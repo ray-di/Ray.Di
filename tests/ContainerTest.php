@@ -10,11 +10,11 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
      * @var Container
      */
     protected $container;
-    
+
     protected $config;
-    
+
     protected $forge;
-    
+
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -26,7 +26,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->forge   = new Forge($this->config);
         $this->container = new Container($this->forge);
     }
-    
+
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
@@ -35,7 +35,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         parent::tearDown();
     }
-    
+
     /**
      * @todo Implement testHas().
      */
@@ -43,14 +43,14 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         $expect = new \StdClass;
         $this->container->set('foo', $expect);
-        
+
         $this->assertTrue($this->container->has('foo'));
         $this->assertFalse($this->container->has('bar'));
-        
+
         $actual = $this->container->get('foo');
         $this->assertSame($expect, $actual);
     }
-    
+
     /**
      * @expectedException Aura\Di\Exception\ServiceInvalid
      */
@@ -58,7 +58,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         $this->container->set('foo', 'bar');
     }
-    
+
     /**
      * @expectedException Aura\Di\Exception\ServiceNotFound
      */
@@ -66,18 +66,18 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         $this->container->get('foo');
     }
-    
+
     public function testGetServiceInsideClosure()
     {
         $di = $this->container;
         $di->set('foo', function() use ($di) {
             return new \Aura\Di\MockParentClass;
         });
-        
+
         $actual = $this->container->get('foo');
-        $this->assertType('Aura\Di\MockParentClass', $actual);
+        $this->assertInstanceOf('Aura\Di\MockParentClass', $actual);
     }
-    
+
     /**
      * @todo Implement testGetServices().
      */
@@ -86,38 +86,38 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->container->set('foo', new \StdClass);
         $this->container->set('bar', new \StdClass);
         $this->container->set('baz', new \StdClass);
-        
+
         $expect = array('foo', 'bar', 'baz');
         $actual = $this->container->getDefs();
         $this->assertSame($expect, $actual);
-        
+
         $service = $this->container->get('bar');
         $expect = array('bar');
         $actual = $this->container->getServices();
         $this->assertSame($expect, $actual);
     }
-    
+
     public function testLazyGet()
     {
         $this->container->set('foo', function() {
             return new MockOtherClass;
         });
-        
+
         $lazy = $this->container->lazyGet('foo');
-        
-        $this->assertType('Aura\Di\Lazy', $lazy);
-        
+
+        $this->assertInstanceOf('Aura\Di\Lazy', $lazy);
+
         $foo = $lazy();
-        
-        $this->assertType('Aura\Di\MockOtherClass', $foo);
+
+        $this->assertInstanceOf('Aura\Di\MockOtherClass', $foo);
     }
-    
+
     public function testMagicGet()
     {
         $this->assertSame($this->container->params, $this->config->getParams());
         $this->assertSame($this->container->setter, $this->config->getSetter());
     }
-    
+
     /**
      * @expectedException \UnexpectedValueException
      */
@@ -125,7 +125,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         $actual = $this->container->no_such_property;
     }
-    
+
     /**
      * @todo Implement testNewInstance().
      */
@@ -136,7 +136,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $actual = $instance->getFoo();
         $this->assertSame($expect, $actual);
     }
-    
+
     public function testNewInstanceWithOverride()
     {
         $instance = $this->container->newInstance(
@@ -145,26 +145,26 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
                 'foo' => 'dib'
             )
         );
-        
+
         $expect = 'dib';
         $actual = $instance->getFoo();
         $this->assertSame($expect, $actual);
     }
-    
+
     public function testLazyNew()
     {
         $lazy = $this->container->lazyNew('Aura\Di\MockOtherClass');
-        $this->assertType('Aura\Di\Lazy', $lazy);
+        $this->assertInstanceOf('Aura\Di\Lazy', $lazy);
         $foo = $lazy();
-        $this->assertType('Aura\Di\MockOtherClass', $foo);
+        $this->assertInstanceOf('Aura\Di\MockOtherClass', $foo);
     }
-    
+
     public function testClone()
     {
         $clone = clone $this->container;
         $this->assertNotSame($clone->getForge(), $this->container->getForge());
     }
-    
+
     /**
      * @expectedException Aura\Di\Exception\ContainerLocked
      */
@@ -173,7 +173,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->container->lock();
         $params = $this->container->params;
     }
-    
+
     /**
      * @expectedException Aura\Di\Exception\ContainerLocked
      */
@@ -181,5 +181,12 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         $this->container->lock();
         $this->container->set('foo', function() { return new StdClass; });
+    }
+
+    public function atestDestruct()
+    {
+        $definition = $this->container->getForge()->getConfig()->getDefinition();
+        $definition['MockDefinition'] = array(Definition::PRE_DESTROY => 'onEnd');
+        $this->container->__destruct();
     }
 }

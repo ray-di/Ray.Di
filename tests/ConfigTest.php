@@ -7,20 +7,20 @@ namespace Aura\Di;
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
     protected $config;
-    
+
     protected function setUp()
     {
         parent::setUp();
         $this->config = new Config;
     }
-    
+
     public function testFetchReadsConstructorDefaults()
     {
         $expect = array('foo' => 'bar');
         list($actual_params, $actual_setter) = $this->config->fetch('Aura\Di\MockParentClass');
         $this->assertSame($expect, $actual_params);
     }
-    
+
     /**
      * coverage for the "merged already" portion of the fetch() method
      */
@@ -30,84 +30,130 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $actual = $this->config->fetch('Aura\Di\MockParentClass');
         $this->assertSame($expect, $actual);
     }
-    
+
     public function testFetchCapturesParentParams()
     {
         $expect = array(
             'foo' => 'bar',
             'zim' => null,
         );
-        
+
         list($actual_params, $actual_setter) = $this->config->fetch('Aura\Di\MockChildClass');
         $this->assertSame($expect, $actual_params);
     }
-    
+
     public function testFetchCapturesExplicitParams()
     {
         $this->config = new Config;
         $params = $this->config->getParams();
         $params['Aura\Di\MockParentClass'] = array('foo' => 'zim');
-        
+
         $expect = array('foo' => 'zim');
         list($actual_params, $actual_setter) = $this->config->fetch('Aura\Di\MockParentClass');
         $this->assertSame($expect, $actual_params);
     }
-    
+
     public function testFetchHonorsExplicitParentParams()
     {
         $this->config = new Config;
         $params = $this->config->getParams();
         $params['Aura\Di\MockParentClass'] = array('foo' => 'dib');
-        
+
         $expect = array(
             'foo' => 'dib',
             'zim' => null,
         );
-        
+
         list($actual_params, $actual_setter) = $this->config->fetch('Aura\Di\MockChildClass');
         $this->assertSame($expect, $actual_params);
-        
+
         // for test coverage of the mock class
         $child = new \Aura\Di\MockChildClass('bar', new \Aura\Di\MockOtherClass);
     }
-    
+
     public function testGetReflection()
     {
         $actual = $this->config->getReflect('Aura\Di\MockOtherClass');
-        $this->assertType('ReflectionClass', $actual);
+        $this->assertInstanceOf('ReflectionClass', $actual);
         $this->assertSame('Aura\Di\MockOtherClass', $actual->getName());
         $actual = $this->config->getReflect('Aura\Di\MockOtherClass');
     }
-    
+
     public function testFetchCapturesParentSetter()
     {
         $setter = $this->config->getSetter();
         $setter['Aura\Di\MockParentClass']['setFake'] = 'fake1';
-        
+
         list($actual_config, $actual_setter) = $this->config->fetch('Aura\Di\MockChildClass');
         $expect = array('setFake' => 'fake1');
         $this->assertSame($expect, $actual_setter);
-        
+
     }
-    
+
     public function testFetchCapturesOverrideSetter()
     {
         $setter = $this->config->getSetter();
         $setter['Aura\Di\MockParentClass']['setFake'] = 'fake1';
         $setter['Aura\Di\MockChildClass']['setFake'] = 'fake2';
-        
+
         list($actual_config, $actual_setter) = $this->config->fetch('Aura\Di\MockChildClass');
         $expect = array('setFake' => 'fake2');
         $this->assertSame($expect, $actual_setter);
     }
-    
+
     public function testClone()
     {
         $this->config = new Config;
         $clone = clone $this->config;
-        
+
         $this->assertNotSame($clone, $this->config);
         $this->assertNotSame($clone->getParams(), $this->config->getParams());
         $this->assertNotSame($clone->getSetter(), $this->config->getSetter());
+    }
+
+    public function testFetchDefinition()
+    {
+        list($actual_config, $actual_setter, $definition) = $this->config->fetch('Aura\Di\Definition\MockDefinitionClass');
+        $expect = 'onInit';
+        $this->assertSame($expect, $definition['PostConstruct']);
+    }
+
+    public function testFetchParentDefinition()
+    {
+        list($actual_config, $actual_setter, $definition) = $this->config->fetch('Aura\Di\Definition\MockDefinitionChildClass');
+        $expect = 'onInit';
+        $this->assertSame($expect, $definition['PostConstruct']);
+        // same
+        $expect = 'prototype';
+        $this->assertSame($expect, $definition['Scope']);
+    }
+
+    public function testFetchOverrideDefinition()
+    {
+        list($actual_config, $actual_setter, $definition) = $this->config->fetch('Aura\Di\Definition\MockDefinitionChildOverrideClass');
+        $expect = 'onInit';
+        $this->assertSame($expect, $definition['PostConstruct']);
+        // changed
+        $expect = 'singleton';
+        $this->assertSame($expect, $definition['Scope']);
+    }
+
+    public function testConfigRetainDefintionAfterFetch()
+    {
+        $this->config->fetch('Aura\Di\Definition\MockDefinitionClass');
+        $def = $this->config->getDefinition();
+        $this->assertTrue(is_array($def['Aura\Di\Definition\MockDefinitionClass']));
+    }
+    public function testConfigRetainDefintionAfterFetchChildClass()
+    {
+        $this->config->fetch('Aura\Di\Definition\MockDefinitionClass');
+        $this->config->fetch('Aura\Di\Definition\MockDefinitionChildClass');
+        $this->config->fetch('Aura\Di\Definition\MockDefinitionChildOverrideClass');
+        $def = $this->config->getDefinition();
+        $this->assertTrue(
+            is_array($def['Aura\Di\Definition\MockDefinitionClass'])
+            && is_array($def['Aura\Di\Definition\MockDefinitionChildClass'])
+            && is_array($def['Aura\Di\Definition\MockDefinitionChildOverrideClass'])
+        );
     }
 }
