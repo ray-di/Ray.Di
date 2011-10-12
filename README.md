@@ -1,29 +1,23 @@
-##Annotation Based Dependency Injection for PHP 5.3+##
+# Annotation based dependency injection for PHP 5.3+ #
 
-This project was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. Guice is a Java dependency injection framework developed by Google (see http://code.google.com/p/google-guice/wiki/Motivation?tm=6).
+## Overview ##
+This project was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. Guice is a Java dependency injection framework developed by Google (see http://code.google.com/p/google-guice/wiki/Motivation?tm=6). 
 
 Not all features of Guice have been implemented.
 
+This package also supports some of the JSR-330 object lifecycle annotations, like @PostConstruct, @PreDestroy. 
+
 <b>This is a preview release.</b>
 
-This software is based on Aura.Di.<br>
 Read Documentation for Aura.Di: [http://auraphp.github.com/Aura.Di](http://auraphp.github.com/Aura.Di)
 
-### Getting Started ###
-We first need to tell it how to map our interfaces to their implementations.
-his configuration is done in a module, which is any PHP class that implements the AbstractModule class:
+## Getting Started ##
 
-	class BillingModule extends AbstractModule {
-	    protected function configure()
-	    {
-	        $this->bind('TransactionLog')->to('DatabaseTransactionLog');
-	        $this->bind('CreditCardProcessor')->to('PaypalCreditCardProcessor');
-	        $this->bind('BillingService')->to('RealBillingService');
-	    }
-	}
+With dependency injection, objects accept dependencies in their constructors. To construct an object, you first build its dependencies. But to build each dependency, you need its dependencies, and so on. So when you build an object, you really need to build an object graph.
 
-We add @Inject to RealBillingService's constructor, which directs Injector to use it.
-Injector will inspect the annotated constructor, and lookup values for each of parameter.
+Building object graphs by hand is labour intensive, error prone, and makes testing difficult. Instead, this package can build the object graph for you. But first, this package needs to be configured to build the graph exactly as you want it.
+
+To illustrate, we'll start the RealBillingService class that accepts its dependent interfaces CreditCardProcessor and TransactionLog in its constructor. To make it explicit that the RealBillingService constructor is invoked by this package, we add the @Inject annotation:
 
 	class RealBillingService implements BillingService
 	{
@@ -40,107 +34,112 @@ Injector will inspect the annotated constructor, and lookup values for each of p
 	    /**
 	     * @Inject
 	     */
-	    public function __construct(CreditCardProcessor $processor, TransactionLog $transactionLog) {
+	    public function __construct(CreditCardProcessor $processor, TransactionLog $transactionLog)
+		{
 	        $this->processor = $processor;
 	        $this->transactionLog = $transactionLog;
 	    }
 
-	    public function chargeOrder(PizzaOrder $order, CreditCard $creditCard) {
-	        try {
-	            $result = $this->processor->charge($creditCard, $order->getAmount());
-	            $this->transactionLog->logChargeResult($result);
+	    public function chargeOrder(PizzaOrder $order, CreditCard $creditCard)
+		{
+		...
+		}
+}
 
-	            return $result->wasSuccessful()
-	            ? Receipt::forSuccessfulCharge($order->getAmount())
-	            : Receipt::forDeclinedCharge($result->getDeclineMessage());
-	        } catch (UnreachableException $e) {
-	            $this->transactionLog->logConnectException($e);
-	            return Receipt::forSystemFailure($e->getMessage());
-	        }
+We want to build a RealBillingService using PaypalCreditCardProcessor and DatabaseTransactionLog. this package uses bindings to map types to their implementations. A module is a collection of bindings specified using fluent, English-like method calls: 
+
+	public class BillingModule extends AbstractModule {
+
+	    protected void configure() {
+
+	        /*
+	         * This tells this package that whenever it sees a dependency on a TransactionLog,
+	         * it should satisfy the dependency using a DatabaseTransactionLog.
+	         */
+	        $this->bind('TransactionLog').to('DatabaseTransactionLog');
+
+	        /*
+	         * Similarly, this binding tells this package that when CreditCardProcessor is used in
+	         * a dependency, that should be satisfied with a PaypalCreditCardProcessor.
+	         */
+	        $this->bind('CreditCardProcessor').to('PaypalCreditCardProcessor');
 	    }
 	}
+The modules are the building blocks of an injector, which is this package's object-graph builder. First we create the injector, and then we can use that to build the RealBillingService: 	
 
-Finally, we can put it all together. The Injector can be used to get an instance of any of the bound classes.
-
-	$injector = new	 Injector(new Container(new Forge(new Config(new Annotation))), new BillingModule);
+	$injector = new	Injector(new Container(new Forge(new Config(new Annotation))), new BillingModule);
 	$billingService = $injector->getInstance('BillingService');
 
+By building the billingService, we've constructed a small object graph using Guice. The graph contains the billing service and its dependent credit card processor and transaction log. 
+
 ##Bindings##
+The injector's job is to assemble graphs of objects. You request an instance of a given type, and it figures out what to build, resolves dependencies, and wires everything together. To specify how dependencies are resolved, configure your injector with bindings. 
+
+###Creating Bindings###
+
+To create bindings, extend AbstractModule and override its configure method. In the method body, call bind() to specify each binding. 
+
+When a dependency is requested but not found it attempts to create a just-in-time binding. The injector also includes bindings for the providers of its other bindings. 
+
 ###Linked Binding###
-	/**
-	 * Linked Binding
-	 *
-	 * Linked bindings map a type to its implementation.
-	 */
+Linked bindings map a type to its implementation. 
+
 	class BillingModule extends AbstractModule {
 	    protected function configure() {
 	        $this->bind('TransactionLogInterface')->to('DatabaseTransactionLog');
 	    }
 	}
 ###Binding annotation###
-	/**
-	 * Binding annotation
-	 *
-	 * The annotation and type together uniquely identify a binding.
-	 */
+The annotation and type together uniquely identify a binding.
+
 	class BillingModule extends AbstractModule {
 	    protected function configure() {
 	        $this->bind('TransactionLogInterface')->annotatedWith('Db')->to('DatabaseTransactionLog');
 	    }
 	}
 ###Instance Bindings###
-	/**
-	 * Instance Bindings
-	 *
-	 * You can bind a type to a specific instance of that type.
-	 * Avoid using .toInstance with objects that are complicated to create, since it can slow down application startup.
-	 * You can use an @Provides method instead.
-	 */
+You can bind a type to a specific instance of that type.
+Avoid using .toInstance with objects that are complicated to create, since it can slow down application startup.
+
 	class BillingModule extends AbstractModule {
 	    protected function configure() {
 	        $instance = new DatabaseTransactionLog;
 	        $this->bind('TransactionLogInterface')->toInantance($instance);
 	    }
 	}
-####Provider interface####
+###Provider Bindings###
 
-	/**
-	 * Provider interface
-	 */
+
+####Provider interface####
+The provider class implements Provider interface, which is a simple, general interface for supplying values:
+
 	interface provider
 	{
 	    public function get();
 	}
-####Provider class####
 
-	/**
-	 * DatabaseTransactionLog provider class
-	 */
+####Provider class####
+Our provider implementation class has dependencies of its own, which it receives via its @Inject-annotated constructor. It implements the Provider interface to define what's returned with complete type safety: 
+
 	class DatabaseTransactionLogProvider implements provider
 	{
 	    /**
 	     * @Inject
 	     */
-	    public function __construct(Di $di, Connection $connection)
+	    public function __construct(Connection $connection)
 	    {
-	        $this->di = $di;
 	        $this->connection = $connection;
 	    }
 
 	    public function get()
 	    {
-	        $transactionLog = $this->di->newInstance('DatabaseTransactionLog');
+	        $transactionLog = new DatabaseTransactionLog;
 	        $transactionLog->setConnection($this->connection);
 	        return $transactionLog;
 	    }
 	}
-###Provider Bindings###
+Finally we bind to the provider using the .toProvider clause: 
 
-	/**
-	 * Provider Bindings
-	 *
-	 * The provider class implements Provider interface, which is a simple, general interface for supplying values:
-	 */
 	class BillingModule extends AbstractModule {
 	    protected function configure() {
 	        $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvider');
@@ -189,3 +188,21 @@ Scopes can also be configured in bind statements:
 	        $this->bind('TransactionLog').to('InMemoryTransactionLog').in(Scope::SINGLETON);
 	    }
 	}
+## Lifecycle Annotations ##
+The @PostConstruct and @PreDestroy annotations can be used to trigger initialization and destruction callbacks respectively.
+
+###@PostConstruct###
+The PostConstruct annotation is used on a method that needs to be executed after dependency injection is done to perform any initialization. 
+
+###@PreDestroy###
+The PreDestroy annotation is used on methods as a callback notification to signal that the instance is in the process of being removed by the container. The method annotated with PreDestroy is typically used to release resources that it has been holding.
+
+##Unimplemented##
+
+ * Eager singletons
+ * Constructor bindings
+ * Stage
+ * Binding for the Logger
+ * Custom scope annotations
+ * Chained linked bindings
+ * AOP
