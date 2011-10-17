@@ -6,13 +6,13 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  *
  */
-namespace Aura\Di\Exception;
+namespace Ray\Di\Exception;
 
 /**
  *
- * The named DI container already exists.
+ * Read only.
  *
- * @package Aura.Di
+ * @package Ray.Di
  *
  */
-class ReadOnly extends \Aura\Di\Exception {}
+class ReadOnly extends \Ray\Di\Exception {}

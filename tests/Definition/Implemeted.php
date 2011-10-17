@@ -1,9 +1,9 @@
 <?php
 
-namespace Aura\Di\Definition;
+namespace Ray\Di\Definition;
 
-use Aura\Di\Mock\logInterface,
-    Aura\Di\Mock\UserInterface;
+use Ray\Di\Mock\logInterface,
+    Ray\Di\Mock\UserInterface;
 
 class Implemented
 {

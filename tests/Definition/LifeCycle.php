@@ -1,9 +1,9 @@
 <?php
 
-namespace Aura\Di\Definition;
+namespace Ray\Di\Definition;
 
-use Aura\Di\Mock\DbInterface,
-    Aura\Di\Mock\UserInterface;
+use Ray\Di\Mock\DbInterface,
+    Ray\Di\Mock\UserInterface;
 
 /**
  * Lifecycle test

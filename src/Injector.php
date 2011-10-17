@@ -1,19 +1,15 @@
 <?php
 /**
+ * Ray
  *
- * This file is part of the Aura Project for PHP.
- *
- * @license http://opensource.org/licenses/bsd-license.php BSD
- *
+ * @license  http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace Aura\Di;
+namespace Ray\Di;
 
 /**
- *
  * Dependency Injector.
  *
- * @package Aura.Di
- *
+ * @package Ray.Di
  */
 class Injector
 {
@@ -203,7 +199,7 @@ class Injector
         };
         $container = $this->container;
         $config = $this->container->getForge()->getConfig();
-        /* @var $forge Aura\Di\Forge */
+        /* @var $forge Ray\Di\Forge */
         $injector = $this;
 
         $getInstance = function($in, $bindingToType, $target) use ($container, $definition, $injector) {
@@ -257,7 +253,7 @@ class Injector
             $params = array_map($bindOneParameter, $settings);
             return array($method, $params);
         };
-        
+
         // main
         $setterDefinitions = (isset($definition[Definition::INJECT][Definition::INJECT_SETTER]))
         ? $definition[Definition::INJECT][Definition::INJECT_SETTER]

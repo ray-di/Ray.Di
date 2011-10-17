@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  *
  */
-namespace Aura\Di;
+namespace Ray\Di;
 
 /**
  *
@@ -72,7 +72,7 @@ class Config implements ConfigInterface
     /**
      * Annotation scanner
      *
-     * @var \Aura\Di\AnnotationInterface
+     * @var \Ray\Di\AnnotationInterface
      */
     protected $Annotation;
 

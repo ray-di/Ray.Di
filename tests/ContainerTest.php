@@ -1,5 +1,5 @@
 <?php
-namespace Aura\Di;
+namespace Ray\Di;
 
 /**
  * Test class for Dependency.
@@ -52,7 +52,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Aura\Di\Exception\ServiceInvalid
+     * @expectedException Ray\Di\Exception\ServiceInvalid
      */
     public function testInitInvalidService()
     {
@@ -60,7 +60,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Aura\Di\Exception\ServiceNotFound
+     * @expectedException Ray\Di\Exception\ServiceNotFound
      */
     public function testGetNoSuchService()
     {
@@ -71,11 +71,11 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         $di = $this->container;
         $di->set('foo', function() use ($di) {
-            return new \Aura\Di\MockParentClass;
+            return new \Ray\Di\MockParentClass;
         });
 
         $actual = $this->container->get('foo');
-        $this->assertInstanceOf('Aura\Di\MockParentClass', $actual);
+        $this->assertInstanceOf('Ray\Di\MockParentClass', $actual);
     }
 
     /**
@@ -105,11 +105,11 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
         $lazy = $this->container->lazyGet('foo');
 
-        $this->assertInstanceOf('Aura\Di\Lazy', $lazy);
+        $this->assertInstanceOf('Ray\Di\Lazy', $lazy);
 
         $foo = $lazy();
 
-        $this->assertInstanceOf('Aura\Di\MockOtherClass', $foo);
+        $this->assertInstanceOf('Ray\Di\MockOtherClass', $foo);
     }
 
     public function testMagicGet()
@@ -131,7 +131,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
      */
     public function testNewInstanceWithDefaults()
     {
-        $instance = $this->container->newInstance('Aura\Di\MockParentClass');
+        $instance = $this->container->newInstance('Ray\Di\MockParentClass');
         $expect = 'bar';
         $actual = $instance->getFoo();
         $this->assertSame($expect, $actual);
@@ -140,7 +140,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testNewInstanceWithOverride()
     {
         $instance = $this->container->newInstance(
-            'Aura\Di\MockParentClass',
+            'Ray\Di\MockParentClass',
             array(
                 'foo' => 'dib'
             )
@@ -153,10 +153,10 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
     public function testLazyNew()
     {
-        $lazy = $this->container->lazyNew('Aura\Di\MockOtherClass');
-        $this->assertInstanceOf('Aura\Di\Lazy', $lazy);
+        $lazy = $this->container->lazyNew('Ray\Di\MockOtherClass');
+        $this->assertInstanceOf('Ray\Di\Lazy', $lazy);
         $foo = $lazy();
-        $this->assertInstanceOf('Aura\Di\MockOtherClass', $foo);
+        $this->assertInstanceOf('Ray\Di\MockOtherClass', $foo);
     }
 
     public function testClone()
@@ -166,7 +166,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Aura\Di\Exception\ContainerLocked
+     * @expectedException Ray\Di\Exception\ContainerLocked
      */
     public function testLockedConfig()
     {
@@ -175,7 +175,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Aura\Di\Exception\ContainerLocked
+     * @expectedException Ray\Di\Exception\ContainerLocked
      */
     public function testLockedSet()
     {

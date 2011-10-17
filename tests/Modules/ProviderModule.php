@@ -1,13 +1,13 @@
 <?php
 
-namespace Aura\Di\Modules;
+namespace Ray\Di\Modules;
 
-use Aura\Di\AbstractModule;
+use Ray\Di\AbstractModule;
 
 class ProviderModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind('Aura\Di\Mock\DbInterface')->toProvider('Aura\Di\Modules\DbProvider');
+        $this->bind('Ray\Di\Mock\DbInterface')->toProvider('Ray\Di\Modules\DbProvider');
     }
 }

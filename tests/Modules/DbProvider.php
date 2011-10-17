@@ -1,8 +1,8 @@
 <?php
 
-namespace Aura\Di\Modules;
+namespace Ray\Di\Modules;
 
-use Aura\Di\ProviderInterface;
+use Ray\Di\ProviderInterface;
 
 class DbProvider implements ProviderInterface
 {
@@ -11,7 +11,7 @@ class DbProvider implements ProviderInterface
      */
     public function get()
     {
-        $db = new \Aura\Di\Mock\UserDb();
+        $db = new \Ray\Di\Mock\UserDb();
         return $db;
     }
 }

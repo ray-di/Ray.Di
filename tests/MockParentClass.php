@@ -1,5 +1,5 @@
 <?php
-namespace Aura\Di;
+namespace Ray\Di;
 class MockParentClass
 {
     protected $foo;

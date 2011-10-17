@@ -1,6 +1,6 @@
 <?php
 
-namespace Aura\Di;
+namespace Ray\Di;
 
 require __DIR__ . '/../src.php';
 

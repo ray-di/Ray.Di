@@ -1,12 +1,12 @@
 <?php
 
-namespace Aura\Di\Definition;
+namespace Ray\Di\Definition;
 
-use Aura\Di\ForgeInterface;
+use Ray\Di\ForgeInterface;
 
-use Aura\Di\Mock\DbInterface,
-    Aura\Di\Mock\UserInterface,
-    Aura\Di\Forge;
+use Ray\Di\Mock\DbInterface,
+    Ray\Di\Mock\UserInterface,
+    Ray\Di\Forge;
 
 
 /**
@@ -15,7 +15,7 @@ use Aura\Di\Mock\DbInterface,
 class MockDefinitionClass
 {
     /**
-     * @var Aura\Di\Db
+     * @var Ray\Di\Db
      */
     public $db;
 

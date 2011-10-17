@@ -1,9 +1,9 @@
 <?php
 
-namespace Aura\Di\Mock;
+namespace Ray\Di\Mock;
 
 /**
- * @ImplementedBy("Aura\Di\Mock\Log")
+ * @ImplementedBy("Ray\Di\Mock\Log")
  *
  */
 interface LogInterface{}

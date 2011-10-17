@@ -1,14 +1,14 @@
 <?php
 
-namespace Aura\Di\Modules;
+namespace Ray\Di\Modules;
 
-use Aura\Di\AbstractModule,
-    Aura\Di\Scope;
+use Ray\Di\AbstractModule,
+    Ray\Di\Scope;
 
 class SingletonModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind('Aura\Di\Mock\DbInterface')->to('Aura\Di\Mock\RndDb')->in(Scope::SINGLETON);
+        $this->bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\RndDb')->in(Scope::SINGLETON);
     }
 }

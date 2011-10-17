@@ -1,5 +1,5 @@
 <?php
-namespace Aura\Di;
+namespace Ray\Di;
 class MockChildClass extends MockParentClass
 {
     protected $zim;

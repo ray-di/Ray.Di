@@ -1,9 +1,9 @@
 <?php
 
-namespace Aura\Di\Mock;
+namespace Ray\Di\Mock;
 
 /**
- * @ProvidedBy("Aura\Di\Modules\ReaderProvider")
+ * @ProvidedBy("Ray\Di\Modules\ReaderProvider")
  *
  */
 interface ReaderInterface{}

@@ -1,14 +1,14 @@
 <?php
 
-namespace Aura\Di\Modules;
+namespace Ray\Di\Modules;
 
-use Aura\Di\AbstractModule,
-    Aura\Di\Scope;
+use Ray\Di\AbstractModule,
+    Ray\Di\Scope;
 
 class InvalidAnnotateModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind('Aura\Di\Mock\NoInterface')->annotatedWith('user_db')->to('Aura\Di\Mock\UserDb')->in(Scope::SINGLETON);
+        $this->bind('Ray\Di\Mock\NoInterface')->annotatedWith('user_db')->to('Ray\Di\Mock\UserDb')->in(Scope::SINGLETON);
     }
 }

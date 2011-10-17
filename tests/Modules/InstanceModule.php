@@ -1,8 +1,8 @@
 <?php
 
-namespace Aura\Di\Modules;
+namespace Ray\Di\Modules;
 
-use Aura\Di\AbstractModule;
+use Ray\Di\AbstractModule;
 
 class InstanceModule extends AbstractModule
 {
@@ -12,7 +12,7 @@ class InstanceModule extends AbstractModule
         $this->bind()->annotatedWith('user_name')->toInstance('koriym');
         $this->bind()->annotatedWith('user_age')->toInstance(21);
         $this->bind()->annotatedWith('user_gender')->toInstance('male');
-        $this->bind('Aura\Di\Mock\DbInterface')->to('\Aura\Di\Mock\UserDb');
-        $this->bind('Aura\Di\Mock\UserInterface')->toInstance(new \Aura\Di\Mock\User);
+        $this->bind('Ray\Di\Mock\DbInterface')->to('\Ray\Di\Mock\UserDb');
+        $this->bind('Ray\Di\Mock\UserInterface')->toInstance(new \Ray\Di\Mock\User);
     }
 }

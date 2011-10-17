@@ -1,6 +1,6 @@
 <?php
 
-namespace Aura\Di\Mock;
+namespace Ray\Di\Mock;
 
 /**
  * @Scope("singleton")

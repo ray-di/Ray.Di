@@ -1,6 +1,6 @@
 <?php
 
-namespace Aura\Di\Definition;
+namespace Ray\Di\Definition;
 
 class MockDefinitionChildClass extends MockDefinitionClass
 {

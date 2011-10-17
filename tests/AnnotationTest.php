@@ -1,6 +1,6 @@
 <?php
 
-namespace Aura\Di;
+namespace Ray\Di;
 
 /**
  * Test class for Annotation.
@@ -20,33 +20,33 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
 
     public function testgetDefinitionScope()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = 'prototype';
         $this->assertSame($expected, $definition['Scope']);
     }
 
     public function testgetDefinitionPostConstruct()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = 'onInit';
         $this->assertSame($expected, $definition['PostConstruct']);
     }
 
     public function testgetDefinitionPreDestoroy()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = 'onEnd';
         $this->assertSame($expected, $definition['PreDestoroy']);
     }
 
     public function testgetDefinitionInjectConstruct()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = array(
             '__construct' => array(
                 array(
                         Definition::PARAM_POS => 0,
-                        Definition::PARAM_TYPEHINT => 'Aura\\Di\\ForgeInterface',
+                        Definition::PARAM_TYPEHINT => 'Ray\\Di\\ForgeInterface',
                         Definition::PARAM_NAME => 'forge',
                         Definition::PARAM_ANNOTATE => Definition::NAME_UNSPECIFIED,
                         Definition::PARAM_TYPEHINT_BY => array()
@@ -66,12 +66,12 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
 
     public function testgetDefinitionInjectMethod0()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = array(
             'setDb' => array(
                 array(
                     Definition::PARAM_POS => 0,
-                    Definition::PARAM_TYPEHINT => 'Aura\\Di\\Mock\\DbInterface',
+                    Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\DbInterface',
                     Definition::PARAM_NAME => 'db',
                     Definition::PARAM_ANNOTATE => Definition::NAME_UNSPECIFIED,
                     Definition::PARAM_TYPEHINT_BY => array()
@@ -83,12 +83,12 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
 
     public function testgetDefinitionInjectMethodSetUserDb()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = array(
             'setUserDb' => array(
                 array(
         			Definition::PARAM_POS => 0,
-                    Definition::PARAM_TYPEHINT => 'Aura\\Di\\Mock\\DbInterface',
+                    Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\DbInterface',
                     Definition::PARAM_NAME => 'db',
                     Definition::PARAM_ANNOTATE => 'user_db',
                     Definition::PARAM_TYPEHINT_BY => array()
@@ -100,12 +100,12 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
 
     public function testgetDefinitionInjectMethodSetAdminDb()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = array(
             'setAdminDb' => array(
                 array(
                     Definition::PARAM_POS => 0,
-                    Definition::PARAM_TYPEHINT => 'Aura\\Di\\Mock\\DbInterface',
+                    Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\DbInterface',
                     Definition::PARAM_NAME => 'db',
                     Definition::PARAM_ANNOTATE => 'staege_db',
                     Definition::PARAM_TYPEHINT_BY => array()
@@ -117,19 +117,19 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
 
     public function testgetDefinitionInjectMethodSetDouble()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = array(
         	'setDouble' => array(
                 array (
                     Definition::PARAM_POS => 0,
-                    Definition::PARAM_TYPEHINT => 'Aura\Di\Mock\UserInterface',
+                    Definition::PARAM_TYPEHINT => 'Ray\Di\Mock\UserInterface',
                     Definition::PARAM_NAME => 'user',
                     Definition::PARAM_ANNOTATE => 'admin_user',
                     Definition::PARAM_TYPEHINT_BY => array()
         ),
                 array (
                     Definition::PARAM_POS => 1,
-                    Definition::PARAM_TYPEHINT => 'Aura\Di\Mock\DbInterface',
+                    Definition::PARAM_TYPEHINT => 'Ray\Di\Mock\DbInterface',
                     Definition::PARAM_NAME => 'db',
                     Definition::PARAM_ANNOTATE => 'production_db',
                     Definition::PARAM_TYPEHINT_BY => array()
@@ -141,21 +141,21 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
    }
 
     /**
-     * @expectedException Aura\Di\Exception\MultipleAnnotationNotAllowed
+     * @expectedException Ray\Di\Exception\MultipleAnnotationNotAllowed
      */
     public function testMultipleAnnotationNotAllowedExcection()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\MockDefinitionMultiplePostConstructClass');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionMultiplePostConstructClass');
     }
 
     public function testSingleVarAnnotattion()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\Named');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\Named');
         $expected = array(
             'setUserDb' => array(
                 array(
                     Definition::PARAM_POS => 0,
-                    Definition::PARAM_TYPEHINT => 'Aura\\Di\\Mock\\DbInterface',
+                    Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\DbInterface',
                     Definition::PARAM_NAME => 'db',
                     Definition::PARAM_ANNOTATE => 'user_db',
                     Definition::PARAM_TYPEHINT_BY => array()
@@ -166,40 +166,40 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Aura\Di\Exception\InvalidNamed
+     * @expectedException Ray\Di\Exception\InvalidNamed
      */
     public function testInvalidNamed()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\InvalidNamed');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\InvalidNamed');
     }
 
     public function testImplementedBy()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Mock\LogInterface');
-        $expected = array('ImplementedBy' => 'Aura\Di\Mock\Log');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Mock\LogInterface');
+        $expected = array('ImplementedBy' => 'Ray\Di\Mock\Log');
         $actual = $definition;
         $this->assertSame($expected, $definition);
     }
 
     public function testImplementedByTwice()
     {
-        $definition1 = $this->annotationSacnner->getDefinition('Aura\Di\Mock\LogInterface');
+        $definition1 = $this->annotationSacnner->getDefinition('Ray\Di\Mock\LogInterface');
         // to be cached
-        $definition2 = $this->annotationSacnner->getDefinition('Aura\Di\Mock\LogInterface');
+        $definition2 = $this->annotationSacnner->getDefinition('Ray\Di\Mock\LogInterface');
         $this->assertSame($definition1, $definition2);
     }
 
     public function testImplemetedBy()
     {
-        $definition = $this->annotationSacnner->getDefinition('Aura\Di\Definition\Implemented');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\Implemented');
         $expected = array(
             'setLog' => array(
                 array(
                     Definition::PARAM_POS => 0,
-                    Definition::PARAM_TYPEHINT => 'Aura\\Di\\Mock\\LogInterface',
+                    Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\LogInterface',
                     Definition::PARAM_NAME => 'log',
                     Definition::PARAM_ANNOTATE => Definition::NAME_UNSPECIFIED,
-                    Definition::PARAM_TYPEHINT_BY => array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, 'Aura\Di\Mock\Log')
+                    Definition::PARAM_TYPEHINT_BY => array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, 'Ray\Di\Mock\Log')
                 ),
             ),
         );

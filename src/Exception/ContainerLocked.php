@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  */
-namespace Aura\Di\Exception;
+namespace Ray\Di\Exception;
 
 /**
  * 
@@ -15,4 +15,4 @@ namespace Aura\Di\Exception;
  * @package Aura.Di
  * 
  */
-class ContainerLocked extends \Aura\Di\Exception {}
+class ContainerLocked extends \Ray\Di\Exception {}

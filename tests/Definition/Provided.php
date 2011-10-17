@@ -1,8 +1,8 @@
 <?php
 
-namespace Aura\Di\Definition;
+namespace Ray\Di\Definition;
 
-use Aura\Di\Mock\ReaderInterface;
+use Ray\Di\Mock\ReaderInterface;
 
 class Provided
 {

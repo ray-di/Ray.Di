@@ -1,18 +1,16 @@
 <?php
 /**
+ * Ray
  *
- * This file is part of the Aura Project for PHP.
- *
- * @license http://opensource.org/licenses/bsd-license.php BSD
- *
+ * @license  http://opensource.org/licenses/bsd-license.php BSD
  */
-namespace Aura\Di;
+namespace Ray\Di;
 
 /**
  * Annotation scanner.
  *
- * @package Aura.Di
- *
+ * @package Ray.Di
+ * @author  Akihito Koriyama <akihito.koriyama@gmail.com>
  */
 interface AnnotationInterface
 {

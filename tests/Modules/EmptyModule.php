@@ -1,9 +1,9 @@
 <?php
 
-namespace Aura\Di\Modules;
+namespace Ray\Di\Modules;
 
-use Aura\Di\AbstractModule,
-    Aura\Di\Scope;
+use Ray\Di\AbstractModule,
+    Ray\Di\Scope;
 
 class EmptyModule extends AbstractModule
 {

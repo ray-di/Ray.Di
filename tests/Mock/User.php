@@ -1,5 +1,5 @@
 <?php
 
-namespace Aura\Di\Mock;
+namespace Ray\Di\Mock;
 
 class User implements UserInterface{}

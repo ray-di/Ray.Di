@@ -1,9 +1,9 @@
 <?php
 
-namespace Aura\Di\Definition;
+namespace Ray\Di\Definition;
 
-use Aura\Di\Mock\DbInterface,
-    Aura\Di\Mock\UserInterface;
+use Ray\Di\Mock\DbInterface,
+    Ray\Di\Mock\UserInterface;
 
 /**
  * @Scope("prototype")
@@ -11,12 +11,12 @@ use Aura\Di\Mock\DbInterface,
 class Multi
 {
     /**
-     * @var Aura\Di\Db
+     * @var Ray\Di\Db
      */
     public $db;
 
     /**
-     * @var Aura\Di\UserDb
+     * @var Ray\Di\UserDb
      */
     public $userDb;
 

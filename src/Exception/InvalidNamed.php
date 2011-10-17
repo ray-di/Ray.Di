@@ -6,13 +6,13 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  *
  */
-namespace Aura\Di\Exception;
+namespace Ray\Di\Exception;
 
 /**
  *
  * 	Invalid @Named annotation.
  *
- * @package Aura.Di
+ * @package Ray.Di
  *
  */
-class InvalidNamed extends \Aura\Di\Exception {}
+class InvalidNamed extends \Ray\Di\Exception {}

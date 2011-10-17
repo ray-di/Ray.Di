@@ -1,15 +1,20 @@
-# Annotation based dependency injection for PHP 5.3+ #
+# Ray.Di
+## Annotation based dependency injection for PHP
 
 ## Overview ##
 This project was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. Guice is a Java dependency injection framework developed by Google (see http://code.google.com/p/google-guice/wiki/Motivation?tm=6). 
 
-Not all features of Guice have been implemented.
-
 This package also supports some of the JSR-330 object lifecycle annotations, like @PostConstruct, @PreDestroy. 
 
-<b>This is a preview release.</b>
+ * This is a preview release.
+ * Not all features of Guice have been implemented.
 
-Read Documentation for Aura.Di: [http://auraphp.github.com/Aura.Di](http://auraphp.github.com/Aura.Di)
+## Aura.Di ##
+This project use Aura.Di component. 
+
+"simple, elegant, and contains some of the cleanest PHP you will see anywhere."
+
+Aura.Di: [http://auraphp.github.com/Aura.Di](http://auraphp.github.com/Aura.Di)
 
 ## Getting Started ##
 
@@ -206,3 +211,6 @@ The PreDestroy annotation is used on methods as a callback notification to signa
  * Custom scope annotations
  * Chained linked bindings
  * AOP
+
+##Requiment##
+ * PHP 5.3+ 

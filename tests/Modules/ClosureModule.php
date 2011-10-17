@@ -1,13 +1,13 @@
 <?php
 
-namespace Aura\Di\Modules;
+namespace Ray\Di\Modules;
 
-use Aura\Di\AbstractModule;
+use Ray\Di\AbstractModule;
 
 class ClosureModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind('Aura\Di\Mock\DbInterface')->toClosure(function(){return new \Aura\Di\Mock\UserDb;});
+        $this->bind('Ray\Di\Mock\DbInterface')->toClosure(function(){return new \Ray\Di\Mock\UserDb;});
     }
 }

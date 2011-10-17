@@ -6,14 +6,13 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  *
  */
-namespace Aura\Di;
+namespace Ray\Di;
 
 /**
- *
  * Scope Definition
  *
- * @package Aura.Di
- *
+ * @package Ray.Di
+ * @author  Akihito Koriyama <akihito.koriyama@gmail.com>
  */
 class Scope
 {

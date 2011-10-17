@@ -1,10 +1,10 @@
 <?php
-namespace Aura\Di;
+namespace Ray\Di;
 
 /**
  * Test class for Inject.
  */
-use Aura\Di\Modules\EmptyModule;
+use Ray\Di\Modules\EmptyModule;
 
 class InjectTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,13 +37,13 @@ class InjectTest extends \PHPUnit_Framework_TestCase
 
     public function testNewInstanceWithPostConstruct()
     {
-        $mock = $this->injector->getInstance('Aura\Di\Definition\LifeCycle');
+        $mock = $this->injector->getInstance('Ray\Di\Definition\LifeCycle');
         $this->assertSame('@PostConstruct', $mock->msg);
     }
 
     public function testNewInstanceWithPreDestory()
     {
-        $mock = $this->injector->getInstance('Aura\Di\Definition\LifeCycle');
+        $mock = $this->injector->getInstance('Ray\Di\Definition\LifeCycle');
         unset($this->injector);
         $this->assertSame('@PreDestoroy', $GLOBALS['pre_destoroy']);
     }
@@ -51,22 +51,22 @@ class InjectTest extends \PHPUnit_Framework_TestCase
     public function testToClass()
     {
         $injector = new Injector($this->container, new Modules\BasicModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Basic');
-        $this->assertInstanceOf('\Aura\Di\Mock\UserDb', $instance->db);
+        $instance = $injector->getInstance('Ray\Di\Definition\Basic');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
     }
 
     public function testToInstance()
     {
 
         $injector = new Injector($this->container, new Modules\InstanceModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Basic');
-        $this->assertInstanceOf('\Aura\Di\Mock\UserDb', $instance->db);
+        $instance = $injector->getInstance('Ray\Di\Definition\Basic');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
     }
 
     public function testToInstanceWithScalar()
     {
         $injector = new Injector($this->container, new Modules\InstanceModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Instance');
+        $instance = $injector->getInstance('Ray\Di\Definition\Instance');
         $this->assertSame('PC6001', $instance->userId);
         $this->assertSame('koriym', $instance->name);
         $this->assertSame(21, $instance->age);
@@ -76,65 +76,65 @@ class InjectTest extends \PHPUnit_Framework_TestCase
     public function testToProvider()
     {
         $injector = new Injector($this->container,  new Modules\ProviderModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Basic');
-        $this->assertInstanceOf('\Aura\Di\Mock\UserDb', $instance->db);
+        $instance = $injector->getInstance('Ray\Di\Definition\Basic');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
     }
 
     public function testToClosure()
     {
         $injector = new Injector($this->container, new Modules\ClosureModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Basic');
-        $this->assertInstanceOf('\Aura\Di\Mock\UserDb', $instance->db);
+        $instance = $injector->getInstance('Ray\Di\Definition\Basic');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
     }
 
     /**
-     * @expectedException Aura\Di\Exception\InvalidBinding
+     * @expectedException Ray\Di\Exception\InvalidBinding
      */
     public function testInvalidNamedAnnotation()
     {
         $injector = new Injector($this->container, new Modules\InvalidAnnotateModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Named');
-        $this->assertInstanceOf('\Aura\Di\Mock\UserDb', $instance->userDb);
+        $instance = $injector->getInstance('Ray\Di\Definition\Named');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->userDb);
     }
 
     public function testAnnotatedWith()
     {
         $injector = new Injector($this->container, new Modules\AnnotateModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Named');
-        $this->assertInstanceOf('\Aura\Di\Mock\UserDb', $instance->userDb);
+        $instance = $injector->getInstance('Ray\Di\Definition\Named');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->userDb);
     }
 
     public function testAnnotatedWithAndUnannotated()
     {
         $injector = new Injector($this->container, new Modules\AnnotateModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Named');
-        $this->assertInstanceOf('\Aura\Di\Mock\UserDb', $instance->userDb);
+        $instance = $injector->getInstance('Ray\Di\Definition\Named');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->userDb);
     }
 
     public function testMultiInject()
     {
         $injector = new Injector($this->container, new Modules\MultiModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Multi');
-        $this->assertInstanceOf('\Aura\Di\Mock\UserDb', $instance->userDb);
+        $instance = $injector->getInstance('Ray\Di\Definition\Multi');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->userDb);
     }
 
     public function testConstructorInjection()
     {
         $injector = new Injector($this->container, new Modules\BasicModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Construct');
-        $this->assertInstanceOf('\Aura\Di\Mock\UserDb', $instance->db);
+        $instance = $injector->getInstance('Ray\Di\Definition\Construct');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
     }
 
     public function testImplemetedBy()
     {
-        $instance = $this->injector->getInstance('Aura\Di\Definition\Implemented');
-        $this->assertInstanceOf('\Aura\Di\Mock\Log', $instance->log);
+        $instance = $this->injector->getInstance('Ray\Di\Definition\Implemented');
+        $this->assertInstanceOf('\Ray\Di\Mock\Log', $instance->log);
     }
 
     public function testProvidedBy()
     {
-        $instance = $this->injector->getInstance('Aura\Di\Definition\Provided');
-        $this->assertInstanceOf('\Aura\Di\Mock\Reader', $instance->reader);
+        $instance = $this->injector->getInstance('Ray\Di\Definition\Provided');
+        $this->assertInstanceOf('\Ray\Di\Mock\Reader', $instance->reader);
     }
 
     public function testClone()
@@ -147,9 +147,9 @@ class InjectTest extends \PHPUnit_Framework_TestCase
     public function testInjectSigleton()
     {
         $injector = new Injector($this->container, new Modules\SingletonModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Basic');
+        $instance = $injector->getInstance('Ray\Di\Definition\Basic');
         $a = $instance->db->rnd;
-        $instance = $injector->getInstance('Aura\Di\Definition\Basic');
+        $instance = $injector->getInstance('Ray\Di\Definition\Basic');
         $b = $instance->db->rnd;
         $this->assertSame($a, $b);
     }
@@ -157,9 +157,9 @@ class InjectTest extends \PHPUnit_Framework_TestCase
     public function testInjectProtortype()
     {
         $injector = new Injector($this->container, new Modules\PrototypeModule);
-        $instance = $injector->getInstance('Aura\Di\Definition\Basic');
+        $instance = $injector->getInstance('Ray\Di\Definition\Basic');
         $a = $instance->db->rnd;
-        $instance = $injector->getInstance('Aura\Di\Definition\Basic');
+        $instance = $injector->getInstance('Ray\Di\Definition\Basic');
         $b = $instance->db->rnd;
         $this->assertFalse($a === $b);
     }

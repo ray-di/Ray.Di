@@ -1,5 +1,5 @@
 <?php
-namespace Aura\Di;
+namespace Ray\Di;
 
 class ManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,14 +24,14 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testNewAndGetContainer()
     {
-        $this->manager->params['Aura\Di\MockParentClass']['foo'] = 'dib';
+        $this->manager->params['Ray\Di\MockParentClass']['foo'] = 'dib';
 
         $mock = $this->manager->newContainer('mock');
-        $mock->params['Aura\Di\MockParentClass']['foo'] = 'zim';
+        $mock->params['Ray\Di\MockParentClass']['foo'] = 'zim';
 
         // make sure two containers give different objects
-        $a = $this->manager->newInstance('Aura\Di\MockParentClass');
-        $b = $mock->newInstance('Aura\Di\MockParentClass');
+        $a = $this->manager->newInstance('Ray\Di\MockParentClass');
+        $b = $mock->newInstance('Ray\Di\MockParentClass');
 
         $this->assertNotSame($a->getFoo(), $b->getFoo());
 
@@ -41,7 +41,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Aura\Di\Exception\ContainerExists
+     * @expectedException Ray\Di\Exception\ContainerExists
      */
     public function testNewContainerExists()
     {
@@ -50,7 +50,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Aura\Di\Exception\ContainerNotFound
+     * @expectedException Ray\Di\Exception\ContainerNotFound
      */
     public function testGetContainerNotFound()
     {
@@ -72,7 +72,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     {
         $mock = $this->manager->newContainer('mock');
         $mock->set('parent', function() use ($mock) {
-            return $mock->newInstance('Aura\Di\MockParentClass');
+            return $mock->newInstance('Ray\Di\MockParentClass');
         });
 
         $clone = $this->manager->cloneContainer('mock');
@@ -85,13 +85,13 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     {
         $mock = $this->manager->newContainer('mock');
         $mock->set('parent', function() use ($mock) {
-            return $mock->newInstance('Aura\Di\MockParentClass');
+            return $mock->newInstance('Ray\Di\MockParentClass');
         });
 
         $lazy = $this->manager->lazyCloneContainer('mock');
-        $this->assertInstanceOf('Aura\Di\Lazy', $lazy);
+        $this->assertInstanceOf('Ray\Di\Lazy', $lazy);
         $mock = $lazy();
-        $this->assertInstanceOf('Aura\Di\Container', $mock);
+        $this->assertInstanceOf('Ray\Di\Container', $mock);
     }
 
     public function testSubContainer()

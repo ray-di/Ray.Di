@@ -1,9 +1,9 @@
 <?php
 
-namespace Aura\Di\Modules;
+namespace Ray\Di\Modules;
 
-use Aura\Di\ProviderInterface,
-    Aura\Di\Mock\Reader;
+use Ray\Di\ProviderInterface,
+    Ray\Di\Mock\Reader;
 
 class ReaderProvider implements ProviderInterface
 {

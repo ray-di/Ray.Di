@@ -1,13 +1,13 @@
 <?php
 
-namespace Aura\Di\Modules;
+namespace Ray\Di\Modules;
 
-use Aura\Di\AbstractModule;
+use Ray\Di\AbstractModule;
 
 class BasicModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind('Aura\Di\Mock\DbInterface')->to('Aura\Di\Mock\UserDb');
+        $this->bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb');
     }
 }
