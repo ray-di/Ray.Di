@@ -55,19 +55,19 @@ We want to build a RealBillingService using PaypalCreditCardProcessor and Databa
 
 	public class BillingModule extends AbstractModule {
 
-	    protected void configure() {
+	    protected function configure() {
 
 	        /*
 	         * This tells this package that whenever it sees a dependency on a TransactionLog,
 	         * it should satisfy the dependency using a DatabaseTransactionLog.
 	         */
-	        $this->bind('TransactionLog').to('DatabaseTransactionLog');
+	        $this->bind('TransactionLog')->to('DatabaseTransactionLog');
 
 	        /*
 	         * Similarly, this binding tells this package that when CreditCardProcessor is used in
 	         * a dependency, that should be satisfied with a PaypalCreditCardProcessor.
 	         */
-	        $this->bind('CreditCardProcessor').to('PaypalCreditCardProcessor');
+	        $this->bind('CreditCardProcessor')->to('PaypalCreditCardProcessor');
 	    }
 	}
 The modules are the building blocks of an injector, which is this package's object-graph builder. First we create the injector, and then we can use that to build the RealBillingService: 	
