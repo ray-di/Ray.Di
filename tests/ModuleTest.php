@@ -100,4 +100,12 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue(is_string((string)$this->module));
     }
-}
+    
+    public function testregisterInterceptAnnotation()
+    {
+        $module = new Modules\AopModule;
+        $interceptorClass = 'Ray\Di\SalesTax';
+        $expected = array(new $interceptorClass);
+        $this->assertSame($interceptorClass, get_class($module->annotations['SalesTax'][0]));
+    }
+    }

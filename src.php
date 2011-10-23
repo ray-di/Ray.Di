@@ -27,3 +27,5 @@ require_once __DIR__ . '/src/Exception/MultipleAnnotationNotAllowed.php';
 require_once __DIR__ . '/src/Exception/ReadOnly.php';
 require_once __DIR__ . '/src/Exception/InvalidBinding.php';
 require_once __DIR__ . '/src/Exception/InvalidNamed.php';
+require_once __DIR__ . '/src/Exception/InvalidBinding.php';
+require_once __DIR__ . '/src/Exception/UnregisteredAnnotation.php';

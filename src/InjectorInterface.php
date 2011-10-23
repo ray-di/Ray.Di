@@ -23,7 +23,7 @@ interface InjectorInterface
      * @param ContainerInterface $container
      * @param AbstractModule $module
      */
-    public function __construct(ContainerInterface $container, BinderInterface $bind);
+    public function __construct(ContainerInterface $container, AbstractModule $module = null);
 
     /**
      * Creates and returns a new instance of a class using 'module,
@@ -38,5 +38,5 @@ interface InjectorInterface
      * @return object
      *
      */
-    public function getInstance($class, AbstractModule $module = null, array $params = null);
+    public function getInstance($class, array $params = null);
 }

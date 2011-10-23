@@ -210,7 +210,92 @@ The PreDestroy annotation is used on methods as a callback notification to signa
  * Binding for the Logger
  * Custom scope annotations
  * Chained linked bindings
- * AOP
+
+# Aspect Oriented Programming #
+
+To compliment dependency injection, Ray.Di with Ray.Aop supports method interception. This feature enables you to write code that is executed each time a matching method is invoked. It's suited for cross cutting concerns ("aspects"), such as transactions, security and logging. Because interceptors divide a problem into aspects rather than objects, their use is called Aspect Oriented Programming (AOP).
+
+
+## Injecting Interceptors
+
+To mark select methods as weekdays-only, we define an annotation and apply. @Aspect in class, @NotOnWeekends in method.
+
+	/**
+	 * @Aspect
+	 */
+	class RealBillingService
+	{
+	    /**
+	     * @NotOnWeekends
+	     */
+	    chargeOrder(PizzaOrder $order, CreditCard $creditCard)
+	    {
+		
+
+Next, we define the interceptor by implementing the Ray\Aop\MethodInterceptor interface. When we need to call through to the underlying method, we do so by calling $invocation->proceed(): 
+
+	use Ray\Aop\MethodInterceptor,
+	    Ray\Aop\MethodInvocation;
+
+	class WeekendBlocker implements MethodInterceptor
+	{
+	    public function invoke(MethodInvocation $invocation)
+	    {
+	        $today = getdate();
+	        if ($today['weekday'][0] === 'S') {
+	            throw new \RuntimeException(
+	          		$invocation->getMethod()->getName() . " not allowed on weekends!"
+	            );
+	        }
+	        return $invocation->proceed();
+	    }
+	}
+
+Finally, we configure everything. We can register intercept annotation or use matchers for the classes and methods to be intercepted. 
+
+	class NotOnWeekendsModule extends AbstractModule
+	{
+	    protected function configure()
+	    {
+	        $this->registerInterceptorAnnotation(
+		        'NotOnWeekends',
+		        array(new WeekendBlocker)
+		    );
+		
+	        // or use matcher binding	
+	        //$classMatcher = function($className){ ...};
+	        //$methodMatcher = function($methodName){ ...};
+			//$this->bindInterceptor(
+			//    $classMatcher,
+			//    $methodMatcher,
+			//    array(new WeekendBlocker)
+			//);
+	    }
+	}
+
+Putting it all together, (and waiting until Saturday), we see the method is intercepted and our order is rejected: 
+
+	RuntimeException: chargeOrder not allowed on weekends! in /apps/pizza/WeekendBlocker.php on line 14
+
+	Call Stack:
+	    0.0022     228296   1. {main}() /apps/pizza/main.php:0
+	    0.0054     317424   2. Ray\Aop\Weaver->chargeOrder() /apps/pizza/main.php:14
+	    0.0054     317608   3. Ray\Aop\Weaver->__call() /libs/Ray.Aop/src/Weaver.php:14
+	    0.0055     318384   4. Ray\Aop\ReflectiveMethodInvocation->proceed() /libs/Ray.Aop/src/Weaver.php:68
+	    0.0056     318784   5. Ray\Aop\Sample\WeekendBlocker->invoke() /libs/Ray.Aop/src/ReflectiveMethodInvocation.php:65
+
+### AOP Alliance
+
+The method interceptor API implemented by Ray.Di is a part of a public specification called AOP Alliance (JAVA). 
 
 ##Requiment##
  * PHP 5.3+ 
+
+##Quick Start##
+    $ git clone git@github.com:koriym/Ray.Di.git
+    $ cd Ray.Di
+    $ git submodule update --init
+    // original
+    $ php doc/sample-01-db/original.php
+    // with Ray.DI (+transaction +timer +template interception.)
+    $ php doc/sample-01-db/main.php

@@ -104,7 +104,12 @@ class Annotation implements AnnotationInterface
         }
         if ($key === Definition::INJECT) {
             $this->setSetterInjectDefinition($methodAnnotation, $method);
+            return;
         }
+        if ($key === Definition::NAMED) {
+            return;
+        }
+        $this->definition[Definition::USER][$key] = array($method->name, $value);
     }
 
     /**

@@ -6,6 +6,14 @@
  */
 namespace Ray\Di;
 
+use Ray\Aop\Bind;
+
+class jointPointMatch {
+    public $classMatcher;
+    public $methodMatcher;
+    public $interceptors;
+}
+
 use Ray\Di\Exception\ReadOnly;
 
 /**
@@ -35,6 +43,11 @@ abstract class AbstractModule implements \ArrayAccess
     const SCOPE = 'scope';
 
     const NAME_UNSPECIFIED = '*';
+    
+    public $annotations = array();
+    
+    public $pointcuts = array();
+    
 
     /**
      * @var Definition
@@ -174,7 +187,30 @@ abstract class AbstractModule implements \ArrayAccess
             self::TO => array(self::TO_CLOSURE, $closure)
         );
     }
-
+    
+    protected function registerInterceptAnnotation($annotation, array $interceptors)
+    {
+        $this->annotations[$annotation] = $interceptors;
+    }
+        
+    protected function bindInterceptor(\Closure $classMatcher, \Closure $methodMatcher, array $interceptors)
+    {
+        $this->pointcuts[] = array($classMatcher, $methodMatcher, $interceptors);
+    }
+    
+    public function __invoke($class)
+    {
+        foreach ($this->pointcuts as $pointcut) {
+            list($classMatcher, $methodMatcher, $interceptors) = $pointcut;
+            if ($classMatcher($class) === true) {
+                $bind = new Bind;
+                $bind->bindMatcher($methodMatcher, $interceptors);
+                return $bind;
+            }
+        }
+        return false;
+    }
+    
     /**
      * @param offset
      */
@@ -209,6 +245,6 @@ abstract class AbstractModule implements \ArrayAccess
      */
     public function __toString()
     {
-        return var_export($this->bindings, true);
+        return 'bindings->' . json_encode($this->bindings) . ',annotation->' . json_encode($this->annotations);
     }
 }

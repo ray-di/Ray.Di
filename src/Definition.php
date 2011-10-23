@@ -137,6 +137,20 @@ class Definition extends \ArrayObject
     const PARAM_ANNOTATE = 'annotate';
 
     /**
+     * Aspect annotation
+     * 
+     * @var string
+     */
+    const ASPECT ='Aspect';
+    
+    /**
+     * User defined interceptor annotation
+     *
+     * @var string
+     */
+    const USER = 'user';
+
+    /**
      * Array container
      *
      * @var array
@@ -159,7 +173,8 @@ class Definition extends \ArrayObject
         self::POST_CONSTRUCT => null,
         self::PRE_DESTROY => null,
         self::INJECT => array(),
-        self::IMPLEMENTEDBY => array()
+        self::IMPLEMENTEDBY => array(),
+        self::USER => array()
         );
     }
 

@@ -1,0 +1,3 @@
+[submodule "vendors/Ray.Aop"]
+	path = vendors/Ray.Aop
+	url = git://github.com/koriym/Ray.Aop.git

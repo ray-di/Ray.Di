@@ -6,12 +6,16 @@
  */
 namespace Ray\Di;
 
+use Ray\Di\Exception;
+
+use Ray\Aop\Bind,
+Ray\Aop\Weaver;
 /**
  * Dependency Injector.
  *
  * @package Ray.Di
  */
-class Injector
+class Injector implements InjectorInterface
 {
     /**
      * Config
@@ -54,11 +58,23 @@ class Injector
      * @return object
      *
      */
-    public function __construct(ContainerInterface $container, AbstractModule $module)
+    public function __construct(ContainerInterface $container, AbstractModule $module = null)
     {
         $this->container = $container;
         $this->config = $container->getForge()->getConfig();
         $this->preDestroyObjects = new \SplObjectStorage;
+        $this->module = $module;
+    }
+
+    /**
+     * Set binding module
+     * 
+     * @param AbstractModule $module
+     * 
+     * @return void
+     */
+    public function setModule(AbstractModule $module)
+    {
         $this->module = $module;
     }
 
@@ -72,7 +88,6 @@ class Injector
 
     /**
      * Clone
-     *
      */
     public function __clone()
     {
@@ -83,7 +98,6 @@ class Injector
      * Gets the injected Config object.
      *
      * @return ConfigInterface
-     *
      */
     public function getContainer()
     {
@@ -100,7 +114,6 @@ class Injector
      * parameter value to use.
      *
      * @return object
-     *
      */
     public function getInstance($class, array $params = null)
     {
@@ -133,6 +146,13 @@ class Injector
                     call_user_func_array(array($object, $method), $value);
                 }
             }
+        }
+        $module = $this->module;
+        $bind = $module($class);
+        if ($bind instanceof Bind) {
+            $object = new Weaver($object, $bind);
+        } elseif (isset($definition[Definition::ASPECT])) {
+            $object = $this->getWeave($object, $definition, $this->module);
         }
         return $object;
     }
@@ -226,7 +246,7 @@ class Injector
             $annotate = $param[Definition::PARAM_ANNOTATE];
             $typeHint = $param[Definition::PARAM_TYPEHINT];
             $binding = (isset($module[$typeHint]) && isset($module[$typeHint][$annotate]) && ($module[$typeHint][$annotate] !== array()))
-                ? $module[$typeHint][$annotate] : false;
+            ? $module[$typeHint][$annotate] : false;
             if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
                 // default bindg by @ImplemetedBy or @ProviderBy
                 $binding = $jitBinding($param, $definition, $typeHint, $annotate);
@@ -275,5 +295,43 @@ class Injector
             $params = array();
         }
         return array($params, $setter);
+    }
+
+    /**
+     * Get weave object
+     * 
+     * @param object         $object
+     * @param array          $definition
+     * @param AbstractModule $module
+     * 
+     * @return \Ray\Aop\Weaveer
+     * @throws Exception\UnregisteredAnnotation
+     */
+    private function getWeave($object, array $definition, AbstractModule $module)
+    {
+        // bind be method
+        $bind = new Bind;
+        foreach ($definition[Definition::USER] as $annotation => $config) {
+            // @SalesTax(5) .. 5 is gone.
+            $method = $config[0]; // 'SalesTax'
+            if (!isset($module->annotations[$annotation])) {
+                throw new Exception\UnregisteredAnnotation($annotation);
+            }
+            $interceptors = $module->annotations[$annotation]; //
+            $bind->bindInterceptors($method, $interceptors);
+        }
+        $weave = new Weaver($object, $bind);
+        return $weave;
+    }
+    
+    /**
+     * to string
+     * 
+     * @return string
+     */
+    public function __toString()
+    {
+        $result = (string)($this->module);
+        return $result;
     }
 }

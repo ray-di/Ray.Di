@@ -1,7 +1,7 @@
 <?php
 // bootstrap for test
 require_once dirname(__DIR__) . '/src.php';
-
+require_once  __DIR__ . '/v.php';
 // Definition class with annotation
 require_once __DIR__ . '/Definition/Basic.php';
 require_once __DIR__ . '/Definition/Named.php';
@@ -31,6 +31,9 @@ require_once __DIR__ . '/Modules/PrototypeModule.php';
 require_once __DIR__ . '/Modules/EmptyModule.php';
 require_once __DIR__ . '/Modules/ClosureModule.php';
 require_once __DIR__ . '/Modules/MultiModule.php';
+require_once __DIR__ . '/Modules/AopModule.php';
+require_once __DIR__ . '/Modules/AopMatcherModule.php';
+require_once __DIR__ . '/Modules/AopMisMatchModule.php';
 // Mock class without annotation
 require_once __DIR__ . '/MockParentClass.php';
 require_once __DIR__ . '/MockChildClass.php';
@@ -46,3 +49,8 @@ require_once __DIR__ . '/Mock/LogInterface.php';
 require_once __DIR__ . '/Mock/Log.php';
 require_once __DIR__ . '/Mock/ReaderInterface.php';
 require_once __DIR__ . '/Mock/Reader.php';
+// Ray.Aop
+require_once dirname(__DIR__) . '/vendors/Ray.Aop/src.php';
+require_once __DIR__ . '/Aop/BillingService.php';
+require_once __DIR__ . '/Aop/RealBillingService.php';
+require_once __DIR__ . '/Aop/SalesTax.php';
