@@ -6,7 +6,8 @@
  */
 namespace Ray\Di;
 
-use Ray\Aop\Bind;
+use Ray\Di\Exception,
+    Ray\Aop\Bind;
 
 class jointPointMatch {
     public $classMatcher;
@@ -43,11 +44,11 @@ abstract class AbstractModule implements \ArrayAccess
     const SCOPE = 'scope';
 
     const NAME_UNSPECIFIED = '*';
-    
+
     public $annotations = array();
-    
+
     public $pointcuts = array();
-    
+
 
     /**
      * @var Definition
@@ -142,6 +143,9 @@ abstract class AbstractModule implements \ArrayAccess
      */
     protected function to($class)
     {
+        if (class_exists($class) === false) {
+            throw new Exception\InvalidToBinding($class);
+        }
         $this->bindings[$this->currentBinding][$this->currentName] = array(
             self::TO => array(self::TO_CLASS, $class)
         );
@@ -157,6 +161,10 @@ abstract class AbstractModule implements \ArrayAccess
      */
     protected function toProvider($provider)
     {
+        $hasProviderInterface = class_exists($provider) && in_array('Ray\Di\ProviderInterface', class_implements($provider));
+        if ($hasProviderInterface === false) {
+            throw new Exception\InvalidProviderBinding($provider);
+        }
         $this->bindings[$this->currentBinding][$this->currentName] = array(
             self::TO => array(self::TO_PROVIDER, $provider)
         );
@@ -187,17 +195,17 @@ abstract class AbstractModule implements \ArrayAccess
             self::TO => array(self::TO_CLOSURE, $closure)
         );
     }
-    
+
     protected function registerInterceptAnnotation($annotation, array $interceptors)
     {
         $this->annotations[$annotation] = $interceptors;
     }
-        
+
     protected function bindInterceptor(\Closure $classMatcher, \Closure $methodMatcher, array $interceptors)
     {
         $this->pointcuts[] = array($classMatcher, $methodMatcher, $interceptors);
     }
-    
+
     public function __invoke($class)
     {
         foreach ($this->pointcuts as $pointcut) {
@@ -210,7 +218,7 @@ abstract class AbstractModule implements \ArrayAccess
         }
         return false;
     }
-    
+
     /**
      * @param offset
      */
