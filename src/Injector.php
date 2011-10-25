@@ -9,7 +9,7 @@ namespace Ray\Di;
 use Ray\Di\Exception;
 
 use Ray\Aop\Bind,
-Ray\Aop\Weaver;
+    Ray\Aop\Weaver;
 /**
  * Dependency Injector.
  *
@@ -63,14 +63,17 @@ class Injector implements InjectorInterface
         $this->container = $container;
         $this->config = $container->getForge()->getConfig();
         $this->preDestroyObjects = new \SplObjectStorage;
+        if ($module == null) {
+            $module = new EmptyModule;
+        }
         $this->module = $module;
     }
 
     /**
      * Set binding module
-     * 
+     *
      * @param AbstractModule $module
-     * 
+     *
      * @return void
      */
     public function setModule(AbstractModule $module)
@@ -123,6 +126,13 @@ class Injector implements InjectorInterface
             list($config, $setter) = $this->bindModule($setter, $definition, $this->module);
         }
         $params = is_null($params) ? $config : array_merge($config, (array) $params);
+
+            // lazy-load params as needed
+        foreach ($params as $key => $val) {
+            if ($params[$key] instanceof Lazy) {
+                $params[$key] = $params[$key]();
+            }
+        }
 
         // create the new instance
         $object = call_user_func_array(
@@ -299,11 +309,11 @@ class Injector implements InjectorInterface
 
     /**
      * Get weave object
-     * 
+     *
      * @param object         $object
      * @param array          $definition
      * @param AbstractModule $module
-     * 
+     *
      * @return \Ray\Aop\Weaveer
      * @throws Exception\UnregisteredAnnotation
      */
@@ -323,10 +333,10 @@ class Injector implements InjectorInterface
         $weave = new Weaver($object, $bind);
         return $weave;
     }
-    
+
     /**
      * to string
-     * 
+     *
      * @return string
      */
     public function __toString()
