@@ -4,7 +4,6 @@ namespace Ray\Di;
 /**
  * Test class for Inject.
  */
-use Ray\Di\Modules\EmptyModule;
 
 class InjectTest extends \PHPUnit_Framework_TestCase
 {
@@ -163,4 +162,5 @@ class InjectTest extends \PHPUnit_Framework_TestCase
         $b = $instance->db->rnd;
         $this->assertFalse($a === $b);
     }
+
 }

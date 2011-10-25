@@ -16,6 +16,8 @@ require_once __DIR__ . '/Definition/MockDefinitionClass.php';
 require_once __DIR__ . '/Definition/MockDefinitionChildClass.php';
 require_once __DIR__ . '/Definition/MockDefinitionChildOverrideClass.php';
 require_once __DIR__ . '/Definition/MockDefinitionMultiplePostConstructClass.php';
+require_once __DIR__ . '/Definition/ClassHint.php';
+require_once __DIR__ . '/Definition/AbstractBasic.php';
 // Modules
 require_once __DIR__ . '/Modules/AnnotateModule.php';
 require_once __DIR__ . '/Modules/InvalidAnnotateModule.php';
@@ -28,12 +30,13 @@ require_once __DIR__ . '/Modules/InstanceModule.php';
 require_once __DIR__ . '/Modules/ReaderProvider.php';
 require_once __DIR__ . '/Modules/SingletonModule.php';
 require_once __DIR__ . '/Modules/PrototypeModule.php';
-require_once __DIR__ . '/Modules/EmptyModule.php';
 require_once __DIR__ . '/Modules/ClosureModule.php';
 require_once __DIR__ . '/Modules/MultiModule.php';
 require_once __DIR__ . '/Modules/AopModule.php';
 require_once __DIR__ . '/Modules/AopMatcherModule.php';
 require_once __DIR__ . '/Modules/AopMisMatchModule.php';
+require_once __DIR__ . '/Modules/InvalidProviderModule.php';
+require_once __DIR__ . '/Modules/InvalidToModule.php';
 // Mock class without annotation
 require_once __DIR__ . '/MockParentClass.php';
 require_once __DIR__ . '/MockChildClass.php';
@@ -49,6 +52,8 @@ require_once __DIR__ . '/Mock/LogInterface.php';
 require_once __DIR__ . '/Mock/Log.php';
 require_once __DIR__ . '/Mock/ReaderInterface.php';
 require_once __DIR__ . '/Mock/Reader.php';
+require_once __DIR__ . '/Mock/Construct.php';
+require_once __DIR__ . '/Mock/AbstractDb.php';
 // Ray.Aop
 require_once dirname(__DIR__) . '/vendors/Ray.Aop/src.php';
 require_once __DIR__ . '/Aop/BillingService.php';

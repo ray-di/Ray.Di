@@ -75,9 +75,6 @@ function v($values = null)
         }
     }
     $label = "$varName in {$file} on line {$line}$method";
-    if (strlen(serialize($values)) > 1000000) {
-        $ouputMode = 'dump';
-    }
     $label = (is_object($values)) ? ucwords(get_class($values)) . " $label" : $label;
     // if CLI
     if (PHP_SAPI === 'cli') {

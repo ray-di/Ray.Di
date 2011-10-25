@@ -170,13 +170,23 @@ class Annotation implements AnnotationInterface
             $hintDef = $this->getAnnotationByDoc($this->config->getReflect($typehint)->getDocComment());
             $definition[$typehint] = $hintDef;
         }
+        // @ImplementBy as default
         if (isset($hintDef[Definition::IMPLEMENTEDBY])) {
             $result = array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $hintDef[Definition::IMPLEMENTEDBY]);
             return $result;
         }
+        // @PROVIDEDBY as default
         if (isset($hintDef[Definition::PROVIDEDBY])) {
             $result = array(Definition::PARAM_TYPEHINT_METHOD_PROVIDEDBY, $hintDef[Definition::PROVIDEDBY]);
             return $result;
+        }
+        // this typehint is class, not a interface.
+        if (class_exists($typehint)) {
+            $ref = new \ReflectionClass($typehint);
+            if ($ref->isAbstract() === false) {
+                $result = array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $typehint);
+                return $result;
+            }
         }
         return array();
     }

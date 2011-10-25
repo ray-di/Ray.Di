@@ -4,7 +4,6 @@ namespace Ray\Di;
 /**
  * Test class for Inject.
  */
-use Ray\Di\Modules\EmptyModule;
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,7 +22,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->container = new Container(new Forge(new Config(new Annotation)));
-        $this->injector = new Injector($this->container, new EmptyModule());
+        $this->injector = new Injector($this->container, new EmptyModule);
     }
 
     /**
@@ -181,7 +180,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $expected = 105;
         $this->assertSame($expected, (int)$amount);
     }
-    
+
     public function testBindInterceptors()
     {
         $this->injector->setModule(new Modules\AopMatcherModule);
@@ -191,7 +190,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $expected = 105;
         $this->assertSame($expected, (int)$amount);
     }
-    
+
     /**
      * @expectedException Ray\Di\Exception\UnregisteredAnnotation
      */
@@ -200,10 +199,42 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->setModule(new Modules\AopMisMatcher);
         $instance = $this->injector->getInstance('Ray\Di\RealBillingService');
     }
-    
+
     public function testToString()
     {
         $this->injector->setModule(new Modules\AnnotateModule);
         $this->assertTrue(is_string((string)$this->injector));
     }
+
+    public function testClassHint()
+    {
+        $this->assertTrue(is_string((string)$this->injector));
+        $instance = $this->injector->getInstance('Ray\Di\Definition\ClassHint');
+        $this->assertInstanceOf('\Ray\Di\Mock\Db', $instance->db);
+    }
+
+    public function testEmptyModule()
+    {
+        $injector = new Injector(new Container(new Forge(new Config(new Annotation))));
+        $ref = new \ReflectionProperty($injector, 'module');
+        $ref->setAccessible(true);
+        $module = $ref->getValue($injector);
+        $this->assertInstanceOf('Ray\Di\EmptyModule', $module);
+    }
+
+    public function testLazyConstructParameter()
+    {
+        $lazyNew = $this->injector->getContainer()->lazyNew('Ray\Di\Mock\Db');
+        $instance = $this->injector->getInstance('Ray\Di\Mock\Construct', array('db' => $lazyNew));
+        $this->assertInstanceOf('Ray\Di\Mock\Db', $instance->db);
+    }
+
+    /**
+     * @expectedException Ray\Di\Exception\InvalidBinding
+     */
+    public function testAbstractClassInvalidBinding()
+    {
+        $instance = $this->injector->getInstance('Ray\Di\Definition\AbstractBasic');
+    }
+
 }

@@ -48,13 +48,6 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $actual);
     }
 
-//     public function testConfigureIn()
-//     {
-//         $expected = Scope::SINGLETON;
-//         $actual = $this->module['Ray\Di\DbInterface'][Definition::NAME_UNSPECIFIED][AbstractModule::IN];
-//         $this->assertSame($expected, $actual);
-//     }
-
     public function testConfigureToProvider()
     {
         $module = new Modules\ProviderModule;
@@ -100,7 +93,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue(is_string((string)$this->module));
     }
-    
+
     public function testregisterInterceptAnnotation()
     {
         $module = new Modules\AopModule;
@@ -108,4 +101,21 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $expected = array(new $interceptorClass);
         $this->assertSame($interceptorClass, get_class($module->annotations['SalesTax'][0]));
     }
+
+    /**
+     * @expectedException Ray\Di\Exception\InvalidToBinding
+     */
+    public function testToInvalid()
+    {
+        new Modules\InvalidToModule;
     }
+
+    /**
+     * @expectedException Ray\Di\Exception\InvalidProviderBinding
+     */
+    public function testToProviderInvalid()
+    {
+        new Modules\InvalidProviderModule;
+    }
+
+}
