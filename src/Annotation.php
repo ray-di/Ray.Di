@@ -10,6 +10,7 @@ namespace Ray\Di;
  * Annotation scanner
  *
  * @package Ray.Di
+ * @author  Akihito Koriyama <akihito.koriyama@gmail.com>
  */
 class Annotation implements AnnotationInterface
 {

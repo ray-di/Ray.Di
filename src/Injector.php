@@ -205,12 +205,13 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * Return dependency using modules
-     *
-     * @param object $instance
-     * @param array  $definition
+     * Return dependency using modules.
+     * 
+     * @param array $setter
+     * @param array $definition
      * @param AbstractModule $module
-     *
+     * @throws Exception\InvalidBinding
+     * 
      * @return array <$constructorParams, $setter>
      */
     private function bindModule(array $setter, array $definition = null, AbstractModule $module)

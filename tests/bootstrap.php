@@ -1,7 +1,6 @@
 <?php
 // bootstrap for test
 require_once dirname(__DIR__) . '/src.php';
-require_once  __DIR__ . '/v.php';
 // Definition class with annotation
 require_once __DIR__ . '/Definition/Basic.php';
 require_once __DIR__ . '/Definition/Named.php';

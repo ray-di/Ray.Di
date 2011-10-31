@@ -7,15 +7,8 @@
 namespace Ray\Di;
 
 use Ray\Di\Exception,
-    Ray\Aop\Bind;
-
-class jointPointMatch {
-    public $classMatcher;
-    public $methodMatcher;
-    public $interceptors;
-}
-
-use Ray\Di\Exception\ReadOnly;
+    Ray\Di\Exception\ReadOnly,
+	Ray\Aop\Bind;
 
 /**
  * A module contributes configuration information, typically interface bindings, which will be used to create an Injector.

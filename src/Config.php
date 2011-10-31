@@ -1,9 +1,11 @@
 <?php
 /**
- *
- * This file is part of the Aura Project for PHP.
+ * Ray
+ * 
+ * This file is taken from Aura Project and modified.
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
+ * @see http://auraphp.github.com/
  *
  */
 namespace Ray\Di;
@@ -56,6 +58,14 @@ class Config implements ConfigInterface
      */
     protected $unified = array();
 
+    /**
+     * Method parameters
+     * 
+     * $params[$class][$method] = array($param1varName, $param2varName ...)
+     * 
+     * @var array
+     */
+    protected $methodReflect;
 
     /**
      * Class annotated definition. objcet life cycle, dependency injecttion.
@@ -87,8 +97,8 @@ class Config implements ConfigInterface
         if (is_null($Annotation)) {
             $Annotation = new Annotation;
         }
-        $this->Annotation = $Annotation;
-        $this->Annotation->setConfig($this);
+        $this->annotation = $Annotation;
+        $this->annotation->setConfig($this);
     }
 
     /**
@@ -119,6 +129,7 @@ class Config implements ConfigInterface
         $this->setter['*'] = array();
         $this->definition = new Definition(array());
         $this->definition['*'] = array();
+        $this->methodReflect = new \ArrayObject;
     }
 
     /**
@@ -201,7 +212,7 @@ class Config implements ConfigInterface
             $parent_params = $this->params['*'];
             $parent_setter = $this->setter['*'];
             // class annotated definiton
-            $parent_definition = $this->Annotation->getDefinition($class);
+            $parent_definition = $this->annotation->getDefinition($class);
         }
         // stores the unified config and setter values
         $unified_params = array();
@@ -243,7 +254,7 @@ class Config implements ConfigInterface
         }
 
         // merge the defenitions
-        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->Annotation->getDefinition($class);
+        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition($class);
         if ($definition !== array()) {
             $unified_definition = array_merge($parent_definition, $definition);
         } else {
@@ -257,4 +268,26 @@ class Config implements ConfigInterface
         $this->unified[$class][2] = $unified_definition;
         return $this->unified[$class];
     }
+    
+    /**
+     *
+     * Returns a \ReflectionClass for a named class.
+     *
+     * @param string $class The class to reflect on.
+     *
+     * @return \ReflectionMethod
+     *
+     */
+    public function getMethodReflect($class, $method)
+    {
+        if (is_object($class)) {
+            $class = get_class($class);
+        }
+        if (! isset($this->reflect[$class][$method])) {
+            $methodRef = new \ReflectionMethod($class, $method);
+            $this->methodReflect[$class][$method] = $methodRef;
+        }
+        return $this->methodReflect[$class][$method];
+    }
+    
 }
