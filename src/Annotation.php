@@ -110,7 +110,7 @@ class Annotation implements AnnotationInterface
         if ($key === Definition::NAMED) {
             return;
         }
-        $this->definition[Definition::USER][$key] = array($method->name, $value);
+        $this->definition[Definition::USER][$key][$value] = $method->name;
     }
 
     /**

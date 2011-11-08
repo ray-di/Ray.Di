@@ -206,12 +206,12 @@ class Injector implements InjectorInterface
 
     /**
      * Return dependency using modules.
-     * 
+     *
      * @param array $setter
      * @param array $definition
      * @param AbstractModule $module
      * @throws Exception\InvalidBinding
-     * 
+     *
      * @return array <$constructorParams, $setter>
      */
     private function bindModule(array $setter, array $definition = null, AbstractModule $module)
@@ -324,7 +324,7 @@ class Injector implements InjectorInterface
         $bind = new Bind;
         foreach ($definition[Definition::USER] as $annotation => $config) {
             // @SalesTax(5) .. 5 is gone.
-            $method = $config[0]; // 'SalesTax'
+            $method = $config[""]; // 'SalesTax'
             if (!isset($module->annotations[$annotation])) {
                 throw new Exception\UnregisteredAnnotation($annotation);
             }
