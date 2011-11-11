@@ -14,6 +14,8 @@ use Ray\Aop\Bind,
  * Dependency Injector.
  *
  * @package Ray.Di
+ *
+ * @Scope("singleton")
  */
 class Injector implements InjectorInterface
 {
@@ -254,29 +256,33 @@ class Injector implements InjectorInterface
         };
 
         $bindOneParameter = function($param) use ($jitBinding, $definition, $module, $getInstance, $config) {
-            $annotate = $param[Definition::PARAM_ANNOTATE];
-            $typeHint = $param[Definition::PARAM_TYPEHINT];
-            $binding = (isset($module[$typeHint]) && isset($module[$typeHint][$annotate]) && ($module[$typeHint][$annotate] !== array()))
-            ? $module[$typeHint][$annotate] : false;
-            if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
-                // default bindg by @ImplemetedBy or @ProviderBy
-                $binding = $jitBinding($param, $definition, $typeHint, $annotate);
+            try {
+                $annotate = $param[Definition::PARAM_ANNOTATE];
+                $typeHint = $param[Definition::PARAM_TYPEHINT];
+                $binding = (isset($module[$typeHint]) && isset($module[$typeHint][$annotate]) && ($module[$typeHint][$annotate] !== array()))
+                ? $module[$typeHint][$annotate] : false;
+                if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
+                    // default bindg by @ImplemetedBy or @ProviderBy
+                    $binding = $jitBinding($param, $definition, $typeHint, $annotate);
+                }
+                $bindingToType = $binding[AbstractModule::TO][0];
+                $target = $binding[AbstractModule::TO][1];
+                if ($bindingToType === AbstractModule::TO_INSTANCE) {
+                    return $target;
+                } elseif ($bindingToType === AbstractModule::TO_CLOSURE) {
+                    return $target();
+                }
+                if (isset($binding[AbstractModule::IN])) {
+                    $in = $binding[AbstractModule::IN];
+                } else {
+                    list($param, $setter, $definition) = $config->fetch($target);
+                    $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
+                }
+                $instance = $getInstance($in, $bindingToType, $target);
+                return $instance;
+            } catch (\Exception $e) {
+                trigger_error((string)$e, E_USER_WARNING);
             }
-            $bindingToType = $binding[AbstractModule::TO][0];
-            $target = $binding[AbstractModule::TO][1];
-            if ($bindingToType === AbstractModule::TO_INSTANCE) {
-                return $target;
-            } elseif ($bindingToType === AbstractModule::TO_CLOSURE) {
-                return $target();
-            }
-            if (isset($binding[AbstractModule::IN])) {
-                $in = $binding[AbstractModule::IN];
-            } else {
-                list($param, $setter, $definition) = $config->fetch($target);
-                $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
-            }
-            $instance = $getInstance($in, $bindingToType, $target);
-            return $instance;
         };
 
         $bindMethod = function ($item) use ($bindOneParameter, $definition, $module) {
