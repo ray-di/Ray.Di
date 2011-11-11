@@ -8,7 +8,7 @@ namespace Ray\Di;
 
 use Ray\Di\Exception,
     Ray\Di\Exception\ReadOnly,
-	Ray\Aop\Bind;
+    Ray\Aop\Bind;
 
 /**
  * A module contributes configuration information, typically interface bindings, which will be used to create an Injector.
@@ -38,15 +38,21 @@ abstract class AbstractModule implements \ArrayAccess
 
     const NAME_UNSPECIFIED = '*';
 
+    /**
+     * @var \ArrayObject
+     */
     public $annotations = array();
 
+    /**
+     * @var \ArrayObject
+     */
     public $pointcuts = array();
-
 
     /**
      * @var Definition
      */
-    protected $bindings;
+    public $bindings;
+    public $container;
 
     /**
      * @var array
@@ -75,7 +81,17 @@ abstract class AbstractModule implements \ArrayAccess
      */
     public function __construct(AbstractModule $module = null)
     {
-        $this->bindings = is_null($module) ? new \ArrayObject : $module;
+        if (is_null($module)) {
+            $this->bindings = new \ArrayObject();
+            $this->annotations = new \ArrayObject();
+            $this->pointcuts = new \ArrayObject();
+            $this->container = new \ArrayObject();
+        } else {
+            $this->bindings = $module->bindings;
+            $this->pointcuts = $module->pointcuts;
+            $this->annotations = $module->annotations;
+            $this->container = $module->container;
+        }
         $this->configure();
     }
 
@@ -139,9 +155,7 @@ abstract class AbstractModule implements \ArrayAccess
         if (class_exists($class) === false) {
             throw new Exception\InvalidToBinding($class);
         }
-        $this->bindings[$this->currentBinding][$this->currentName] = array(
-            self::TO => array(self::TO_CLASS, $class)
-        );
+        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_CLASS, $class));
         return $this;
     }
 
@@ -158,9 +172,7 @@ abstract class AbstractModule implements \ArrayAccess
         if ($hasProviderInterface === false) {
             throw new Exception\InvalidProviderBinding($provider);
         }
-        $this->bindings[$this->currentBinding][$this->currentName] = array(
-            self::TO => array(self::TO_PROVIDER, $provider)
-        );
+        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_PROVIDER, $provider));
     }
 
     /**
@@ -172,9 +184,7 @@ abstract class AbstractModule implements \ArrayAccess
      */
     protected function toInstance($instance)
     {
-        $this->bindings[$this->currentBinding][$this->currentName] = array(
-            self::TO => array(self::TO_INSTANCE, $instance)
-        );
+        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_INSTANCE, $instance));
     }
 
     /**
@@ -184,9 +194,7 @@ abstract class AbstractModule implements \ArrayAccess
      */
     protected function toClosure(\Closure $closure)
     {
-        $this->bindings[$this->currentBinding][$this->currentName] = array(
-            self::TO => array(self::TO_CLOSURE, $closure)
-        );
+        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_CLOSURE, $closure));
     }
 
     protected function registerInterceptAnnotation($annotation, array $interceptors)
@@ -201,10 +209,10 @@ abstract class AbstractModule implements \ArrayAccess
 
     public function __invoke($class)
     {
-        foreach ($this->pointcuts as $pointcut) {
+        foreach($this->pointcuts as $pointcut) {
             list($classMatcher, $methodMatcher, $interceptors) = $pointcut;
             if ($classMatcher($class) === true) {
-                $bind = new Bind;
+                $bind = new Bind();
                 $bind->bindMatcher($methodMatcher, $interceptors);
                 return $bind;
             }
@@ -215,14 +223,16 @@ abstract class AbstractModule implements \ArrayAccess
     /**
      * @param offset
      */
-    public function offsetExists ($offset) {
+    public function offsetExists($offset)
+    {
         return isset($this->bindings[$offset]);
     }
 
     /**
      * @param offset
      */
-    public function offsetGet ($offset) {
+    public function offsetGet($offset)
+    {
         return isset($this->bindings[$offset]) ? $this->bindings[$offset] : null;
     }
 
@@ -230,15 +240,17 @@ abstract class AbstractModule implements \ArrayAccess
      * @param offset
      * @param value
      */
-    public function offsetSet ($offset, $value) {
-        throw new Exception\ReadOnly;
+    public function offsetSet($offset, $value)
+    {
+        throw new Exception\ReadOnly();
     }
 
     /**
      * @param offset
      */
-    public function offsetUnset ($offset) {
-        throw new Exception\ReadOnly;
+    public function offsetUnset($offset)
+    {
+        throw new Exception\ReadOnly();
     }
 
     /**
@@ -246,6 +258,34 @@ abstract class AbstractModule implements \ArrayAccess
      */
     public function __toString()
     {
-        return 'bindings->' . json_encode($this->bindings) . ',annotation->' . json_encode($this->annotations);
+        $output = '';
+        foreach((array)$this->bindings as $bind => $bindTo) {
+            if( !is_array($bindTo) && !$bindTo instanceof Traversable ) {
+                continue;
+            }
+            foreach($bindTo as $annoatte => $to) {
+                $type = $to['to'][0];
+                $output .= ($annoatte !== '*') ? "bind('{$bind}')->annotatedWith('{$annoatte}')" : "bind('{$bind}')";
+                if ($type === 'class') {
+                    $output .= "->to('" . $to['to'][1] . "')\n";
+                }
+                if ($type === 'instance') {
+                    $instance = $to['to'][1];
+                    $type = gettype($instance);
+                    switch ($type) {
+                        case "object":
+                            $instance = '(object)' . get_class($instance);
+                            break;
+                        case "array":
+                            $instance = '(array)' . json_encode(array_keys($instance));
+                            break;
+                        default:
+                            $instance = "($type)$instance";
+                    }
+                    $output .= "->toInstance(" . $instance . ")\n";
+                }
+            }
+        }
+        return $output;
     }
 }
