@@ -11,7 +11,7 @@ namespace Ray\Di;
  *
  * @package Ray.Di
  *
- * @ImplemetedBy("Ray\Di\Injector")
+ * @ImplementedBy("Ray\Di\Injector")
  */
 interface InjectorInterface
 {

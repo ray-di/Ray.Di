@@ -205,4 +205,11 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertContains($expected, $definition['Inject'][Definition::INJECT_SETTER]);
     }
+
+    public function testgetDefinitionDobule()
+    {
+        $definition1 = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $definition2 = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $this->assertSame($definition1, $definition2);
+    }
 }
