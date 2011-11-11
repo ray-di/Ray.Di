@@ -22,6 +22,13 @@ class Annotation implements AnnotationInterface
     protected $definition = array();
 
     /**
+     * Class definition container
+     *
+     * @var array
+     */
+    protected $definisions = array();
+
+    /**
      * Method reflection
      *
      * @var ReflectionMethod
@@ -36,7 +43,7 @@ class Annotation implements AnnotationInterface
     protected $config;
 
     /**
-     *  Set config
+     * Set config
      *
      * @param ConfigInterface $config
      *
@@ -56,9 +63,13 @@ class Annotation implements AnnotationInterface
      */
     public function getDefinition($class)
     {
+        if (isset($this->definisions[$class])) {
+            return $this->definisions[$class];
+        }
         $classRef = $this->config->getReflect($class);
         $this->definition = $this->getAnnotationByDoc($classRef->getDocComment());
         $this->parseMethods($classRef);
+        $this->definisions[$class] = $this->definition;
         return $this->definition;
     }
 
@@ -72,11 +83,11 @@ class Annotation implements AnnotationInterface
     private function parseMethods(\ReflectionClass $ref)
     {
         $methods = $ref->getMethods();
-        foreach ($methods as $method) {
+        foreach($methods as $method) {
             $this->methodReflection[$method->name] = $method;
             $doc = $method->getDocComment();
             $methodAnnotation = $this->getAnnotationByDoc($doc);
-            foreach ($methodAnnotation as $key => $value) {
+            foreach($methodAnnotation as $key => $value) {
                 $this->setAnnotationKey($key, $value, $methodAnnotation, $method);
             }
         }
@@ -93,11 +104,11 @@ class Annotation implements AnnotationInterface
      * @return void
      * @throws Exception\MultipleAnnotationNotAllowed
      */
-    private function setAnnotationKey($key, $value, array $methodAnnotation, \ReflectionMethod $method)
+    private function setAnnotationKey($key, $value, array $methodAnnotation,\ReflectionMethod $method)
     {
         if ($key === Definition::POST_CONSTRUCT || $key == Definition::PRE_DESTROY) {
             if (isset($this->definition[$key])) {
-                throw new Exception\MultipleAnnotationNotAllowed;
+                throw new Exception\MultipleAnnotationNotAllowed();
             } else {
                 $this->definition[$key] = $method->name;
             }
@@ -121,13 +132,14 @@ class Annotation implements AnnotationInterface
      *
      * @return void
      */
-    private function setSetterInjectDefinition(array $methodAnnotation, \ReflectionMethod $method)
+    private function setSetterInjectDefinition(array $methodAnnotation,\ReflectionMethod $method)
     {
+        //         debug_print_backtrace();
         $nameParameter = isset($methodAnnotation[Definition::NAMED]) ? $methodAnnotation[Definition::NAMED] : false;
         $named = ($nameParameter !== false) ? $this->getNamed($nameParameter) : array();
         $parameters = $method->getParameters();
         $paramsInfo = array();
-        foreach ($parameters as $parameter) {
+        foreach($parameters as $parameter) {
             /* @var $parameter ReflectionParameter */
             $class = $parameter->getClass();
             $typehint = $class ? $class->getName() : '';
@@ -140,13 +152,7 @@ class Annotation implements AnnotationInterface
             } else {
                 $name = Definition::NAME_UNSPECIFIED;
             }
-            $paramsInfo[] = array(
-                Definition::PARAM_POS => $pos,
-                Definition::PARAM_TYPEHINT => $typehint,
-                Definition::PARAM_NAME => $parameter->name,
-                Definition::PARAM_ANNOTATE => $name,
-                Definition::PARAM_TYPEHINT_BY => $typehintBy
-            );
+            $paramsInfo[] = array(Definition::PARAM_POS => $pos, Definition::PARAM_TYPEHINT => $typehint, Definition::PARAM_NAME => $parameter->name, Definition::PARAM_ANNOTATE => $name, Definition::PARAM_TYPEHINT_BY => $typehintBy);
         }
         $paramInfo[$method->name] = $paramsInfo;
         $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
@@ -168,7 +174,9 @@ class Annotation implements AnnotationInterface
         if (isset($definition[$typehint])) {
             $hintDef = $definition[$typehint];
         } else {
-            $hintDef = $this->getAnnotationByDoc($this->config->getReflect($typehint)->getDocComment());
+            $ref = $this->config->getReflect($typehint);
+            $doc = $ref->getDocComment();
+            $hintDef = $this->getAnnotationByDoc($doc);
             $definition[$typehint] = $hintDef;
         }
         // @ImplementBy as default
@@ -176,7 +184,7 @@ class Annotation implements AnnotationInterface
             $result = array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $hintDef[Definition::IMPLEMENTEDBY]);
             return $result;
         }
-        // @PROVIDEDBY as default
+        // @ProvidBY as default
         if (isset($hintDef[Definition::PROVIDEDBY])) {
             $result = array(Definition::PARAM_TYPEHINT_METHOD_PROVIDEDBY, $hintDef[Definition::PROVIDEDBY]);
             return $result;
@@ -201,19 +209,19 @@ class Annotation implements AnnotationInterface
      */
     private function getNamed($nameParameter)
     {
+        // signle annotation @Named($annotation)
         if (preg_match("/^[a-zA-Z0-9_]+$/", $nameParameter)) {
             return $nameParameter;
-            // signle annotation @Named($annotation)
         }
         // multi annotation @Named($varName1=$annotate1,$varName2=$annotate2)
         // http://stackoverflow.com/questions/168171/regular-expression-for-parsing-name-value-pairs
         preg_match_all('/([^=,]*)=("[^"]*"|[^,"]*)/', $nameParameter, $matches);
         if ($matches[0] === array()) {
-            throw new Exception\InvalidNamed;
+            throw new Exception\InvalidNamed();
         }
         $result = array();
         $count = count($matches[0]);
-        for ($i = 0; $i < $count; $i++) {
+        for($i = 0; $i < $count; $i++) {
             $result[$matches[1][$i]] = $matches[2][$i];
         }
         return $result;
@@ -231,7 +239,7 @@ class Annotation implements AnnotationInterface
         $keys = $match[1];
         $values = $match[3];
         $i = 0;
-        foreach ($keys as $key) {
+        foreach($keys as $key) {
             $result[$key] = $values[$i];
             $i++;
         }
