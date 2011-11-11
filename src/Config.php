@@ -1,7 +1,7 @@
 <?php
 /**
  * Ray
- * 
+ *
  * This file is taken from Aura Project and modified.
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
@@ -17,7 +17,7 @@ namespace Ray\Di;
  * @package Aura.Di
  *
  */
-class Config implements ConfigInterface
+class Config implements ConfigInterface, \Serializable
 {
     /**
      *
@@ -60,9 +60,9 @@ class Config implements ConfigInterface
 
     /**
      * Method parameters
-     * 
+     *
      * $params[$class][$method] = array($param1varName, $param2varName ...)
-     * 
+     *
      * @var array
      */
     protected $methodReflect;
@@ -91,13 +91,13 @@ class Config implements ConfigInterface
      * Constructor.
      *
      */
-    public function __construct(AnnotationInterface $Annotation = null)
+    public function __construct(AnnotationInterface $annotation = null)
     {
         $this->reset();
-        if (is_null($Annotation)) {
-            $Annotation = new Annotation;
+        if (is_null($annotation)) {
+            $annotation = new Annotation;
         }
-        $this->annotation = $Annotation;
+        $this->annotation = $annotation;
         $this->annotation->setConfig($this);
     }
 
@@ -268,7 +268,7 @@ class Config implements ConfigInterface
         $this->unified[$class][2] = $unified_definition;
         return $this->unified[$class];
     }
-    
+
     /**
      *
      * Returns a \ReflectionClass for a named class.
@@ -289,5 +289,32 @@ class Config implements ConfigInterface
         }
         return $this->methodReflect[$class][$method];
     }
-    
+
+    /**
+     * Serialize
+     */
+    public function serialize() {
+        return serialize(array(
+            $this->params,
+            $this->setter,
+            $this->unified,
+            $this->definition,
+            $this->annotation
+        ));
+    }
+
+    /**
+     * Unerialize
+     */
+    public function unserialize($data) {
+       $data = unserialize($data);
+       list(
+           $this->params,
+           $this->setter,
+           $this->unified,
+           $this->definition,
+           $this->annotation
+       ) = $data;
+       $this->annotation->setConfig($this);
+    }
 }
