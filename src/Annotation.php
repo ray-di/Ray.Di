@@ -83,11 +83,11 @@ class Annotation implements AnnotationInterface
     private function parseMethods(\ReflectionClass $ref)
     {
         $methods = $ref->getMethods();
-        foreach($methods as $method) {
+        foreach ($methods as $method) {
             $this->methodReflection[$method->name] = $method;
             $doc = $method->getDocComment();
             $methodAnnotation = $this->getAnnotationByDoc($doc);
-            foreach($methodAnnotation as $key => $value) {
+            foreach ($methodAnnotation as $key => $value) {
                 $this->setAnnotationKey($key, $value, $methodAnnotation, $method);
             }
         }
@@ -139,7 +139,7 @@ class Annotation implements AnnotationInterface
         $named = ($nameParameter !== false) ? $this->getNamed($nameParameter) : array();
         $parameters = $method->getParameters();
         $paramsInfo = array();
-        foreach($parameters as $parameter) {
+        foreach ($parameters as $parameter) {
             /* @var $parameter ReflectionParameter */
             $class = $parameter->getClass();
             $typehint = $class ? $class->getName() : '';
@@ -152,7 +152,13 @@ class Annotation implements AnnotationInterface
             } else {
                 $name = Definition::NAME_UNSPECIFIED;
             }
-            $paramsInfo[] = array(Definition::PARAM_POS => $pos, Definition::PARAM_TYPEHINT => $typehint, Definition::PARAM_NAME => $parameter->name, Definition::PARAM_ANNOTATE => $name, Definition::PARAM_TYPEHINT_BY => $typehintBy);
+            $paramsInfo[] = array(
+                Definition::PARAM_POS => $pos,
+                Definition::PARAM_TYPEHINT => $typehint,
+                Definition::PARAM_NAME => $parameter->name,
+                Definition::PARAM_ANNOTATE => $name,
+                Definition::PARAM_TYPEHINT_BY => $typehintBy
+            );
         }
         $paramInfo[$method->name] = $paramsInfo;
         $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
@@ -221,7 +227,7 @@ class Annotation implements AnnotationInterface
         }
         $result = array();
         $count = count($matches[0]);
-        for($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $result[$matches[1][$i]] = $matches[2][$i];
         }
         return $result;
@@ -239,7 +245,7 @@ class Annotation implements AnnotationInterface
         $keys = $match[1];
         $values = $match[3];
         $i = 0;
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             $result[$key] = $values[$i];
             $i++;
         }

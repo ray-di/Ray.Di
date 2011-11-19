@@ -254,7 +254,8 @@ class Config implements ConfigInterface, \Serializable
         }
 
         // merge the defenitions
-        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition($class);
+        $definition = isset($this->definition[$class])
+        ? $this->definition[$class] : $this->annotation->getDefinition($class);
         if ($definition !== array()) {
             $unified_definition = array_merge($parent_definition, $definition);
         } else {
@@ -294,27 +295,29 @@ class Config implements ConfigInterface, \Serializable
      * Serialize
      */
     public function serialize() {
-        return serialize(array(
-            $this->params,
-            $this->setter,
-            $this->unified,
-            $this->definition,
-            $this->annotation
-        ));
+        return serialize(
+            array(
+                $this->params,
+                $this->setter,
+                $this->unified,
+                $this->definition,
+                $this->annotation
+            )
+        );
     }
 
     /**
      * Unerialize
      */
     public function unserialize($data) {
-       $data = unserialize($data);
-       list(
-           $this->params,
-           $this->setter,
-           $this->unified,
-           $this->definition,
-           $this->annotation
-       ) = $data;
-       $this->annotation->setConfig($this);
+        $data = unserialize($data);
+        list(
+            $this->params,
+            $this->setter,
+            $this->unified,
+            $this->definition,
+            $this->annotation
+        ) = $data;
+        $this->annotation->setConfig($this);
     }
 }

@@ -216,7 +216,7 @@ class Injector implements InjectorInterface
      *
      * @return array <$constructorParams, $setter>
      */
-    private function bindModule(array $setter, array $definition = null, AbstractModule $module)
+    private function bindModule(array $setter, array $definition, AbstractModule $module)
     {
         // @return array array(AbstractModule::TO => array($toMethod, $toTarget)
         $jitBinding = function($param, $definition, $typeHint, $annotate) use ($module) {
@@ -259,7 +259,8 @@ class Injector implements InjectorInterface
             try {
                 $annotate = $param[Definition::PARAM_ANNOTATE];
                 $typeHint = $param[Definition::PARAM_TYPEHINT];
-                $binding = (isset($module[$typeHint]) && isset($module[$typeHint][$annotate]) && ($module[$typeHint][$annotate] !== array()))
+                $binding = (isset($module[$typeHint])
+                && isset($module[$typeHint][$annotate]) && ($module[$typeHint][$annotate] !== array()))
                 ? $module[$typeHint][$annotate] : false;
                 if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
                     // default bindg by @ImplemetedBy or @ProviderBy
@@ -305,7 +306,7 @@ class Injector implements InjectorInterface
             }
         }
         // constuctor injection ?
-        if (isset($setter['__construct'])){
+        if (isset($setter['__construct'])) {
             $params = $setter['__construct'];
             unset($setter['__construct']);
         } else {

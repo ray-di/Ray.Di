@@ -11,7 +11,8 @@ use Ray\Di\Exception,
     Ray\Aop\Bind;
 
 /**
- * A module contributes configuration information, typically interface bindings, which will be used to create an Injector.
+ * A module contributes configuration information, typically interface bindings,
+ *  which will be used to create an Injector.
  *
  * @package Ray.Di
  * @author  Akihito Koriyama <akihito.koriyama@gmail.com>
@@ -39,19 +40,31 @@ abstract class AbstractModule implements \ArrayAccess
     const NAME_UNSPECIFIED = '*';
 
     /**
+     * Annotation
+     *
      * @var \ArrayObject
      */
     public $annotations = array();
 
     /**
+     * Pointcuts
+     *
      * @var \ArrayObject
      */
     public $pointcuts = array();
 
     /**
+     * Binding definition
+     *
      * @var Definition
      */
     public $bindings;
+
+    /**
+     * Object carry container
+     *
+     * @var \ArrayObject
+     */
     public $container;
 
     /**
@@ -168,11 +181,13 @@ abstract class AbstractModule implements \ArrayAccess
      */
     protected function toProvider($provider)
     {
-        $hasProviderInterface = class_exists($provider) && in_array('Ray\Di\ProviderInterface', class_implements($provider));
+        $hasProviderInterface = class_exists($provider)
+        && in_array('Ray\Di\ProviderInterface', class_implements($provider));
         if ($hasProviderInterface === false) {
             throw new Exception\InvalidProviderBinding($provider);
         }
-        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_PROVIDER, $provider));
+        $this->bindings[$this->currentBinding][$this->currentName]
+        = array(self::TO => array(self::TO_PROVIDER, $provider));
     }
 
     /**
@@ -184,24 +199,45 @@ abstract class AbstractModule implements \ArrayAccess
      */
     protected function toInstance($instance)
     {
-        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_INSTANCE, $instance));
+        $this->bindings[$this->currentBinding][$this->currentName]
+        = array(self::TO => array(self::TO_INSTANCE, $instance));
     }
 
     /**
      * To closure
      *
      * @param Closure $closure
+     *
+     * @return void
      */
     protected function toClosure(\Closure $closure)
     {
-        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_CLOSURE, $closure));
+        $this->bindings[$this->currentBinding][$this->currentName]
+        = array(self::TO => array(self::TO_CLOSURE, $closure));
     }
 
+    /**
+     * Register intercepter annotation
+     *
+     * @param string $annotation   annotation
+     * @param array  $interceptors Interceptor[]
+     *
+     * @return void
+     */
     protected function registerInterceptAnnotation($annotation, array $interceptors)
     {
         $this->annotations[$annotation] = $interceptors;
     }
 
+    /**
+     * Bind interceptor
+     *
+     * @param \Closure $classMatcher
+     * @param \Closure $methodMatcher
+     * @param array $interceptors
+     *
+     * @return void
+     */
     protected function bindInterceptor(\Closure $classMatcher, \Closure $methodMatcher, array $interceptors)
     {
         $this->pointcuts[] = array($classMatcher, $methodMatcher, $interceptors);
@@ -209,7 +245,7 @@ abstract class AbstractModule implements \ArrayAccess
 
     public function __invoke($class)
     {
-        foreach($this->pointcuts as $pointcut) {
+        foreach ($this->pointcuts as $pointcut) {
             list($classMatcher, $methodMatcher, $interceptors) = $pointcut;
             if ($classMatcher($class) === true) {
                 $bind = new Bind();
@@ -254,16 +290,15 @@ abstract class AbstractModule implements \ArrayAccess
     }
 
     /**
+     * To string
+     *
      * @return string
      */
     public function __toString()
     {
         $output = '';
-        foreach((array)$this->bindings as $bind => $bindTo) {
-            if( !is_array($bindTo) && !$bindTo instanceof Traversable ) {
-                continue;
-            }
-            foreach($bindTo as $annoatte => $to) {
+        foreach ((array)$this->bindings as $bind => $bindTo) {
+            foreach ($bindTo as $annoatte => $to) {
                 $type = $to['to'][0];
                 $output .= ($annoatte !== '*') ? "bind('{$bind}')->annotatedWith('{$annoatte}')" : "bind('{$bind}')";
                 if ($type === 'class') {
