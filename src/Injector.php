@@ -195,8 +195,8 @@ class Injector implements InjectorInterface
      */
     private function setLifeCycle($instance, array $definition = null)
     {
-        if (isset($definition[Definition::POST_CONSTRUCT])
-        && method_exists($instance, $definition[Definition::POST_CONSTRUCT])) {
+        $isSet = isset($definition[Definition::POST_CONSTRUCT]);
+        if ($isSet && method_exists($instance, $definition[Definition::POST_CONSTRUCT])) {
             //signal
             call_user_func(array($instance, $definition[Definition::POST_CONSTRUCT]));
         }
@@ -294,8 +294,7 @@ class Injector implements InjectorInterface
 
         // main
         $setterDefinitions = (isset($definition[Definition::INJECT][Definition::INJECT_SETTER]))
-        ? $definition[Definition::INJECT][Definition::INJECT_SETTER]
-        : false ;
+        ? $definition[Definition::INJECT][Definition::INJECT_SETTER] : false;
         if ($setterDefinitions !== false) {
             $injected = array_map($bindMethod, $setterDefinitions);
             $setter = array();
@@ -324,18 +323,18 @@ class Injector implements InjectorInterface
      *
      * @return \Ray\Aop\Weaveer
      * @throws Exception\UnregisteredAnnotation
+     * @internal @SalesTax(5) .. 5 is gone. $method = 'SalesTax'
      */
     private function getWeave($object, array $definition, AbstractModule $module)
     {
         // bind be method
         $bind = new Bind;
         foreach ($definition[Definition::USER] as $annotation => $config) {
-            // @SalesTax(5) .. 5 is gone.
-            $method = $config[""]; // 'SalesTax'
+            $method = $config[""]; 
             if (!isset($module->annotations[$annotation])) {
                 throw new Exception\UnregisteredAnnotation($annotation);
             }
-            $interceptors = $module->annotations[$annotation]; //
+            $interceptors = $module->annotations[$annotation]; //aa
             $bind->bindInterceptors($method, $interceptors);
         }
         $weave = new Weaver($object, $bind);

@@ -162,6 +162,7 @@ abstract class AbstractModule implements \ArrayAccess
      * @param string $class
      *
      * @return AbstractModule
+     * @throws Exception\InvalidToBinding
      */
     protected function to($class)
     {
@@ -178,6 +179,7 @@ abstract class AbstractModule implements \ArrayAccess
      * @param string $provider provider class
      *
      * @return AbstractModule
+     * @throws Exception\InvalidProviderBinding
      */
     protected function toProvider($provider)
     {
@@ -187,7 +189,7 @@ abstract class AbstractModule implements \ArrayAccess
             throw new Exception\InvalidProviderBinding($provider);
         }
         $this->bindings[$this->currentBinding][$this->currentName]
-        = array(self::TO => array(self::TO_PROVIDER, $provider));
+            = array(self::TO => array(self::TO_PROVIDER, $provider));
     }
 
     /**
@@ -200,7 +202,7 @@ abstract class AbstractModule implements \ArrayAccess
     protected function toInstance($instance)
     {
         $this->bindings[$this->currentBinding][$this->currentName]
-        = array(self::TO => array(self::TO_INSTANCE, $instance));
+            = array(self::TO => array(self::TO_INSTANCE, $instance));
     }
 
     /**
@@ -213,7 +215,7 @@ abstract class AbstractModule implements \ArrayAccess
     protected function toClosure(\Closure $closure)
     {
         $this->bindings[$this->currentBinding][$this->currentName]
-        = array(self::TO => array(self::TO_CLOSURE, $closure));
+            = array(self::TO => array(self::TO_CLOSURE, $closure));
     }
 
     /**
@@ -275,18 +277,20 @@ abstract class AbstractModule implements \ArrayAccess
     /**
      * @param offset
      * @param value
+     * @throws Exception\ReadOnly
      */
     public function offsetSet($offset, $value)
     {
-        throw new Exception\ReadOnly();
+        throw new Exception\ReadOnly;
     }
 
     /**
      * @param offset
+     * @throws Exception\ReadOnly
      */
     public function offsetUnset($offset)
     {
-        throw new Exception\ReadOnly();
+        throw new Exception\ReadOnly;
     }
 
     /**

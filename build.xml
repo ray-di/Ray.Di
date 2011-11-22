@@ -48,7 +48,7 @@
   <exec executable="phpmd">
    <arg line="${source}
               xml
-              codesize,design,naming,unusedcode
+              /usr/local/phpmd/phpmd.xml
               --reportfile ${basedir}/build/logs/pmd.xml" />
   </exec>
  </target>

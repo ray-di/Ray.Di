@@ -102,7 +102,8 @@ class Container implements ContainerInterface
      * @param string $key The property to retrieve ('params' or 'setter').
      *
      * @return mixed
-     *
+     * @throws Exception\ContainerLocked
+     * @throws \UnexpectedValueException
      */
     public function __get($key)
     {
@@ -195,8 +196,7 @@ class Container implements ContainerInterface
      * Lazy.
      *
      * @throws Exception\ContainerLocked when the Container is locked.
-     *
-     * @throws Exception\Service
+     * @throws Exception\ServiceInvalid
      */
     public function set($key, $val)
     {
@@ -296,7 +296,7 @@ class Container implements ContainerInterface
     {
         $self = $this;
         return new Lazy(function() use ($self, $key) {
-           return $self->get($key);
+            return $self->get($key);
         });
     }
 

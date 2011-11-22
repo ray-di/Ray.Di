@@ -53,7 +53,7 @@ class Manager extends Container
      * @param string $name The sub-container name.
      * 
      * @return Container The new sub-container.
-     * 
+     * @throws Exception\ContainerExists
      */
     public function newContainer($name)
     {
@@ -74,7 +74,7 @@ class Manager extends Container
      * @param string $name The sub-container name.
      * 
      * @return Container The sub-container.
-     * 
+     * @throws Exception\ContainerNotFound
      */
     public function getContainer($name)
     {

@@ -180,6 +180,7 @@ class Definition extends \ArrayObject
     /**
      * (non-PHPdoc)
      * @see ArrayObject::offsetSet()
+     * @throws \InvalidArgumentException
      */
     public function offsetSet($offset, $value) {
         if (is_null($offset) || !is_array($value)) {

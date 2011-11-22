@@ -212,6 +212,7 @@ class Annotation implements AnnotationInterface
      * @param string $nameParameter "value" or "key1=value1,ke2=value2"
      *
      * @return array <arary($paramName => $named)>
+     * @throws Exception\InvalidNamed
      */
     private function getNamed($nameParameter)
     {
@@ -223,7 +224,7 @@ class Annotation implements AnnotationInterface
         // http://stackoverflow.com/questions/168171/regular-expression-for-parsing-name-value-pairs
         preg_match_all('/([^=,]*)=("[^"]*"|[^,"]*)/', $nameParameter, $matches);
         if ($matches[0] === array()) {
-            throw new Exception\InvalidNamed();
+            throw new Exception\InvalidNamed;
         }
         $result = array();
         $count = count($matches[0]);
