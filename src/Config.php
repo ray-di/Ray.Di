@@ -284,7 +284,9 @@ class Config implements ConfigInterface, \Serializable
         if (is_object($class)) {
             $class = get_class($class);
         }
-        if (! isset($this->reflect[$class][$method])) {
+        if (!isset($this->reflect[$class])
+		|| !is_array($this->reflect[$class])
+		|| ! isset($this->reflect[$class][$method])) {
             $methodRef = new \ReflectionMethod($class, $method);
             $this->methodReflect[$class][$method] = $methodRef;
         }
