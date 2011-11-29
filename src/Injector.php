@@ -2,6 +2,7 @@
 /**
  * Ray
  *
+ * @package Ray.Di
  * @license  http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
@@ -330,7 +331,7 @@ class Injector implements InjectorInterface
         // bind be method
         $bind = new Bind;
         foreach ($definition[Definition::USER] as $annotation => $config) {
-            $method = $config[""]; 
+            $method = $config[""];
             if (!isset($module->annotations[$annotation])) {
                 throw new Exception\UnregisteredAnnotation($annotation);
             }
@@ -342,7 +343,7 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * to string
+     * Return module information.
      *
      * @return string
      */

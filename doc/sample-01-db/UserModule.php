@@ -8,6 +8,10 @@ use Ray\Di\AbstractModule,
 
 class UserModule extends AbstractModule
 {
+    /**
+     * (non-PHPdoc)
+     * @see Ray\Di.AbstractModule::configure()
+     */
     protected function configure()
     {
         $pdo = new \PDO('sqlite::memory:', null, null);

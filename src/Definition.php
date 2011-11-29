@@ -2,8 +2,8 @@
 /**
  * Ray
  *
+ * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
- *
  */
 namespace Ray\Di;
 
@@ -137,11 +137,11 @@ class Definition extends \ArrayObject
 
     /**
      * Aspect annotation
-     * 
+     *
      * @var string
      */
     const ASPECT ='Aspect';
-    
+
     /**
      * User defined interceptor annotation
      *
@@ -214,11 +214,22 @@ class Definition extends \ArrayObject
         return isset($this->container[$offset]) ? $this->container[$offset] : null;
     }
 
+    /**
+     * Return class annotation definition information.
+     *
+     * @return string
+     */
     public function __toString()
     {
         return var_export($this->container, true);
     }
 
+    /**
+     * Return definition iterator
+     *
+     * (non-PHPdoc)
+     * @see ArrayObject::getIterator()
+     */
     public function getIterator() {
         return new \ArrayIterator($this->container);
     }

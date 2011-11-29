@@ -2,7 +2,8 @@
 /**
  * Ray
  *
- * @license  http://opensource.org/licenses/bsd-license.php BSD
+ * @package Ray.Di
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
 
@@ -19,24 +20,74 @@ use Ray\Di\Exception,
  */
 abstract class AbstractModule implements \ArrayAccess
 {
+    /**
+     * Bind
+     *
+     * @var string
+     */
     const BIND = 'bind';
 
+    /**
+     * Name
+     *
+     * @var string
+     */
     const NAME = 'name';
 
+    /**
+     * In (Scope)
+     *
+     * @var string
+     */
     const IN = 'in';
 
+    /**
+     * To
+     *
+     * @var string
+     */
     const TO = 'to';
 
+    /**
+     * To Class
+     *
+     * @var string
+     */
     const TO_CLASS = 'class';
 
+    /**
+     * Provider
+     *
+     * @var string
+     */
     const TO_PROVIDER = 'provider';
 
+    /**
+     * To Instance
+     *
+     * @var string
+     */
     const TO_INSTANCE = 'instance';
 
+    /**
+     * To Closure
+     *
+     * @var string
+     */
     const TO_CLOSURE = 'closure';
 
+    /**
+     * To Scope
+     *
+     * @var string
+     */
     const SCOPE = 'scope';
 
+    /**
+     * Unspecified name
+     *
+     * @var string
+     */
     const NAME_UNSPECIFIED = '*';
 
     /**
@@ -68,16 +119,22 @@ abstract class AbstractModule implements \ArrayAccess
     public $container;
 
     /**
+     * Params
+     *
      * @var array
      */
     protected $params = array();
 
     /**
+     * Current Binding
+     *
      * @var string
      */
     protected $currentBinding;
 
     /**
+     * Current Name
+     *
      * @var string
      */
     protected $currentName = self::NAME_UNSPECIFIED;
@@ -245,6 +302,13 @@ abstract class AbstractModule implements \ArrayAccess
         $this->pointcuts[] = array($classMatcher, $methodMatcher, $interceptors);
     }
 
+    /**
+     * Invoke
+     *
+     * @param string $class
+     *
+     * @return \Ray\Aop\Bind|boolean
+     */
     public function __invoke($class)
     {
         foreach ($this->pointcuts as $pointcut) {
@@ -259,6 +323,8 @@ abstract class AbstractModule implements \ArrayAccess
     }
 
     /**
+     * ArrayAccess::offsetExists
+     *
      * @param offset
      */
     public function offsetExists($offset)
@@ -267,6 +333,8 @@ abstract class AbstractModule implements \ArrayAccess
     }
 
     /**
+     * ArrayAccess::offsetGet
+     *
      * @param offset
      */
     public function offsetGet($offset)
@@ -275,6 +343,8 @@ abstract class AbstractModule implements \ArrayAccess
     }
 
     /**
+     * ArrayAccess::offsetSet
+     *
      * @param offset
      * @param value
      * @throws Exception\ReadOnly
@@ -285,6 +355,8 @@ abstract class AbstractModule implements \ArrayAccess
     }
 
     /**
+     * ArrayAccess::offsetUnset
+     *
      * @param offset
      * @throws Exception\ReadOnly
      */
@@ -294,7 +366,7 @@ abstract class AbstractModule implements \ArrayAccess
     }
 
     /**
-     * To string
+     * Return binding information
      *
      * @return string
      */
