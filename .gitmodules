@@ -1,3 +1,6 @@
-[submodule "vendors/Ray.Aop"]
-	path = vendors/Ray.Aop
+[submodule "vendor/Doctrine.Common"]
+	path = vendor/Doctrine.Common
+	url = https://github.com/doctrine/common.git
+[submodule "vendor/Ray.Aop"]
+	path = vendor/Ray.Aop
 	url = git://github.com/koriym/Ray.Aop.git

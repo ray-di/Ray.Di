@@ -32,3 +32,12 @@ require_once __DIR__ . '/src/Exception/InvalidBinding.php';
 require_once __DIR__ . '/src/Exception/InvalidToBinding.php';
 require_once __DIR__ . '/src/Exception/InvalidProviderBinding.php';
 require_once __DIR__ . '/src/Exception/UnregisteredAnnotation.php';
+
+require_once __DIR__ . '/src/Annotation/Annotation.php';
+require_once __DIR__ . '/src/Annotation/Aspect.php';
+require_once __DIR__ . '/src/Annotation/ImplementedBy.php';
+require_once __DIR__ . '/src/Annotation/Inject.php';
+require_once __DIR__ . '/src/Annotation/Named.php';
+require_once __DIR__ . '/src/Annotation/PostConstruct.php';
+require_once __DIR__ . '/src/Annotation/PreDestroy.php';
+require_once __DIR__ . '/src/Annotation/ProvidedBy.php';

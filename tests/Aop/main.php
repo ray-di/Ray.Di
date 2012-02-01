@@ -5,7 +5,7 @@ namespace Ray\Di;
 use Ray\Aop\Weaver;
 
 // Ray.Aop
-require dirname(dirname(__DIR__)) . '/vendors/Ray.Aop/src.php';
+require dirname(dirname(__DIR__)) . '/vendor/Ray.Aop/src.php';
 require __DIR__ . '/BillingService.php';
 require __DIR__ . '/RealBillingService.php';
 require __DIR__ . '/SalesTax.php';
