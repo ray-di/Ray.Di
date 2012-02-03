@@ -2,10 +2,13 @@
 /**
  * Ray
  *
- * @package Ray.Di
  * @license  http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
+
+use Doctrine\Common\Annotations\DocParser,
+    Doctrine\Common\Annotations\PhpParser,
+    Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * Annotation scanner
@@ -16,43 +19,39 @@ namespace Ray\Di;
 class Annotation implements AnnotationInterface
 {
     /**
-     * Class definition data
+     * Class definition
+     *
+     * @var Definition
+     */
+    protected $definition;
+
+    /**
+     * Ray.Di Annotations
      *
      * @var array
      */
-    protected $definition = array();
+    private $defaultImports = [
+        'aspect' => 'Ray\Di\Di\Aspect',
+        'bindingannotation' => 'Ray\Di\Di\BindingAnnotation',
+        'implementedby' => 'Ray\Di\Di\ImplementedBy',
+        'inject' => 'Ray\Di\Di\Inject',
+        'named' => 'Ray\Di\Di\Named',
+        'postconstruct' => 'Ray\Di\Di\PostConstruct',
+        'predestroy' => 'Ray\Di\Di\PreDestroy',
+        'providedby' => 'Ray\Di\Di\ProvidedBy',
+        'scope' => 'Ray\Di\Di\Scope'
+    ];
 
     /**
-     * Class definition container
-     *
-     * @var array
+     * Constructor
      */
-    protected $definisions = array();
-
-    /**
-     * Method reflection
-     *
-     * @var ReflectionMethod
-     */
-    protected $methodReflection;
-
-    /**
-     * Config
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Set config
-     *
-     * @param ConfigInterface $config
-     *
-     * @return void
-     */
-    public function setConfig(ConfigInterface $config)
+    public function __construct()
     {
-        $this->config = $config;
+        $this->definition = new Definition;
+        $this->definition = [];
+        $this->docParser = new DocParser;
+        $this->docParser->setIgnoreNotImportedAnnotations(true);
+        $this->phpParser = new PhpParser;
     }
 
     /**
@@ -62,34 +61,66 @@ class Annotation implements AnnotationInterface
      *
      * @return array
      */
-    public function getDefinition($class)
+    public function getDefinition($className)
     {
-        if (isset($this->definisions[$class])) {
-            return $this->definisions[$class];
+        $this->definition = [];
+        $class = new \ReflectionClass($className);
+        $useImports = $this->phpParser->parseClass($class);
+        $imports = array_merge($this->defaultImports, $useImports);
+        $this->docParser->setImports($imports);
+        // Class Annoattion
+        $this->docParser->setTarget(Target::TARGET_CLASS);
+        $annotations = $this->docParser->parse($class->getDocComment(), 'class ' . $class->name);
+        $classDefinition = $this->getDefinitionFormat($annotations);
+        foreach ($classDefinition as $key => $value) {
+            $this->definition[$key] = $value;
         }
-        $classRef = $this->config->getReflect($class);
-        $this->definition = $this->getAnnotationByDoc($classRef->getDocComment());
-        $this->parseMethods($classRef);
-        $this->definisions[$class] = $this->definition;
+        // Method Annotation
+        $this->setMethodDefinition($class);
         return $this->definition;
     }
 
     /**
-     * Parse method doc-comments
+	 * Get definition format from annotations
+	 *
+	 * @param array $annotations
+	 *
+	 * @return [$annotation => $value][]
+     */
+    private function getDefinitionFormat(array $annotations)
+    {
+        $result = [];
+        foreach ($annotations as $annotation) {
+            $classPath = explode('\\', get_class($annotation));
+            $key = array_pop($classPath);
+            $value = isset($annotation->value) ? $annotation->value : null ;
+            $result[$key] = $value;
+        }
+        return $result;
+    }
+
+    /**
+     * Set method definition
      *
-     * @param \ReflectionClass $ref
+     * @param \ReflectionClass $class
      *
      * @return void
      */
-    private function parseMethods(\ReflectionClass $ref)
+    private function setMethodDefinition(\ReflectionClass $class)
     {
-        $methods = $ref->getMethods();
+        $methods = $class->getMethods();
         foreach ($methods as $method) {
-            $this->methodReflection[$method->name] = $method;
-            $doc = $method->getDocComment();
-            $methodAnnotation = $this->getAnnotationByDoc($doc);
+            /** @var \ReflectionMethod $method */
+            $this->docParser->setTarget(Target::TARGET_METHOD);
+            $annotations = $this->docParser->parse($method->getDocComment(), 'class ' . $class->name);
+            $methodAnnotation = $this->getDefinitionFormat($annotations);
             foreach ($methodAnnotation as $key => $value) {
                 $this->setAnnotationKey($key, $value, $methodAnnotation, $method);
+            }
+            $this->docParser->setTarget(Target::TARGET_CLASS);
+            foreach ($annotations as $annotation) {
+                $annotationClass = new \ReflectionClass($annotation);
+                $annotationClassAnnotations = $this->docParser->parse($annotationClass->getDocComment(), 'class ' . $annotationClass->name);
             }
         }
     }
@@ -122,7 +153,7 @@ class Annotation implements AnnotationInterface
         if ($key === Definition::NAMED) {
             return;
         }
-        $this->definition[Definition::USER][$key][$value] = $method->name;
+        $this->definition[Definition::BINDING][$key][] = [$method->name, $methodAnnotation];
     }
 
     /**
@@ -135,9 +166,8 @@ class Annotation implements AnnotationInterface
      */
     private function setSetterInjectDefinition(array $methodAnnotation,\ReflectionMethod $method)
     {
-        //         debug_print_backtrace();
         $nameParameter = isset($methodAnnotation[Definition::NAMED]) ? $methodAnnotation[Definition::NAMED] : false;
-        $named = ($nameParameter !== false) ? $this->getNamed($nameParameter) : array();
+        $named = ($nameParameter !== false) ? $this->getNamed($nameParameter) : [];
         $parameters = $method->getParameters();
         $paramsInfo = array();
         foreach ($parameters as $parameter) {
@@ -154,11 +184,11 @@ class Annotation implements AnnotationInterface
                 $name = Definition::NAME_UNSPECIFIED;
             }
             $paramsInfo[] = array(
-                Definition::PARAM_POS => $pos,
-                Definition::PARAM_TYPEHINT => $typehint,
-                Definition::PARAM_NAME => $parameter->name,
-                Definition::PARAM_ANNOTATE => $name,
-                Definition::PARAM_TYPEHINT_BY => $typehintBy
+            Definition::PARAM_POS => $pos,
+            Definition::PARAM_TYPEHINT => $typehint,
+            Definition::PARAM_NAME => $parameter->name,
+            Definition::PARAM_ANNOTATE => $name,
+            Definition::PARAM_TYPEHINT_BY => $typehintBy
             );
         }
         $paramInfo[$method->name] = $paramsInfo;
@@ -181,9 +211,10 @@ class Annotation implements AnnotationInterface
         if (isset($definition[$typehint])) {
             $hintDef = $definition[$typehint];
         } else {
-            $ref = $this->config->getReflect($typehint);
-            $doc = $ref->getDocComment();
-            $hintDef = $this->getAnnotationByDoc($doc);
+            $this->docParser->setTarget(Target::TARGET_CLASS);
+            $doc = (new \ReflectionClass($typehint))->getDocComment();
+            $annotations = $this->docParser->parse($doc, 'class ' . $typehint);
+            $hintDef = $this->getDefinitionFormat($annotations);
             $definition[$typehint] = $hintDef;
         }
         // @ImplementBy as default
@@ -198,13 +229,13 @@ class Annotation implements AnnotationInterface
         }
         // this typehint is class, not a interface.
         if (class_exists($typehint)) {
-            $ref = new \ReflectionClass($typehint);
-            if ($ref->isAbstract() === false) {
+            $class = new \ReflectionClass($typehint);
+            if ($class->isAbstract() === false) {
                 $result = array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $typehint);
                 return $result;
             }
         }
-        return array();
+        return [];
     }
 
     /**
@@ -212,7 +243,7 @@ class Annotation implements AnnotationInterface
      *
      * @param string $nameParameter "value" or "key1=value1,ke2=value2"
      *
-     * @return array <arary($paramName => $named)>
+     * @return array [$paramName => $named][]
      * @throws Exception\InvalidNamed
      */
     private function getNamed($nameParameter)
@@ -224,32 +255,13 @@ class Annotation implements AnnotationInterface
         // multi annotation @Named($varName1=$annotate1,$varName2=$annotate2)
         // http://stackoverflow.com/questions/168171/regular-expression-for-parsing-name-value-pairs
         preg_match_all('/([^=,]*)=("[^"]*"|[^,"]*)/', $nameParameter, $matches);
-        if ($matches[0] === array()) {
+        if ($matches[0] === []) {
             throw new Exception\InvalidNamed;
         }
-        $result = array();
+        $result = [];
         $count = count($matches[0]);
         for ($i = 0; $i < $count; $i++) {
             $result[$matches[1][$i]] = $matches[2][$i];
-        }
-        return $result;
-    }
-
-    /**
-     * Get annotation array by doc-comments
-     *
-     * @return array
-     */
-    private function getAnnotationByDoc($doc)
-    {
-        $result = $match = array();
-        preg_match_all('/@([A-Z][A-Za-z]+)(\("(.+)"\))*/', $doc, $match);
-        $keys = $match[1];
-        $values = $match[3];
-        $i = 0;
-        foreach ($keys as $key) {
-            $result[$key] = $values[$i];
-            $i++;
         }
         return $result;
     }

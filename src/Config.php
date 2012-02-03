@@ -73,7 +73,7 @@ class Config implements ConfigInterface, \Serializable
      *
      * `$definition[$class]['Scope'] = $value`
      * `$definition[$class]['PostConstruct'] = $value`
-     * `$definition[$class]['PreDestoroy'] = $value`
+     * `$definition[$class]['PreDestroy'] = $value`
      * `$definition[$class]['Inject'] = $value`
      *
      * @var Definition
@@ -99,7 +99,6 @@ class Config implements ConfigInterface, \Serializable
             $annotation = new Annotation;
         }
         $this->annotation = $annotation;
-        $this->annotation->setConfig($this);
     }
 
     /**
@@ -286,8 +285,8 @@ class Config implements ConfigInterface, \Serializable
             $class = get_class($class);
         }
         if (!isset($this->reflect[$class])
-		|| !is_array($this->reflect[$class])
-		|| ! isset($this->reflect[$class][$method])) {
+        || !is_array($this->reflect[$class])
+        || ! isset($this->reflect[$class][$method])) {
             $methodRef = new \ReflectionMethod($class, $method);
             $this->methodReflect[$class][$method] = $methodRef;
         }
@@ -321,6 +320,5 @@ class Config implements ConfigInterface, \Serializable
             $this->definition,
             $this->annotation
         ) = $data;
-        $this->annotation->setConfig($this);
     }
 }

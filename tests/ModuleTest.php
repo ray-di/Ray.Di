@@ -94,7 +94,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_string((string)$this->module));
     }
 
-    public function testregisterInterceptAnnotation()
+    public function estregisterInterceptAnnotation()
     {
         $module = new Modules\AopModule;
         $interceptorClass = 'Ray\Di\SalesTax';

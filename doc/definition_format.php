@@ -3,7 +3,7 @@ return
 array (
   'Scope' => 'prototype',
   'PostConstruct' => 'onInit',
-  'PreDestoroy' => 'onEnd',
+  'PreDestroy' => 'onEnd',
   'Inject' =>
   array (
     'setter' =>

@@ -44,7 +44,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $mock = $this->injector->getInstance('Ray\Di\Definition\LifeCycle');
         unset($this->injector);
-        $this->assertSame('@PreDestoroy', $GLOBALS['pre_destoroy']);
+        $this->assertSame('@PreDestroy', $GLOBALS['pre_destoroy']);
     }
 
     public function testToClass()
@@ -172,7 +172,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, get_class($instance));
     }
 
-    public function testregisterInterceptAnnotation()
+    public function estregisterInterceptAnnotation()
     {
         $this->injector->setModule(new Modules\AopModule);
         $instance = $this->injector->getInstance('Ray\Di\RealBillingService');
@@ -192,14 +192,24 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, (int)$amount);
     }
 
-    /**
-     * @expectedException Ray\Di\Exception\UnregisteredAnnotation
-     */
-    public function testBindMismatchButHasAnnotation()
+    public function estBindDobuleInterceptors()
     {
-        $this->injector->setModule(new Modules\AopMisMatcher);
-        $instance = $this->injector->getInstance('Ray\Di\RealBillingService');
+        $this->injector->setModule(new Modules\AopMatcherModule);
+        $instance = $this->injector->getInstance('Ray\Di\DaubleTaxBilling');
+        /* @var $instance \Ray\Di\RealBillingService */
+        list($amount, $unit) = $instance->chargeOrder();
+        $expected = 105;
+        $this->assertSame($expected, (int)$amount);
     }
+
+//     /**
+//      * @expectedException Ray\Di\Exception\UnregisteredAnnotation
+//      */
+//     public function testBindMismatchButHasAnnotation()
+//     {
+//         $this->injector->setModule(new Modules\AopMisMatcher);
+//         $instance = $this->injector->getInstance('Ray\Di\RealBillingService');
+//     }
 
     public function testToString()
     {

@@ -56,11 +56,10 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($condition);
     }
 
-    public function testOffsetGet_ScopeDefaultIsSngleton()
+    public function testOffsetGet_ScopeDefaultIsPrototype()
     {
-        $this->definition['MockDefiniton'] = array(Definition::PRE_DESTROY => 'onEnd');
-        $prototype = $this->definition['MockDefiniton'][Definition::SCOPE];
-        $expected = Scope::SINGLETON;
+        $prototype = $this->definition[Definition::SCOPE];
+        $expected = Scope::PROTOTYPE;
         $this->assertSame($expected, $prototype);
     }
 

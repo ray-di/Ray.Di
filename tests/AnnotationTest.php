@@ -14,8 +14,7 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->annotationSacnner = new Annotation();
-        $this->annotationSacnner->setConfig(new Config);
+        $this->annotationSacnner = new Annotation;
     }
 
     public function testgetDefinitionScope()
@@ -32,11 +31,11 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $definition['PostConstruct']);
     }
 
-    public function testgetDefinitionPreDestoroy()
+    public function testgetDefinitionPreDestroy()
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = 'onEnd';
-        $this->assertSame($expected, $definition['PreDestoroy']);
+        $this->assertSame($expected, $definition['PreDestroy']);
     }
 
     public function testgetDefinitionInjectConstruct()

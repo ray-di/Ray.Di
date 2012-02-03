@@ -68,11 +68,11 @@ class MockDefinitionClass
     }
 
     /**
-     * @PreDestoroy
+     * @PreDestroy
      */
     public function onEnd()
     {
-        $GLOBALS['pre_destoroy'] = '@PreDestoroy';
+        $GLOBALS['pre_destoroy'] = '@PreDestroy';
     }
 
     /**

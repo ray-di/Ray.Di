@@ -147,7 +147,6 @@ class Injector implements InjectorInterface
         if ($definition) {
             $this->setLifeCycle($object, $definition);
         }
-
         // call setters after creation
         foreach ($setter as $method => $value) {
             // does the specified setter method exist?
@@ -164,7 +163,7 @@ class Injector implements InjectorInterface
         $bind = $module($class);
         if ($bind instanceof Bind) {
             $object = new Weaver($object, $bind);
-        } elseif (isset($definition[Definition::ASPECT])) {
+        } elseif (array_key_exists(Definition::ASPECT, $definition)) {
             $object = $this->getWeave($object, $definition, $this->module);
         }
         return $object;
@@ -329,13 +328,16 @@ class Injector implements InjectorInterface
     private function getWeave($object, array $definition, AbstractModule $module)
     {
         // bind be method
+        v($definition);
         $bind = new Bind;
-        foreach ($definition[Definition::USER] as $annotation => $config) {
-            $method = $config[""];
+        foreach ($definition[Definition::OPTIONS] as $annotation => $config) {
+            v($config);
+            list($value, $method) = each($config);
             if (!isset($module->annotations[$annotation])) {
                 throw new Exception\UnregisteredAnnotation($annotation);
             }
-            $interceptors = $module->annotations[$annotation]; //aa
+            $interceptors = $module->annotations[$annotation];
+            v($interceptors);
             $bind->bindInterceptors($method, $interceptors);
         }
         $weave = new Weaver($object, $bind);

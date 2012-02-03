@@ -1,11 +1,5 @@
 <?php
 
-// vendor/*
-require_once dirname(__DIR__) . '/vendor/Doctrine.Common/lib/Doctrine/Common/ClassLoader.php';
-$commonLoader = new \Doctrine\Common\ClassLoader('Doctrine\Common', dirname(__DIR__) . '/vendor/Doctrine.Common/lib');
-$commonLoader->register();
-require_once dirname(__DIR__) . '/vendor/Ray.Aop/src.php';
-
 // Definition class with annotation
 require_once __DIR__ . '/Definition/Basic.php';
 require_once __DIR__ . '/Definition/Named.php';
@@ -63,3 +57,5 @@ require_once __DIR__ . '/Mock/AbstractDb.php';
 require_once __DIR__ . '/Aop/BillingService.php';
 require_once __DIR__ . '/Aop/RealBillingService.php';
 require_once __DIR__ . '/Aop/SalesTax.php';
+require_once __DIR__ . '/Aop/DoubleTaxBilling.php';
+require_once __DIR__ . '/Aop/TaxCharger.php';

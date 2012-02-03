@@ -2,15 +2,14 @@
 
 namespace Ray\Di;
 
-use Ray\Aop\MethodInterceptor,
-    Ray\Aop\MethodInvocation;
+// use Ray\Di\Di\Annotation;
 
-class SalesTax implements MethodInterceptor
+/**
+ * @Annotation
+ * @Target("METHOD")
+ * @BindingAnnotation
+ */
+final class SalesTax
 {
-    public function invoke(MethodInvocation $invocation)
-    {
-        list($amount, $unit) =  $invocation->proceed();
-        $amount *= 1.05;
-        return array($amount, $unit);
-    }
+    public $value = 1.05;
 }

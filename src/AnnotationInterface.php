@@ -20,7 +20,7 @@ interface AnnotationInterface
      *
      * @param string $class
      *
-     * @return array
+     * @return Definition
      */
     public function getDefinition($class);
 }

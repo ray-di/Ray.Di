@@ -2,6 +2,8 @@
 
 namespace Ray\Di\Modules;
 
+use Ray\Di\TaxCharger;
+
 use Ray\Di\AbstractModule,
 Ray\Di\Scope,
 Ray\Di\SalesTax;
@@ -16,6 +18,6 @@ class AopMatcherModule extends AbstractModule
             }
         };
         $methodMatcher = function($method) {return true;};
-        $this->bindInterceptor($classMatcher, $methodMatcher, array(new SalesTax));
+        $this->bindInterceptor($classMatcher, $methodMatcher, array(new TaxCharger));
     }
 }

@@ -24,11 +24,11 @@ class Definition extends \ArrayObject
     const POST_CONSTRUCT = "PostConstruct";
 
     /**
-     * PreDestoroy annotation
+     * PreDestroy annotation
      *
      * @var string
      */
-    const PRE_DESTROY = "PreDestoroy";
+    const PRE_DESTROY = "PreDestroy";
 
     /**
      * Inject annotation
@@ -73,7 +73,7 @@ class Definition extends \ArrayObject
     const NAMED = "Named";
 
     /**
-     * PreDestoroy annotation
+     * PreDestroy annotation
      *
      * @var string
      */
@@ -148,45 +148,56 @@ class Definition extends \ArrayObject
      * @var string
      */
     const USER = 'user';
+    const OPTIONS = 'options';
+    const BINDING = 'binding';
 
     /**
      * Array container
      *
      * @var array
      */
-    private $container = array();
+    public $container = [];
 
     /**
      * Default
      *
      * @var unknown_type
      */
-    private $defaults = array();
+    private $defaults = [];
 
     /**
      * Constructor
      */
     public function __construct() {
         $this->defaults = array(
-        self::SCOPE => Scope::SINGLETON,
-        self::POST_CONSTRUCT => null,
-        self::PRE_DESTROY => null,
-        self::INJECT => array(),
-        self::IMPLEMENTEDBY => array(),
-        self::USER => array()
+            self::SCOPE => Scope::PROTOTYPE,
+            self::POST_CONSTRUCT => null,
+            self::PRE_DESTROY => null,
+            self::INJECT => [],
+            self::IMPLEMENTEDBY => [],
+            self::USER => []
         );
+        $this->container = $this->defaults;
     }
 
+    public function toArray()
+    {
+        return (array)$this->container;
+    }
     /**
      * (non-PHPdoc)
      * @see ArrayObject::offsetSet()
      * @throws \InvalidArgumentException
      */
     public function offsetSet($offset, $value) {
-        if (is_null($offset) || !is_array($value)) {
-            throw new \InvalidArgumentException;
+        if (! is_string($offset)) {
+            throw new \InvalidArgumentException(gettype($value));
         }
-        $value = array_merge($this->defaults, $value);
+        if (! is_array($value)) {
+            $value = [];
+//             throw new \InvalidArgumentException(gettype($value));
+        }
+//         $value = array_merge($this->defaults, $value);
         $this->container[$offset] = $value;
     }
 
@@ -232,5 +243,19 @@ class Definition extends \ArrayObject
      */
     public function getIterator() {
         return new \ArrayIterator($this->container);
+    }
+
+//     public function merge($definition)
+//     {
+//         if ($definition instanceof Definition) {
+//             return $definition->merge($this->container);
+//         }
+//         $this->container = array_merge($this->container, $definition);
+//         return $this;
+//     }
+
+    public function setBindingAnotation($bindingAnnotationKey, $methodName, $annotation)
+    {
+        $this->container[self::BINDING][$bindingAnnotationKey][] = [$methodName, $annotation];
     }
 }

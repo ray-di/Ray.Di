@@ -8,10 +8,11 @@ use Ray\Di\Di\ImplementedBy;
 /**
  * @Aspect
  */
-class RealBillingService implements BillingService {
-
+class DaubleTaxBilling implements BillingService
+{
 	/**
-	 * @SalesTax
+	 * @SalesTax(10)
+	 * @SalesTax(5)
 	 */
 	public function chargeOrder()
 	{

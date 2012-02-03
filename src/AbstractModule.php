@@ -293,11 +293,11 @@ abstract class AbstractModule implements \ArrayAccess
      *
      * @param \Closure $classMatcher
      * @param \Closure $methodMatcher
-     * @param array $interceptors
+     * @param array    $interceptors
      *
      * @return void
      */
-    protected function bindInterceptor(\Closure $classMatcher, \Closure $methodMatcher, array $interceptors)
+    protected function bindInterceptor($classMatcher, $methodMatcher, array $interceptors)
     {
         $this->pointcuts[] = array($classMatcher, $methodMatcher, $interceptors);
     }
