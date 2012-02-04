@@ -12,6 +12,7 @@ require_once __DIR__ . '/src/Manager.php';
 require_once __DIR__ . '/src/InjectorInterface.php';
 require_once __DIR__ . '/src/Injector.php';
 require_once __DIR__ . '/src/Matcher.php';
+require_once __DIR__ . '/src/Matched.php';
 
 require_once __DIR__ . '/src/AnnotationInterface.php';
 require_once __DIR__ . '/src/Annotation.php';

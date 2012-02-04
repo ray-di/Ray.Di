@@ -164,14 +164,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($a === $b);
     }
 
-    public function testGetWeaveInstance()
-    {
-        $this->injector->setModule(new Modules\AopModule);
-        $instance = $this->injector->getInstance('Ray\Di\RealBillingService');
-        $expected = 'Ray\Aop\Weaver';
-        $this->assertSame($expected, get_class($instance));
-    }
-
     public function estregisterInterceptAnnotation()
     {
         $this->injector->setModule(new Modules\AopModule);

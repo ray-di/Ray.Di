@@ -9,8 +9,9 @@
  */
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\Reader;
+
 /**
- *
  * Matcher
  *
  * @package Aura.Di
@@ -18,16 +19,11 @@ namespace Ray\Di;
  */
 class Matcher
 {
+    const ANY = true;
 
-    public function __construct($callable = null)
+    public function __construct(Reader $reader)
     {
-        $this->callable = $callable;
-    }
-
-    public function any()
-    {
-        $func = function(){ return true;};
-        return $func;
+        $this->reader = $reader;
     }
 
     /**
@@ -37,9 +33,47 @@ class Matcher
      * @return object The object created by the closure.
      *
      */
-    public function __invoke()
+    public function __invoke($arg)
     {
         $callable = $this->callable;
-        return $callable();
+        return $callable($arg);
+    }
+
+    /**
+     * Any match
+     *
+     * @return Ray\Di\Matcher
+     */
+    public function any()
+    {
+        return function(){
+            return self::ANY;
+        };
+    }
+
+    /**
+     * Match binding annotation
+     *
+     * @param string $annotationName
+     *
+     * @return \Ray\Di\Matcher
+     */
+    public function annotatedWith($annotationName)
+    {
+        $reader = $this->reader;
+        $this->callable = function($class) use ($annotationName, $reader) {
+            $methods = (new \ReflectionClass($class))->getMethods();
+            foreach ($methods as $method) {
+                $annotation = $reader->getMethodAnnotation($method, $annotationName);
+                if ($annotation) {
+                    $matched = new Matched;
+                    $matched->methodName = $method->name;
+                    $matched->annotation = $annotation;
+                    return $matched;
+                }
+            }
+            return false;
+        };
+        return $this;
     }
 }

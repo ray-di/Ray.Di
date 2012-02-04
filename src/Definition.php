@@ -180,10 +180,6 @@ class Definition extends \ArrayObject
         $this->container = $this->defaults;
     }
 
-    public function toArray()
-    {
-        return (array)$this->container;
-    }
     /**
      * (non-PHPdoc)
      * @see ArrayObject::offsetSet()
@@ -193,11 +189,6 @@ class Definition extends \ArrayObject
         if (! is_string($offset)) {
             throw new \InvalidArgumentException(gettype($value));
         }
-        if (! is_array($value)) {
-            $value = [];
-//             throw new \InvalidArgumentException(gettype($value));
-        }
-//         $value = array_merge($this->defaults, $value);
         $this->container[$offset] = $value;
     }
 
@@ -243,19 +234,5 @@ class Definition extends \ArrayObject
      */
     public function getIterator() {
         return new \ArrayIterator($this->container);
-    }
-
-//     public function merge($definition)
-//     {
-//         if ($definition instanceof Definition) {
-//             return $definition->merge($this->container);
-//         }
-//         $this->container = array_merge($this->container, $definition);
-//         return $this;
-//     }
-
-    public function setBindingAnotation($bindingAnnotationKey, $methodName, $annotation)
-    {
-        $this->container[self::BINDING][$bindingAnnotationKey][] = [$methodName, $annotation];
     }
 }

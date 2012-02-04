@@ -36,6 +36,9 @@ require_once __DIR__ . '/Modules/AopMisMatchModule.php';
 require_once __DIR__ . '/Modules/InvalidProviderModule.php';
 require_once __DIR__ . '/Modules/InvalidToModule.php';
 require_once __DIR__ . '/Modules/ArrayInstance.php';
+require_once __DIR__ . '/Modules/AopAnnotateMatcherModule.php';
+require_once __DIR__ . '/Modules/AopAnyMatcherModule.php';
+
 // Mock class without annotation
 require_once __DIR__ . '/MockParentClass.php';
 require_once __DIR__ . '/MockChildClass.php';

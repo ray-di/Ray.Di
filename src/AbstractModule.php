@@ -7,9 +7,15 @@
  */
 namespace Ray\Di;
 
+
 use Ray\Di\Exception,
     Ray\Di\Exception\ReadOnly,
-    Ray\Aop\Bind;
+    Ray\Di\Matcher;
+
+use Ray\Aop\Bind;
+
+use Doctrine\Common\Annotations\AnnotationReader as Reader;
+
 
 /**
  * A module contributes configuration information, typically interface bindings,
@@ -152,16 +158,17 @@ abstract class AbstractModule implements \ArrayAccess
     public function __construct(AbstractModule $module = null)
     {
         if (is_null($module)) {
-            $this->bindings = new \ArrayObject();
-            $this->annotations = new \ArrayObject();
-            $this->pointcuts = new \ArrayObject();
-            $this->container = new \ArrayObject();
+            $this->bindings = new \ArrayObject;
+            $this->annotations = new \ArrayObject;
+            $this->pointcuts = new \ArrayObject;
+            $this->container = new \ArrayObject;
         } else {
             $this->bindings = $module->bindings;
             $this->pointcuts = $module->pointcuts;
             $this->annotations = $module->annotations;
             $this->container = $module->container;
         }
+        $this->matcher = new Matcher(new Reader);
         $this->configure();
     }
 
@@ -246,7 +253,7 @@ abstract class AbstractModule implements \ArrayAccess
             throw new Exception\InvalidProviderBinding($provider);
         }
         $this->bindings[$this->currentBinding][$this->currentName]
-            = array(self::TO => array(self::TO_PROVIDER, $provider));
+        = array(self::TO => array(self::TO_PROVIDER, $provider));
     }
 
     /**
@@ -259,7 +266,7 @@ abstract class AbstractModule implements \ArrayAccess
     protected function toInstance($instance)
     {
         $this->bindings[$this->currentBinding][$this->currentName]
-            = array(self::TO => array(self::TO_INSTANCE, $instance));
+        = array(self::TO => array(self::TO_INSTANCE, $instance));
     }
 
     /**
@@ -272,20 +279,7 @@ abstract class AbstractModule implements \ArrayAccess
     protected function toClosure(\Closure $closure)
     {
         $this->bindings[$this->currentBinding][$this->currentName]
-            = array(self::TO => array(self::TO_CLOSURE, $closure));
-    }
-
-    /**
-     * Register intercepter annotation
-     *
-     * @param string $annotation   annotation
-     * @param array  $interceptors Interceptor[]
-     *
-     * @return void
-     */
-    protected function registerInterceptAnnotation($annotation, array $interceptors)
-    {
-        $this->annotations[$annotation] = $interceptors;
+        = array(self::TO => array(self::TO_CLOSURE, $closure));
     }
 
     /**
@@ -311,11 +305,19 @@ abstract class AbstractModule implements \ArrayAccess
      */
     public function __invoke($class)
     {
+        $bind = new Bind;
         foreach ($this->pointcuts as $pointcut) {
             list($classMatcher, $methodMatcher, $interceptors) = $pointcut;
             if ($classMatcher($class) === true) {
-                $bind = new Bind();
-                $bind->bindMatcher($methodMatcher, $interceptors);
+                // runtime matcher
+                if (!($methodMatcher instanceof Matcher)) {
+                    $bind->bindMatcher($methodMatcher, $interceptors);
+                }
+                // compiled by annotation binding matcher
+                $matched = $methodMatcher($class);
+                if ($matched instanceof Matched) {
+                    $bind->bindInterceptors($matched->methodName, $interceptors);
+                }
                 return $bind;
             }
         }
