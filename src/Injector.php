@@ -161,7 +161,8 @@ class Injector implements InjectorInterface
         }
         $module = $this->module;
         $bind = $module($class);
-        if ($bind instanceof Bind) {
+        /** @var $bind \BEAR\Di\Bind */
+        if ($bind->hasBinding() === true) {
             $object = new Weaver($object, $bind);
         }
         return $object;

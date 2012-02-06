@@ -63,16 +63,17 @@ class Matcher
         $reader = $this->reader;
         $this->callable = function($class) use ($annotationName, $reader) {
             $methods = (new \ReflectionClass($class))->getMethods();
+            $result = [];
             foreach ($methods as $method) {
                 $annotation = $reader->getMethodAnnotation($method, $annotationName);
                 if ($annotation) {
                     $matched = new Matched;
                     $matched->methodName = $method->name;
                     $matched->annotation = $annotation;
-                    return $matched;
+                    $result[] = $matched;
                 }
             }
-            return false;
+            return $result;
         };
         return $this;
     }

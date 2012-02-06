@@ -14,7 +14,7 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->annotationSacnner = new Annotation;
+        $this->annotationSacnner = new Annotation(new Definition);
     }
 
     public function testgetDefinitionScope()

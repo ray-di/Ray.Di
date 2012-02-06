@@ -152,70 +152,23 @@ class Definition extends \ArrayObject
     const BINDING = 'binding';
 
     /**
-     * Array container
-     *
-     * @var array
-     */
-    public $container = [];
-
-    /**
-     * Default
-     *
-     * @var unknown_type
-     */
-    private $defaults = [];
-
-    /**
      * Constructor
      */
-    public function __construct() {
-        $this->defaults = array(
+    public function __construct(
+        $defaults = [
             self::SCOPE => Scope::PROTOTYPE,
             self::POST_CONSTRUCT => null,
             self::PRE_DESTROY => null,
             self::INJECT => [],
             self::IMPLEMENTEDBY => [],
             self::USER => []
-        );
-        $this->container = $this->defaults;
+        ]
+    )
+    {
+        parent::__construct($defaults);
     }
 
-    /**
-     * (non-PHPdoc)
-     * @see ArrayObject::offsetSet()
-     * @throws \InvalidArgumentException
-     */
-    public function offsetSet($offset, $value) {
-        if (! is_string($offset)) {
-            throw new \InvalidArgumentException(gettype($value));
-        }
-        $this->container[$offset] = $value;
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see ArrayObject::offsetExists()
-     */
-    public function offsetExists($offset) {
-        return isset($this->container[$offset]);
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see ArrayObject::offsetUnset()
-     */
-    public function offsetUnset($offset) {
-        unset($this->container[$offset]);
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see ArrayObject::offsetGet()
-     */
-    public function offsetGet($offset) {
-        return isset($this->container[$offset]) ? $this->container[$offset] : null;
-    }
-
+    
     /**
      * Return class annotation definition information.
      *
@@ -223,16 +176,6 @@ class Definition extends \ArrayObject
      */
     public function __toString()
     {
-        return var_export($this->container, true);
-    }
-
-    /**
-     * Return definition iterator
-     *
-     * (non-PHPdoc)
-     * @see ArrayObject::getIterator()
-     */
-    public function getIterator() {
-        return new \ArrayIterator($this->container);
+        return var_export($this, true);
     }
 }

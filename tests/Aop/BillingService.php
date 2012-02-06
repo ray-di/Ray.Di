@@ -1,6 +1,6 @@
 <?php
 
-namespace Ray\Di;
+namespace Ray\Di\Tests;
 
 interface BillingService {
 

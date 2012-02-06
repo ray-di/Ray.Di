@@ -2,7 +2,7 @@
 
 namespace Ray\Di\Modules;
 
-use Ray\Di\TaxCharger;
+use Ray\Di\Tests\TaxCharger;
 
 use Ray\Di\AbstractModule,
 Ray\Di\Scope,
@@ -13,7 +13,7 @@ class AopMatcherModule extends AbstractModule
     protected function configure()
     {
         $classMatcher = function($class) {
-            if ($class === 'Ray\Di\RealBillingService') {
+            if ($class === 'Ray\Di\Tests\RealBillingService') {
                 return true;
             }
         };

@@ -7,15 +7,11 @@
  */
 namespace Ray\Di;
 
-
 use Ray\Di\Exception,
     Ray\Di\Exception\ReadOnly,
     Ray\Di\Matcher;
-
 use Ray\Aop\Bind;
-
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
-
 
 /**
  * A module contributes configuration information, typically interface bindings,
@@ -129,7 +125,7 @@ abstract class AbstractModule implements \ArrayAccess
      *
      * @var array
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      * Current Binding
@@ -152,6 +148,7 @@ abstract class AbstractModule implements \ArrayAccess
      */
     protected $scope = array(Scope::PROTOTYPE, Scope::SINGLETON);
 
+
     /**
      * Constructor
      */
@@ -159,13 +156,11 @@ abstract class AbstractModule implements \ArrayAccess
     {
         if (is_null($module)) {
             $this->bindings = new \ArrayObject;
-            $this->annotations = new \ArrayObject;
             $this->pointcuts = new \ArrayObject;
             $this->container = new \ArrayObject;
         } else {
             $this->bindings = $module->bindings;
             $this->pointcuts = $module->pointcuts;
-            $this->annotations = $module->annotations;
             $this->container = $module->container;
         }
         $this->matcher = new Matcher(new Reader);
@@ -296,39 +291,52 @@ abstract class AbstractModule implements \ArrayAccess
         $this->pointcuts[] = array($classMatcher, $methodMatcher, $interceptors);
     }
 
+    protected function install(AbstractModule $module)
+    {
+        $this->bindings = array_merge((array)$this->bindings, (array)$module->bindings);
+        $this->pointcuts = array_merge((array)$module->pointcuts, (array)$module->pointcuts);
+        $this->container = array_merge((array)$module->container, (array)$module->container);
+    }
+
     /**
-     * Invoke
+     * Return matched binder.
      *
      * @param string $class
      *
-     * @return \Ray\Aop\Bind|boolean
+     * @return \Ray\Aop\Bind
      */
     public function __invoke($class)
     {
         $bind = new Bind;
         foreach ($this->pointcuts as $pointcut) {
             list($classMatcher, $methodMatcher, $interceptors) = $pointcut;
-            if ($classMatcher($class) === true) {
-                // runtime matcher
-                if (!($methodMatcher instanceof Matcher)) {
-                    $bind->bindMatcher($methodMatcher, $interceptors);
-                }
-                // compiled by annotation binding matcher
-                $matched = $methodMatcher($class);
+            if ($classMatcher($class) !== true) {
+                continue;
+            }
+            // runtime matcher
+            if (!($methodMatcher instanceof Matcher)) {
+                $bind->bindMatcher($methodMatcher, $interceptors);
+                continue;
+            }
+            // compiled by annotation binding matcher
+            $matches = $methodMatcher($class);
+            if (! $matches) {
+                continue;
+            }
+            foreach ($matches as $matched) {
                 if ($matched instanceof Matched) {
-                    $bind->bindInterceptors($matched->methodName, $interceptors);
+                    $bind->bindInterceptors($matched->methodName, $interceptors, $matched->annotation);
                 }
-                return $bind;
             }
         }
-        return false;
+        return $bind;
     }
 
-    /**
-     * ArrayAccess::offsetExists
-     *
-     * @param offset
-     */
+   /**
+    * ArrayAccess::offsetExists
+    *
+    * @param offset
+    */
     public function offsetExists($offset)
     {
         return isset($this->bindings[$offset]);

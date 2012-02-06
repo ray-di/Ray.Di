@@ -1,18 +1,15 @@
 <?php
 
-namespace Ray\Di;
+namespace Ray\Di\Tests;
 
-use Ray\Di\SalesTax;
+use Ray\Di\Tests\SalesTax;
+
 use Ray\Di\Di\ImplementedBy;
 
-/**
- * @Aspect
- */
-class DaubleTaxBilling implements BillingService
+class DoubleTaxBilling implements BillingService
 {
 	/**
-	 * @SalesTax(10)
-	 * @SalesTax(5)
+	 * @SalesTax(0.1)
 	 */
 	public function chargeOrder()
 	{

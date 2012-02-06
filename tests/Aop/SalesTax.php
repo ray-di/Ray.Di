@@ -1,8 +1,6 @@
 <?php
 
-namespace Ray\Di;
-
-// use Ray\Di\Di\Annotation;
+namespace Ray\Di\Tests;
 
 /**
  * @Annotation

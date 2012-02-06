@@ -45,10 +45,9 @@ class Annotation implements AnnotationInterface
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct(Definition $definition)
     {
-        $this->definition = new Definition;
-        $this->definition = [];
+        $this->definition = $definition;
         $this->docParser = new DocParser;
         $this->docParser->setIgnoreNotImportedAnnotations(true);
         $this->phpParser = new PhpParser;
@@ -136,7 +135,7 @@ class Annotation implements AnnotationInterface
      * @return void
      * @throws Exception\MultipleAnnotationNotAllowed
      */
-    private function setAnnotationKey($key, $value, array $methodAnnotation,\ReflectionMethod $method)
+    private function setAnnotationKey($key, $value, array $methodAnnotation, \ReflectionMethod $method)
     {
         if ($key === Definition::POST_CONSTRUCT || $key == Definition::PRE_DESTROY) {
             if (isset($this->definition[$key])) {

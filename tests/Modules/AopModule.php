@@ -2,7 +2,7 @@
 
 namespace Ray\Di\Modules;
 
-use Ray\Di\TaxCharger;
+use Ray\Di\Tests\TaxCharger;
 
 use Ray\Di\AbstractModule,
     Ray\Di\Matcher,

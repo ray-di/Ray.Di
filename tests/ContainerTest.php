@@ -22,7 +22,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->config  = new Config;
+        $this->config  = new Config(new Annotation(new Definition));;
         $this->forge   = new Forge($this->config);
         $this->container = new Container($this->forge);
     }

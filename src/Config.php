@@ -92,12 +92,9 @@ class Config implements ConfigInterface, \Serializable
      * Constructor.
      *
      */
-    public function __construct(AnnotationInterface $annotation = null)
+    public function __construct(AnnotationInterface $annotation)
     {
         $this->reset();
-        if (is_null($annotation)) {
-            $annotation = new Annotation;
-        }
         $this->annotation = $annotation;
     }
 

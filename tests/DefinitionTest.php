@@ -2,8 +2,6 @@
 
 namespace Ray\Di;
 
-require __DIR__ . '/../src.php';
-
 /**
  * Test class for Annotation.
  */
@@ -26,17 +24,13 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
-     * @expectedException InvalidArgumentException
+     * @expectedException PHPUnit_Framework_Error_Notice
      */
     public function testOffsetSetWithoutKey()
     {
         $method = 'onEnd';
         $this->definition[] = array('MockDefiniton' => array(Definition::PRE_DESTROY => $method));
         $actual = $this->definition['MockDefiniton'][Definition::PRE_DESTROY];
-        v($this->definition);
-        v($actual);
-        $this->assertSame($method, $actual);
     }
 
     public function testOffsetExists()

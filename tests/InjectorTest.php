@@ -21,7 +21,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->container = new Container(new Forge(new Config(new Annotation)));
+        $this->container = new Container(new Forge(new Config(new Annotation(new Definition))));
         $this->injector = new Injector($this->container, new EmptyModule);
     }
 
@@ -167,7 +167,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function estregisterInterceptAnnotation()
     {
         $this->injector->setModule(new Modules\AopModule);
-        $instance = $this->injector->getInstance('Ray\Di\RealBillingService');
+        $instance = $this->injector->getInstance('Ray\Di\Tests\RealBillingService');
         /* @var $instance \Ray\Di\RealBillingService */
         list($amount, $unit) = $instance->chargeOrder();
         $expected = 105;
@@ -177,20 +177,21 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testBindInterceptors()
     {
         $this->injector->setModule(new Modules\AopMatcherModule);
-        $instance = $this->injector->getInstance('Ray\Di\RealBillingService');
+        $instance = $this->injector->getInstance('Ray\Di\Tests\RealBillingService');
         /* @var $instance \Ray\Di\RealBillingService */
         list($amount, $unit) = $instance->chargeOrder();
         $expected = 105;
         $this->assertSame($expected, (int)$amount);
     }
 
-    public function estBindDobuleInterceptors()
+    public function testBindDobuleInterceptors()
     {
-        $this->injector->setModule(new Modules\AopMatcherModule);
-        $instance = $this->injector->getInstance('Ray\Di\DaubleTaxBilling');
+        $module = new Modules\AopMatcherModule;
+        $this->injector->setModule(new Modules\AopAnnotateMatcherModule);
+        $instance = $this->injector->getInstance('Ray\Di\Tests\DoubleTaxBilling');
         /* @var $instance \Ray\Di\RealBillingService */
         list($amount, $unit) = $instance->chargeOrder();
-        $expected = 105;
+        $expected = 110;
         $this->assertSame($expected, (int)$amount);
     }
 
@@ -200,7 +201,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 //     public function testBindMismatchButHasAnnotation()
 //     {
 //         $this->injector->setModule(new Modules\AopMisMatcher);
-//         $instance = $this->injector->getInstance('Ray\Di\RealBillingService');
+//         $instance = $this->injector->getInstance('Ray\Di\Tests\RealBillingService');
 //     }
 
     public function testToString()
@@ -218,7 +219,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testEmptyModule()
     {
-        $injector = new Injector(new Container(new Forge(new Config(new Annotation))));
+        $injector = new Injector(new Container(new Forge(new Config(new Annotation(new Definition)))));
         $ref = new \ReflectionProperty($injector, 'module');
         $ref->setAccessible(true);
         $module = $ref->getValue($injector);
@@ -234,6 +235,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * not expectedException Ray\Di\Exception\InvalidBinding
+     *
      * @expectedException PHPUnit_Framework_Error_Warning
      */
     public function testAbstractClassInvalidBinding()

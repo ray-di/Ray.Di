@@ -17,7 +17,7 @@ This project use Aura.Di component.
 Aura.Di: [http://auraphp.github.com/Aura.Di](http://auraphp.github.com/Aura.Di)
 
 ##Requiment##
- * PHP 5.3 / 5.4
+ * PHP 5.4+
 
 ##Quick Start##
     $ git clone git@github.com:koriym/Ray.Di.git

@@ -34,14 +34,6 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
-//     public function testConfigureBind()
-//     {
-//         $expected = 'Ray\Di\Mock\DbInterface';
-//         $actual = $this->module[AbstractModule::BIND];
-//         v($this->module);
-//         $this->assertSame($expected, $actual);
-//     }
-
     public function testConfigureTo()
     {
         $expected = array(AbstractModule::TO_CLASS, 'Ray\Di\Mock\UserDb');
@@ -95,13 +87,13 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_string((string)$this->module));
     }
 
-//     public function restregisterInterceptAnnotation()
-//     {
-//         $module = new Modules\AopModule;
-//         $interceptorClass = 'Ray\Di\SalesTax';
-//         $expected = array(new $interceptorClass);
-//         $this->assertSame($interceptorClass, get_class($module->annotations['SalesTax'][0]));
-//     }
+    //     public function restregisterInterceptAnnotation()
+    //     {
+    //         $module = new Modules\AopModule;
+    //         $interceptorClass = 'Ray\Di\SalesTax';
+    //         $expected = array(new $interceptorClass);
+    //         $this->assertSame($interceptorClass, get_class($module->annotations['SalesTax'][0]));
+    //     }
 
     /**
      * @expectedException Ray\Di\Exception\InvalidToBinding
@@ -152,32 +144,46 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
     public function testInvokeReturnFalse()
     {
         $module = $this->module;
-        $binder = $module('Ray\Di\RealBillingService');
-        $this->assertSame(false, $binder);
+        $binder = $module('Ray\Di\Tests\RealBillingService');
+        $this->assertSame(false, $binder->hasBinding());
     }
 
     public function testInvokeReturnBinder()
     {
         $module = new \Ray\Di\Modules\AopMatcherModule;;
-        $binder = $module('Ray\Di\RealBillingService');
+        $binder = $module('Ray\Di\Tests\RealBillingService');
         $this->assertInstanceOf('\Ray\Aop\Bind', $binder);
     }
 
     public function testAopAnyMatcherModule()
     {
         $module = new \Ray\Di\Modules\AopAnyMatcherModule;;
-        $bind = $module('Ray\Di\RealBillingService');
+        $bind = $module('Ray\$bind\Tests\RealBillingService');
+        $this->assertInstanceOf('Ray\Aop\Bind', $bind);
         $interceptors = $bind('any_method_name');
-        $this->assertInstanceOf('\Ray\Di\TaxCharger', $interceptors[0]);
+        $this->assertInstanceOf('\Ray\Di\Tests\TaxCharger', $interceptors[0]);
     }
 
     public function testAopAnnotateMatcherModule()
     {
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
-        $bind = $module('Ray\Di\RealBillingService');
+        $bind = $module('Ray\Di\Tests\RealBillingService');
         $result = $bind('chargeOrderWithNoTax');
         $this->assertSame(false, $result);
+    }
+
+    public function testAopAnnotateMatcherModuleGetCorrectIntercecptor()
+    {
+        $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
+        $bind = $module('Ray\Di\Tests\RealBillingService');
         $result = $bind('chargeOrder');
-        $this->assertInstanceOf('\Ray\Di\TaxCharger', $result[0]);
+        $this->assertInstanceOf('\Ray\Di\Tests\TaxCharger', $result[0]);
+    }
+
+    public function testInstall()
+    {
+        $module = new \Ray\Di\Modules\InstallModule;
+        $this->assertTrue(isset($module->bindings['Ray\\Di\\Mock\\DbInterface']));
+        $this->assertTrue(isset($module->bindings['Ray\\Di\\Mock\\LogInterface']));
     }
 }
