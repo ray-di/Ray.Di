@@ -333,10 +333,10 @@ abstract class AbstractModule implements \ArrayAccess
     }
 
    /**
-    * ArrayAccess::offsetExists
-    *
-    * @param offset
-    */
+     * ArrayAccess::offsetExists
+     *
+     * @param offset
+     */
     public function offsetExists($offset)
     {
         return isset($this->bindings[$offset]);

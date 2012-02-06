@@ -119,7 +119,10 @@ class Annotation implements AnnotationInterface
             $this->docParser->setTarget(Target::TARGET_CLASS);
             foreach ($annotations as $annotation) {
                 $annotationClass = new \ReflectionClass($annotation);
-                $annotationClassAnnotations = $this->docParser->parse($annotationClass->getDocComment(), 'class ' . $annotationClass->name);
+                $annotationClassAnnotations = $this->docParser->parse(
+                    $annotationClass->getDocComment(),
+                	'class ' . $annotationClass->name
+                );
             }
         }
     }
