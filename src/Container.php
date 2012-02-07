@@ -54,7 +54,7 @@ class Container implements ContainerInterface
      * @var array
      *
      */
-    protected $defs = array();
+    protected $defs = [];
 
     /**
      *
@@ -63,7 +63,7 @@ class Container implements ContainerInterface
      * @var array
      *
      */
-    protected $services = array();
+    protected $services = [];
 
     /**
      *
@@ -128,7 +128,7 @@ class Container implements ContainerInterface
      */
     public function __clone()
     {
-        $this->services = array();
+        $this->services = [];
         $this->forge = clone $this->forge;
     }
 
@@ -323,12 +323,12 @@ class Container implements ContainerInterface
      * the following idiom:
      *
      *      $di->params['ClassName']['param_name'] = Lazy(function() use ($di)) {
-     *          return $di->newInstance('OtherClass', array(...));
+     *          return $di->newInstance('OtherClass', [...)];
      *      }
      *
      * ... with the following:
      *
-     *      $di->params['ClassName']['param_name'] = $di->lazyNew('OtherClass', array(...));
+     *      $di->params['ClassName']['param_name'] = $di->lazyNew('OtherClass', [...)];
      *
      * @param string $class The type of class of instantiate.
      *

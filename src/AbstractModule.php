@@ -97,14 +97,14 @@ abstract class AbstractModule implements \ArrayAccess
      *
      * @var \ArrayObject
      */
-    public $annotations = array();
+    public $annotations = [];
 
     /**
      * Pointcuts
      *
      * @var \ArrayObject
      */
-    public $pointcuts = array();
+    public $pointcuts = [];
 
     /**
      * Binding definition
@@ -146,7 +146,7 @@ abstract class AbstractModule implements \ArrayAccess
      *
      * @var array
      */
-    protected $scope = array(Scope::PROTOTYPE, Scope::SINGLETON);
+    protected $scope = [Scope::PROTOTYPE, Scope::SINGLETON];
 
 
     /**
@@ -198,7 +198,7 @@ abstract class AbstractModule implements \ArrayAccess
     protected function annotatedWith($name)
     {
         $this->currentName = $name;
-        $this->bindings[$this->currentBinding][$name] = array(self::IN => Scope::SINGLETON);
+        $this->bindings[$this->currentBinding][$name] = [self::IN => Scope::SINGLETON];
         return $this;
     }
 
@@ -228,7 +228,7 @@ abstract class AbstractModule implements \ArrayAccess
         if (class_exists($class) === false) {
             throw new Exception\InvalidToBinding($class);
         }
-        $this->bindings[$this->currentBinding][$this->currentName] = array(self::TO => array(self::TO_CLASS, $class));
+        $this->bindings[$this->currentBinding][$this->currentName] = [self::TO => [self::TO_CLASS, $class]];
         return $this;
     }
 
@@ -248,7 +248,7 @@ abstract class AbstractModule implements \ArrayAccess
             throw new Exception\InvalidProviderBinding($provider);
         }
         $this->bindings[$this->currentBinding][$this->currentName]
-        = array(self::TO => array(self::TO_PROVIDER, $provider));
+        = [self::TO => [self::TO_PROVIDER, $provider]];
     }
 
     /**
@@ -261,7 +261,7 @@ abstract class AbstractModule implements \ArrayAccess
     protected function toInstance($instance)
     {
         $this->bindings[$this->currentBinding][$this->currentName]
-        = array(self::TO => array(self::TO_INSTANCE, $instance));
+        = [self::TO => [self::TO_INSTANCE, $instance]];
     }
 
     /**
@@ -274,7 +274,7 @@ abstract class AbstractModule implements \ArrayAccess
     protected function toClosure(\Closure $closure)
     {
         $this->bindings[$this->currentBinding][$this->currentName]
-        = array(self::TO => array(self::TO_CLOSURE, $closure));
+        = [self::TO => [self::TO_CLOSURE, $closure]];
     }
 
     /**
@@ -288,7 +288,7 @@ abstract class AbstractModule implements \ArrayAccess
      */
     protected function bindInterceptor($classMatcher, $methodMatcher, array $interceptors)
     {
-        $this->pointcuts[] = array($classMatcher, $methodMatcher, $interceptors);
+        $this->pointcuts[] = [$classMatcher, $methodMatcher, $interceptors];
     }
 
     protected function install(AbstractModule $module)

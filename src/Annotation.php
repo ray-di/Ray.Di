@@ -171,12 +171,12 @@ class Annotation implements AnnotationInterface
         $nameParameter = isset($methodAnnotation[Definition::NAMED]) ? $methodAnnotation[Definition::NAMED] : false;
         $named = ($nameParameter !== false) ? $this->getNamed($nameParameter) : [];
         $parameters = $method->getParameters();
-        $paramsInfo = array();
+        $paramsInfo = [];
         foreach ($parameters as $parameter) {
             /* @var $parameter ReflectionParameter */
             $class = $parameter->getClass();
             $typehint = $class ? $class->getName() : '';
-            $typehintBy = $typehint ? $this->getTypeHintDefaultInjection($typehint) : array();
+            $typehintBy = $typehint ? $this->getTypeHintDefaultInjection($typehint) : [];
             $pos = $parameter->getPosition();
             if (is_string($named)) {
                 $name = $named;
@@ -185,13 +185,13 @@ class Annotation implements AnnotationInterface
             } else {
                 $name = Definition::NAME_UNSPECIFIED;
             }
-            $paramsInfo[] = array(
-            Definition::PARAM_POS => $pos,
-            Definition::PARAM_TYPEHINT => $typehint,
-            Definition::PARAM_NAME => $parameter->name,
-            Definition::PARAM_ANNOTATE => $name,
-            Definition::PARAM_TYPEHINT_BY => $typehintBy
-            );
+            $paramsInfo[] = [
+                Definition::PARAM_POS => $pos,
+                Definition::PARAM_TYPEHINT => $typehint,
+                Definition::PARAM_NAME => $parameter->name,
+                Definition::PARAM_ANNOTATE => $name,
+                Definition::PARAM_TYPEHINT_BY => $typehintBy
+            ];
         }
         $paramInfo[$method->name] = $paramsInfo;
         $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
@@ -208,7 +208,7 @@ class Annotation implements AnnotationInterface
      */
     private function getTypeHintDefaultInjection($typehint)
     {
-        static $definition = array();
+        static $definition = [];
 
         if (isset($definition[$typehint])) {
             $hintDef = $definition[$typehint];
@@ -221,19 +221,19 @@ class Annotation implements AnnotationInterface
         }
         // @ImplementBy as default
         if (isset($hintDef[Definition::IMPLEMENTEDBY])) {
-            $result = array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $hintDef[Definition::IMPLEMENTEDBY]);
+            $result = [Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $hintDef[Definition::IMPLEMENTEDBY]];
             return $result;
         }
         // @ProvidBY as default
         if (isset($hintDef[Definition::PROVIDEDBY])) {
-            $result = array(Definition::PARAM_TYPEHINT_METHOD_PROVIDEDBY, $hintDef[Definition::PROVIDEDBY]);
+            $result = [Definition::PARAM_TYPEHINT_METHOD_PROVIDEDBY, $hintDef[Definition::PROVIDEDBY]];
             return $result;
         }
         // this typehint is class, not a interface.
         if (class_exists($typehint)) {
             $class = new \ReflectionClass($typehint);
             if ($class->isAbstract() === false) {
-                $result = array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $typehint);
+                $result = [Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $typehint];
                 return $result;
             }
         }

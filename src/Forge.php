@@ -94,7 +94,7 @@ class Forge implements ForgeInterface
 
         // create the new instance
         $object = call_user_func_array(
-            array($this->config->getReflect($class), 'newInstance'),
+            [$this->config->getReflect($class), 'newInstance'],
             $params
         );
 

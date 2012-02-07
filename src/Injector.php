@@ -125,7 +125,7 @@ class Injector implements InjectorInterface
     {
         list($config, $setter, $definition) = $this->config->fetch($class);
         // annotation-oriented dependency
-        if ($definition !== array()) {
+        if ($definition !== []) {
             list($config, $setter) = $this->bindModule($setter, $definition, $this->module);
         }
         $params = is_null($params) ? $config : array_merge($config, (array) $params);
@@ -139,7 +139,7 @@ class Injector implements InjectorInterface
 
         // create the new instance
         $object = call_user_func_array(
-            array($this->config->getReflect($class), 'newInstance'),
+            [$this->config->getReflect($class), 'newInstance'],
             $params
         );
 
@@ -217,17 +217,17 @@ class Injector implements InjectorInterface
      */
     private function bindModule(array $setter, array $definition, AbstractModule $module)
     {
-        // @return array array(AbstractModule::TO => array($toMethod, $toTarget)
+        // @return array [AbstractModule::TO => [$toMethod, $toTarget]]
         $jitBinding = function($param, $definition, $typeHint, $annotate) use ($module) {
             $typehintBy = $param[Definition::PARAM_TYPEHINT_BY];
-            if ($typehintBy == array()) {
+            if ($typehintBy == []) {
                 $typehint = $param[Definition::PARAM_TYPEHINT];
                 throw new Exception\InvalidBinding("$typeHint:$annotate");
             }
             if ($typehintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
-                return array(AbstractModule::TO => array(AbstractModule::TO_CLASS, $typehintBy[1]));
+                return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typehintBy[1]]];
             }
-            return array(AbstractModule::TO => array(AbstractModule::TO_PROVIDER, $typehintBy[1]));
+            return [AbstractModule::TO => [AbstractModule::TO_PROVIDER, $typehintBy[1]]];
         };
         $container = $this->container;
         $config = $this->container->getForge()->getConfig();
@@ -258,9 +258,10 @@ class Injector implements InjectorInterface
             try {
                 $annotate = $param[Definition::PARAM_ANNOTATE];
                 $typeHint = $param[Definition::PARAM_TYPEHINT];
-                $binding = (isset($module[$typeHint])
-                && isset($module[$typeHint][$annotate]) && ($module[$typeHint][$annotate] !== array()))
-                ? $module[$typeHint][$annotate] : false;
+                $hasTypeHint = isset($module[$typeHint])
+                && isset($module[$typeHint][$annotate])
+                && ($module[$typeHint][$annotate] !== []);
+                $binding = $hasTypeHint ? $module[$typeHint][$annotate] : false;
                 if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
                     // default bindg by @ImplemetedBy or @ProviderBy
                     $binding = $jitBinding($param, $definition, $typeHint, $annotate);
@@ -288,7 +289,7 @@ class Injector implements InjectorInterface
         $bindMethod = function ($item) use ($bindOneParameter, $definition, $module) {
             list($method, $settings) = each($item);
             $params = array_map($bindOneParameter, $settings);
-            return array($method, $params);
+            return [$method, $params];
         };
 
         // main
@@ -296,7 +297,7 @@ class Injector implements InjectorInterface
         ? $definition[Definition::INJECT][Definition::INJECT_SETTER] : false;
         if ($setterDefinitions !== false) {
             $injected = array_map($bindMethod, $setterDefinitions);
-            $setter = array();
+            $setter = [];
             foreach ($injected as $item) {
                 $setterMethod = $item[0];
                 $object =  (count($item[1]) === 1 && $setterMethod !== '__construct') ? $item[1][0] : $item[1];
@@ -308,9 +309,9 @@ class Injector implements InjectorInterface
             $params = $setter['__construct'];
             unset($setter['__construct']);
         } else {
-            $params = array();
+            $params = [];
         }
-        return array($params, $setter);
+        return [$params, $setter];
     }
 
     /**

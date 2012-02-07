@@ -38,7 +38,7 @@ class Config implements ConfigInterface, \Serializable
      * @var array
      *
      */
-    protected $reflect = array();
+    protected $reflect = [];
 
     /**
      *
@@ -57,12 +57,12 @@ class Config implements ConfigInterface, \Serializable
      * @var array
      *
      */
-    protected $unified = array();
+    protected $unified = [];
 
     /**
      * Method parameters
      *
-     * $params[$class][$method] = array($param1varName, $param2varName ...)
+     * $params[$class][$method] = [$param1varName, $param2varName ...]
      *
      * @var array
      */
@@ -121,11 +121,11 @@ class Config implements ConfigInterface, \Serializable
     protected function reset()
     {
         $this->params = new \ArrayObject;
-        $this->params['*'] = array();
+        $this->params['*'] = [];
         $this->setter = new \ArrayObject;
-        $this->setter['*'] = array();
-        $this->definition = new Definition(array());
-        $this->definition['*'] = array();
+        $this->setter['*'] = [];
+        $this->definition = new Definition([]);
+        $this->definition['*'] = [];
         $this->methodReflect = new \ArrayObject;
     }
 
@@ -212,9 +212,9 @@ class Config implements ConfigInterface, \Serializable
             $parent_definition = $this->annotation->getDefinition($class);
         }
         // stores the unified config and setter values
-        $unified_params = array();
-        $unified_setter = array();
-        $unified_defenition = array();
+        $unified_params = [];
+        $unified_setter = [];
+        $unified_defenition = [];
 
         // reflect on the class
         $rclass = $this->getReflect($class);
@@ -253,7 +253,7 @@ class Config implements ConfigInterface, \Serializable
         // merge the defenitions
         $definition = isset($this->definition[$class])
         ? $this->definition[$class] : $this->annotation->getDefinition($class);
-        if ($definition !== array()) {
+        if ($definition !== []) {
             $unified_definition = array_merge($parent_definition, $definition);
         } else {
             $unified_definition = $parent_definition;
@@ -295,13 +295,13 @@ class Config implements ConfigInterface, \Serializable
      */
     public function serialize() {
         return serialize(
-            array(
+            [
                 $this->params,
                 $this->setter,
                 $this->unified,
                 $this->definition,
                 $this->annotation
-            )
+            ]
         );
     }
 

@@ -103,7 +103,7 @@ class Definition extends \ArrayObject
     /**
      * Param typehint default concrete class / provider class
      *
-     * @var array array($typehitMethod, $className>)
+     * @var array [$typehitMethod, $className>]
      */
     const PARAM_TYPEHINT_BY = 'typehint_by';
 
