@@ -141,6 +141,24 @@ abstract class AbstractModule implements \ArrayAccess
     protected $scope = [Scope::PROTOTYPE, Scope::SINGLETON];
 
     /**
+     * A list with annotations that are not causing exceptions when not resolved to an annotation class.
+     *
+     * The names are case sensitive.
+     *
+     * @var array
+     */
+     private $globalIgnoredNames = [
+        'Inject',
+        'Named',
+        'ImplementedBy',
+        'PostConstruct',
+        'PreDestroy',
+        'ProvidedBy',
+        'Scope',
+        'Provides'
+    ];
+
+    /**
      * Constructor
      */
     public function __construct(AbstractModule $module = null)
@@ -154,7 +172,11 @@ abstract class AbstractModule implements \ArrayAccess
             $this->pointcuts = $module->pointcuts;
             $this->container = $module->container;
         }
-        $this->matcher = new Matcher(new Reader);
+        $reader = new Reader;
+        foreach ($this->globalIgnoredNames as $name) {
+            $reader->addGlobalIgnoredName($name);
+        }
+        $this->matcher = new Matcher($reader);
         $this->configure();
     }
 
