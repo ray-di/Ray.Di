@@ -10,6 +10,8 @@ namespace Ray\Di;
 use Ray\Aop\Bind,
     Ray\Aop\Matcher;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
+use Doctrine\Common\Annotations\FileCacheReader;
+use Doctrine\Common\Cache\ApcCache;
 use ArrayObject;
 
 /**
@@ -160,6 +162,8 @@ abstract class AbstractModule implements \ArrayAccess
 
     /**
      * Constructor
+     *
+     * @param AbstractModule $module
      */
     public function __construct(AbstractModule $module = null)
     {
@@ -176,6 +180,11 @@ abstract class AbstractModule implements \ArrayAccess
         foreach ($this->globalIgnoredNames as $name) {
             $reader->addGlobalIgnoredName($name);
         }
+        $reader = new FileCacheReader(
+                $reader,
+                dirname(__DIR__) . '/tmp/',
+                $debug = true
+        );
         $this->matcher = new Matcher($reader);
         $this->configure();
     }
