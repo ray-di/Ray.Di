@@ -1,6 +1,8 @@
 <?php
 namespace Ray\Di;
 
+use Ray\Aop\Bind;
+
 /**
  * Test class for Module.
  */
@@ -144,30 +146,30 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
     public function testInvokeReturnFalse()
     {
         $module = $this->module;
-        $binder = $module('Ray\Di\Tests\RealBillingService');
+        $binder = $module('Ray\Di\Tests\RealBillingService', new Bind);
         $this->assertSame(false, $binder->hasBinding());
     }
 
     public function testInvokeReturnBinder()
     {
         $module = new \Ray\Di\Modules\AopMatcherModule;;
-        $binder = $module('Ray\Di\Tests\RealBillingService');
+        $binder = $module('Ray\Di\Tests\RealBillingService', new Bind);
         $this->assertInstanceOf('\Ray\Aop\Bind', $binder);
     }
 
     public function testAopAnyMatcherModule()
     {
-        $module = new \Ray\Di\Modules\AopAnyMatcherModule;;
-        $bind = $module('Ray\$bind\Tests\RealBillingService');
+        $module = new \Ray\Di\Modules\AopAnyMatcherModule;
+        $bind = $module('Ray\Di\Tests\RealBillingService', new Bind);
         $this->assertInstanceOf('Ray\Aop\Bind', $bind);
-        $interceptors = $bind('any_method_name');
+        $interceptors = $bind('chargeOrderWithNoTax');
         $this->assertInstanceOf('\Ray\Di\Tests\TaxCharger', $interceptors[0]);
     }
 
     public function testAopAnnotateMatcherModule()
     {
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
-        $bind = $module('Ray\Di\Tests\RealBillingService');
+        $bind = $module('Ray\Di\Tests\RealBillingService', new Bind);
         $result = $bind('chargeOrderWithNoTax');
         $this->assertSame(false, $result);
     }
@@ -175,7 +177,7 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
     public function testAopAnnotateMatcherModuleGetCorrectIntercecptor()
     {
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
-        $bind = $module('Ray\Di\Tests\RealBillingService');
+        $bind = $module('Ray\Di\Tests\RealBillingService', new Bind);
         $result = $bind('chargeOrder');
         $this->assertInstanceOf('\Ray\Di\Tests\TaxCharger', $result[0]);
     }

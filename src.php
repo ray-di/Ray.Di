@@ -11,8 +11,6 @@ require __DIR__ . '/src/Lazy.php';
 require __DIR__ . '/src/Manager.php';
 require __DIR__ . '/src/InjectorInterface.php';
 require __DIR__ . '/src/Injector.php';
-require __DIR__ . '/src/Matcher.php';
-require __DIR__ . '/src/Matched.php';
 
 require __DIR__ . '/src/AnnotationInterface.php';
 require __DIR__ . '/src/Annotation.php';

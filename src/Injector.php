@@ -70,6 +70,7 @@ class Injector implements InjectorInterface
             $module = new EmptyModule;
         }
         $this->module = $module;
+        $this->bind = new Bind;
     }
 
     /**
@@ -160,7 +161,7 @@ class Injector implements InjectorInterface
             }
         }
         $module = $this->module;
-        $bind = $module($class);
+        $bind = $module($class, new $this->bind);
         /** @var $bind \BEAR\Di\Bind */
         if ($bind->hasBinding() === true) {
             $object = new Weaver($object, $bind);
