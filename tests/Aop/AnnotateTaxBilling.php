@@ -6,7 +6,7 @@ use Ray\Di\Tests\SalesTax;
 
 use Ray\Di\Di\ImplementedBy;
 
-class DoubleTaxBilling implements BillingService
+class AnnotateTaxBilling implements BillingService
 {
 	/**
 	 * @SalesTax(0.1)

@@ -18,6 +18,13 @@ use Ray\Di\AbstractModule,
  */
 class EmptyModule extends AbstractModule
 {
+    public function __construct()
+    {
+        $this->bindings = new \ArrayObject;
+        $this->pointcuts = new \ArrayObject;
+        $this->container = new \ArrayObject;
+    }
+
     /**
      * (non-PHPdoc)
      * @see Ray\Di.AbstractModule::configure()

@@ -188,21 +188,22 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Modules\AopMatcherModule;
         $this->injector->setModule(new Modules\AopAnnotateMatcherModule);
-        $instance = $this->injector->getInstance('Ray\Di\Tests\DoubleTaxBilling');
+        $instance = $this->injector->getInstance('Ray\Di\Tests\AnnotateTaxBilling');
         /* @var $instance \Ray\Di\RealBillingService */
         list($amount, $unit) = $instance->chargeOrder();
         $expected = 110;
         $this->assertSame($expected, (int)$amount);
     }
 
-//     /**
-//      * @expectedException Ray\Di\Exception\UnregisteredAnnotation
-//      */
-//     public function testBindMismatchButHasAnnotation()
-//     {
-//         $this->injector->setModule(new Modules\AopMisMatcher);
-//         $instance = $this->injector->getInstance('Ray\Di\Tests\RealBillingService');
-//     }
+    public function testBindInterceptorsToChildClass()
+    {
+        $this->injector->setModule(new Modules\AopAnnotateMatcherModule);
+        $instance = $this->injector->getInstance('Ray\Di\Tests\ChildRealBillingService');
+        /* @var $instance \Ray\Di\RealBillingService */
+        list($amount, $unit) = $instance->chargeOrder();
+        $expected = 110;
+        $this->assertSame($expected, (int)$amount);
+    }
 
     public function testToString()
     {

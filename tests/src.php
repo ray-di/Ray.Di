@@ -61,5 +61,6 @@ require_once __DIR__ . '/Mock/AbstractDb.php';
 require_once __DIR__ . '/Aop/BillingService.php';
 require_once __DIR__ . '/Aop/RealBillingService.php';
 require_once __DIR__ . '/Aop/SalesTax.php';
-require_once __DIR__ . '/Aop/DoubleTaxBilling.php';
+require_once __DIR__ . '/Aop/AnnotateTaxBilling.php';
 require_once __DIR__ . '/Aop/TaxCharger.php';
+require_once __DIR__ . '/Aop/ChildRealBillingService.php';
