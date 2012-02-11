@@ -7,6 +7,8 @@
  */
 namespace Ray\Di;
 
+use ArrayObject;
+
 /**
  *
  * Retains target class inject definition.
@@ -14,7 +16,7 @@ namespace Ray\Di;
  * @package Ray.Di
  * @author  Akihito Koriyama <akihito.koriyama@gmail.com>
  */
-class Definition extends \ArrayObject
+class Definition extends ArrayObject
 {
     /**
      * Postconstruct annotation
@@ -151,6 +153,9 @@ class Definition extends \ArrayObject
     const OPTIONS = 'options';
     const BINDING = 'binding';
 
+    const BY_METHOD = 'by_method';
+    const BY_NAME = 'by_name';
+
     /**
      * Constructor
      */
@@ -168,7 +173,61 @@ class Definition extends \ArrayObject
         parent::__construct($defaults);
     }
 
-    
+    /**
+     * Set user annotation by name
+     *
+     *  @param string $annotationName
+     *  @param string $methodName
+     *  @param object $methodAnnotation
+     *
+     *  @return void
+     */
+    public function setUserAnnotationMethodName($annotationName, $methodName)
+    {
+        $this[self::BY_NAME][$annotationName][] = $methodName;
+    }
+
+    /**
+     * Return user annotation by annotation name
+     *
+     * @param $annotationName
+     *
+     * @return array [$methodName, $methodAnnotation]
+     */
+    public function getUserAnnotationMethodName($annotationName)
+    {
+        $result = isset($this[self::BY_NAME]) && isset($this[self::BY_NAME][$annotationName]) ? $this[Definition::BY_NAME][$annotationName] : null;
+        return $result;
+    }
+
+    /**
+     * setUserAnnotationByMethod
+     *
+     * @param string $annotationName
+     * @param string $methodName
+     * @param object $methodAnnotation
+     *
+     * @return void
+     */
+    public function setUserAnnotationByMethod($annotationName, $methodName, $methodAnnotation)
+    {
+        $this[self::BY_METHOD][$methodName][$annotationName][] = $methodAnnotation;
+    }
+
+    /**
+     * Return user annotation by method name
+     *
+     * @param string $methodName
+     *
+     * @return array [$annotationName, $methodAnnotation][]
+     */
+    public function getUserAnnotationByMethod($methodName)
+    {
+        $result = @isset($this[self::BY_METHOD][$methodName]) ?
+        $this[self::BY_METHOD][$methodName] : null;
+        return $result;
+    }
+
     /**
      * Return class annotation definition information.
      *

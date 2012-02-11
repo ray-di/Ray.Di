@@ -18,7 +18,7 @@ namespace Ray\Di;
  * @package Aura.Di
  *
  */
-class Config implements ConfigInterface, \Serializable
+class Config implements ConfigInterface
 {
     /**
      *
@@ -254,7 +254,7 @@ class Config implements ConfigInterface, \Serializable
         $definition = isset($this->definition[$class])
         ? $this->definition[$class] : $this->annotation->getDefinition($class);
         if ($definition !== []) {
-            $unified_definition = array_merge($parent_definition, $definition);
+            $unified_definition = new Definition(array_merge($parent_definition->getArrayCopy(), $definition->getArrayCopy()));
         } else {
             $unified_definition = $parent_definition;
         }
@@ -290,32 +290,8 @@ class Config implements ConfigInterface, \Serializable
         return $this->methodReflect[$class][$method];
     }
 
-    /**
-     * Serialize
-     */
-    public function serialize() {
-        return serialize(
-            [
-                $this->params,
-                $this->setter,
-                $this->unified,
-                $this->definition,
-                $this->annotation
-            ]
-        );
-    }
-
-    /**
-     * Unerialize
-     */
-    public function unserialize($data) {
-        $data = unserialize($data);
-        list(
-            $this->params,
-            $this->setter,
-            $this->unified,
-            $this->definition,
-            $this->annotation
-        ) = $data;
+    public function __sleep()
+    {
+        return ['params', 'setter', 'unified', 'definition', 'annotation'];
     }
 }

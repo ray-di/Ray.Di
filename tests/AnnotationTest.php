@@ -175,9 +175,8 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     public function testImplementedBy()
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Mock\LogInterface');
-        $expected = array('ImplementedBy' => 'Ray\Di\Mock\Log');
-        $actual = $definition;
-        $this->assertSame($expected, $definition);
+        $expected ='Ray\Di\Mock\Log';
+        $this->assertSame($expected, $definition['ImplementedBy']);
     }
 
     public function testImplementedByTwice()

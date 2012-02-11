@@ -68,4 +68,51 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         $iterator = get_class($this->definition->getIterator());
         $this->assertSame('ArrayIterator', $iterator);
     }
+
+    public function test_setUserAnnotationMethodName()
+    {
+        $annotationName = 'anno1';
+        $methodName = 'method1';
+        $methodAnnotation = 'method_annotation1';
+        $this->definition->setUserAnnotationMethodName($annotationName, $methodName);
+        $result = $this->definition->getUserAnnotationMethodName($annotationName);
+        $this->assertSame([$methodName], $result);
+    }
+
+    public function test_setUserAnnotationMethodNameMulti()
+    {
+        $annotationName = 'anno1';
+        $methodName = 'method1';
+        $methodName2 = 'method2';
+        $methodAnnotation = 'method_annotation1';
+        $this->definition->setUserAnnotationMethodName($annotationName, $methodName);
+        $this->definition->setUserAnnotationMethodName($annotationName, $methodName2);
+        $result = $this->definition->getUserAnnotationMethodName($annotationName);
+        $this->assertSame([$methodName, $methodName2], $result);
+    }
+
+    public function test_setUserAnnotationByMethod()
+    {
+        $annotationName = 'anno1';
+        $methodName = 'method1';
+        $methodAnnotation = 'method_annotation1';
+        $this->definition->setUserAnnotationByMethod($annotationName, $methodName, $methodAnnotation);
+        $result = $this->definition->getUserAnnotationByMethod($methodName);
+        $expected = ['anno1' => ['method_annotation1']];
+        $this->assertSame($expected,  $result);
+    }
+
+    public function test_setUserAnnotationByMulti2()
+    {
+        $annotationName = 'anno1';
+        $annotationName2 = 'anno2';
+        $methodName = 'method1';
+        $methodAnnotation = 'method_annotation1';
+        $methodAnnotation2 = 'method_annotation2';
+        $this->definition->setUserAnnotationByMethod($annotationName, $methodName, $methodAnnotation);
+        $this->definition->setUserAnnotationByMethod($annotationName2, $methodName, $methodAnnotation2);
+        $result = $this->definition->getUserAnnotationByMethod($methodName);
+        $expected = [$annotationName => [$methodAnnotation], $annotationName2 => [$methodAnnotation2]];
+        $this->assertSame($expected,  $result);
+    }
 }

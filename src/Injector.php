@@ -156,7 +156,7 @@ class Injector implements InjectorInterface
                     // call the setter
                     $object->$method($value);
                 } else {
-                    call_user_func_array(array($object, $method), $value);
+                    call_user_func_array([$object, $method], $value);
                 }
             }
         }
@@ -193,14 +193,14 @@ class Injector implements InjectorInterface
      *
      * @return void
      */
-    private function setLifeCycle($instance, array $definition = null)
+    private function setLifeCycle($instance, Definition $definition = null)
     {
         $isSet = isset($definition[Definition::POST_CONSTRUCT]);
         if ($isSet && method_exists($instance, $definition[Definition::POST_CONSTRUCT])) {
             //signal
             call_user_func(array($instance, $definition[Definition::POST_CONSTRUCT]));
         }
-        if (isset($definition[Definition::PRE_DESTROY])) {
+        if (! is_null($definition[Definition::PRE_DESTROY])) {
             $this->preDestroyObjects->attach($instance, $definition[Definition::PRE_DESTROY]);
         }
 
@@ -216,7 +216,7 @@ class Injector implements InjectorInterface
      *
      * @return array <$constructorParams, $setter>
      */
-    private function bindModule(array $setter, array $definition, AbstractModule $module)
+    private function bindModule(array $setter, Definition $definition, AbstractModule $module)
     {
         // @return array [AbstractModule::TO => [$toMethod, $toTarget]]
         $jitBinding = function($param, $definition, $typeHint, $annotate) use ($module) {
