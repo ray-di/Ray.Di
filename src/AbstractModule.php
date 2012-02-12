@@ -421,6 +421,6 @@ abstract class AbstractModule implements \ArrayAccess
 
     public function __sleep()
     {
-        return ['bindings'];
+        return ['bindings', 'annotations'];
     }
 }
