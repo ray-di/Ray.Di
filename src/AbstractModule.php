@@ -418,4 +418,9 @@ abstract class AbstractModule implements \ArrayAccess
         }
         return $output;
     }
+
+    public function __sleep()
+    {
+        return ['bindings'];
+    }
 }
