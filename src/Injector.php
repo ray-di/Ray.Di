@@ -113,11 +113,6 @@ class Injector implements InjectorInterface
         return $this->container;
     }
 
-    public function __wakeup()
-    {
-        $this->container->lock();
-    }
-
     /**
      * Get a service object using binding module, optionally with overriding params.
      *
@@ -131,12 +126,7 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class, array $params = null)
     {
-        if ($this->container->isLocked()) {
-            $config = new Config(new Annotation(new Definition));
-            list($config, $setter, $definition) = $config->fetch($class);
-        } else {
-            list($config, $setter, $definition) = $this->config->fetch($class);
-        }
+        list($config, $setter, $definition) = $this->config->fetch($class);
         // annotation-oriented dependency
         if ($definition !== []) {
             list($config, $setter) = $this->bindModule($setter, $definition, $this->module);
