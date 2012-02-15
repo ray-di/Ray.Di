@@ -2,22 +2,25 @@
 
 namespace Ray\Di\Modules;
 
-use Ray\Di\Tests\TaxCharger;
+use Ray\Di\Tests\TaxCharger,
+    Ray\Di\AbstractModule,
+    Ray\Di\Scope,
+    Ray\Di\SalesTax;
 
-use Ray\Di\AbstractModule,
-Ray\Di\Scope,
-Ray\Di\SalesTax;
+use Ray\Aop\Matcher;
+use Doctrine\Common\Annotations\AnnotationReader as Reader;
 
+/**
+ * @deprecated
+ *
+ * not to set \Closure for serialize.
+ */
 class AopMatcherModule extends AbstractModule
 {
     protected function configure()
     {
-        $classMatcher = function($class) {
-            if ($class === 'Ray\Di\Tests\RealBillingService') {
-                return true;
-            }
-        };
-        $methodMatcher = function($method) {return true;};
-        $this->bindInterceptor($classMatcher, $methodMatcher, array(new TaxCharger));
+        $matcher = new Matcher(new Reader);
+        $this->bindInterceptor($matcher->subclassesOf('Ray\Di\Tests\RealBillingService'), $matcher->any(), array(new TaxCharger));
+        $this->bindInterceptor($matcher->any(), $matcher->any(), [new TaxCharger]);
     }
 }

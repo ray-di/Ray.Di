@@ -7,6 +7,8 @@
  */
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\Annotation;
+
 use Ray\Di\Exception;
 
 use Ray\Aop\Bind,
@@ -111,6 +113,11 @@ class Injector implements InjectorInterface
         return $this->container;
     }
 
+    public function __wakeup()
+    {
+        $this->container->lock();
+    }
+
     /**
      * Get a service object using binding module, optionally with overriding params.
      *
@@ -124,7 +131,12 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class, array $params = null)
     {
-        list($config, $setter, $definition) = $this->config->fetch($class);
+        if ($this->container->isLocked()) {
+            $config = new Config(new Annotation(new Definition));
+            list($config, $setter, $definition) = $config->fetch($class);
+        } else {
+            list($config, $setter, $definition) = $this->config->fetch($class);
+        }
         // annotation-oriented dependency
         if ($definition !== []) {
             list($config, $setter) = $this->bindModule($setter, $definition, $this->module);

@@ -188,4 +188,12 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
         $this->assertTrue(isset($module->bindings['Ray\\Di\\Mock\\DbInterface']));
         $this->assertTrue(isset($module->bindings['Ray\\Di\\Mock\\LogInterface']));
     }
+
+    public function testSerializeModule()
+    {
+        $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
+        $wakedModule = unserialize(serialize($module));
+        $this->assertObjectHasAttribute('pointcuts', $wakedModule);
+        $this->assertTrue(is_array($wakedModule->pointcuts));
+    }
 }

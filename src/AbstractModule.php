@@ -8,11 +8,13 @@
 namespace Ray\Di;
 
 use Ray\Aop\Bind,
-    Ray\Aop\Matcher;
+    Ray\Aop\Matcher,
+    Ray\Aop\Pointcut;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Doctrine\Common\Annotations\FileCacheReader;
 use Doctrine\Common\Cache\ApcCache;
 use ArrayObject;
+
 
 /**
  * A module contributes configuration information, typically interface bindings,
@@ -94,20 +96,6 @@ abstract class AbstractModule implements \ArrayAccess
     const NAME_UNSPECIFIED = '*';
 
     /**
-     * Annotation
-     *
-     * @var \ArrayObject
-     */
-    public $annotations;
-
-    /**
-     * Pointcuts
-     *
-     * @var \ArrayObject
-     */
-    public $pointcuts;
-
-    /**
      * Binding definition
      *
      * @var Definition
@@ -115,11 +103,18 @@ abstract class AbstractModule implements \ArrayAccess
     public $bindings;
 
     /**
+     * Pointcuts
+     *
+     * @var \ArrayObject
+     */
+    public $pointcuts = [];
+
+    /**
      * Object carry container
      *
      * @var \ArrayObject
      */
-    public $container;
+    protected $container;
 
     /**
      * Current Binding
@@ -169,7 +164,6 @@ abstract class AbstractModule implements \ArrayAccess
     {
         if (is_null($module)) {
             $this->bindings = new \ArrayObject;
-            $this->pointcuts = new \ArrayObject;
             $this->container = new \ArrayObject;
         } else {
             $this->bindings = $module->bindings;
@@ -311,7 +305,7 @@ abstract class AbstractModule implements \ArrayAccess
      */
     protected function bindInterceptor(Callable $classMatcher, Callable $methodMatcher, array $interceptors)
     {
-        $this->pointcuts[] = [$classMatcher, $methodMatcher, $interceptors];
+        $this->pointcuts[] = new Pointcut($classMatcher, $methodMatcher, $interceptors);
     }
 
     /**
@@ -324,7 +318,7 @@ abstract class AbstractModule implements \ArrayAccess
     protected function install(AbstractModule $module)
     {
         $this->bindings = new ArrayObject(array_merge($this->bindings->getArrayCopy(), $module->bindings->getArrayCopy()));
-        $this->pointcuts = new ArrayObject(array_merge($module->pointcuts->getArrayCopy(), $module->pointcuts->getArrayCopy()));
+        $this->pointcuts = array_merge($module->pointcuts, $module->pointcuts);
         $this->container = new ArrayObject(array_merge($module->container->getArrayCopy(), $module->container->getArrayCopy()));
     }
 
@@ -337,7 +331,7 @@ abstract class AbstractModule implements \ArrayAccess
      */
     public function __invoke($class, Bind $bind)
     {
-        $bind->bind($class, $this->pointcuts);
+        $bind->bind($class, (array)$this->pointcuts);
         return $bind;
     }
 
@@ -421,6 +415,6 @@ abstract class AbstractModule implements \ArrayAccess
 
     public function __sleep()
     {
-        return ['bindings', 'annotations'];
+        return ['bindings', 'pointcuts'];
     }
 }
