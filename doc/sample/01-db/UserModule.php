@@ -16,7 +16,7 @@ class UserModule extends AbstractModule
     {
         $pdo = new \PDO('sqlite::memory:', null, null);
         $this->bind('PDO')->annotatedWith('pdo_user')->toInstance($pdo);
-        $this->registerInterceptAnnotation('Transactional', array(new Timer, new Transaction));
-        $this->registerInterceptAnnotation('Template', array(new Template));
+        $this->bindInterceptor($this->matcher->any(), $this->matcher->any(), [new Timer, new Transaction]);
+        //$this->bindInterceptor($this->matcher->any(), $this->matcher->any(), [new Template]);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Ray\Di\Sample;
 
-$injector = include dirname(dirname(__DIR__)) . '/scripts/instance.php';
+$di = require __DIR__ . '/di.php';
 
 require __DIR__ . '/User.php';
 require __DIR__ . '/UserModule.php';
@@ -9,8 +9,8 @@ require __DIR__ . '/Transaction.php';
 require __DIR__ . '/Timer.php';
 require __DIR__ . '/Template.php';
 
-$injector->setModule(new UserModule);
-$user = $injector->getInstance('Ray\Di\Sample\User');
+$di->setModule(new UserModule);
+$user = $di->getInstance('Ray\Di\Sample\User');
 /* @var $user \Ray\Di\Sample\User */
 $user->createUser('Koriym', rand(18,35));
 $user->createUser('Bear', rand(18,35));

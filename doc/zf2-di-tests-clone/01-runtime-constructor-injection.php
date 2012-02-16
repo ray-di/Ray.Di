@@ -11,10 +11,10 @@ namespace MovieApp {
 }
 
 namespace {
-    $di = include __DIR__ . '/scripts/instance.php';
-    $di->getContainer()->params['MovieApp\Lister'] = array(
+    $di = require __DIR__ . '/scripts/instance.php';
+    $di->getContainer()->params['MovieApp\Lister'] = [
         'finder' => new MovieApp\Finder
-    );
+    ];
     $lister = $di->getInstance('MovieApp\Lister');
 
     // expression to test

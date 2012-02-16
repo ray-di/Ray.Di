@@ -13,9 +13,13 @@ class Template implements MethodInterceptor
     {
         $view = '';
         $result = $invocation->proceed();
+        if (! is_array($result)) {
+            return $result;
+        }
         foreach ($result as &$row) {
             $view .= "Name:{$row['Name']}\tAge:{$row['Age']}\n";
         }
+        echo $view;
         return $view;
     }
 }

@@ -131,9 +131,10 @@ class Injector implements InjectorInterface
         if ($definition !== []) {
             list($config, $setter) = $this->bindModule($setter, $definition, $this->module);
         }
+//         $params = isset($this->container->params[$class]) ? $this->container->params[$class] : null;
         $params = is_null($params) ? $config : array_merge($config, (array) $params);
 
-            // lazy-load params as needed
+        // lazy-load params as needed
         foreach ($params as $key => $val) {
             if ($params[$key] instanceof Lazy) {
                 $params[$key] = $params[$key]();

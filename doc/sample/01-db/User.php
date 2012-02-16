@@ -2,13 +2,11 @@
 
 namespace Ray\Di\Sample;
 
-/**
- * @Aspect
- */
+
 class User
 {
     private $db;
-    
+
     /**
      * @Inject
      * @Named("pdo=pdo_user")
