@@ -2,7 +2,8 @@
 /**
  * Ray
  *
- * @license  http://opensource.org/licenses/bsd-license.php BSD
+ * @package Ray.Di
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
 
@@ -85,7 +86,7 @@ class Annotation implements AnnotationInterface
     /**
      * Get class definition by annotation
      *
-     * @param string $class
+     * @param string $className
      *
      * @return array
      */
@@ -165,7 +166,6 @@ class Annotation implements AnnotationInterface
      * Set annotation key-value for DI
      *
      * @param string            $name        annotation name
-     * @param mixed             $value
      * @param \ReflectionMethod $method
      * @param \array            $annotations
      *

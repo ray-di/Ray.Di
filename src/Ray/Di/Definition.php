@@ -150,12 +150,40 @@ class Definition extends ArrayObject
      * @var string
      */
     const USER = 'user';
+
+    /**
+     * OPTIONS
+     *
+     * @var string
+     */
     const OPTIONS = 'options';
+
+    /**
+     * BINDING
+     *
+     * @var string
+     */
     const BINDING = 'binding';
 
+    /**
+     * BY_METHOD
+     *
+     * @var string
+     */
     const BY_METHOD = 'by_method';
+
+    /**
+     * BY_NAME
+     *
+     * @var string
+     */
     const BY_NAME = 'by_name';
 
+    /**
+     * Definition default
+     *
+     * @var array
+     */
     private $defaults = [
         self::SCOPE => Scope::PROTOTYPE,
         self::POST_CONSTRUCT => null,
@@ -167,6 +195,8 @@ class Definition extends ArrayObject
 
     /**
      * Constructor
+     *
+     * @array $default default defnition set
      */
     public function __construct($defaults = null)
     {
@@ -190,7 +220,6 @@ class Definition extends ArrayObject
      *
      *  @param string $annotationName
      *  @param string $methodName
-     *  @param object $methodAnnotation
      *
      *  @return void
      */

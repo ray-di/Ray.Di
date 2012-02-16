@@ -18,6 +18,9 @@ use Ray\Di\AbstractModule,
  */
 class EmptyModule extends AbstractModule
 {
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->bindings = new \ArrayObject;
