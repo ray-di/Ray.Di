@@ -27,10 +27,13 @@ Available at Google Code.
 Testing Ray.Di
 ==============
 
-Here's how to install Ray.Di from source to run the unit tests:
+Here's how to install Ray.Di from source to run the unit tests and samples.
 
 ```
 $ git clone git://github.com/koriym/Ray.Aop.git
 $ git submodule update --init
 $ phpunit
+$ php doc/sample/01-db/main.ph
+$ cd doc/zf2-di-tests-clone/
+$ php runall.php
 ```

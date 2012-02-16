@@ -21,7 +21,6 @@ namespace Foo\Bar\Test {
 
     $di = include __DIR__ . '/scripts/instance.php';
     $baz = $di->getInstance('Foo\Bar\Baz');
-    var_dump($baz);
     // expression to test
     $works = ($baz->bam instanceof \Foo\Bar\Bam);
 
