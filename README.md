@@ -19,15 +19,6 @@ Requiment
 
 * PHP 5.4+
 
-##Quick Start##
-    $ git clone git@github.com:koriym/Ray.Di.git
-    $ cd Ray.Di
-    $ git submodule update --init
-    // original
-    $ php doc/sample-01-db/original.php
-    // with Ray.DI (+transaction +timer +template interception.)
-    $ php doc/sample-01-db/main.php
-
 ## Documentation ##
 Available at Google Code.
 
