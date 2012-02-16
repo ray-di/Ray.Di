@@ -156,21 +156,33 @@ class Definition extends ArrayObject
     const BY_METHOD = 'by_method';
     const BY_NAME = 'by_name';
 
+    private $defaults = [
+        self::SCOPE => Scope::PROTOTYPE,
+        self::POST_CONSTRUCT => null,
+        self::PRE_DESTROY => null,
+        self::INJECT => [],
+        self::IMPLEMENTEDBY => [],
+        self::USER => []
+    ];
+
     /**
      * Constructor
      */
-    public function __construct(
-        $defaults = [
-            self::SCOPE => Scope::PROTOTYPE,
-            self::POST_CONSTRUCT => null,
-            self::PRE_DESTROY => null,
-            self::INJECT => [],
-            self::IMPLEMENTEDBY => [],
-            self::USER => []
-        ]
-    )
+    public function __construct($defaults = null)
     {
+        $defaults = $defaults ?: $this->defaults;
         parent::__construct($defaults);
+    }
+
+    /**
+     * Return is-defined
+     *
+     * @return bool
+     */
+    public function hasNoDefinition()
+    {
+       $hasNoDefinition = ($this->getArrayCopy() !== $this->defaults);
+       return $hasNoDefinition;
     }
 
     /**
