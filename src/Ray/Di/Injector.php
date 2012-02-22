@@ -139,11 +139,6 @@ class Injector implements InjectorInterface
                 [$this->config->getReflect($class), 'newInstance'],
                 $params
         );
-
-        // set life cycle
-        if ($definition) {
-            $this->setLifeCycle($object, $definition);
-        }
         // call setters after creation
         foreach ($setter as $method => $value) {
             // does the specified setter method exist?
@@ -162,6 +157,11 @@ class Injector implements InjectorInterface
         if ($bind->hasBinding() === true) {
             $object = new Weaver($object, $bind);
         }
+        // set life cycle
+        if ($definition) {
+            $this->setLifeCycle($object, $definition);
+        }
+
         return $object;
     }
 
