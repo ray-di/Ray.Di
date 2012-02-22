@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation;
 use Ray\Di\Exception;
 
 use Ray\Aop\Bind,
-    Ray\Aop\Weaver;
+Ray\Aop\Weaver;
 /**
  * Dependency Injector.
  *
@@ -125,7 +125,7 @@ class Injector implements InjectorInterface
         if ($definition->hasNoDefinition()) {
             list($config, $setter) = $this->bindModule($setter, $definition, $this->module);
         }
-//         $params = isset($this->container->params[$class]) ? $this->container->params[$class] : null;
+        //         $params = isset($this->container->params[$class]) ? $this->container->params[$class] : null;
         $params = is_null($params) ? $config : array_merge($config, (array) $params);
         // lazy-load params as needed
         foreach ($params as $key => $val) {
@@ -136,8 +136,8 @@ class Injector implements InjectorInterface
 
         // create the new instance
         $object = call_user_func_array(
-            [$this->config->getReflect($class), 'newInstance'],
-            $params
+                [$this->config->getReflect($class), 'newInstance'],
+                $params
         );
 
         // set life cycle
@@ -215,22 +215,10 @@ class Injector implements InjectorInterface
     private function bindModule(array $setter, Definition $definition, AbstractModule $module)
     {
         // @return array [AbstractModule::TO => [$toMethod, $toTarget]]
-        $jitBinding = function($param, $definition, $typeHint, $annotate) use ($module) {
-            $typehintBy = $param[Definition::PARAM_TYPEHINT_BY];
-            if ($typehintBy == []) {
-                $typehint = $param[Definition::PARAM_TYPEHINT];
-                throw new Exception\InvalidBinding("$typeHint:$annotate");
-            }
-            if ($typehintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
-                return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typehintBy[1]]];
-            }
-            return [AbstractModule::TO => [AbstractModule::TO_PROVIDER, $typehintBy[1]]];
-        };
         $container = $this->container;
         $config = $this->container->getForge()->getConfig();
         /* @var $forge Ray\Di\Forge */
         $injector = $this;
-
         $getInstance = function($in, $bindingToType, $target) use ($container, $definition, $injector) {
             if ($in === Scope::SINGLETON && $container->has($target)) {
                 $instance = $container->get($target);
@@ -250,43 +238,10 @@ class Injector implements InjectorInterface
             }
             return $instance;
         };
-
-        $bindOneParameter = function($param) use ($jitBinding, $definition, $module, $getInstance, $config) {
-            try {
-                $annotate = $param[Definition::PARAM_ANNOTATE];
-                $typeHint = $param[Definition::PARAM_TYPEHINT];
-                $hasTypeHint = isset($module[$typeHint])
-                && isset($module[$typeHint][$annotate])
-                && ($module[$typeHint][$annotate] !== []);
-                $binding = $hasTypeHint ? $module[$typeHint][$annotate] : false;
-                if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
-                    // default bindg by @ImplemetedBy or @ProviderBy
-                    $binding = $jitBinding($param, $definition, $typeHint, $annotate);
-                }
-                $bindingToType = $binding[AbstractModule::TO][0];
-                $target = $binding[AbstractModule::TO][1];
-                if ($bindingToType === AbstractModule::TO_INSTANCE) {
-                    return $target;
-                } elseif ($bindingToType === AbstractModule::TO_CLOSURE) {
-                    return $target();
-                }
-                if (isset($binding[AbstractModule::IN])) {
-                    $in = $binding[AbstractModule::IN];
-                } else {
-                    list($param, $setter, $definition) = $config->fetch($target);
-                    $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
-                }
-                $instance = $getInstance($in, $bindingToType, $target);
-                return $instance;
-            } catch (\Exception $e) {
-                trigger_error((string)$e, E_USER_WARNING);
-            }
-        };
-
-        $bindMethod = function ($item) use ($bindOneParameter, $definition, $module) {
+        $bindMethod = function ($item) use ($definition, $module, $getInstance) {
             list($method, $settings) = each($item);
-            $params = array_map($bindOneParameter, $settings);
-            return [$method, $params];
+            array_walk($settings, [$this, 'bindOneParameter'], [$definition, $getInstance]);
+            return [$method, $settings];
         };
 
         // main
@@ -309,6 +264,51 @@ class Injector implements InjectorInterface
             $params = [];
         }
         return [$params, $setter];
+    }
+
+    private function bindOneParameter(&$param, $key, array $userData)
+    {
+        list($definition, $getInstance) = $userData;
+        $annotate = $param[Definition::PARAM_ANNOTATE];
+        $typeHint = $param[Definition::PARAM_TYPEHINT];
+        $hasTypeHint = isset($this->module[$typeHint])
+        && isset($this->module[$typeHint][$annotate])
+        && ($this->module[$typeHint][$annotate] !== []);
+        $binding = $hasTypeHint ? $this->module[$typeHint][$annotate] : false;
+        if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
+            // default bindg by @ImplemetedBy or @ProviderBy
+            $binding = $this->jitBinding($param, $definition, $typeHint, $annotate);
+        }
+        $bindingToType = $binding[AbstractModule::TO][0];
+        $target = $binding[AbstractModule::TO][1];
+        if ($bindingToType === AbstractModule::TO_INSTANCE) {
+            $param = $target;
+            return;
+        } elseif ($bindingToType === AbstractModule::TO_CLOSURE) {
+            $param = $target();
+            return;
+        }
+        if (isset($binding[AbstractModule::IN])) {
+            $in = $binding[AbstractModule::IN];
+        } else {
+            list($param, $setter, $definition) = $this->config->fetch($target);
+            $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
+        }
+        $param = $getInstance($in, $bindingToType, $target);
+//         return $instance;
+    }
+
+    private function jitBinding($param, $definition, $typeHint, $annotate)
+    {
+        $typehintBy = $param[Definition::PARAM_TYPEHINT_BY];
+        if ($typehintBy == []) {
+            $typehint = $param[Definition::PARAM_TYPEHINT];
+            throw new Exception\InvalidBinding("$typeHint:$annotate");
+        }
+        if ($typehintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
+            return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typehintBy[1]]];
+        }
+        return [AbstractModule::TO => [AbstractModule::TO_PROVIDER, $typehintBy[1]]];
     }
 
     /**

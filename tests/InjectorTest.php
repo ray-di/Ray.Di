@@ -88,7 +88,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * does not expectedException Ray\Di\Exception\InvalidBinding
-     * @expectedException PHPUnit_Framework_Error_Warning
+     * @expectedException Ray\Di\Exception\InvalidBinding
      */
     public function testInvalidNamedAnnotation()
     {
@@ -237,7 +237,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     /**
      * not expectedException Ray\Di\Exception\InvalidBinding
      *
-     * @expectedException PHPUnit_Framework_Error_Warning
+     * @expectedException Ray\Di\Exception\InvalidBinding
      */
     public function testAbstractClassInvalidBinding()
     {
