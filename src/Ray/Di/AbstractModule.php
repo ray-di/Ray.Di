@@ -174,11 +174,11 @@ abstract class AbstractModule implements \ArrayAccess
         foreach ($this->globalIgnoredNames as $name) {
             $reader->addGlobalIgnoredName($name);
         }
-        $reader = new FileCacheReader(
-                $reader,
-                dirname(__DIR__) . '/tmp/',
-                $debug = true
-        );
+//         $reader = new FileCacheReader(
+//                 $reader,
+//                 dirname(__DIR__) . '/tmp/',
+//                 $debug = true
+//         );
         $this->matcher = new Matcher($reader);
         $this->configure();
     }
