@@ -98,7 +98,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     //     }
 
     /**
-     * @expectedException Ray\Di\Exception\InvalidToBinding
+     * @expectedException Ray\Di\Exception\ToBinding
      */
     public function testToInvalid()
     {
@@ -106,7 +106,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\InvalidProviderBinding
+     * @expectedException Ray\Di\Exception\Configuration
      */
     public function testToProviderInvalid()
     {

@@ -270,7 +270,7 @@ class Injector implements InjectorInterface
      * @param array $setter
      * @param array $definition
      * @param AbstractModule $module
-     * @throws Exception\InvalidBinding
+     * @throws Exception\Binding
      *
      * @return array <$constructorParams, $setter>
      */
@@ -372,7 +372,7 @@ class Injector implements InjectorInterface
         $typehintBy = $param[Definition::PARAM_TYPEHINT_BY];
         if ($typehintBy == []) {
             $typehint = $param[Definition::PARAM_TYPEHINT];
-            throw new Exception\InvalidBinding("$typeHint:$annotate");
+            throw new Exception\Binding("$typeHint:$annotate");
         }
         if ($typehintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
             return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typehintBy[1]]];

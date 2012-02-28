@@ -8,8 +8,8 @@
 namespace Ray\Di\Exception;
 
 /**
- * Invalid annotation registration.
+ *  Invalid binding.
  *
  * @package Ray.Di
  */
-class UnregisteredAnnotation extends \Ray\Di\Exception {}
+class ToBinding extends Binding {}

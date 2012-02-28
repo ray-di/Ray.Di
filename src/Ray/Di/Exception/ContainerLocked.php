@@ -7,9 +7,11 @@
  */
 namespace Ray\Di\Exception;
 
+use Ray\Di\Exception;
+
 /**
  * The DI container is locked.
  *
  * @package Aura.Di
  */
-class ContainerLocked extends \Ray\Di\Exception {}
+class ContainerLocked extends Exception {}

@@ -7,9 +7,11 @@
  */
 namespace Ray\Di\Exception;
 
+use Ray\Di\Exception;
+
 /**
  * Read only.
  *
  * @package Ray.Di
  */
-class ReadOnly extends \Ray\Di\Exception {}
+class ReadOnly extends Exception {}

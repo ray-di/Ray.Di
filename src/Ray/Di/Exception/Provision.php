@@ -12,4 +12,4 @@ namespace Ray\Di\Exception;
  *
  * @package Ray.Di
  */
-class Provision extends \Ray\Di\Exception {}
+class Provision extends Binding {}

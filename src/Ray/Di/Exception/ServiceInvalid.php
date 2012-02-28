@@ -7,9 +7,11 @@
  */
 namespace Ray\Di\Exception;
 
+use Ray\Di\Exception;
+
 /**
  * The service definition is not valid.
  *
  * @package Aura.Di
  */
-class ServiceInvalid extends \Ray\Di\Exception {}
+class ServiceInvalid extends Exception {}

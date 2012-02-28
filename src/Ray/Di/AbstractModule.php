@@ -251,12 +251,12 @@ abstract class AbstractModule implements \ArrayAccess
      * @param string $class
      *
      * @return AbstractModule
-     * @throws Exception\InvalidToBinding
+     * @throws Exception\ToBinding
      */
     protected function to($class)
     {
         if (class_exists($class) === false) {
-            throw new Exception\InvalidToBinding($class);
+            throw new Exception\ToBinding($class);
         }
         $this->bindings[$this->currentBinding][$this->currentName] = [self::TO => [self::TO_CLASS, $class]];
         return $this;
@@ -268,14 +268,14 @@ abstract class AbstractModule implements \ArrayAccess
      * @param string $provider provider class
      *
      * @return AbstractModule
-     * @throws Exception\InvalidProviderBinding
+     * @throws Exception\Configuration
      */
     protected function toProvider($provider)
     {
         $hasProviderInterface = class_exists($provider)
         && in_array('Ray\Di\ProviderInterface', class_implements($provider));
         if ($hasProviderInterface === false) {
-            throw new Exception\InvalidProviderBinding($provider);
+            throw new Exception\Configuration($provider);
         }
         $this->bindings[$this->currentBinding][$this->currentName]
         = [self::TO => [self::TO_PROVIDER, $provider]];

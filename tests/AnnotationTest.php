@@ -165,9 +165,9 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\InvalidNamed
+     * 	@expectedException Ray\Di\Exception\Named
      */
-    public function testInvalidNamed()
+    public function testNamed()
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\InvalidNamed');
     }

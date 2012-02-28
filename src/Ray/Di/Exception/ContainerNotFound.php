@@ -7,9 +7,11 @@
  */
 namespace Ray\Di\Exception;
 
+use Ray\Di\Exception;
+
 /**
  * The named DI container was not found.
  *
  * @package Aura.Di
  */
-class ContainerNotFound extends \Ray\Di\Exception {}
+class ContainerNotFound extends Exception {}

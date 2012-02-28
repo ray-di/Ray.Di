@@ -7,9 +7,13 @@
  */
 namespace Ray\Di\Exception;
 
+use Ray\Di\Exception;
+
 /**
- *  Invalid binding.
  *
- * @package Ray.Di
+ * Generic package exception.
+ *
+ * @package Aura.Di
+ *
  */
-class InvalidToBinding extends InvalidBinding {}
+class Runtime extends Exception {}

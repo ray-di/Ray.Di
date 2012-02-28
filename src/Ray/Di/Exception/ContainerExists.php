@@ -7,9 +7,11 @@
  */
 namespace Ray\Di\Exception;
 
+use Ray\Di\Exception;
+
 /**
  * The named DI container already exists.
  *
  * @package Ray.Di
  */
-class ContainerExists extends \Ray\Di\Exception {}
+class ContainerExists extends Exception {}

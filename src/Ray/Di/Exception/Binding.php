@@ -8,8 +8,8 @@
 namespace Ray\Di\Exception;
 
 /**
- * Invalid @Named annotation.
+ * Invalid binding.
  *
  * @package Ray.Di
  */
-class InvalidNamed extends \Ray\Di\Exception {}
+class Binding extends Runtime {}

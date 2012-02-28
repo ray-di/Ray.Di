@@ -12,4 +12,4 @@ namespace Ray\Di\Exception;
  *
  * @package Ray.Di
  */
-class InvalidProviderBinding extends InvalidBinding {}
+class Configuration extends Binding {}

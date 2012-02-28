@@ -20,6 +20,8 @@ require __DIR__ . '/src/Ray/Di/Scope.php';
 require __DIR__ . '/src/Ray/Di/EmptyModule.php';
 
 require __DIR__ . '/src/Ray/Di/Exception.php';
+require __DIR__ . '/src/Ray/Di/Exception/Runtime.php';
+require __DIR__ . '/src/Ray/Di/Exception/Binding.php';
 require __DIR__ . '/src/Ray/Di/Exception/ServiceInvalid.php';
 require __DIR__ . '/src/Ray/Di/Exception/ServiceNotFound.php';
 require __DIR__ . '/src/Ray/Di/Exception/ContainerLocked.php';
@@ -27,11 +29,9 @@ require __DIR__ . '/src/Ray/Di/Exception/ContainerExists.php';
 require __DIR__ . '/src/Ray/Di/Exception/ContainerNotFound.php';
 require __DIR__ . '/src/Ray/Di/Exception/MultipleAnnotationNotAllowed.php';
 require __DIR__ . '/src/Ray/Di/Exception/ReadOnly.php';
-require __DIR__ . '/src/Ray/Di/Exception/InvalidNamed.php';
-require __DIR__ . '/src/Ray/Di/Exception/InvalidBinding.php';
-require __DIR__ . '/src/Ray/Di/Exception/InvalidToBinding.php';
-require __DIR__ . '/src/Ray/Di/Exception/InvalidProviderBinding.php';
-require __DIR__ . '/src/Ray/Di/Exception/UnregisteredAnnotation.php';
+require __DIR__ . '/src/Ray/Di/Exception/Named.php';
+require __DIR__ . '/src/Ray/Di/Exception/ToBinding.php';
+require __DIR__ . '/src/Ray/Di/Exception/Configuration.php';
 require __DIR__ . '/src/Ray/Di/Exception/Provision.php';
 
 require __DIR__ . '/src/Ray/Di/Di/Annotation.php';

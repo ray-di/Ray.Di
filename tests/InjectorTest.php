@@ -87,10 +87,10 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * does not expectedException Ray\Di\Exception\InvalidBinding
-     * @expectedException Ray\Di\Exception\InvalidBinding
+     * does not expectedException Ray\Di\Exception\Binding
+     * @expectedException Ray\Di\Exception\Binding
      */
-    public function testInvalidNamedAnnotation()
+    public function testNamedAnnotation()
     {
         $this->injector->setModule(new Modules\InvalidAnnotateModule);
         $instance = $this->injector->getInstance('Ray\Di\Definition\Named');
@@ -235,11 +235,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * not expectedException Ray\Di\Exception\InvalidBinding
+     * not expectedException Ray\Di\Exception\Binding
      *
-     * @expectedException Ray\Di\Exception\InvalidBinding
+     * @expectedException Ray\Di\Exception\Binding
      */
-    public function testAbstractClassInvalidBinding()
+    public function testAbstractClassBinding()
     {
         $instance = $this->injector->getInstance('Ray\Di\Definition\AbstractBasic');
     }
@@ -259,6 +259,16 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->injector = new Injector($this->container, new \Ray\Di\Modules\InvalidBindingModule);
         $lister = $this->injector->getInstance('Ray\Di\Mock\MovieApp\Lister');
+
+    }
+
+
+    /**
+     * @expectedException Ray\Di\Exception\Configuration
+     */
+    public function testProviderIsNotExists()
+    {
+        $this->injector = new Injector($this->container, new \Ray\Di\Modules\ProvideNotExistsModule);
 
     }
 
