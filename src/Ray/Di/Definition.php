@@ -237,7 +237,8 @@ class Definition extends ArrayObject
      */
     public function getUserAnnotationMethodName($annotationName)
     {
-        $result = isset($this[self::BY_NAME]) && isset($this[self::BY_NAME][$annotationName]) ? $this[Definition::BY_NAME][$annotationName] : null;
+        $hasUserAnnotation = isset($this[self::BY_NAME]) && isset($this[self::BY_NAME][$annotationName]);
+        $result = $hasUserAnnotation ? $this[Definition::BY_NAME][$annotationName] : null;
         return $result;
     }
 
@@ -264,7 +265,7 @@ class Definition extends ArrayObject
      */
     public function getUserAnnotationByMethod($methodName)
     {
-        $result = @isset($this[self::BY_METHOD][$methodName]) ?
+        $result = isset($this[self::BY_METHOD][$methodName]) ?
         $this[self::BY_METHOD][$methodName] : null;
         return $result;
     }
