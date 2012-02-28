@@ -143,9 +143,10 @@ class Injector implements InjectorInterface
     public function getInstance($class, array $params = null)
     {
         list($config, $setter, $definition) = $this->config->fetch($class);
-
         // annotation dependency
-        if ($definition->hasNoDefinition()) {
+        /* @var $definition Ray\Di\Definition */
+        $hasDirectBinding =  isset($this->module->bindings[$class]);
+        if ($definition->hasDefinition() || $hasDirectBinding) {
             list($config, $setter) = $this->bindModule($setter, $definition, $this->module);
         }
 
@@ -158,7 +159,7 @@ class Injector implements InjectorInterface
         }
 
         // check provision
-        $this->checkProvision($class, $params);
+        $this->checkProvision($class, $params, $this->module);
 
         // create the new instance
         $object = call_user_func_array(
@@ -200,17 +201,29 @@ class Injector implements InjectorInterface
      * @return void
      * @throws Exception\Provision
      */
-    private function checkProvision($class, array $params)
+    private function checkProvision($class, array &$params, AbstractModule $module)
     {
-        $ref = new \ReflectionClass($class);
-        $properties = $ref->getProperties();
-        foreach ($properties as $index => $property) {
-            if (!isset($params[$index])) {
-                throw new Exception\Provision("Not binded. argument #{$index}(\${$property->name}) in {$class}::__construct()");
+        $ref = method_exists($class, '__construct') ? new \ReflectionMethod($class, '__construct')  : false;
+        if ($ref === false) {
+            return;
+        }
+        $parameters = $ref->getParameters();
+        foreach ($parameters as $index => $parameter) {
+            $params = array_values($params);
+            if (! isset($params[$index])) {
+                $hasConstrcutorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
+                if ($hasConstrcutorBinding) {
+                    $param = isset($module[$class]['*'][AbstractModule::TO][1][$parameter->name]) ? $module[$class]['*'][AbstractModule::TO][1][$parameter->name] : false;
+                    if ($param) {
+                        $params[$index] = $param;
+                        continue;
+                    }
+                }
+                throw new Exception\Provision("No bind. argument #{$index}(\${$parameter->name}) in {$class}::__construct()");
             }
-            if (isset($property->class) && (! $params[$index] instanceof $property->class)) {
-                throw new Exception\Provision("Invalid type. argument #{$index}(\${$property->name}) in {$class}::__construct()");
-            }
+//             if (isset($property->class) && (! $params[$index] instanceof $property->class)) {
+//                 throw new Exception\Provision("Invalid type. argument #{$index}(\${$property->name}) in {$class}::__construct()");
+//             }
         }
     }
 
@@ -292,7 +305,6 @@ class Injector implements InjectorInterface
             array_walk($settings, [$this, 'bindOneParameter'], [$definition, $getInstance]);
             return [$method, $settings];
         };
-
         // main
         $setterDefinitions = (isset($definition[Definition::INJECT][Definition::INJECT_SETTER]))
         ? $definition[Definition::INJECT][Definition::INJECT_SETTER] : false;

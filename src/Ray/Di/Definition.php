@@ -209,10 +209,10 @@ class Definition extends ArrayObject
      *
      * @return bool
      */
-    public function hasNoDefinition()
+    public function hasDefinition()
     {
-       $hasNoDefinition = ($this->getArrayCopy() !== $this->defaults);
-       return $hasNoDefinition;
+       $hasDefinition = ($this->getArrayCopy() !== $this->defaults);
+       return $hasDefinition;
     }
 
     /**

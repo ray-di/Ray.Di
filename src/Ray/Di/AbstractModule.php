@@ -82,6 +82,20 @@ abstract class AbstractModule implements \ArrayAccess
     const TO_CALLABLE = 'callable';
 
     /**
+     * To Constructor
+     *
+     * @var string
+     */
+    const TO_CONSTRUCTOR = 'constructor';
+
+    /**
+     * To Constructor
+     *
+     * @var string
+     */
+    const TO_SETTER = 'setter';
+
+    /**
      * To Scope
      *
      * @var string
@@ -195,7 +209,7 @@ abstract class AbstractModule implements \ArrayAccess
      *
      * @param string $interface
      *
-     * @return AbstractModule
+     * @return $this
      */
     protected function bind($interface = '')
     {
@@ -293,6 +307,14 @@ abstract class AbstractModule implements \ArrayAccess
         $this->bindings[$this->currentBinding][$this->currentName]
         = [self::TO => [self::TO_CALLABLE, $callable]];
     }
+
+    protected function toConstructor(array $params)
+    {
+        $this->bindings[$this->currentBinding][$this->currentName]
+        = [self::TO => [self::TO_CONSTRUCTOR, $params]];
+    }
+
+
 
     /**
      * Bind interceptor

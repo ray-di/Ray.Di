@@ -14,6 +14,6 @@ class NoAnnotationBindingModule extends AbstractModule
 
     protected function configure()
     {
-        $this->injector->params['Ray\Di\Mock\MovieApp\Lister'] = ['finder' => new \Ray\Di\Mock\MovieApp\Finder];
+        $this->bind('Ray\Di\Mock\MovieApp\Lister')->toConstructor(['finder' => new \Ray\Di\Mock\MovieApp\Finder]);
     }
 }

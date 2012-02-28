@@ -247,9 +247,18 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testConstructorBindings()
     {
         $this->injector = new Injector($this->container, new \Ray\Di\Modules\NoAnnotationBindingModule($this->injector));
-//         $this->injector->params['Ray\Di\Mock\MovieApp\Lister'] = ['finder' => new \Ray\Di\Mock\MovieApp\Finder];
         $lister = $this->injector->getInstance('Ray\Di\Mock\MovieApp\Lister');
         $this->assertInstanceOf('Ray\Di\Mock\MovieApp\Finder', $lister->finder);
+
+    }
+
+    /**
+     * @expectedException Ray\Di\Exception\Provision
+     */
+    public function testProvisionException()
+    {
+        $this->injector = new Injector($this->container, new \Ray\Di\Modules\InvalidBindingModule);
+        $lister = $this->injector->getInstance('Ray\Di\Mock\MovieApp\Lister');
 
     }
 
