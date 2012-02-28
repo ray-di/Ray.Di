@@ -32,6 +32,7 @@ require __DIR__ . '/src/Ray/Di/Exception/InvalidBinding.php';
 require __DIR__ . '/src/Ray/Di/Exception/InvalidToBinding.php';
 require __DIR__ . '/src/Ray/Di/Exception/InvalidProviderBinding.php';
 require __DIR__ . '/src/Ray/Di/Exception/UnregisteredAnnotation.php';
+require __DIR__ . '/src/Ray/Di/Exception/Provision.php';
 
 require __DIR__ . '/src/Ray/Di/Di/Annotation.php';
 require __DIR__ . '/src/Ray/Di/Di/Aspect.php';

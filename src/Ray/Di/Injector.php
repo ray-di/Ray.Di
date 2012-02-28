@@ -157,6 +157,9 @@ class Injector implements InjectorInterface
             }
         }
 
+        // check provision
+        $this->checkProvision($class, $params);
+
         // create the new instance
         $object = call_user_func_array(
                 [$this->config->getReflect($class), 'newInstance'],
@@ -186,6 +189,29 @@ class Injector implements InjectorInterface
         }
 
         return $object;
+    }
+
+    /**
+     * Check parameter provision
+     *
+     * @param string $class
+     * @param array  $params
+     *
+     * @return void
+     * @throws Exception\Provision
+     */
+    private function checkProvision($class, array $params)
+    {
+        $ref = new \ReflectionClass($class);
+        $properties = $ref->getProperties();
+        foreach ($properties as $index => $property) {
+            if (!isset($params[$index])) {
+                throw new Exception\Provision("Not binded. argument #{$index}(\${$property->name}) in {$class}::__construct()");
+            }
+            if (isset($property->class) && (! $params[$index] instanceof $property->class)) {
+                throw new Exception\Provision("Invalid type. argument #{$index}(\${$property->name}) in {$class}::__construct()");
+            }
+        }
     }
 
     /**
