@@ -316,7 +316,7 @@ class Injector implements InjectorInterface
         if ($bindingToType === AbstractModule::TO_INSTANCE) {
             $param = $target;
             return;
-        } elseif ($bindingToType === AbstractModule::TO_CLOSURE) {
+        } elseif ($bindingToType === AbstractModule::TO_CALLABLE) {
             $param = $target();
             return;
         }

@@ -79,7 +79,7 @@ abstract class AbstractModule implements \ArrayAccess
      *
      * @var string
      */
-    const TO_CLOSURE = 'closure';
+    const TO_CALLABLE = 'callable';
 
     /**
      * To Scope
@@ -288,10 +288,10 @@ abstract class AbstractModule implements \ArrayAccess
      *
      * @return void
      */
-    protected function toClosure(\Closure $closure)
+    protected function toCallable(Callable $callable)
     {
         $this->bindings[$this->currentBinding][$this->currentName]
-        = [self::TO => [self::TO_CLOSURE, $closure]];
+        = [self::TO => [self::TO_CALLABLE, $callable]];
     }
 
     /**

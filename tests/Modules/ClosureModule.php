@@ -8,6 +8,6 @@ class ClosureModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind('Ray\Di\Mock\DbInterface')->toClosure(function(){return new \Ray\Di\Mock\UserDb;});
+        $this->bind('Ray\Di\Mock\DbInterface')->toCallable(function(){return new \Ray\Di\Mock\UserDb;});
     }
 }
