@@ -31,6 +31,26 @@ class Injector implements InjectorInterface
     protected $config;
 
     /**
+     *
+     * A convenient reference to the Config::$params object, which itself
+     * is contained by the Forge object.
+     *
+     * @var \ArrayObject
+     *
+     */
+    protected $params;
+
+    /**
+     *
+     * A convenient reference to the Config::$setter object, which itself
+     * is contained by the Forge object.
+     *
+     * @var \ArrayObject
+     *
+     */
+    protected $setter;
+
+    /**
      * Container
      *
      * @var Container
@@ -67,6 +87,8 @@ class Injector implements InjectorInterface
         }
         $this->module = $module;
         $this->bind = new Bind;
+        $this->params = $this->config->getParams();
+        $this->setter = $this->config->getSetter();
     }
 
     /**
@@ -121,11 +143,12 @@ class Injector implements InjectorInterface
     public function getInstance($class, array $params = null)
     {
         list($config, $setter, $definition) = $this->config->fetch($class);
-        // annotation-oriented dependency
+
+        // annotation dependency
         if ($definition->hasNoDefinition()) {
             list($config, $setter) = $this->bindModule($setter, $definition, $this->module);
         }
-        //         $params = isset($this->container->params[$class]) ? $this->container->params[$class] : null;
+
         $params = is_null($params) ? $config : array_merge($config, (array) $params);
         // lazy-load params as needed
         foreach ($params as $key => $val) {
@@ -266,6 +289,15 @@ class Injector implements InjectorInterface
         return [$params, $setter];
     }
 
+    /**
+     * Set one parameter with definitio, or JIT binding.
+     *
+     * @param string $param
+     * @param string $key
+     * @param array  $userData
+     *
+     * @return void
+     */
     private function bindOneParameter(&$param, $key, array $userData)
     {
         list($definition, $getInstance) = $userData;
@@ -295,7 +327,6 @@ class Injector implements InjectorInterface
             $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
         }
         $param = $getInstance($in, $bindingToType, $target);
-//         return $instance;
     }
 
     private function jitBinding($param, $definition, $typeHint, $annotate)
@@ -309,6 +340,44 @@ class Injector implements InjectorInterface
             return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typehintBy[1]]];
         }
         return [AbstractModule::TO => [AbstractModule::TO_PROVIDER, $typehintBy[1]]];
+    }
+
+
+    /**
+     * Magic get to provide access to the Config::$params and $setter
+     * objects.
+     *
+     * @param string $key The property to retrieve ('params' or 'setter').
+     *
+     * @return mixed
+     * @throws Exception\ContainerLocked
+     * @throws \UnexpectedValueException
+     */
+    public function __get($key)
+    {
+        if ($this->container->isLocked()) {
+            throw new Exception\ContainerLocked;
+        }
+
+        if ($key == 'params' || $key == 'setter') {
+            return $this->$key;
+        }
+
+        throw new \UnexpectedValueException($key);
+    }
+
+    /**
+     * Set params or setter
+     *
+     * @param string params | setter
+     * @param mixed $val
+     *
+     * @return $this
+     */
+    public function __set($key, $val)
+    {
+        $this->$key = $val;
+        return $this;
     }
 
     /**

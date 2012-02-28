@@ -39,6 +39,7 @@ require_once __DIR__ . '/Modules/ArrayInstance.php';
 require_once __DIR__ . '/Modules/AopAnnotateMatcherModule.php';
 require_once __DIR__ . '/Modules/AopAnyMatcherModule.php';
 require_once __DIR__ . '/Modules/InstallModule.php';
+require_once __DIR__ . '/Modules/NoAnnotationBindingModule.php';
 
 // Mock class without annotation
 require_once __DIR__ . '/MockParentClass.php';
@@ -57,6 +58,7 @@ require_once __DIR__ . '/Mock/ReaderInterface.php';
 require_once __DIR__ . '/Mock/Reader.php';
 require_once __DIR__ . '/Mock/Construct.php';
 require_once __DIR__ . '/Mock/AbstractDb.php';
+require_once __DIR__ . '/Mock/MovieApp.php';
 // Ray.Aop
 require_once __DIR__ . '/Aop/BillingService.php';
 require_once __DIR__ . '/Aop/RealBillingService.php';

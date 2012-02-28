@@ -95,7 +95,6 @@ class Container implements ContainerInterface
     }
 
     /**
-     *
      * Magic get to provide access to the Config::$params and $setter
      * objects.
      *
