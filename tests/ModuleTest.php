@@ -196,4 +196,20 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
         $this->assertObjectHasAttribute('pointcuts', $wakedModule);
         $this->assertTrue(is_array($wakedModule->pointcuts));
     }
+
+    public function test_installModuleCount()
+    {
+        $module = new Modules\TimeModule;
+        $this->module->install($module);
+        $this->assertSame(2, count((array)($this->module->bindings)));
+    }
+
+    public function test_mergeModuleContent()
+    {
+        $module = new Modules\TimeModule;
+        $this->module->install($module);
+        $bindigs = $this->module->bindings;
+        $bindingClass = array_keys((array)$bindigs);
+        $this->assertSame($bindingClass, ["Ray\\Di\\Mock\\DbInterface", '']);
+    }
 }

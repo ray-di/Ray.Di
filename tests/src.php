@@ -42,6 +42,7 @@ require_once __DIR__ . '/Modules/InstallModule.php';
 require_once __DIR__ . '/Modules/NoAnnotationBindingModule.php';
 require_once __DIR__ . '/Modules/InvalidBindingModule.php';
 require_once __DIR__ . '/Modules/ProvideNotExistsModule.php';
+require_once __DIR__ . '/Modules/TimeModule.php';
 
 // Mock class without annotation
 require_once __DIR__ . '/MockParentClass.php';

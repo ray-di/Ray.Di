@@ -337,7 +337,7 @@ abstract class AbstractModule implements \ArrayAccess
 	 *
 	 * @return void
      */
-    protected function install(AbstractModule $module)
+    public function install(AbstractModule $module)
     {
         $this->bindings = new ArrayObject(array_merge($this->bindings->getArrayCopy(), $module->bindings->getArrayCopy()));
         $this->pointcuts = array_merge($module->pointcuts, $module->pointcuts);

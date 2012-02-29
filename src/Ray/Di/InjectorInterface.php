@@ -19,14 +19,6 @@ use Aura\Di\ContainerInterface;
 interface InjectorInterface
 {
     /**
-     * Constructor
-     *
-     * @param ContainerInterface $container
-     * @param AbstractModule $module
-     */
-    public function __construct(ContainerInterface $container, AbstractModule $module = null);
-
-    /**
      * Creates and returns a new instance of a class using 'module,
      * optionally with overriding params.
      *
