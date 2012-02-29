@@ -174,8 +174,10 @@ abstract class AbstractModule implements \ArrayAccess
      *
      * @param AbstractModule $module
      */
-    public function __construct(AbstractModule $module = null)
-    {
+    public function __construct(
+   		AbstractModule $module = null,
+    	Matcher $matcher = null
+    ){
         if (is_null($module)) {
             $this->bindings = new \ArrayObject;
             $this->container = new \ArrayObject;
@@ -184,16 +186,14 @@ abstract class AbstractModule implements \ArrayAccess
             $this->pointcuts = $module->pointcuts;
             $this->container = $module->container;
         }
-        $reader = new Reader;
-        foreach ($this->globalIgnoredNames as $name) {
-            $reader->addGlobalIgnoredName($name);
+        if (is_null($matcher)) {
+        	$reader = new Reader;
+        	foreach ($this->globalIgnoredNames as $name) {
+        		$reader->addGlobalIgnoredName($name);
+        	}
+        	$matcher = new Matcher($reader);
         }
-//         $reader = new FileCacheReader(
-//                 $reader,
-//                 dirname(__DIR__) . '/tmp/',
-//                 $debug = true
-//         );
-        $this->matcher = new Matcher($reader);
+        $this->matcher = $matcher;
         $this->configure();
     }
 

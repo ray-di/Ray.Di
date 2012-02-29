@@ -45,7 +45,7 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
             '__construct' => array(
                 array(
                         Definition::PARAM_POS => 0,
-                        Definition::PARAM_TYPEHINT => 'Ray\\Di\\ForgeInterface',
+                        Definition::PARAM_TYPEHINT => 'Aura\\Di\\ForgeInterface',
                         Definition::PARAM_NAME => 'forge',
                         Definition::PARAM_ANNOTATE => Definition::NAME_UNSPECIFIED,
                         Definition::PARAM_TYPEHINT_BY => array()

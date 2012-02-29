@@ -11,9 +11,9 @@ use Ray\Di\Exception;
 
 /**
  *
- * Generic package exception.
+ * Generic package runtime exception.
  *
- * @package Aura.Di
+ * @package Ray.Di
  *
  */
 class Runtime extends Exception {}

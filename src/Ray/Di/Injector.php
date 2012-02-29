@@ -7,12 +7,11 @@
  */
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\Annotation;
-
-use Ray\Di\Exception;
-
+use Aura\Di\Lazy,
+	Aura\Di\ContainerInterface;
 use Ray\Aop\Bind,
-Ray\Aop\Weaver;
+	Ray\Aop\Weaver;
+
 /**
  * Dependency Injector.
  *

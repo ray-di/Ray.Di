@@ -2,22 +2,23 @@
 /**
  * Ray
  *
- * This file is taken from Aura Project and modified.
+ * This file is taken from Aura.Di(https://github.com/auraphp/Aura.Di) and modified.
  *
  * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
- * @see http://auraphp.github.com/
+ * @see https://github.com/auraphp/Aura.Di
  *
  */
 namespace Ray\Di;
 
+use Aura\Di\ConfigInterface;
 use Guzzle\Common\Cache\CacheAdapterInterface as Cache;
 
 /**
  *
  * Retains and unifies class configurations.
  *
- * @package Aura.Di
+ * @package Ray.Di
  *
  */
 class Config implements ConfigInterface

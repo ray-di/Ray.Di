@@ -2,7 +2,7 @@
 
 namespace Ray\Di\Definition;
 
-use Ray\Di\ForgeInterface;
+use Aura\Di\ForgeInterface;
 
 use Ray\Di\Mock\DbInterface,
     Ray\Di\Mock\UserInterface,

@@ -7,6 +7,8 @@
  */
 namespace Ray\Di;
 
+use Aura\Di\ContainerInterface;
+
 /**
  * Defines the interface for dependency injector.
  *
