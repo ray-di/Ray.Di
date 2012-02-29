@@ -75,7 +75,6 @@ class Annotation implements AnnotationInterface
      */
     public function __construct(Definition $definition, array $annotationImports = [])
     {
-//         $this->definition = $definition;
         $this->docParser = new DocParser;
         $this->docParser->setIgnoreNotImportedAnnotations(true);
         $this->phpParser = new PhpParser;

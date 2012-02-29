@@ -7,7 +7,7 @@
 namespace Ray\Di\Di;
 
 /**
- * Inject
+ * Named
  *
  * @Annotation
  * @Target("CLASS")

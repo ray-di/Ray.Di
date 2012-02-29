@@ -8,7 +8,7 @@
 namespace Ray\Di\Exception;
 
 /**
- *  Invalid binding.
+ * Configuration
  *
  * @package Ray.Di
  */

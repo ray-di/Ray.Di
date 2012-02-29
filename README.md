@@ -7,7 +7,8 @@ This project was created in order to get Guice style dependency injection in PHP
 
  * Supports some of the JSR-330 object lifecycle annotations (@PostConstruct, @PreDestroy)
  * Provides an AOP Alliance-compliant aspect-oriented programming implementation.
- * Using [Aura.Di](http://auraphp.github.com/Aura.Di ) , [Doctrine.Commons](http://www.doctrine-project.org/projects/common) as components.
+ * [Aura.Di](http://auraphp.github.com/Aura.Di ) extended.
+ * [Doctrine.Commons](http://www.doctrine-project.org/projects/common) annotation.
 
 _Not all features of Guice have been implemented._
 

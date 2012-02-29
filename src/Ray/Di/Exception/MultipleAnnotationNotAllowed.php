@@ -10,7 +10,7 @@ namespace Ray\Di\Exception;
 use Ray\Di\Exception;
 
 /**
- * The named service was not found.
+ * Multiple annotation is not allowd.
  *
  * @package Ray.Di
  */

@@ -7,7 +7,7 @@
 namespace Ray\Di\Di;
 
 /**
- * Inject
+ * PostConstruct
  *
  * @Annotation
  * @Target("METHOD")
