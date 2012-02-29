@@ -8,7 +8,6 @@ require __DIR__ . '/src/Ray/Di/Definition.php';
 require __DIR__ . '/src/Ray/Di/ForgeInterface.php';
 require __DIR__ . '/src/Ray/Di/Forge.php';
 require __DIR__ . '/src/Ray/Di/Lazy.php';
-require __DIR__ . '/src/Ray/Di/Manager.php';
 require __DIR__ . '/src/Ray/Di/InjectorInterface.php';
 require __DIR__ . '/src/Ray/Di/Injector.php';
 

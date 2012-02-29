@@ -9,6 +9,7 @@
  */
 namespace Ray\Di;
 
+
 /**
  *
  * Dependency injection container.
@@ -184,10 +185,11 @@ class Container implements ContainerInterface
 
     /**
      *
-     * Sets a service definition by name.
-     *
-     * If you set a service as a closure, it is automatically treated as a
-     * Lazy.
+     * Sets a service definition by name. If you set a service as a Closure,
+     * it is automatically treated as a Lazy. (Note that is has to be a
+     * Closure, not just any callable, to be treated as a Lazy; this is
+     * because the actual service object itself might be callable via an
+     * __invoke() method.)
      *
      * @param string $key The service key.
      *
@@ -212,6 +214,8 @@ class Container implements ContainerInterface
         }
 
         $this->defs[$key] = $val;
+
+        return $this;
     }
 
     /**

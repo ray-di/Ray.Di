@@ -4,7 +4,6 @@ Annotation based dependency injection for PHP
 ---------------------------------------------
 
 This project was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google. 
-This package also supports some of the JSR-330 object lifecycle annotations, like @PostConstruct, @PreDestroy. 
 
  * Supports some of the JSR-330 object lifecycle annotations (@PostConstruct, @PreDestroy)
  * Provides an AOP Alliance-compliant aspect-oriented programming implementation.
@@ -37,3 +36,4 @@ $ php doc/sample/01-db/main.ph
 $ cd doc/zf2-di-tests-clone/
 $ php runall.php
 ```
+

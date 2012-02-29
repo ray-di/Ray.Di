@@ -11,7 +11,7 @@ namespace Ray\Di;
  *
  * Generic package exception.
  *
- * @package Aura.Di
+ * @package Ray.Di
  *
  */
 class Exception extends \Exception {}

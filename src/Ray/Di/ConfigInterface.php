@@ -15,7 +15,7 @@ namespace Ray\Di;
  *
  * Retains and unifies class constructor parameter values with external values.
  *
- * @package Aura.Di
+ * @package Ray.Di
  *
  */
 interface ConfigInterface

@@ -11,7 +11,7 @@ namespace Ray\Di;
 
 /**
  *
- * Wraps a closure specifically for the purpose of lazy-loading an object.
+ * Wraps a callable specifically for the purpose of lazy-loading an object.
  *
  * @package Aura.Di
  *
@@ -20,12 +20,12 @@ class Lazy
 {
     /**
      *
-     * A closure that creates an object instance.
+     * A callable to create an object instance.
      *
-     * @var \Closure
+     * @var callable
      *
      */
-    protected $closure;
+    protected $callable;
 
     /**
      *
@@ -36,9 +36,9 @@ class Lazy
      * @return void
      *
      */
-    public function __construct(\Closure $closure)
+    public function __construct(callable $callable)
     {
-        $this->closure = $closure;
+        $this->callable = $callable;
     }
 
     /**
@@ -50,7 +50,7 @@ class Lazy
      */
     public function __invoke()
     {
-        $closure = $this->closure;
-        return $closure();
+        $callable = $this->callable;
+        return $callable();
     }
 }
