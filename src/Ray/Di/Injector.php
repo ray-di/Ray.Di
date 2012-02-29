@@ -7,10 +7,12 @@
  */
 namespace Ray\Di;
 
+use Ray\Aop\Weave;
+
 use Aura\Di\Lazy,
-	Aura\Di\ContainerInterface;
+Aura\Di\ContainerInterface;
 use Ray\Aop\Bind,
-	Ray\Aop\Weaver;
+Ray\Aop\Weaver;
 
 /**
  * Dependency Injector.
@@ -220,9 +222,9 @@ class Injector implements InjectorInterface
                 }
                 throw new Exception\Provision("No bind. argument #{$index}(\${$parameter->name}) in {$class}::__construct()");
             }
-//             if (isset($property->class) && (! $params[$index] instanceof $property->class)) {
-//                 throw new Exception\Provision("Invalid type. argument #{$index}(\${$property->name}) in {$class}::__construct()");
-//             }
+            //             if (isset($property->class) && (! $params[$index] instanceof $property->class)) {
+            //                 throw new Exception\Provision("Invalid type. argument #{$index}(\${$property->name}) in {$class}::__construct()");
+            //             }
         }
     }
 
@@ -252,10 +254,10 @@ class Injector implements InjectorInterface
      */
     private function setLifeCycle($instance, Definition $definition = null)
     {
-        $isSet = isset($definition[Definition::POST_CONSTRUCT]);
-        if ($isSet && method_exists($instance, $definition[Definition::POST_CONSTRUCT])) {
+        $postConstructMethod = $definition[Definition::POST_CONSTRUCT];
+        if ($postConstructMethod) {
             //signal
-            call_user_func(array($instance, $definition[Definition::POST_CONSTRUCT]));
+            call_user_func(array($instance, $postConstructMethod));
         }
         if (! is_null($definition[Definition::PRE_DESTROY])) {
             $this->preDestroyObjects->attach($instance, $definition[Definition::PRE_DESTROY]);
