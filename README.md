@@ -12,7 +12,7 @@ This project was created in order to get Guice style dependency injection in PHP
 
 _Not all features of Guice have been implemented._
 
-[![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png)](http://travis-ci.org/koriym/Ray.Di)
+[![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=master)](http://travis-ci.org/koriym/Ray.Di)
 
 Requiment
 ---------
