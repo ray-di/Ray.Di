@@ -2,6 +2,7 @@
 
 require __DIR__ . '/vendor/Aura.Di/src.php';
 require __DIR__ . '/src/Ray/Di/Config.php';
+require __DIR__ . '/src/Ray/Di/ApcConfig.php';
 require __DIR__ . '/src/Ray/Di/Container.php';
 require __DIR__ . '/src/Ray/Di/Definition.php';
 require __DIR__ . '/src/Ray/Di/Forge.php';

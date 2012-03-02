@@ -69,3 +69,8 @@ require_once __DIR__ . '/Aop/SalesTax.php';
 require_once __DIR__ . '/Aop/AnnotateTaxBilling.php';
 require_once __DIR__ . '/Aop/TaxCharger.php';
 require_once __DIR__ . '/Aop/ChildRealBillingService.php';
+
+require_once __DIR__ . '/ConfigTest.php';
+
+require_once dirname(__DIR__) . '/vendor/Aura.Di/tests/Aura/Di/MockParentClass.php';
+require_once dirname(__DIR__) . '/vendor/Aura.Di/tests/Aura/Di/MockChildClass.php';

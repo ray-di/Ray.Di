@@ -17,7 +17,6 @@ class Time
     public function __construct($time)
     {
         $this->time = $time;
-        $this->closure = function (){ return $_SERVER;};
     }
 }
 
@@ -67,6 +66,5 @@ class ApcInjectorTest extends \PHPUnit_Framework_TestCase
 		$instance1 = $this->injector->getInstance('Ray\Di\Time');
 		$instance2 = $this->injector->getInstance('Ray\Di\Time');
 		$this->assertSame($instance1->time, $instance2->time);
-		$closure = $instance1->closure;
 	}
 }

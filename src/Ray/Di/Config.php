@@ -90,17 +90,15 @@ class Config implements ConfigInterface
      */
     protected $Annotation;
 
-    protected $cache;
     /**
      *
      * Constructor.
      *
      */
-    public function __construct(AnnotationInterface $annotation, Cache $cache = null)
+    public function __construct(AnnotationInterface $annotation)
     {
         $this->reset();
         $this->annotation = $annotation;
-        $this->cache = $cache;
     }
 
     /**
@@ -204,15 +202,6 @@ class Config implements ConfigInterface
             return $this->unified[$class];
         }
 
-        // cache
-        $key = 'config' . $class;
-        if (! is_null($this->cache)) {
-            $config = $this->cache->fetch($key);
-            if ($config) {
-                return $config;
-            }
-        }
-
         // fetch the values for parents so we can inherit them
         $pclass = get_parent_class($class);
         if ($pclass) {
@@ -278,10 +267,6 @@ class Config implements ConfigInterface
         $this->unified[$class][0] = $unified_params;
         $this->unified[$class][1] = $unified_setter;
         $this->unified[$class][2] = $unified_definition;
-
-        if (! is_null($this->cache)) {
-            $this->cache->save($key, $this->unified[$class]);
-        }
 
         return $this->unified[$class];
     }
