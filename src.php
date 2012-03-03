@@ -38,4 +38,4 @@ require __DIR__ . '/src/Ray/Di/Di/PreDestroy.php';
 require __DIR__ . '/src/Ray/Di/Di/ProvidedBy.php';
 require __DIR__ . '/src/Ray/Di/Di/Scope.php';
 
-require dirname(dirname(__DIR__)) . '/vendor/Aura.Di/src/Aura/Di/Exception/ContainerLocked.php';
+require __DIR__ . '/vendor/Aura.Di/src/Aura/Di/Exception/ContainerLocked.php';
