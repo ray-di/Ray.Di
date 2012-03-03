@@ -339,9 +339,9 @@ abstract class AbstractModule implements \ArrayAccess
      */
     public function install(AbstractModule $module)
     {
-        $this->bindings = array_merge_recursive((array)$this->bindings, (array)$module->bindings);
-        $this->pointcuts = array_merge_recursive((array)$module->pointcuts, (array)$module->pointcuts);
-        $this->container = array_merge_recursive((array)$module->container, (array)$module->container);
+        $this->bindings = new ArrayObject(array_merge_recursive((array)$this->bindings, (array)$module->bindings));
+        $this->pointcuts = new ArrayObject(array_merge_recursive((array)$module->pointcuts, (array)$module->pointcuts));
+        $this->container = new ArrayObject(array_merge_recursive((array)$module->container, (array)$module->container));
     }
 
     /**
