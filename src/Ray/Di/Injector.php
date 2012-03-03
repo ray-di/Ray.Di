@@ -22,7 +22,7 @@ use Ray\Aop\Bind,
  *
  * @Scope("singleton")
  */
-class Injector extends Container implements InjectorInterface
+class Injector implements InjectorInterface
 {
     /**
      * Config
