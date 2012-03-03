@@ -141,7 +141,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $clone = clone $this->injector;
         $this->assertNotSame($clone, $this->injector);
-        $this->assertNotSame($clone->getContainer(), $this->injector->getContainer());
     }
 
     public function testInjectSigleton()
@@ -229,7 +228,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testLazyConstructParameter()
     {
-        $lazyNew = $this->injector->getContainer()->lazyNew('Ray\Di\Mock\Db');
+        $lazyNew = $this->injector->lazyNew('Ray\Di\Mock\Db');
         $instance = $this->injector->getInstance('Ray\Di\Mock\Construct', array('db' => $lazyNew));
         $this->assertInstanceOf('Ray\Di\Mock\Db', $instance->db);
     }
@@ -262,7 +261,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     }
 
-
     /**
      * @expectedException Ray\Di\Exception\Configuration
      */
@@ -272,4 +270,31 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function test__get()
+    {
+        $params = $this->injector->params;
+        $params['dummy'] = ['a' => 'fake1'];
+        $getParams = $this->injector->params;
+        $expected = $getParams['dummy'];
+        $actual = $getParams['dummy'];
+        $this->assertSame($actual, $expected);
+    }
+
+    /**
+     * @expectedException Aura\Di\Exception\ContainerLocked
+     */
+    public function test_lockWithParam()
+    {
+        $this->injector->lock();
+        $params = $this->injector->params;
+    }
+
+    /**
+     * @expectedException Aura\Di\Exception\ContainerLocked
+     */
+    public function test_lockWhenSetModule()
+    {
+        $this->injector->lock();
+        $this->injector->setModule(new Modules\BasicModule);
+    }
 }
