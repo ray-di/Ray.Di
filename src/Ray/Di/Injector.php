@@ -109,6 +109,16 @@ class Injector implements InjectorInterface
     }
 
     /**
+     * Return container
+     *
+     * @return Aura\Di\Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
      * Destructor
      */
     public function __destruct()

@@ -7,8 +7,6 @@
  */
 namespace Ray\Di;
 
-use Aura\Di\ContainerInterface;
-
 /**
  * Defines the interface for dependency injector.
  *
@@ -32,4 +30,11 @@ interface InjectorInterface
      *
      */
     public function getInstance($class, array $params = null);
+
+    /**
+     * Return container
+     *
+     * @return Ray\Di\Container;
+     */
+    public function getContainer();
 }
