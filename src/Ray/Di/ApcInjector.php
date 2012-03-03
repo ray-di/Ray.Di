@@ -8,9 +8,9 @@
 namespace Ray\Di;
 
 use Aura\Di\Lazy,
-Aura\Di\ContainerInterface;
+    Aura\Di\ContainerInterface;
 use Ray\Aop\Bind,
-Ray\Aop\Weaver;
+    Ray\Aop\Weaver;
 
 /**
  * Dependency Injector using APC
@@ -35,18 +35,6 @@ class ApcInjector extends Injector
      *
      * @throws Exception
      */
-    public function __construct(array $callableModules,  $key = '', Callable $container = null)
-    {
-        $this->prefix = $key;
-        $container = (is_null($container)) ?  new Container(new Forge(new Config(new Annotation(new Definition)))) : $container();
-        foreach ($callableModules as $callableModule) {
-            if (! is_callable($callableModule)) {
-                throw new Exception('Module is not callable');
-            }
-            $module = (! isset($module)) ? $callableModule() : $module->install($callableModule());
-        }
-        parent::__construct($container,  $module);
-    }
 
     /**
      * Get a service object using APC cache

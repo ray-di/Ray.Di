@@ -36,7 +36,7 @@ class ApcInjectorTest extends \PHPUnit_Framework_TestCase
 	protected function setUp()
 	{
 		parent::setUp();
-	    $this->module = function (){ return new Modules\TimeModule; };
+		$this->container = new Container(new Forge(new Config(new Annotation(new Definition))));
 	}
 
 	/**
@@ -49,20 +49,18 @@ class ApcInjectorTest extends \PHPUnit_Framework_TestCase
 	}
 
 	public function test_new(){
-	    $injector = new ApcInjector([$this->module]);
+	    $injector = new ApcInjector($this->container, new Modules\TimeModule);
 		$this->assertInstanceOf('\Ray\Di\ApcInjector', $injector);
 	}
 
 	public function test_getInstance(){
-	    $module = function(){ return new Modules\BasicModule;};
-	    $injector = new ApcInjector([$module]);
+	    $injector = new ApcInjector($this->container, new Modules\BasicModule);
 		$instance = $injector->getInstance('Ray\Di\Definition\Basic');
 		$this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
 	}
 
 	public function test_Freeze(){
-	    $module = function (){ return new Modules\TimeModule; };
-	    $this->injector = new ApcInjector([$module]);
+	    $this->injector = new ApcInjector($this->container, new Modules\TimeModule);
 		$instance1 = $this->injector->getInstance('Ray\Di\Time');
 		$instance2 = $this->injector->getInstance('Ray\Di\Time');
 		$this->assertSame($instance1->time, $instance2->time);

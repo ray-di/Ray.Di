@@ -36,15 +36,12 @@ class ApcConfig extends Config
     public function fetch($class)
     {
         $file = (new ReflectionClass($class))->getFileName();
-        $key = __CLASS__ . $file . md5(serialize($this->setter));
+        $key = __CLASS__ . $file . hash('crc32b', serialize($this->setter));
         $config = apc_fetch($key, $success);
-        $config = $config ?: parent::fetch($class);
+        $config = $config ? ($config): parent::fetch($class);
         if ($success !== true) {
-            apc_store($key, $config);
+            apc_store($key, ($config));
         }
-//         if (isset($this->setter[$class])) {
-//             $config[1] = (array)$this->setter[$class] + (array)$config[1];
-//         }
         return $config;
     }
 }
