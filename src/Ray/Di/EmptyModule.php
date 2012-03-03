@@ -25,6 +25,7 @@ class EmptyModule extends AbstractModule
     {
         $this->bindings = new \ArrayObject;
         $this->container = new \ArrayObject;
+        $this->configure();
     }
 
     /**

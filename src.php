@@ -2,11 +2,13 @@
 
 require __DIR__ . '/vendor/Aura.Di/src.php';
 require __DIR__ . '/src/Ray/Di/Config.php';
+require __DIR__ . '/src/Ray/Di/ApcConfig.php';
 require __DIR__ . '/src/Ray/Di/Container.php';
 require __DIR__ . '/src/Ray/Di/Definition.php';
 require __DIR__ . '/src/Ray/Di/Forge.php';
 require __DIR__ . '/src/Ray/Di/InjectorInterface.php';
 require __DIR__ . '/src/Ray/Di/Injector.php';
+require __DIR__ . '/src/Ray/Di/ApcInjector.php';
 
 require __DIR__ . '/src/Ray/Di/AnnotationInterface.php';
 require __DIR__ . '/src/Ray/Di/Annotation.php';
@@ -35,3 +37,5 @@ require __DIR__ . '/src/Ray/Di/Di/PostConstruct.php';
 require __DIR__ . '/src/Ray/Di/Di/PreDestroy.php';
 require __DIR__ . '/src/Ray/Di/Di/ProvidedBy.php';
 require __DIR__ . '/src/Ray/Di/Di/Scope.php';
+
+require dirname(dirname(__DIR__)) . '/vendor/Aura.Di/src/Aura/Di/Exception/ContainerLocked.php';

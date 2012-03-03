@@ -139,16 +139,16 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($def['Ray\Di\Definition\MockDefinitionClass'] instanceof Definition);
     }
 
-    public function testConfigRetainDefintionAfterFetchChildClass()
-    {
-        $this->config->fetch('Ray\Di\Definition\MockDefinitionClass');
-        $this->config->fetch('Ray\Di\Definition\MockDefinitionChildClass');
-        $this->config->fetch('Ray\Di\Definition\MockDefinitionChildOverrideClass');
-        $def = $this->config->getDefinition();
-        $this->assertTrue($def['Ray\Di\Definition\MockDefinitionClass'] instanceof Definition);
-        $this->assertTrue($def['Ray\Di\Definition\MockDefinitionChildClass'] instanceof Definition);
-        $this->assertTrue($def['Ray\Di\Definition\MockDefinitionChildOverrideClass'] instanceof Definition);
-    }
+//     public function testConfigRetainDefintionAfterFetchChildClass()
+//     {
+//         $this->config->fetch('Ray\Di\Definition\MockDefinitionClass');
+//         $this->config->fetch('Ray\Di\Definition\MockDefinitionChildClass');
+//         $this->config->fetch('Ray\Di\Definition\MockDefinitionChildOverrideClass');
+//         $def = $this->config->getDefinition();
+//         $this->assertTrue($def['Ray\Di\Definition\MockDefinitionClass'] instanceof Definition);
+//         $this->assertTrue($def['Ray\Di\Definition\MockDefinitionChildClass'] instanceof Definition);
+//         $this->assertTrue($def['Ray\Di\Definition\MockDefinitionChildOverrideClass'] instanceof Definition);
+//     }
 
     public function testGetMethodReflect()
     {

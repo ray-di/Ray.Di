@@ -10,9 +10,10 @@ namespace Ray\Di;
 use Ray\Aop\Weave;
 
 use Aura\Di\Lazy,
-Aura\Di\ContainerInterface;
+    Aura\Di\ContainerInterface,
+    Aura\Di\Exception\ContainerLocked;
 use Ray\Aop\Bind,
-Ray\Aop\Weaver;
+    Ray\Aop\Weaver;
 
 /**
  * Dependency Injector.
@@ -21,7 +22,7 @@ Ray\Aop\Weaver;
  *
  * @Scope("singleton")
  */
-class Injector implements InjectorInterface
+class Injector extends Container implements InjectorInterface
 {
     /**
      * Config
@@ -101,6 +102,9 @@ class Injector implements InjectorInterface
      */
     public function setModule(AbstractModule $module)
     {
+        if ($this->container->isLocked()) {
+            throw new ContainerLocked;
+        }
         $this->module = $module;
     }
 
@@ -118,16 +122,6 @@ class Injector implements InjectorInterface
     public function __clone()
     {
         $this->container = clone $this->container;
-    }
-
-    /**
-     * Gets the injected Config object.
-     *
-     * @return ConfigInterface
-     */
-    public function getContainer()
-    {
-        return $this->container;
     }
 
     /**
@@ -220,11 +214,8 @@ class Injector implements InjectorInterface
                         continue;
                     }
                 }
-                throw new Exception\Provision("No bind. argument #{$index}(\${$parameter->name}) in {$class}::__construct()");
+                throw new Exception\Provision("Bind not found. argument #{$index}(\${$parameter->name}) in {$class} constructor.");
             }
-            //             if (isset($property->class) && (! $params[$index] instanceof $property->class)) {
-            //                 throw new Exception\Provision("Invalid type. argument #{$index}(\${$property->name}) in {$class}::__construct()");
-            //             }
         }
     }
 
@@ -383,6 +374,35 @@ class Injector implements InjectorInterface
 
 
     /**
+     *
+     * Lock the Container so that configuration cannot be accessed externally,
+     * and no new service definitions can be added.
+     *
+     * @return void
+     *
+     */
+    public function lock()
+    {
+        $this->container->lock();
+    }
+
+    /**
+     * Returns a Lazy that creates a new instance. This allows you to replace
+     * the following idiom:
+     *
+     * @param string $class The type of class of instantiate.
+     *
+     * @param array $params Override parameters for the instance.
+     *
+     * @return Lazy A lazy-load object that creates the new instance.
+     *
+     */
+    public function lazyNew($class, array $params = null)
+    {
+        return $this->container->lazyNew($class, $params);
+    }
+
+    /**
      * Magic get to provide access to the Config::$params and $setter
      * objects.
      *
@@ -394,15 +414,7 @@ class Injector implements InjectorInterface
      */
     public function __get($key)
     {
-        if ($this->container->isLocked()) {
-            throw new Exception\ContainerLocked;
-        }
-
-        if ($key == 'params' || $key == 'setter') {
-            return $this->$key;
-        }
-
-        throw new \UnexpectedValueException($key);
+        return $this->container->__get($key);
     }
 
     /**

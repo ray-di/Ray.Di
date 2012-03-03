@@ -42,6 +42,7 @@ require_once __DIR__ . '/Modules/InstallModule.php';
 require_once __DIR__ . '/Modules/NoAnnotationBindingModule.php';
 require_once __DIR__ . '/Modules/InvalidBindingModule.php';
 require_once __DIR__ . '/Modules/ProvideNotExistsModule.php';
+require_once __DIR__ . '/Modules/TimeModule.php';
 
 // Mock class without annotation
 require_once __DIR__ . '/MockParentClass.php';
@@ -68,3 +69,8 @@ require_once __DIR__ . '/Aop/SalesTax.php';
 require_once __DIR__ . '/Aop/AnnotateTaxBilling.php';
 require_once __DIR__ . '/Aop/TaxCharger.php';
 require_once __DIR__ . '/Aop/ChildRealBillingService.php';
+
+require_once __DIR__ . '/ConfigTest.php';
+
+require_once dirname(__DIR__) . '/vendor/Aura.Di/tests/Aura/Di/MockParentClass.php';
+require_once dirname(__DIR__) . '/vendor/Aura.Di/tests/Aura/Di/MockChildClass.php';
