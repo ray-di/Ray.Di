@@ -198,10 +198,15 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * Check parameter provision
+     * Return parameter using TO_CONSTRUCTOR
      *
-     * @param string $class
-     * @param array  $params
+     * 1) If parameter is provided, return. (check)
+     * 2) If parameter is NOT provided and TO_CONSTRUCTOR binding is available, return parameter with it
+     * 3) No binding found, throw exception.
+     *
+     * @param string         $class
+     * @param array          &$params
+     * @param AbstractModule $module
      *
      * @return void
      * @throws Exception\Provision
@@ -214,6 +219,9 @@ class Injector implements InjectorInterface
         }
         $parameters = $ref->getParameters();
         foreach ($parameters as $index => $parameter) {
+            /** @var $parameter \ReflectionParameter */
+
+            // has binding ?
             $params = array_values($params);
             if (! isset($params[$index])) {
                 $hasConstrcutorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
@@ -224,8 +232,15 @@ class Injector implements InjectorInterface
                         continue;
                     }
                 }
+                $isDefaultValueAvailable = $parameter->isDefaultValueAvailable();
+                if ($isDefaultValueAvailable === true) {
+                    continue;
+                }
                 throw new Exception\Provision("Bind not found. argument #{$index}(\${$parameter->name}) in {$class} constructor.");
             }
+
+            // has default value ?
+
         }
     }
 

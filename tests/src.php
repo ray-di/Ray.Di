@@ -60,6 +60,7 @@ require_once __DIR__ . '/Mock/Log.php';
 require_once __DIR__ . '/Mock/ReaderInterface.php';
 require_once __DIR__ . '/Mock/Reader.php';
 require_once __DIR__ . '/Mock/Construct.php';
+require_once __DIR__ . '/Mock/ConstructWithDefault.php';
 require_once __DIR__ . '/Mock/AbstractDb.php';
 require_once __DIR__ . '/Mock/MovieApp.php';
 // Ray.Aop

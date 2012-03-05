@@ -297,4 +297,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->lock();
         $this->injector->setModule(new Modules\BasicModule);
     }
+
+    public function testConstructorBindingsWithDefault()
+    {
+        $this->injector = new Injector($this->container, new \Ray\Di\Modules\NoAnnotationBindingModule($this->injector));
+        $constructWithDefault = $this->injector->getInstance('Ray\Di\Mock\ConstructWithDefault');
+        $this->assertInstanceOf('Ray\Di\Mock\DefaultDB', $constructWithDefault->db);
+    }
 }
