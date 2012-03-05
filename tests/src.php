@@ -1,4 +1,5 @@
 <?php
+require dirname(__DIR__) . '/vendor/Aura.Di/src/Aura/Di/Exception/ContainerLocked.php';
 
 // Definition class with annotation
 require_once __DIR__ . '/Definition/Basic.php';

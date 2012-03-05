@@ -1,6 +1,4 @@
 <?php
-
-require __DIR__ . '/vendor/Aura.Di/src.php';
 require __DIR__ . '/src/Ray/Di/Config.php';
 require __DIR__ . '/src/Ray/Di/ApcConfig.php';
 require __DIR__ . '/src/Ray/Di/Container.php';
@@ -37,5 +35,3 @@ require __DIR__ . '/src/Ray/Di/Di/PostConstruct.php';
 require __DIR__ . '/src/Ray/Di/Di/PreDestroy.php';
 require __DIR__ . '/src/Ray/Di/Di/ProvidedBy.php';
 require __DIR__ . '/src/Ray/Di/Di/Scope.php';
-
-require __DIR__ . '/vendor/Aura.Di/src/Aura/Di/Exception/ContainerLocked.php';
