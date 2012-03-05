@@ -265,7 +265,7 @@ class Definition extends ArrayObject
      */
     public function getUserAnnotationByMethod($methodName)
     {
-        $result = isset($this[self::BY_METHOD][$methodName]) ?
+        $result = isset($this[self::BY_METHOD]) && isset($this[self::BY_METHOD][$methodName]) ?
         $this[self::BY_METHOD][$methodName] : null;
         return $result;
     }
