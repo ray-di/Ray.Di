@@ -18,6 +18,7 @@ Requiment
 ---------
 
 * PHP 5.4+
+* (APC) 
 
 Documentation
 =============

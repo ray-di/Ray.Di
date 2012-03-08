@@ -1,8 +1,8 @@
 {
     "name": "Ray/Di",
     "type": "library",
-    "description": "Guice style annotation-driven dependency injection framework for PHP",
-    "keywords": ["dependency injection", "container", "guice", "annotation","inversion of control", "loose coupling", "ioc",  "aop", "method interception", "jsr"],
+    "description": "Guice style annotation-driven dependency injection framework",
+    "keywords": ["dependency injection", "di", "container", "guice", "annotation", "ioc",  "aop", "method interception", "jsr"],
     "homepage": "https://github.com/koriym/Ray.Di",
     "version": "0.1.0",
     "license": "BSD",
