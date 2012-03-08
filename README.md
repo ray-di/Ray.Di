@@ -1,7 +1,7 @@
 Ray.Di
 =======
-Annotation based dependency injection for PHP
----------------------------------------------
+Guice style annotation-driven dependency injection framework for PHP
+--------------------------------------------------------------------
 
 This project was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google. 
 
@@ -19,11 +19,28 @@ Requiment
 
 * PHP 5.4+
 
-## Documentation ##
+Documentation
+=============
+
 Available at Google Code.
 
  [http://code.google.com/p/rayphp/wiki/Motivation?tm=6](http://code.google.com/p/rayphp/wiki/Motivation?tm=6)
- 
+
+
+Installation
+============
+
+### Install with Composer
+If you're using [Composer](https://github.com/composer/composer) to manage dependencies, you can add Ray.Di with it.
+
+	{
+		"require": {
+			"Ray/Di": ">=0.1"
+		}
+	}
+
+*Note that Ray.Di has not yet reached 1.0!*
+
 Testing Ray.Di
 ==============
 
@@ -31,7 +48,8 @@ Here's how to install Ray.Di from source to run the unit tests and samples.
 
 ```
 $ git clone git://github.com/koriym/Ray.Di.git
-$ git submodule update --init
+$ cd Ray.Di
+$ composer.phar install
 $ phpunit
 $ php doc/sample/01-db/main.php
 $ cd doc/zf2-di-tests-clone/

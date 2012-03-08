@@ -1,0 +1,29 @@
+{
+    "name": "Ray/Di",
+    "type": "library",
+    "description": "Guice style annotation-driven dependency injection framework for PHP",
+    "keywords": ["dependency injection", "container", "guice", "annotation","inversion of control", "loose coupling", "ioc",  "aop", "method interception", "jsr"],
+    "homepage": "https://github.com/koriym/Ray.Di",
+    "version": "0.1.0",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Akihito Koriyama",
+            "email": "akihito.koriyama@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "doctrine/common": "2.2.*",
+        "Ray/Aop": ">=0.1.0",
+        "Aura/Di": ">=1.0.0-dev"
+    },
+    "replace": {
+    },
+    "autoload": {
+        "psr-0": {
+			"Ray\\Di": "src/",
+			"Aura\\Di": "vendor/Aura/Di/src/" 
+		}
+    }
+}

@@ -1,6 +1,4 @@
 <?php
-require dirname(__DIR__) . '/vendor/Aura.Di/src/Aura/Di/Exception/ContainerLocked.php';
-
 // Definition class with annotation
 require_once __DIR__ . '/Definition/Basic.php';
 require_once __DIR__ . '/Definition/Named.php';
@@ -74,5 +72,3 @@ require_once __DIR__ . '/Aop/ChildRealBillingService.php';
 
 require_once __DIR__ . '/ConfigTest.php';
 
-require_once dirname(__DIR__) . '/vendor/Aura.Di/tests/Aura/Di/MockParentClass.php';
-require_once dirname(__DIR__) . '/vendor/Aura.Di/tests/Aura/Di/MockChildClass.php';
