@@ -337,16 +337,20 @@ class Injector implements InjectorInterface
             }
             return $instance;
         };
+
         $bindMethod = function ($item) use ($definition, $module, $getInstance) {
             list($method, $settings) = each($item);
-            array_walk($settings, [$this, 'bindOneParameter'], [$definition, $getInstance]);
+            array_walk($settings, [$this, 'bindOneParameter'], [$definition, $module, $getInstance]);
             return [$method, $settings];
         };
+
         // main
         $setterDefinitions = (isset($definition[Definition::INJECT][Definition::INJECT_SETTER]))
         ? $definition[Definition::INJECT][Definition::INJECT_SETTER] : false;
         if ($setterDefinitions !== false) {
-            $injected = array_map($bindMethod, $setterDefinitions);
+            foreach ($setterDefinitions as $setterDefinition) {
+                $injected[] = $this->bindMethod($setterDefinition, $definition, $module, $getInstance);
+            }
             $setter = [];
             foreach ($injected as $item) {
                 $setterMethod = $item[0];
@@ -361,7 +365,15 @@ class Injector implements InjectorInterface
         } else {
             $params = [];
         }
-        return [$params, $setter];
+        $result = [$params, $setter];
+        return $result;
+    }
+
+    private function bindMethod($setterDefinition, $definition, $module, $getInstance)
+    {
+        list($method, $settings) = each($setterDefinition);
+        array_walk($settings, [$this, 'bindOneParameter'], [$definition, $getInstance]);
+        return [$method, $settings];
     }
 
     /**

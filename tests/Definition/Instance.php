@@ -6,6 +6,8 @@ use Ray\Di\Mock\UserInterface;
 
 class Instance
 {
+    public $userId;
+
     /**
      * @var string
      */
