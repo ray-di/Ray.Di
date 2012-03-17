@@ -94,6 +94,26 @@ class Injector implements InjectorInterface
     }
 
     /**
+     * Injector builder
+     *
+     * @param AbstractModule[] $modules
+     * @param array            $annotations
+     *
+     * @return Injector
+     */
+    public static function create(array $modules = [], array $annotations = [])
+    {
+        $injector = new self(new Container(new Forge(new ApcConfig(new Annotation(new Definition, $annotations)))));
+        if (count($modules) > 0) {
+            $module = array_shift($modules);
+            foreach ($modules as $extraModule) {
+                $module->install($extraModule);
+            }
+        }
+        return $injector;
+    }
+
+    /**
      * Set binding module
      *
      * @param AbstractModule $module

@@ -304,4 +304,28 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $constructWithDefault = $this->injector->getInstance('Ray\Di\Mock\ConstructWithDefault');
         $this->assertInstanceOf('Ray\Di\Mock\DefaultDB', $constructWithDefault->db);
     }
+
+    public function testCreate()
+    {
+        $injector = Injector::create();
+        $this->assertInstanceOf('Ray\Di\Injector', $injector);
+    }
+
+    public function testCreateWithModule()
+    {
+        $injector = Injector::create([new EmptyModule]);
+        $this->assertInstanceOf('Ray\Di\Injector', $injector);
+    }
+
+    public function testCreateWithModules()
+    {
+        $injector = Injector::create([new EmptyModule, new EmptyModule, new EmptyModule]);
+        $this->assertInstanceOf('Ray\Di\Injector', $injector);
+    }
+
+    public function testGetContainer()
+    {
+        $continaer = $this->injector->getContainer();
+        $this->assertInstanceOf('Ray\Di\Container', $continaer);
+    }
 }
