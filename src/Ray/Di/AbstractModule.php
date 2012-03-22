@@ -344,6 +344,12 @@ abstract class AbstractModule implements \ArrayAccess
         $this->container = new ArrayObject(array_merge_recursive((array)$module->container, (array)$module->container));
     }
 
+    public function requestInjection($class)
+    {
+        $injector = Injector::create();
+        $injector->setModule($this);
+        return $injector->getInstance($class);
+    }
     /**
      * Return matched binder.
      *

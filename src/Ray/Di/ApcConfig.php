@@ -35,7 +35,12 @@ class ApcConfig extends Config
      */
     public function fetch($class)
     {
-        $file = (new ReflectionClass($class))->getFileName();
+        try {
+            class_exists($class, true);
+            $file = (new ReflectionClass($class))->getFileName();
+        } catch (\ReflectionException $e) {
+            throw new Exception\Configuration("{$class} not loaded.");
+        }
         $key = __CLASS__ . $file . hash('crc32b', serialize($this->setter));
         $config = apc_fetch($key, $success);
         $config = $config ? ($config): parent::fetch($class);
