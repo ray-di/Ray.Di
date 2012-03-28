@@ -8,8 +8,8 @@
 namespace Ray\Di;
 
 use Ray\Aop\Bind,
-    Ray\Aop\Matcher,
-    Ray\Aop\Pointcut;
+Ray\Aop\Matcher,
+Ray\Aop\Pointcut;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Doctrine\Common\Annotations\FileCacheReader;
 use Doctrine\Common\Cache\ApcCache;
@@ -121,7 +121,6 @@ abstract class AbstractModule implements \ArrayAccess
      *
      * @var \ArrayObject
      */
-    public $pointcuts = [];
 
     /**
      * Object carry container
@@ -158,7 +157,7 @@ abstract class AbstractModule implements \ArrayAccess
      *
      * @var array
      */
-     private $globalIgnoredNames = [
+    private $globalIgnoredNames = [
         'Inject',
         'Named',
         'ImplementedBy',
@@ -169,17 +168,20 @@ abstract class AbstractModule implements \ArrayAccess
         'Provides'
     ];
 
+    public $pointcuts = [];
+
     /**
      * Constructor
      *
      * @param AbstractModule $module
      */
     public function __construct(
-   		AbstractModule $module = null,
-    	Matcher $matcher = null
+        AbstractModule $module = null,
+        Matcher $matcher = null
     ){
         if (is_null($module)) {
             $this->bindings = new \ArrayObject;
+            $this->pointcuts = new \ArrayObject;
             $this->container = new \ArrayObject;
         } else {
             $this->bindings = $module->bindings;
@@ -187,11 +189,11 @@ abstract class AbstractModule implements \ArrayAccess
             $this->container = $module->container;
         }
         if (is_null($matcher)) {
-        	$reader = new Reader;
-        	foreach ($this->globalIgnoredNames as $name) {
-        		$reader->addGlobalIgnoredName($name);
-        	}
-        	$matcher = new Matcher($reader);
+            $reader = new Reader;
+            foreach ($this->globalIgnoredNames as $name) {
+                $reader->addGlobalIgnoredName($name);
+            }
+            $matcher = new Matcher($reader);
         }
         $this->matcher = $matcher;
         $this->configure();
@@ -331,17 +333,17 @@ abstract class AbstractModule implements \ArrayAccess
     }
 
     /**
-	 * Install module
-	 *
-	 * @params AbstractModule $module
-	 *
-	 * @return void
+     * Install module
+     *
+     * @params AbstractModule $module
+     *
+     * @return void
      */
     public function install(AbstractModule $module)
     {
         $this->bindings = new ArrayObject(array_merge_recursive((array)$this->bindings, (array)$module->bindings));
-        $this->pointcuts = new ArrayObject(array_merge_recursive((array)$module->pointcuts, (array)$module->pointcuts));
-        $this->container = new ArrayObject(array_merge_recursive((array)$module->container, (array)$module->container));
+        $this->pointcuts = new ArrayObject(array_merge_recursive((array)$module->pointcuts, (array)$this->pointcuts));
+        $this->container = new ArrayObject(array_merge_recursive((array)$module->container, (array)$this->container));
     }
 
     public function requestInjection($class)
@@ -350,6 +352,7 @@ abstract class AbstractModule implements \ArrayAccess
         $injector->setModule($this);
         return $injector->getInstance($class);
     }
+
     /**
      * Return matched binder.
      *
@@ -363,7 +366,7 @@ abstract class AbstractModule implements \ArrayAccess
         return $bind;
     }
 
-   /**
+    /**
      * ArrayAccess::offsetExists
      *
      * @param offset

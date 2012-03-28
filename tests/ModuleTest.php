@@ -194,7 +194,7 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
         $wakedModule = unserialize(serialize($module));
         $this->assertObjectHasAttribute('pointcuts', $wakedModule);
-        $this->assertTrue(is_array($wakedModule->pointcuts));
+        $this->assertTrue($wakedModule->pointcuts instanceof \ArrayObject);
     }
 
     public function test_installModuleCount()
