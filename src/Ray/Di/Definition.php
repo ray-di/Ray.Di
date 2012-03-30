@@ -180,6 +180,13 @@ class Definition extends ArrayObject
     const BY_NAME = 'by_name';
 
     /**
+     * Optional Inject
+     *
+     * @var unknown_type
+     */
+    const OPTIONAL = 'optional';
+
+    /**
      * Definition default
      *
      * @var array
@@ -190,7 +197,8 @@ class Definition extends ArrayObject
         self::PRE_DESTROY => null,
         self::INJECT => [],
         self::IMPLEMENTEDBY => [],
-        self::USER => []
+        self::USER => [],
+        self::OPTIONAL => []
     ];
 
     /**

@@ -15,6 +15,7 @@ require_once __DIR__ . '/Definition/MockDefinitionChildOverrideClass.php';
 require_once __DIR__ . '/Definition/MockDefinitionMultiplePostConstructClass.php';
 require_once __DIR__ . '/Definition/ClassHint.php';
 require_once __DIR__ . '/Definition/AbstractBasic.php';
+require_once __DIR__ . '/Definition/OptionalInject.php';
 // Modules
 require_once __DIR__ . '/Modules/AnnotateModule.php';
 require_once __DIR__ . '/Modules/InvalidAnnotateModule.php';

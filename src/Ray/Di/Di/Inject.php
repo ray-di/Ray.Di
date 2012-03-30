@@ -10,7 +10,6 @@ namespace Ray\Di\Di;
  * Inject
  *
  * @Annotation
- * @Target("CLASS")
  * @Target("METHOD")
  *
  * @package    Ray.Di
@@ -18,4 +17,5 @@ namespace Ray\Di\Di;
  */
 final class Inject implements Annotation
 {
+    public $optional = false;
 }

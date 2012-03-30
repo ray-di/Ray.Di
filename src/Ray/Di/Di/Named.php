@@ -10,7 +10,6 @@ namespace Ray\Di\Di;
  * Named
  *
  * @Annotation
- * @Target("CLASS")
  * @Target("METHOD")
  *
  * @package    Ray.Di

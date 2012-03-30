@@ -224,12 +224,14 @@ class Annotation implements AnnotationInterface
             } else {
                 $name = Definition::NAME_UNSPECIFIED;
             }
+            $optinalInject = $methodAnnotation[Definition::INJECT]->optional;
             $paramsInfo[] = [
                 Definition::PARAM_POS => $pos,
                 Definition::PARAM_TYPEHINT => $typehint,
                 Definition::PARAM_NAME => $parameter->name,
                 Definition::PARAM_ANNOTATE => $name,
-                Definition::PARAM_TYPEHINT_BY => $typehintBy
+                Definition::PARAM_TYPEHINT_BY => $typehintBy,
+                Definition::OPTIONAL => $optinalInject
             ];
         }
         $paramInfo[$method->name] = $paramsInfo;

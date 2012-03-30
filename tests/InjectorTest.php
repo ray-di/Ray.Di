@@ -328,4 +328,10 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $continaer = $this->injector->getContainer();
         $this->assertInstanceOf('Ray\Di\Container', $continaer);
     }
+
+    public function testOptionalInjection()
+    {
+        $object = $this->injector->getInstance('Ray\Di\Definition\OptionalInject');
+        $this->assertSame($object->userDb, 'NOT_INJECTED');
+    }
 }

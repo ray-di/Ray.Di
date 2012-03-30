@@ -7,6 +7,8 @@
  */
 namespace Ray\Di;
 
+use Ray\Di\Exception\OptionalInjectionNotBinded;
+
 use Ray\Aop\Weave;
 
 use Aura\Di\Lazy,
@@ -24,6 +26,13 @@ use Ray\Aop\Bind,
  */
 class Injector implements InjectorInterface
 {
+    /**
+     * Inject annotation with optional=false
+     *
+     * @var bool
+     */
+    const OPTIONAL_BINDING_NOT_BINDED = false;
+
     /**
      * Config
      *
@@ -337,19 +346,16 @@ class Injector implements InjectorInterface
             }
             return $instance;
         };
-
-        $bindMethod = function ($item) use ($definition, $module, $getInstance) {
-            list($method, $settings) = each($item);
-            array_walk($settings, [$this, 'bindOneParameter'], [$definition, $module, $getInstance]);
-            return [$method, $settings];
-        };
-
         // main
         $setterDefinitions = (isset($definition[Definition::INJECT][Definition::INJECT_SETTER]))
         ? $definition[Definition::INJECT][Definition::INJECT_SETTER] : false;
         if ($setterDefinitions !== false) {
+            $injected = [];
             foreach ($setterDefinitions as $setterDefinition) {
-                $injected[] = $this->bindMethod($setterDefinition, $definition, $module, $getInstance);
+                try {
+                    $injected[] = $this->bindMethod($setterDefinition, $definition, $module, $getInstance);
+                } catch (OptionalInjectionNotBinded $e) {
+                }
             }
             $setter = [];
             foreach ($injected as $item) {
@@ -372,6 +378,7 @@ class Injector implements InjectorInterface
     private function bindMethod($setterDefinition, $definition, $module, $getInstance)
     {
         list($method, $settings) = each($setterDefinition);
+
         array_walk($settings, [$this, 'bindOneParameter'], [$definition, $getInstance]);
         return [$method, $settings];
     }
@@ -397,6 +404,9 @@ class Injector implements InjectorInterface
         if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
             // default bindg by @ImplemetedBy or @ProviderBy
             $binding = $this->jitBinding($param, $definition, $typeHint, $annotate);
+            if ($binding === self::OPTIONAL_BINDING_NOT_BINDED) {
+                throw new OptionalInjectionNotBinded($key);
+            }
         }
         $bindingToType = $binding[AbstractModule::TO][0];
         $target = $binding[AbstractModule::TO][1];
@@ -421,6 +431,9 @@ class Injector implements InjectorInterface
         $typehintBy = $param[Definition::PARAM_TYPEHINT_BY];
         if ($typehintBy == []) {
             $typehint = $param[Definition::PARAM_TYPEHINT];
+            if ($param[Definition::OPTIONAL] === true) {
+                return self::OPTIONAL_BINDING_NOT_BINDED;
+            }
             throw new Exception\Binding("$typeHint:$annotate");
         }
         if ($typehintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
