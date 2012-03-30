@@ -212,4 +212,11 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
         $bindingClass = array_keys((array)$bindigs);
         $this->assertSame($bindingClass, ["Ray\\Di\\Mock\\DbInterface", '']);
     }
+
+    public function test_requestInjection()
+    {
+        $module = new Modules\RequestInjectionModule;
+        $this->assertInstanceOf('Ray\Di\Definition\Basic', $module->object);
+        $this->assertInstanceOf('Ray\Di\Mock\UserDb', $module->object->db);
+    }
 }

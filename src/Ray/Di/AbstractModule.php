@@ -346,6 +346,15 @@ abstract class AbstractModule implements \ArrayAccess
         $this->container = new ArrayObject(array_merge_recursive((array)$module->container, (array)$this->container));
     }
 
+    /**
+     * Request injection
+     *
+     * Get instance with current module.
+     *
+     * @param string $class
+     *
+     * @return object
+     */
     public function requestInjection($class)
     {
         $injector = Injector::create();

@@ -1,10 +1,6 @@
 <?php
 namespace Ray\Di;
 
-/**
- * Test class for Inject.
- */
-
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
     /**
