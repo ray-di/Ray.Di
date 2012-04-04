@@ -7,10 +7,10 @@
  */
 namespace Ray\Di;
 
-use Aura\Di\Lazy,
-    Aura\Di\ContainerInterface;
-use Ray\Aop\Bind,
-    Ray\Aop\Weaver;
+use Aura\Di\Lazy;
+use Aura\Di\ContainerInterface;
+use Ray\Aop\Bind;
+use Ray\Aop\Weaver;
 
 /**
  * Dependency Injector using APC

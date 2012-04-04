@@ -7,8 +7,8 @@
  */
 namespace Ray\Di;
 
-use Aura\Di\Container as AuraContainer,
-	Aura\Di\ContainerInterface;
+use Aura\Di\Container as AuraContainer;
+use Aura\Di\ContainerInterface;
 
 /**
  *

@@ -7,11 +7,11 @@
  */
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\DocParser,
-    Doctrine\Common\Annotations\PhpParser,
-    Doctrine\Common\Annotations\Annotation\Target;
-use ReflectionClass,
-    ReflectionMethod;
+use Doctrine\Common\Annotations\DocParser;
+use Doctrine\Common\Annotations\PhpParser;
+use Doctrine\Common\Annotations\Annotation\Target;
+use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * Annotation scanner

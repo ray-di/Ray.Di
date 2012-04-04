@@ -11,11 +11,11 @@ use Ray\Di\Exception\OptionalInjectionNotBinded;
 
 use Ray\Aop\Weave;
 
-use Aura\Di\Lazy,
-    Aura\Di\ContainerInterface,
-    Aura\Di\Exception\ContainerLocked;
-use Ray\Aop\Bind,
-    Ray\Aop\Weaver;
+use Aura\Di\Lazy;
+use Aura\Di\ContainerInterface;
+use Aura\Di\Exception\ContainerLocked;
+use Ray\Aop\Bind;
+use Ray\Aop\Weaver;
 
 /**
  * Dependency Injector.

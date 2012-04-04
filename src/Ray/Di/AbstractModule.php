@@ -7,9 +7,9 @@
  */
 namespace Ray\Di;
 
-use Ray\Aop\Bind,
-Ray\Aop\Matcher,
-Ray\Aop\Pointcut;
+use Ray\Aop\Bind;
+use Ray\Aop\Matcher;
+use Ray\Aop\Pointcut;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Doctrine\Common\Annotations\FileCacheReader;
 use Doctrine\Common\Cache\ApcCache;
