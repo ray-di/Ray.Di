@@ -112,7 +112,7 @@ class Injector implements InjectorInterface
      */
     public static function create(array $modules = [], array $annotations = [])
     {
-        $injector = new self(new Container(new Forge(new ApcConfig(new Annotation(new Definition, $annotations)))));
+        $injector = new self(new Container(new Forge(new Config(new Annotation(new Definition, $annotations)))));
         if (count($modules) > 0) {
             $module = array_shift($modules);
             foreach ($modules as $extraModule) {
