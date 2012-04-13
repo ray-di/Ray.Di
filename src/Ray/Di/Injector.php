@@ -3,7 +3,7 @@
  * Ray
  *
  * @package Ray.Di
- * @license  http://opensource.org/licenses/bsd-license.php BSD
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
 
@@ -37,27 +37,26 @@ class Injector implements InjectorInterface
      * Config
      *
      * @var Config
-     *
      */
     protected $config;
 
     /**
+     * Params
      *
      * A convenient reference to the Config::$params object, which itself
      * is contained by the Forge object.
      *
      * @var \ArrayObject
-     *
      */
     protected $params;
 
     /**
+     * Setter
      *
      * A convenient reference to the Config::$setter object, which itself
      * is contained by the Forge object.
      *
      * @var \ArrayObject
-     *
      */
     protected $setter;
 
@@ -215,7 +214,7 @@ class Injector implements InjectorInterface
         }
         $module = $this->module;
         $bind = $module($class, new $this->bind);
-        /** @var $bind \BEAR\Di\Bind */
+        /* @var $bind \BEAR\Di\Bind */
         if ($bind->hasBinding() === true) {
             $object = new Weaver($object, $bind);
         }
@@ -243,13 +242,13 @@ class Injector implements InjectorInterface
      */
     private function checkProvision($class, array &$params, AbstractModule $module)
     {
-        $ref = method_exists($class, '__construct') ? new \ReflectionMethod($class, '__construct')  : false;
+        $ref = method_exists($class, '__construct') ? new \ReflectionMethod($class, '__construct') : false;
         if ($ref === false) {
             return;
         }
         $parameters = $ref->getParameters();
         foreach ($parameters as $index => $parameter) {
-            /** @var $parameter \ReflectionParameter */
+            /* @var $parameter \ReflectionParameter */
 
             // has binding ?
             $params = array_values($params);
@@ -270,7 +269,6 @@ class Injector implements InjectorInterface
             }
 
             // has default value ?
-
         }
     }
 
@@ -293,8 +291,8 @@ class Injector implements InjectorInterface
     /**
      * Set object life cycle
      *
-     * @param object $instance
-     * @param array  $definition
+     * @param object     $instance
+     * @param Definition $definition
      *
      * @return void
      */
@@ -302,7 +300,6 @@ class Injector implements InjectorInterface
     {
         $postConstructMethod = $definition[Definition::POST_CONSTRUCT];
         if ($postConstructMethod) {
-            //signal
             call_user_func(array($instance, $postConstructMethod));
         }
         if (! is_null($definition[Definition::PRE_DESTROY])) {
@@ -314,9 +311,10 @@ class Injector implements InjectorInterface
     /**
      * Return dependency using modules.
      *
-     * @param array $setter
-     * @param array $definition
+     * @param array          $setter
+     * @param Definition     $definition
      * @param AbstractModule $module
+     *
      * @throws Exception\Binding
      *
      * @return array <$constructorParams, $setter>
@@ -341,6 +339,7 @@ class Injector implements InjectorInterface
                     $provider = $injector->getInstance($target);
                     $instance = $provider->get();
                     break;
+                default:
             }
             if ($in === Scope::SINGLETON) {
                 $container->set($target, $instance);
@@ -348,20 +347,19 @@ class Injector implements InjectorInterface
             return $instance;
         };
         // main
-        $setterDefinitions = (isset($definition[Definition::INJECT][Definition::INJECT_SETTER]))
-        ? $definition[Definition::INJECT][Definition::INJECT_SETTER] : false;
+        $setterDefinitions = (isset($definition[Definition::INJECT][Definition::INJECT_SETTER])) ? $definition[Definition::INJECT][Definition::INJECT_SETTER] : false;
         if ($setterDefinitions !== false) {
             $injected = [];
             foreach ($setterDefinitions as $setterDefinition) {
                 try {
-                    $injected[] = $this->bindMethod($setterDefinition, $definition, $module, $getInstance);
+                    $injected[] = $this->bindMethod($setterDefinition, $definition, $getInstance);
                 } catch (OptionalInjectionNotBinded $e) {
                 }
             }
             $setter = [];
             foreach ($injected as $item) {
                 $setterMethod = $item[0];
-                $object =  (count($item[1]) === 1 && $setterMethod !== '__construct') ? $item[1][0] : $item[1];
+                $object = (count($item[1]) === 1 && $setterMethod !== '__construct') ? $item[1][0] : $item[1];
                 $setter[$setterMethod] = $object;
             }
         }
@@ -376,7 +374,14 @@ class Injector implements InjectorInterface
         return $result;
     }
 
-    private function bindMethod($setterDefinition, $definition, $module, $getInstance)
+    /**
+     * Bind method
+     *
+     * @param array      $setterDefinition
+     * @param Definition $definition
+     * @param Callable   $getInstance
+     */
+    private function bindMethod(array $setterDefinition, Definition $definition, Callable $getInstance)
     {
         list($method, $settings) = each($setterDefinition);
 
@@ -387,7 +392,7 @@ class Injector implements InjectorInterface
     /**
      * Set one parameter with definitio, or JIT binding.
      *
-     * @param string $param
+     * @param string &$param
      * @param string $key
      * @param array  $userData
      *
@@ -404,7 +409,7 @@ class Injector implements InjectorInterface
         $binding = $hasTypeHint ? $this->module[$typeHint][$annotate] : false;
         if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
             // default bindg by @ImplemetedBy or @ProviderBy
-            $binding = $this->jitBinding($param, $definition, $typeHint, $annotate);
+            $binding = $this->jitBinding($param, $typeHint, $annotate);
             if ($binding === self::OPTIONAL_BINDING_NOT_BINDED) {
                 throw new OptionalInjectionNotBinded($key);
             }
@@ -427,7 +432,16 @@ class Injector implements InjectorInterface
         $param = $getInstance($in, $bindingToType, $target);
     }
 
-    private function jitBinding($param, $definition, $typeHint, $annotate)
+    /**
+     * JIT binding
+     *
+     * @param array      $param
+     * @param string     $typeHint
+     * @param string     $annotate
+     *
+     * @throws Exception\Binding
+     */
+    private function jitBinding(array $param, $typeHint, $annotate)
     {
         $typehintBy = $param[Definition::PARAM_TYPEHINT_BY];
         if ($typehintBy == []) {
@@ -445,12 +459,12 @@ class Injector implements InjectorInterface
 
 
     /**
+     * Lock
      *
      * Lock the Container so that configuration cannot be accessed externally,
      * and no new service definitions can be added.
      *
      * @return void
-     *
      */
     public function lock()
     {
@@ -458,6 +472,8 @@ class Injector implements InjectorInterface
     }
 
     /**
+     * Lazy new
+     *
      * Returns a Lazy that creates a new instance. This allows you to replace
      * the following idiom:
      *
@@ -466,7 +482,6 @@ class Injector implements InjectorInterface
      * @param array $params Override parameters for the instance.
      *
      * @return Lazy A lazy-load object that creates the new instance.
-     *
      */
     public function lazyNew($class, array $params = null)
     {
@@ -474,6 +489,8 @@ class Injector implements InjectorInterface
     }
 
     /**
+     * Get
+     *
      * Magic get to provide access to the Config::$params and $setter
      * objects.
      *
@@ -491,8 +508,8 @@ class Injector implements InjectorInterface
     /**
      * Set params or setter
      *
-     * @param string params | setter
-     * @param mixed $val
+     * @param string $key
+     * @param mixed  $val
      *
      * @return $this
      */
