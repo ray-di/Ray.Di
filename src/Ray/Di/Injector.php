@@ -118,6 +118,7 @@ class Injector implements InjectorInterface
             foreach ($modules as $extraModule) {
                 $module->install($extraModule);
             }
+            $injector->setModule($module);
         }
         return $injector;
     }
