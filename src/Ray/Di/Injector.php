@@ -117,6 +117,11 @@ class Injector implements InjectorInterface
             foreach ($modules as $extraModule) {
                 $module->install($extraModule);
             }
+            // dirty manual bind hack to bind injector with current module to Ray\Di\InjectorInterface.
+            if (isset($module->bindings['Ray\Di\InjectorInterface']) &&
+                isset($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1])) {
+                $module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]->setModule($module);
+            }
             $injector->setModule($module);
         }
         return $injector;
@@ -435,9 +440,9 @@ class Injector implements InjectorInterface
     /**
      * JIT binding
      *
-     * @param array      $param
-     * @param string     $typeHint
-     * @param string     $annotate
+     * @param array  $param
+     * @param string $typeHint
+     * @param string $annotate
      *
      * @throws Exception\Binding
      */
