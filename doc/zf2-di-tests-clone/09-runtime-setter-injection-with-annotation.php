@@ -1,5 +1,8 @@
 <?php
 
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+
 namespace MovieApp {
 
     class Lister

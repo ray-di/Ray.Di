@@ -1,7 +1,8 @@
 <?php
-
 namespace Ray\Di\Sample;
 
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
 
 class User
 {

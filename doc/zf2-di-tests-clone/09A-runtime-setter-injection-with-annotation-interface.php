@@ -2,6 +2,9 @@
 
 namespace MovieApp {
 
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+
     class Lister
     {
         public $finder;
