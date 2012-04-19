@@ -7,6 +7,7 @@ require __DIR__ . '/src/Ray/Di/Forge.php';
 require __DIR__ . '/src/Ray/Di/InjectorInterface.php';
 require __DIR__ . '/src/Ray/Di/Injector.php';
 require __DIR__ . '/src/Ray/Di/ApcInjector.php';
+require __DIR__ . '/src/Ray/Di/LoggerInterface.php';
 
 require __DIR__ . '/src/Ray/Di/AnnotationInterface.php';
 require __DIR__ . '/src/Ray/Di/Annotation.php';

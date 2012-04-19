@@ -82,6 +82,13 @@ class Injector implements InjectorInterface
     private $preDestroyObjects;
 
     /**
+     * Logger
+     * 
+     * @var LoggerInterface
+     */
+    private $log;
+    
+    /**
      * Constructor
      *
      * @param ContainerInterface $container  The class to instantiate.
@@ -101,6 +108,18 @@ class Injector implements InjectorInterface
         $this->setter = $this->config->getSetter();
     }
 
+    /**
+     * Set Logger
+     * 
+     * @param Logger $logger
+     * 
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->log = $logger;
+    }
+    
     /**
      * Injector builder
      *
@@ -222,6 +241,10 @@ class Injector implements InjectorInterface
         /* @var $bind \BEAR\Di\Bind */
         if ($bind->hasBinding() === true) {
             $object = new Weaver($object, $bind);
+        }
+        // injection logging
+        if ($this->log) {
+            $this->log->log($class, $params, $setter, $object);
         }
         // set life cycle
         if ($definition) {

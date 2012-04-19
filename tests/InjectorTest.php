@@ -330,4 +330,13 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $object = $this->injector->getInstance('Ray\Di\Definition\OptionalInject');
         $this->assertSame($object->userDb, 'NOT_INJECTED');
     }
+    
+    public function testSetLogger()
+    {
+        $this->injector->setLogger(new \Ray\Di\Mock\TestLogger);
+        $this->injector->setModule(new Modules\BasicModule);
+        $instance = $this->injector->getInstance('Ray\Di\Definition\Basic');
+        $this->assertTrue(is_string(\Ray\Di\Mock\TestLogger::$log));
+    }
+    
 }

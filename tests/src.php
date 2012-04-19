@@ -64,6 +64,7 @@ require_once __DIR__ . '/Mock/Construct.php';
 require_once __DIR__ . '/Mock/ConstructWithDefault.php';
 require_once __DIR__ . '/Mock/AbstractDb.php';
 require_once __DIR__ . '/Mock/MovieApp.php';
+require_once __DIR__ . '/Mock/TestLogger.php';
 // Ray.Aop
 require_once __DIR__ . '/Aop/BillingService.php';
 require_once __DIR__ . '/Aop/RealBillingService.php';
