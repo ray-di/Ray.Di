@@ -128,9 +128,10 @@ class Injector implements InjectorInterface
      *
      * @return Injector
      */
-    public static function create(array $modules = [], array $annotations = [])
+    public static function create(array $modules = [], $useApcConfig = true)
     {
-        $injector = new self(new Container(new Forge(new Config(new Annotation(new Definition, $annotations)))));
+    	$config = $useApcConfig ? __NAMESPACE__ . '\ApcConfig' : __NAMESPACE__ . '\Config';
+        $injector = new self(new Container(new Forge(new $config(new Annotation(new Definition, [])))));
         if (count($modules) > 0) {
             $module = array_shift($modules);
             foreach ($modules as $extraModule) {
