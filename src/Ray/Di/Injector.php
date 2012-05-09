@@ -512,7 +512,7 @@ class Injector implements InjectorInterface
      *
      * @return Lazy A lazy-load object that creates the new instance.
      */
-    public function lazyNew($class, array $params = null)
+    public function lazyNew($class, array $params = [])
     {
         return $this->container->lazyNew($class, $params);
     }
