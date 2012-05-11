@@ -245,7 +245,7 @@ class Injector implements InjectorInterface
         }
         // injection logging
         if ($this->log) {
-            $this->log->log($class, $params, $setter, $object);
+            $this->log->log($class, $params, $setter, $object, $bind);
         }
         // set life cycle
         if ($definition) {
@@ -512,7 +512,7 @@ class Injector implements InjectorInterface
      *
      * @return Lazy A lazy-load object that creates the new instance.
      */
-    public function lazyNew($class, array $params = null)
+    public function lazyNew($class, array $params = [])
     {
         return $this->container->lazyNew($class, $params);
     }
