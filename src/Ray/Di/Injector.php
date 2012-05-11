@@ -245,7 +245,7 @@ class Injector implements InjectorInterface
         }
         // injection logging
         if ($this->log) {
-            $this->log->log($class, $params, $setter, $object);
+            $this->log->log($class, $params, $setter, $object, $bind);
         }
         // set life cycle
         if ($definition) {

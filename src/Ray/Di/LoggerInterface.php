@@ -7,7 +7,7 @@
  */
 namespace Ray\Di;
 
-use ArrayObject;
+use Ray\Aop\Bind;
 
 /**
  * Defines the interface for dependency injector logger.
@@ -17,5 +17,5 @@ use ArrayObject;
  */
 interface LoggerInterface
 {
-    public function log($class, array $params, array $setter, $object);
+    public function log($class, array $params, array $setter, $object, Bind $bind);
 }
