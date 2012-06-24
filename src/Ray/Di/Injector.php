@@ -10,17 +10,13 @@ namespace Ray\Di;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ApcCache;
-
 use Ray\Di\Exception\OptionalInjectionNotBinded;
-
-use Ray\Aop\Weave;
-
 use Aura\Di\Lazy;
 use Aura\Di\ContainerInterface;
 use Aura\Di\Exception\ContainerLocked;
 use Ray\Aop\Bind;
 use Ray\Aop\Weaver;
-
+use ReflectionMethod;
 /**
  * Dependency Injector.
  *
@@ -87,16 +83,16 @@ class Injector implements InjectorInterface
 
     /**
      * Logger
-     * 
+     *
      * @var LoggerInterface
      */
     private $log;
-    
+
     /**
      * Constructor
      *
-     * @param ContainerInterface $container  The class to instantiate.
-     * @param AbstractModule     $module Binding configuration module
+     * @param ContainerInterface $container The class to instantiate.
+     * @param AbstractModule     $module    Binding configuration module
      */
     public function __construct(ContainerInterface $container, AbstractModule $module = null)
     {
@@ -114,16 +110,16 @@ class Injector implements InjectorInterface
 
     /**
      * Set Logger
-     * 
+     *
      * @param Logger $logger
-     * 
+     *
      * @return void
      */
     public function setLogger(LoggerInterface $logger)
     {
         $this->log = $logger;
     }
-    
+
     /**
      * Injector builder
      *
@@ -134,21 +130,27 @@ class Injector implements InjectorInterface
      */
     public static function create(array $modules = [], $useApcCache = true)
     {
-    	$config = $useApcCache ? __NAMESPACE__ . '\ApcConfig' : __NAMESPACE__ . '\Config';
-    	$reader = $useApcCache ? new AnnotationReader : new CachedReader(new AnnotationReader, new ApcCache, false);
+        $config = $useApcCache ? __NAMESPACE__ . '\ApcConfig' : __NAMESPACE__ . '\Config';
+        $reader = $useApcCache ? new AnnotationReader : new CachedReader(new AnnotationReader, new ApcCache, false);
         $injector = new self(new Container(new Forge(new $config(new Annotation(new Definition, $reader)))));
         if (count($modules) > 0) {
             $module = array_shift($modules);
             foreach ($modules as $extraModule) {
                 $module->install($extraModule);
             }
-            // dirty manual bind hack to bind injector with current module to Ray\Di\InjectorInterface.
-            if (isset($module->bindings['Ray\Di\InjectorInterface']) &&
-                isset($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1])) {
-                $module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]->setModule($module);
+            // dirty manual bind hack for injector
+            // - set new module if binded injector instance exists, binded injecotor instance enjoy new module.
+            $isSetInjectorInterfaceBind = isset($module->bindings['Ray\Di\InjectorInterface']) && isset($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]);
+            if ($isSetInjectorInterfaceBind) {
+                $isInjectorInterfaceBindedToInjectoInstance = ($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1] instanceof InjectorInterface);
+                if ($isInjectorInterfaceBindedToInjectoInstance) {
+                    // set new module to binded injector
+                    $module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]->setModule($module);
+                }
             }
             $injector->setModule($module);
         }
+
         return $injector;
     }
 
@@ -227,8 +229,8 @@ class Injector implements InjectorInterface
 
         // create the new instance
         $object = call_user_func_array(
-                [$this->config->getReflect($class), 'newInstance'],
-                $params
+                        [$this->config->getReflect($class), 'newInstance'],
+                        $params
         );
         // call setters after creation
         foreach ($setter as $method => $value) {
@@ -267,7 +269,7 @@ class Injector implements InjectorInterface
      * 2) If parameter is NOT provided and TO_CONSTRUCTOR binding is available, return parameter with it
      * 3) No binding found, throw exception.
      *
-     * @param string         $class
+     * @param string $class
      * @param array          &$params
      * @param AbstractModule $module
      *
@@ -276,7 +278,7 @@ class Injector implements InjectorInterface
      */
     private function checkNotBinded($class, array &$params, AbstractModule $module)
     {
-        $ref = method_exists($class, '__construct') ? new \ReflectionMethod($class, '__construct') : false;
+        $ref = method_exists($class, '__construct') ? new ReflectionMethod($class, '__construct') : false;
         if ($ref === false) {
             return;
         }
@@ -289,14 +291,11 @@ class Injector implements InjectorInterface
             if (! isset($params[$index])) {
                 $hasConstrcutorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
                 if ($hasConstrcutorBinding) {
-                    $param = isset($module[$class]['*'][AbstractModule::TO][1][$parameter->name]) ? $module[$class]['*'][AbstractModule::TO][1][$parameter->name] : false;
-                    if ($param) {
-                        $params[$index] = $param;
-                        continue;
-                    }
+                    $params[$index] = $module[$class]['*'][AbstractModule::TO][1][$parameter->name];
+                    continue;
                 }
-                $isDefaultValueAvailable = $parameter->isDefaultValueAvailable();
-                if ($isDefaultValueAvailable === true) {
+                // has constructor default value ?
+                if ($parameter->isDefaultValueAvailable() === true) {
                     continue;
                 }
                 throw new Exception\NotBinded("Bind not found. argument #{$index}(\${$parameter->name}) in {$class} constructor.");
@@ -363,6 +362,7 @@ class Injector implements InjectorInterface
         $getInstance = function($in, $bindingToType, $target) use ($container, $definition, $injector) {
             if ($in === Scope::SINGLETON && $container->has($target)) {
                 $instance = $container->get($target);
+
                 return $instance;
             }
             switch ($bindingToType) {
@@ -373,11 +373,11 @@ class Injector implements InjectorInterface
                     $provider = $injector->getInstance($target);
                     $instance = $provider->get();
                     break;
-                default:
             }
             if ($in === Scope::SINGLETON) {
                 $container->set($target, $instance);
             }
+
             return $instance;
         };
         // main
@@ -405,6 +405,7 @@ class Injector implements InjectorInterface
             $params = [];
         }
         $result = [$params, $setter];
+
         return $result;
     }
 
@@ -420,6 +421,7 @@ class Injector implements InjectorInterface
         list($method, $settings) = each($setterDefinition);
 
         array_walk($settings, [$this, 'bindOneParameter'], [$definition, $getInstance]);
+
         return [$method, $settings];
     }
 
@@ -448,13 +450,14 @@ class Injector implements InjectorInterface
                 throw new OptionalInjectionNotBinded($key);
             }
         }
-        $bindingToType = $binding[AbstractModule::TO][0];
-        $target = $binding[AbstractModule::TO][1];
+        list($bindingToType, $target) = $binding[AbstractModule::TO];
         if ($bindingToType === AbstractModule::TO_INSTANCE) {
             $param = $target;
+
             return;
         } elseif ($bindingToType === AbstractModule::TO_CALLABLE) {
             $param = $target();
+
             return;
         }
         if (isset($binding[AbstractModule::IN])) {
@@ -473,6 +476,8 @@ class Injector implements InjectorInterface
      * @param string $typeHint
      * @param string $annotate
      *
+     * @reutn array
+     *
      * @throws Exception\Binding
      */
     private function jitBinding(array $param, $typeHint, $annotate)
@@ -488,9 +493,9 @@ class Injector implements InjectorInterface
         if ($typehintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
             return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typehintBy[1]]];
         }
+
         return [AbstractModule::TO => [AbstractModule::TO_PROVIDER, $typehintBy[1]]];
     }
-
 
     /**
      * Lock
@@ -550,6 +555,7 @@ class Injector implements InjectorInterface
     public function __set($key, $val)
     {
         $this->$key = $val;
+
         return $this;
     }
 
@@ -560,7 +566,8 @@ class Injector implements InjectorInterface
      */
     public function __toString()
     {
-        $result = (string)($this->module);
+        $result = (string) ($this->module);
+
         return $result;
     }
 }

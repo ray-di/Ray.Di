@@ -20,9 +20,9 @@ interface InjectorInterface
      * Creates and returns a new instance of a class using 'module,
      * optionally with overriding params.
      *
-     * @param string $class The class to instantiate.
+     * @param string         $class  The class to instantiate.
      * @param AbstractModule $module Binding configuration module
-     * @param array $params An associative array of override parameters where
+     * @param array          $params An associative array of override parameters where
      * the key the name of the constructor parameter and the value is the
      * parameter value to use.
      *

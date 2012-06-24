@@ -7,11 +7,8 @@
  */
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\DocParser;
-use Doctrine\Common\Annotations\PhpParser;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\Annotation\Target;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -88,15 +85,16 @@ class Annotation implements AnnotationInterface
         // Method Annotation
         $this->setMethodDefinition($class);
         $this->definitions[$className] = $this->definition;
+
         return $this->definition;
     }
 
     /**
-	 * Get definition format from annotations
-	 *
-	 * @param array $annotations
-	 *
-	 * @return [$annotation => $value][]
+     * Get definition format from annotations
+     *
+     * @param array $annotations
+     *
+     * @return [$annotation => $value][]
      */
     private function getDefinitionFormat(array $annotations, $returnValue = true)
     {
@@ -110,6 +108,7 @@ class Annotation implements AnnotationInterface
             }
             $result[$key] = $value;
         }
+
         return $result;
     }
 
@@ -142,9 +141,9 @@ class Annotation implements AnnotationInterface
     /**
      * Set annotation key-value for DI
      *
-     * @param string            $name        annotation name
+     * @param string           $name        annotation name
      * @param ReflectionMethod $method
-     * @param \array            $annotations
+     * @param \array           $annotations
      *
      * @return void
      * @throws Exception\MultipleAnnotationNotAllowed
@@ -158,10 +157,12 @@ class Annotation implements AnnotationInterface
             } else {
                 $this->definition[$name] = $method->name;
             }
+
             return;
         }
         if ($name === Definition::INJECT) {
             $this->setSetterInjectDefinition($annotations, $method);
+
             return;
         }
         if ($name === Definition::NAMED) {
@@ -174,7 +175,7 @@ class Annotation implements AnnotationInterface
     /**
      * Set setter inject definition
      *
-     * @param array             $methodAnnotation
+     * @param array            $methodAnnotation
      * @param ReflectionMethod $method
      *
      * @return void
@@ -239,11 +240,13 @@ class Annotation implements AnnotationInterface
         // @ImplementBy as default
         if (isset($hintDef[Definition::IMPLEMENTEDBY])) {
             $result = [Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $hintDef[Definition::IMPLEMENTEDBY]];
+
             return $result;
         }
         // @ProvidBY as default
         if (isset($hintDef[Definition::PROVIDEDBY])) {
             $result = [Definition::PARAM_TYPEHINT_METHOD_PROVIDEDBY, $hintDef[Definition::PROVIDEDBY]];
+
             return $result;
         }
         // this typehint is class, not a interface.
@@ -251,9 +254,11 @@ class Annotation implements AnnotationInterface
             $class = new \ReflectionClass($typehint);
             if ($class->isAbstract() === false) {
                 $result = [Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $typehint];
+
                 return $result;
             }
         }
+
         return [];
     }
 
@@ -262,7 +267,7 @@ class Annotation implements AnnotationInterface
      *
      * @param string $nameParameter "value" or "key1=value1,ke2=value2"
      *
-     * @return array [$paramName => $named][]
+     * @return array           [$paramName => $named][]
      * @throws Exception\Named
      */
     private function getNamed($nameParameter)
@@ -282,6 +287,7 @@ class Annotation implements AnnotationInterface
         for ($i = 0; $i < $count; $i++) {
             $result[$matches[1][$i]] = $matches[2][$i];
         }
+
         return $result;
     }
 }

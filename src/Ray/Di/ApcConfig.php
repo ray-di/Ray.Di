@@ -11,8 +11,8 @@
  */
 namespace Ray\Di;
 
-use Aura\Di\ConfigInterface;
 use ReflectionClass;
+use ReflectionException;
 
 /**
  *
@@ -36,10 +36,11 @@ class ApcConfig extends Config
     public function fetch($class)
     {
         try {
+            // autoload
             class_exists($class, true);
             $file = (new ReflectionClass($class))->getFileName();
-        } catch (\ReflectionException $e) {
-            throw new Exception\Configuration("{$class} not loaded.");
+        } catch (ReflectionException $e) {
+            throw new Exception\Configuration("{$class} not exists.");
         }
         $key = __CLASS__ . $file . hash('crc32b', serialize($this->setter));
         $config = apc_fetch($key, $success);
@@ -47,6 +48,7 @@ class ApcConfig extends Config
         if ($success !== true) {
             apc_store($key, ($config));
         }
+
         return $config;
     }
 }

@@ -8,7 +8,6 @@
 namespace Ray\Di;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Scope;
 
 /**
  * Empty Module

@@ -127,11 +127,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Ray\Di\Mock\Log', $instance->log);
     }
 
-//     public function testProvidedBy()
-//     {
-//         $instance = $this->injector->getInstance('Ray\Di\Definition\Provided');
-//         $this->assertInstanceOf('\Ray\Di\Mock\Reader', $instance->reader);
-//     }
+    public function testProvidedBy()
+    {
+        $instance = $this->injector->getInstance('Ray\Di\Definition\Provided');
+        $this->assertInstanceOf('\Ray\Di\Mock\Reader', $instance->reader);
+    }
 
     public function testClone()
     {
@@ -304,6 +304,18 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $injector = Injector::create();
+        $this->assertInstanceOf('Ray\Di\Injector', $injector);
+    }
+
+    public function testCreateApcOn()
+    {
+        $injector = Injector::create([], true);
+        $this->assertInstanceOf('Ray\Di\Injector', $injector);
+    }
+
+    public function testCreateInjectorBindModule()
+    {
+        $injector = Injector::create([new \Ray\Di\Modules\InjectorModule]);
         $this->assertInstanceOf('Ray\Di\Injector', $injector);
     }
 

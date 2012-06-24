@@ -12,7 +12,6 @@
 namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
-use Guzzle\Common\Cache\CacheAdapterInterface as Cache;
 
 /**
  *
@@ -182,6 +181,7 @@ class Config implements ConfigInterface
         if (! isset($this->reflect[$class])) {
             $this->reflect[$class] = new \ReflectionClass($class);
         }
+
         return $this->reflect[$class];
     }
 
@@ -230,7 +230,7 @@ class Config implements ConfigInterface
             foreach ($params as $param) {
                 $name = $param->name;
                 $explicit = $this->params->offsetExists($class)
-                         && isset($this->params[$class][$name]);
+                && isset($this->params[$class][$name]);
                 if ($explicit) {
                     // use the explicit value for this class
                     $unified_params[$name] = $this->params[$class][$name];
@@ -254,13 +254,8 @@ class Config implements ConfigInterface
         }
 
         // merge the defenitions
-        $definition = isset($this->definition[$class])
-        ? $this->definition[$class] : $this->annotation->getDefinition($class);
-        if ($definition !== []) {
-            $unified_definition = new Definition(array_merge($parent_definition->getArrayCopy(), $definition->getArrayCopy()));
-        } else {
-            $unified_definition = $parent_definition;
-        }
+        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition($class);
+        $unified_definition = new Definition(array_merge($parent_definition->getArrayCopy(), $definition->getArrayCopy()));
         $this->definition[$class] = $unified_definition;
 
         // done, return the unified values
@@ -286,14 +281,18 @@ class Config implements ConfigInterface
             $class = get_class($class);
         }
         if (!isset($this->reflect[$class])
-        || !is_array($this->reflect[$class])
-        || ! isset($this->reflect[$class][$method])) {
+                        || !is_array($this->reflect[$class])
+                        || ! isset($this->reflect[$class][$method])) {
             $methodRef = new \ReflectionMethod($class, $method);
             $this->methodReflect[$class][$method] = $methodRef;
         }
+
         return $this->methodReflect[$class][$method];
     }
 
+    /**
+     * Remove reflection property
+     */
     public function __sleep()
     {
         return ['params', 'setter', 'unified', 'definition', 'annotation'];

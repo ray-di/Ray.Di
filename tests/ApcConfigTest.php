@@ -35,4 +35,12 @@ class ApcConfigTest extends ConfigTest
         $definition = $def['Ray\Di\Definition\MockDefinitionClass'];
         $this->assertTrue($definition instanceof Definition);
     }
+
+    /**
+     * @expectedException Ray\Di\Exception\Configuration
+     */
+    public function testConfigInvalidClass()
+    {
+        $this->config->fetch('XXXXX');
+    }
 }
