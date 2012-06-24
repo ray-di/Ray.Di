@@ -15,7 +15,6 @@ class MockNamed
      */
     public $userDb;
 
-
     /**
      * @Inject
      * @Named("user_db")

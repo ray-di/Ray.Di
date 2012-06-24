@@ -23,8 +23,8 @@ class ApcConfigTest extends ConfigTest
     {
         $config1 = $this->config->fetch('Ray\Di\MockParentClass');
         $config2 = $this->config->fetch('Ray\Di\MockParentClass');
-        $definition1 = (array)($config1[2]);
-        $definition2 = (array)($config2[2]);
+        $definition1 = (array) ($config1[2]);
+        $definition2 = (array) ($config2[2]);
         $this->assertSame($definition1, $definition2);
     }
 

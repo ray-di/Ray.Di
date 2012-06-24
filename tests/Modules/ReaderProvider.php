@@ -13,6 +13,7 @@ class ReaderProvider implements ProviderInterface
     public function get()
     {
         $instance = new Reader();
+
         return $instance;
     }
 }

@@ -166,7 +166,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         /* @var $instance \Ray\Di\RealBillingService */
         list($amount, $unit) = $instance->chargeOrder();
         $expected = 105;
-        $this->assertSame($expected, (int)$amount);
+        $this->assertSame($expected, (int) $amount);
     }
 
     public function testBindInterceptors()
@@ -176,7 +176,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         /* @var $instance \Ray\Di\RealBillingService */
         list($amount, $unit) = $instance->chargeOrder();
         $expected = 105;
-        $this->assertSame($expected, (int)$amount);
+        $this->assertSame($expected, (int) $amount);
     }
 
     public function testBindDobuleInterceptors()
@@ -187,7 +187,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         /* @var $instance \Ray\Di\RealBillingService */
         list($amount, $unit) = $instance->chargeOrder();
         $expected = 110;
-        $this->assertSame($expected, (int)$amount);
+        $this->assertSame($expected, (int) $amount);
     }
 
     public function testBindInterceptorsToChildClass()
@@ -197,18 +197,18 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         /* @var $instance \Ray\Di\RealBillingService */
         list($amount, $unit) = $instance->chargeOrder();
         $expected = 110;
-        $this->assertSame($expected, (int)$amount);
+        $this->assertSame($expected, (int) $amount);
     }
 
     public function testToString()
     {
         $this->injector->setModule(new Modules\AnnotateModule);
-        $this->assertTrue(is_string((string)$this->injector));
+        $this->assertTrue(is_string((string) $this->injector));
     }
 
     public function testClassHint()
     {
-        $this->assertTrue(is_string((string)$this->injector));
+        $this->assertTrue(is_string((string) $this->injector));
         $instance = $this->injector->getInstance('Ray\Di\Definition\ClassHint');
         $this->assertInstanceOf('\Ray\Di\Mock\Db', $instance->db);
     }
@@ -330,7 +330,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $object = $this->injector->getInstance('Ray\Di\Definition\OptionalInject');
         $this->assertSame($object->userDb, 'NOT_INJECTED');
     }
-    
+
     public function testSetLogger()
     {
         $this->injector->setLogger(new \Ray\Di\Mock\TestLogger);
@@ -338,5 +338,5 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $instance = $this->injector->getInstance('Ray\Di\Definition\Basic');
         $this->assertTrue(is_string(\Ray\Di\Mock\TestLogger::$log));
     }
-    
+
 }

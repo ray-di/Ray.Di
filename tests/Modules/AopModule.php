@@ -9,7 +9,6 @@ use Ray\Di\AbstractModule,
     Ray\Di\Scope,
     Ray\Di\SalesTax;
 
-
 class AopModule extends AbstractModule
 {
     protected function configure()

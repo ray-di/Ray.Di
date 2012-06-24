@@ -86,16 +86,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
      */
     public function testToString()
     {
-        $this->assertTrue(is_string((string)$this->module));
+        $this->assertTrue(is_string((string) $this->module));
     }
-
-    //     public function restregisterInterceptAnnotation()
-    //     {
-    //         $module = new Modules\AopModule;
-    //         $interceptorClass = 'Ray\Di\SalesTax';
-    //         $expected = array(new $interceptorClass);
-    //         $this->assertSame($interceptorClass, get_class($module->annotations['SalesTax'][0]));
-    //     }
 
     /**
      * @expectedException Ray\Di\Exception\ToBinding
@@ -116,28 +108,28 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testToStringInstance()
     {
         $module = new \Ray\Di\Modules\InstanceModule;
-        $expected = "bind('')->annotatedWith('id')->toInstance((string)PC6001)
-bind('')->annotatedWith('user_name')->toInstance((string)koriym)
-bind('')->annotatedWith('user_age')->toInstance((integer)21)
-bind('')->annotatedWith('user_gender')->toInstance((string)male)
+        $expected = "bind('')->annotatedWith('id')->toInstance((string) PC6001)
+bind('')->annotatedWith('user_name')->toInstance((string) koriym)
+bind('')->annotatedWith('user_age')->toInstance((integer) 21)
+bind('')->annotatedWith('user_gender')->toInstance((string) male)
 bind('Ray\Di\Mock\DbInterface')->to('\Ray\Di\Mock\UserDb')
-bind('Ray\Di\Mock\UserInterface')->toInstance((object)Ray\Di\Mock\User)\n";
-        $this->assertSame($expected, (string)$module);
+bind('Ray\Di\Mock\UserInterface')->toInstance((object) Ray\Di\Mock\User)\n";
+        $this->assertSame($expected, (string) $module);
     }
 
     public function testToStringInstanceArray()
     {
         $module = new \Ray\Di\Modules\ArrayInstance;
-        $expected = "bind('')->annotatedWith('adapters')->toInstance((array)[\"html\",\"http\"])\n";
-        $this->assertSame($expected, (string)$module);
+        $expected = "bind('')->annotatedWith('adapters')->toInstance((array) [\"html\",\"http\"])\n";
+        $this->assertSame($expected, (string) $module);
     }
 
     public function testToStringDecoratedModule()
     {
         $module = new \Ray\Di\Modules\BasicModule(new \Ray\Di\Modules\ArrayInstance);
-        $expected = "bind('')->annotatedWith('adapters')->toInstance((array)[\"html\",\"http\"])
+        $expected = "bind('')->annotatedWith('adapters')->toInstance((array) [\"html\",\"http\"])
 bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
-        $this->assertSame($expected, (string)$module);
+        $this->assertSame($expected, (string) $module);
     }
 
     /**
@@ -201,7 +193,7 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
     {
         $module = new Modules\TimeModule;
         $this->module->install($module);
-        $this->assertSame(2, count((array)($this->module->bindings)));
+        $this->assertSame(2, count((array) ($this->module->bindings)));
     }
 
     public function test_mergeModuleContent()
@@ -209,7 +201,7 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
         $module = new Modules\TimeModule;
         $this->module->install($module);
         $bindigs = $this->module->bindings;
-        $bindingClass = array_keys((array)$bindigs);
+        $bindingClass = array_keys((array) $bindigs);
         $this->assertSame($bindingClass, ["Ray\\Di\\Mock\\DbInterface", '']);
     }
 

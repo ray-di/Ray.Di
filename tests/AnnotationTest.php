@@ -89,7 +89,7 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
         $expected = array(
             'setUserDb' => array(
                 array(
-        			Definition::PARAM_POS => 0,
+                    Definition::PARAM_POS => 0,
                     Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\DbInterface',
                     Definition::PARAM_NAME => 'db',
                     Definition::PARAM_ANNOTATE => 'user_db',
@@ -123,7 +123,7 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = array(
-        	'setDouble' => array(
+            'setDouble' => array(
                 array (
                     Definition::PARAM_POS => 0,
                     Definition::PARAM_TYPEHINT => 'Ray\Di\Mock\UserInterface',

@@ -12,6 +12,7 @@ class DbProvider implements ProviderInterface
     public function get()
     {
         $db = new \Ray\Di\Mock\UserDb();
+
         return $db;
     }
 }

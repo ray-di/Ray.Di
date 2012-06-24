@@ -59,7 +59,7 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
 
     public function testIsString()
     {
-        $str = (string)$this->definition;
+        $str = (string) $this->definition;
         $this->assertSame(true, is_string($str));
     }
 

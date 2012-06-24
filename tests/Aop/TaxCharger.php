@@ -15,6 +15,7 @@ class TaxCharger implements MethodInterceptor
         $annotation = $invocation->getAnnotation();
         $tax = $annotation ? $annotation->value : self::defaultTaxRate;
         $amount *= (1 + $tax);
+
         return array($amount, $unit);
     }
 }

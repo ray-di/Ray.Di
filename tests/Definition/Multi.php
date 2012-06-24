@@ -8,7 +8,6 @@ use Ray\Di\Mock\DbInterface,
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Scope;
 use Ray\Di\Di\Named;
-use Ray\Di\Di\Provide;
 
 /**
  * @Scope("prototype")
@@ -69,6 +68,5 @@ class Multi
     public function setDouble(UserInterface $user, DbInterface $db)
     {
     }
-
 
 }

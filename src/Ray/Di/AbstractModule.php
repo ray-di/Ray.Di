@@ -437,13 +437,13 @@ abstract class AbstractModule implements \ArrayAccess
                     $type = gettype($instance);
                     switch ($type) {
                         case "object":
-                            $instance = '(object)' . get_class($instance);
+                            $instance = '(object) ' . get_class($instance);
                             break;
                         case "array":
-                            $instance = '(array)' . json_encode(array_keys($instance));
+                            $instance = '(array) ' . json_encode(array_keys($instance));
                             break;
                         default:
-                            $instance = "($type)$instance";
+                            $instance = "($type) $instance";
                     }
                     $output .= "->toInstance(" . $instance . ")\n";
                 }

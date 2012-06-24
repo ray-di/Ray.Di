@@ -15,7 +15,6 @@ class InvalidNamed
      */
     public $userDb;
 
-
     /**
      * @Inject
      * @Named("user_db!")

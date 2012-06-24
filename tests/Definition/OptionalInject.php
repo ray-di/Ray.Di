@@ -15,7 +15,6 @@ class OptionalInject
      */
     public $userDb = 'NOT_INJECTED';
 
-
     /**
      * @Inject(optional = true)
      * @Named("user_db")

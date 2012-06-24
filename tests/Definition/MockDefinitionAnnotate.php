@@ -14,7 +14,6 @@ class MockInjectNamed
 
     public $userDb;
 
-
     /**
      * @Inject
      *
