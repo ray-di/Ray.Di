@@ -5,6 +5,11 @@ namespace Ray\Di\Definition;
 use Ray\Di\Mock\DbInterface,
     Ray\Di\Mock\UserInterface;
 
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Scope;
+use Ray\Di\Di\Named;
+use Ray\Di\Di\Provide;
+
 /**
  * @Scope("prototype")
  */
@@ -37,24 +42,25 @@ class Multi
      * @param DbInterface $db
      *
      */
-    public function setUserDb(DbInterface $db)
+    public function setUserDb(DbInterface $userDb)
     {
-        $this->userDb = $db;
+        $this->userDb = $userDb;
     }
 
     /**
-     * @aInject
-     * @Named("db=staege_db")
+     * @Inject
+     * @Named("adminDb=admin_db")
      *
      * @param DbInterface $db
      *
      */
-    public function setAdminDb(DbInterface $db)
+    public function setAdminDb(DbInterface $adminDb)
     {
+        $this->adminDb = $adminDb;
     }
 
     /**
-     * @aInject
+     * @Inject
      * @Named("user=admin_user,db=production_db")
      *
      * @param DbInterface $db
@@ -64,14 +70,5 @@ class Multi
     {
     }
 
-    /**
-     * a@Provide
-     * @Named("user")
-     *
-     * @return Db
-     */
-    public function provideDb()
-    {
-    }
 
 }

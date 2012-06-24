@@ -43,7 +43,7 @@ array (
             'pos' => 0,
             'interface' => 'Aura\\Di\\Db',
             'param_name' => 'db',
-            'named' => 'staege_db',
+            'named' => 'stage_db',
           ),
         ),
       ),

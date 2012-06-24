@@ -1,7 +1,7 @@
 <?php
 // Definition class with annotation
 require_once __DIR__ . '/Definition/Basic.php';
-require_once __DIR__ . '/Definition/Named.php';
+require_once __DIR__ . '/Definition/MockNamed.php';
 require_once __DIR__ . '/Definition/InvalidNamed.php';
 require_once __DIR__ . '/Definition/Instance.php';
 require_once __DIR__ . '/Definition/Construct.php';
@@ -65,6 +65,7 @@ require_once __DIR__ . '/Mock/ConstructWithDefault.php';
 require_once __DIR__ . '/Mock/AbstractDb.php';
 require_once __DIR__ . '/Mock/MovieApp.php';
 require_once __DIR__ . '/Mock/TestLogger.php';
+require_once __DIR__ . '/Mock/Time.php';
 // Ray.Aop
 require_once __DIR__ . '/Aop/BillingService.php';
 require_once __DIR__ . '/Aop/RealBillingService.php';

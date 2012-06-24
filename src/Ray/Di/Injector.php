@@ -7,6 +7,10 @@
  */
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\ApcCache;
+
 use Ray\Di\Exception\OptionalInjectionNotBinded;
 
 use Ray\Aop\Weave;
@@ -128,10 +132,11 @@ class Injector implements InjectorInterface
      *
      * @return Injector
      */
-    public static function create(array $modules = [], $useApcConfig = true)
+    public static function create(array $modules = [], $useApcCache = true)
     {
-    	$config = $useApcConfig ? __NAMESPACE__ . '\ApcConfig' : __NAMESPACE__ . '\Config';
-        $injector = new self(new Container(new Forge(new $config(new Annotation(new Definition, [])))));
+    	$config = $useApcCache ? __NAMESPACE__ . '\ApcConfig' : __NAMESPACE__ . '\Config';
+    	$reader = $useApcCache ? new AnnotationReader : new CachedReader(new AnnotationReader, new ApcCache, false);
+        $injector = new self(new Container(new Forge(new $config(new Annotation(new Definition, $reader)))));
         if (count($modules) > 0) {
             $module = array_shift($modules);
             foreach ($modules as $extraModule) {
@@ -218,7 +223,7 @@ class Injector implements InjectorInterface
         }
 
         // check provision
-        $this->checkProvision($class, $params, $this->module);
+        $this->checkNotBinded($class, $params, $this->module);
 
         // create the new instance
         $object = call_user_func_array(
@@ -267,9 +272,9 @@ class Injector implements InjectorInterface
      * @param AbstractModule $module
      *
      * @return void
-     * @throws Exception\Provision
+     * @throws Exception\NotBinded
      */
-    private function checkProvision($class, array &$params, AbstractModule $module)
+    private function checkNotBinded($class, array &$params, AbstractModule $module)
     {
         $ref = method_exists($class, '__construct') ? new \ReflectionMethod($class, '__construct') : false;
         if ($ref === false) {
@@ -294,7 +299,7 @@ class Injector implements InjectorInterface
                 if ($isDefaultValueAvailable === true) {
                     continue;
                 }
-                throw new Exception\Provision("Bind not found. argument #{$index}(\${$parameter->name}) in {$class} constructor.");
+                throw new Exception\NotBinded("Bind not found. argument #{$index}(\${$parameter->name}) in {$class} constructor.");
             }
 
             // has default value ?

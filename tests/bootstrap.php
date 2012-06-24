@@ -1,6 +1,6 @@
 <?php
 // vendor
-require dirname(__DIR__) . '/vendor/.composer/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 // library
 require dirname(__DIR__) . '/src.php';
 // tests

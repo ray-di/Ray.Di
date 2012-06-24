@@ -110,7 +110,7 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
                     Definition::PARAM_POS => 0,
                     Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\DbInterface',
                     Definition::PARAM_NAME => 'db',
-                    Definition::PARAM_ANNOTATE => 'staege_db',
+                    Definition::PARAM_ANNOTATE => 'stage_db',
                     Definition::PARAM_TYPEHINT_BY => [],
                     Definition::OPTIONAL => false
                 ),
@@ -156,7 +156,7 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
 
     public function testSingleVarAnnotattion()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\Named');
+        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockNamed');
         $expected = array(
             'setUserDb' => array(
                 array(
@@ -175,7 +175,7 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     /**
      * 	@expectedException Ray\Di\Exception\Named
      */
-    public function testNamed()
+    public function testInvalidNamed()
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\InvalidNamed');
     }

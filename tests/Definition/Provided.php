@@ -4,6 +4,8 @@ namespace Ray\Di\Definition;
 
 use Ray\Di\Mock\ReaderInterface;
 
+use Ray\Di\Di\Inject;
+
 class Provided
 {
     /**

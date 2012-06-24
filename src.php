@@ -21,10 +21,10 @@ require __DIR__ . '/src/Ray/Di/Exception/Runtime.php';
 require __DIR__ . '/src/Ray/Di/Exception/Binding.php';
 require __DIR__ . '/src/Ray/Di/Exception/MultipleAnnotationNotAllowed.php';
 require __DIR__ . '/src/Ray/Di/Exception/ReadOnly.php';
-require __DIR__ . '/src/Ray/Di/Exception/Named.php';
+// require __DIR__ . '/src/Ray/Di/Exception/Named.php';
 require __DIR__ . '/src/Ray/Di/Exception/ToBinding.php';
 require __DIR__ . '/src/Ray/Di/Exception/Configuration.php';
-require __DIR__ . '/src/Ray/Di/Exception/Provision.php';
+require __DIR__ . '/src/Ray/Di/Exception/NotBinded.php';
 
 require __DIR__ . '/src/Ray/Di/Di/Annotation.php';
 require __DIR__ . '/src/Ray/Di/Di/Aspect.php';

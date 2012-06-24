@@ -89,21 +89,21 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testNamedAnnotation()
     {
         $this->injector->setModule(new Modules\InvalidAnnotateModule);
-        $instance = $this->injector->getInstance('Ray\Di\Definition\Named');
+        $instance = $this->injector->getInstance('Ray\Di\Definition\MockNamed');
         $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->userDb);
     }
 
     public function testAnnotatedWith()
     {
         $this->injector->setModule(new Modules\AnnotateModule);
-        $instance = $this->injector->getInstance('Ray\Di\Definition\Named');
+        $instance = $this->injector->getInstance('Ray\Di\Definition\MockNamed');
         $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->userDb);
     }
 
     public function testAnnotatedWithAndUnannotated()
     {
         $this->injector->setModule(new Modules\AnnotateModule);
-        $instance = $this->injector->getInstance('Ray\Di\Definition\Named');
+        $instance = $this->injector->getInstance('Ray\Di\Definition\MockNamed');
         $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->userDb);
     }
 
@@ -127,11 +127,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Ray\Di\Mock\Log', $instance->log);
     }
 
-    public function testProvidedBy()
-    {
-        $instance = $this->injector->getInstance('Ray\Di\Definition\Provided');
-        $this->assertInstanceOf('\Ray\Di\Mock\Reader', $instance->reader);
-    }
+//     public function testProvidedBy()
+//     {
+//         $instance = $this->injector->getInstance('Ray\Di\Definition\Provided');
+//         $this->assertInstanceOf('\Ray\Di\Mock\Reader', $instance->reader);
+//     }
 
     public function testClone()
     {
@@ -248,9 +248,9 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\Provision
+     * @expectedException Ray\Di\Exception\NotBinded
      */
-    public function testProvisionException()
+    public function testNotBindedException()
     {
         $this->injector = new Injector($this->container, new \Ray\Di\Modules\InvalidBindingModule);
         $lister = $this->injector->getInstance('Ray\Di\Mock\MovieApp\Lister');

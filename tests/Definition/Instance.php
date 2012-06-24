@@ -4,6 +4,9 @@ namespace Ray\Di\Definition;
 
 use Ray\Di\Mock\UserInterface;
 
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+
 class Instance
 {
     public $userId;
@@ -34,7 +37,7 @@ class Instance
     public $user;
 
     /**
-     * @aInject
+     * @Inject
      * @Named("id")
      *
      * @param string $db

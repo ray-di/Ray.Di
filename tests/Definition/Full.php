@@ -3,6 +3,14 @@
 namespace Ray\Di\Definition;
 
 use Ray\Di\Mock\UserInterface;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Scope;
+use Ray\Di\Di\PostConstruct;
+
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Scope;
+use Ray\Di\Di\Named;
+
 
 /**
  * @Scope("singleton")

@@ -2,6 +2,10 @@
 
 namespace Ray\Di\Definition;
 
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Scope;
+use Ray\Di\Di\PostConstruct;
+
 /**
  * @Scope("prototype")
  */

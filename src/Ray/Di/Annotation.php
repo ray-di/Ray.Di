@@ -9,6 +9,8 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\PhpParser;
+use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Annotation\Target;
 use ReflectionClass;
 use ReflectionMethod;
@@ -52,34 +54,15 @@ class Annotation implements AnnotationInterface
     protected $definitions = [];
 
     /**
-     * Ray.Di Annotations
-     *
-     * @var array
-     */
-    private $defaultImports = [
-        'bindingannotation' => 'Ray\Di\Di\BindingAnnotation',
-        'implementedby' => 'Ray\Di\Di\ImplementedBy',
-        'inject' => 'Ray\Di\Di\Inject',
-        'named' => 'Ray\Di\Di\Named',
-        'postconstruct' => 'Ray\Di\Di\PostConstruct',
-        'predestroy' => 'Ray\Di\Di\PreDestroy',
-        'providedby' => 'Ray\Di\Di\ProvidedBy',
-        'scope' => 'Ray\Di\Di\Scope'
-    ];
-
-    /**
      * Constructor
      *
      * @param Definition $definition
      * @param array      $annotationImports Additional default annotation map
      */
-    public function __construct(Definition $definition, array $annotationImports = [])
+    public function __construct(Definition $definition, Reader $reader = null)
     {
-        $this->docParser = new DocParser;
-        $this->docParser->setIgnoreNotImportedAnnotations(true);
-        $this->phpParser = new PhpParser;
-        $this->defaultImports += $annotationImports;
         $this->newDefinition = $definition;
+        $this->reader = $reader ?: new AnnotationReader;
     }
 
     /**
@@ -96,12 +79,8 @@ class Annotation implements AnnotationInterface
         }
         $this->definition = clone $this->newDefinition;
         $class = new ReflectionClass($className);
-        $useImports = $this->phpParser->parseClass($class);
-        $imports = array_merge($this->defaultImports, $useImports);
-        $this->docParser->setImports($imports);
         // Class Annoattion
-        $this->docParser->setTarget(Target::TARGET_CLASS);
-        $annotations = $this->docParser->parse($class->getDocComment(), 'class ' . $class->name);
+        $annotations = $this->reader->getClassAnnotations($class);
         $classDefinition = $this->getDefinitionFormat($annotations);
         foreach ($classDefinition as $key => $value) {
             $this->definition[$key] = $value;
@@ -137,17 +116,16 @@ class Annotation implements AnnotationInterface
     /**
      * Set method definition
      *
-     * @param \ReflectionClass $class
+     * @param ReflectionClass $class
      *
      * @return void
      */
-    private function setMethodDefinition(\ReflectionClass $class)
+    private function setMethodDefinition(ReflectionClass $class)
     {
         $methods = $class->getMethods();
         foreach ($methods as $method) {
-            /** @var \ReflectionMethod $method */
-            $this->docParser->setTarget(Target::TARGET_METHOD);
-            $annotations = $this->docParser->parse($method->getDocComment(), 'class ' . $class->name);
+            /** @var ReflectionMethod $method */
+            $annotations = $this->reader->getMethodAnnotations($method);
             $methodAnnotation = $this->getDefinitionFormat($annotations, false);
             foreach ($methodAnnotation as $key => $value) {
                 $this->setAnnotationName($key, $method, $methodAnnotation);
@@ -165,13 +143,13 @@ class Annotation implements AnnotationInterface
      * Set annotation key-value for DI
      *
      * @param string            $name        annotation name
-     * @param \ReflectionMethod $method
+     * @param ReflectionMethod $method
      * @param \array            $annotations
      *
      * @return void
      * @throws Exception\MultipleAnnotationNotAllowed
      */
-    private function setAnnotationName($name, \ReflectionMethod $method, array $annotations)
+    private function setAnnotationName($name, ReflectionMethod $method, array $annotations)
     {
         if ($name === Definition::POST_CONSTRUCT || $name == Definition::PRE_DESTROY) {
             if (isset($this->definition[$name]) && $this->definition[$name]) {
@@ -197,11 +175,11 @@ class Annotation implements AnnotationInterface
      * Set setter inject definition
      *
      * @param array             $methodAnnotation
-     * @param \ReflectionMethod $method
+     * @param ReflectionMethod $method
      *
      * @return void
      */
-    private function setSetterInjectDefinition($methodAnnotation,\ReflectionMethod $method)
+    private function setSetterInjectDefinition($methodAnnotation,ReflectionMethod $method)
     {
         $nameParameter = false;
         if (isset($methodAnnotation[Definition::NAMED])) {
@@ -254,9 +232,7 @@ class Annotation implements AnnotationInterface
         if (isset($definition[$typehint])) {
             $hintDef = $definition[$typehint];
         } else {
-            $this->docParser->setTarget(Target::TARGET_CLASS);
-            $doc = (new \ReflectionClass($typehint))->getDocComment();
-            $annotations = $this->docParser->parse($doc, 'class ' . $typehint);
+            $annotations = $this->reader->getClassAnnotations(new ReflectionClass($typehint));
             $hintDef = $this->getDefinitionFormat($annotations);
             $definition[$typehint] = $hintDef;
         }

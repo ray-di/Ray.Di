@@ -5,21 +5,6 @@ namespace Ray\Di;
  * Test class for Inject.
  */
 
-class Time
-{
-    public $time;
-    public $oclosure;
-
-    /**
-     * @Inject
-     * @Named("now")
-     */
-    public function __construct($time)
-    {
-        $this->time = $time;
-    }
-}
-
 class ApcInjectorTest extends \PHPUnit_Framework_TestCase
 {
 	/**
@@ -61,8 +46,8 @@ class ApcInjectorTest extends \PHPUnit_Framework_TestCase
 
 	public function test_Freeze(){
 	    $this->injector = new ApcInjector($this->container, new Modules\TimeModule);
-		$instance1 = $this->injector->getInstance('Ray\Di\Time');
-		$instance2 = $this->injector->getInstance('Ray\Di\Time');
+		$instance1 = $this->injector->getInstance('Ray\Di\Mock\Time');
+		$instance2 = $this->injector->getInstance('Ray\Di\Mock\Time');
 		$this->assertSame($instance1->time, $instance2->time);
 	}
 }

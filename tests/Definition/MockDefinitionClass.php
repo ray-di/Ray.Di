@@ -8,6 +8,11 @@ use Ray\Di\Mock\DbInterface,
     Ray\Di\Mock\UserInterface,
     Ray\Di\Forge;
 
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+use Ray\Di\Di\Scope;
+use Ray\Di\Di\PreDestroy;
+use Ray\Di\Di\PostConstruct;
 
 /**
  * @Scope("prototype")
@@ -99,7 +104,7 @@ class MockDefinitionClass
 
     /**
      * @Inject
-     * @Named("db=staege_db")
+     * @Named("db=stage_db")
      *
      * @param DbInterface $db
      *
@@ -120,7 +125,6 @@ class MockDefinitionClass
     }
 
     /**
-     * @Provide
      * @Named("user")
      *
      * @return Db

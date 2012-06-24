@@ -14,7 +14,6 @@ class ApcConfigTest extends ConfigTest
     {
         parent::setUp();
         $this->config = new ApcConfig(new Annotation(new Definition));;
-//         apc_clear_cache("user");
     }
 
     /**

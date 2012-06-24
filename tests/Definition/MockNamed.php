@@ -5,7 +5,10 @@ namespace Ray\Di\Definition;
 use Ray\Di\Mock\DbInterface,
     Ray\Di\Mock\UserInterface;
 
-class Named
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+
+class MockNamed
 {
     /**
      * @var DbInterface

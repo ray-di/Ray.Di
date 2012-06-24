@@ -6,6 +6,7 @@
          backupStaticAttributes="false"
          strict="true"
          colors="true"
+         stopOnFailure="true"
          verbose="true">
   <testsuites>
     <testsuite name="Aura.Di">

@@ -3,6 +3,7 @@
 namespace Ray\Di\Definition;
 
 use Ray\Di\Mock\Db;
+use Ray\Di\Di\Inject;
 
 /**
  * Class Injection
