@@ -14,4 +14,6 @@ use Ray\Di\Exception;
  *
  * @package Ray.Di
  */
-class MultipleAnnotationNotAllowed extends Exception {}
+class MultipleAnnotationNotAllowed implements Exception
+{
+}

@@ -16,4 +16,6 @@ use Ray\Di\Exception;
  * @package Ray.Di
  *
  */
-class Runtime extends Exception {}
+class Runtime implements Exception
+{
+}

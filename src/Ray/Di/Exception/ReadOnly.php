@@ -14,4 +14,6 @@ use Ray\Di\Exception;
  *
  * @package Ray.Di
  */
-class ReadOnly extends Exception {}
+class ReadOnly implements Exception
+{
+}

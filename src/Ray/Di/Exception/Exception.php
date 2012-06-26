@@ -8,10 +8,10 @@
 namespace Ray\Di\Exception;
 
 /**
- * Invalid binding.
+ * Exception interface
  *
  * @package Ray.Di
  */
-class Binding extends Runtime implements Exception
+interface Exception
 {
 }

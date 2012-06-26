@@ -12,4 +12,6 @@ namespace Ray\Di\Exception;
  *
  * @package Ray.Di
  */
-class Configuration extends Binding {}
+class Configuration extends Binding implements Exception
+{
+}
