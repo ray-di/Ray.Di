@@ -131,8 +131,7 @@ class Injector implements InjectorInterface
     public static function create(array $modules = [], $useApcCache = true)
     {
         $config = $useApcCache ? __NAMESPACE__ . '\ApcConfig' : __NAMESPACE__ . '\Config';
-        $reader = $useApcCache ? new AnnotationReader : new CachedReader(new AnnotationReader, new ApcCache, false);
-        $injector = new self(new Container(new Forge(new $config(new Annotation(new Definition, $reader)))));
+        $injector = new self(new Container(new Forge(new $config(new Annotation(new Definition)))));
         if (count($modules) > 0) {
             $module = array_shift($modules);
             foreach ($modules as $extraModule) {
