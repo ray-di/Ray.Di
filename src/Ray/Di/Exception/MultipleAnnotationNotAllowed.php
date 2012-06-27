@@ -7,11 +7,11 @@
  */
 namespace Ray\Di\Exception;
 
-use Ray\Di\Exception;
-
 /**
  * Multiple annotation is not allowd.
  *
  * @package Ray.Di
  */
-class MultipleAnnotationNotAllowed extends Exception {}
+class MultipleAnnotationNotAllowed extends Binding implements Exception
+{
+}

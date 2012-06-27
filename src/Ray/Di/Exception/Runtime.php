@@ -7,8 +7,6 @@
  */
 namespace Ray\Di\Exception;
 
-use Ray\Di\Exception;
-
 /**
  *
  * Generic package runtime exception.
@@ -16,4 +14,6 @@ use Ray\Di\Exception;
  * @package Ray.Di
  *
  */
-class Runtime extends Exception {}
+class Runtime implements Exception
+{
+}

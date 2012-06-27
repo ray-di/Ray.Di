@@ -351,4 +351,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_string(\Ray\Di\Mock\TestLogger::$log));
     }
 
+    /**
+     * @expectedException Ray\Di\Exception\Binding
+     */
+    public function testNoBindings()
+    {
+        $object = $this->injector->getInstance('Ray\Di\Definition\Basic');
+    }
 }

@@ -7,13 +7,11 @@
  */
 namespace Ray\Di\Exception;
 
-use LogicException;
-
 /**
- * Invalid @Named annotation.
+ * Exception interface
  *
  * @package Ray.Di
  */
-class Named extends Binding implements Exception
+interface Exception
 {
 }

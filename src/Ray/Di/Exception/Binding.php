@@ -7,9 +7,13 @@
  */
 namespace Ray\Di\Exception;
 
+use LogicException;
+
 /**
  * Invalid binding.
  *
  * @package Ray.Di
  */
-class Binding extends Runtime {}
+class Binding extends LogicException implements Exception
+{
+}
