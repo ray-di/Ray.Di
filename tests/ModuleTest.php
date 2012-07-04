@@ -211,4 +211,13 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
         $this->assertInstanceOf('Ray\Di\Definition\Basic', $module->object);
         $this->assertInstanceOf('Ray\Di\Mock\UserDb', $module->object->db);
     }
+    
+    public function test_installModuleTwice()
+    {
+        $module = new Modules\TwiceInstallModule;
+        $bindings = (array) $module->bindings;
+        $result = $bindings['']['val_a']['to'];
+        $firstInstallIsOnlyExpected = ['instance', 1];
+        $this->assertSame($firstInstallIsOnlyExpected, $result);
+    }
 }

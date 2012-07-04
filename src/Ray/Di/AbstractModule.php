@@ -167,6 +167,8 @@ abstract class AbstractModule implements \ArrayAccess
 
     public $pointcuts = [];
 
+    private $installedModule = [];
+    
     /**
      * Constructor
      *
@@ -341,6 +343,12 @@ abstract class AbstractModule implements \ArrayAccess
      */
     public function install(AbstractModule $module)
     {
+        $class = get_class($module);
+        if (isset($this->installedModule[$class])) {
+            // ignore second install
+            return ;
+        }
+        $this->installedModule[$class] = true;
         $this->bindings = new ArrayObject(array_merge_recursive((array) $this->bindings, (array) $module->bindings));
         $this->pointcuts = new ArrayObject(array_merge_recursive((array) $module->pointcuts, (array) $this->pointcuts));
         $this->container = new ArrayObject(array_merge_recursive((array) $module->container, (array) $this->container));
