@@ -4,7 +4,7 @@
     "description": "Guice style annotation-driven dependency injection framework",
     "keywords": ["dependency injection", "di", "container", "guice", "annotation", "ioc",  "aop", "method interception", "jsr"],
     "homepage": "https://github.com/koriym/Ray.Di",
-    "version": "0.1.0",
+    "version": "1.0.0beta1",
     "license": "BSD",
     "authors": [
         {
@@ -14,9 +14,9 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "doctrine/common": "2.2.*",
-        "Ray/Aop": ">=0.1.0",
-        "Aura/Di": ">=1.0.0-dev"
+        "doctrine/common": "2.3.*-dev",
+        "Ray/Aop": ">=1.0.*-dev",
+        "Aura/Di": ">=1.0.*-dev"
     },
     "replace": {
     },

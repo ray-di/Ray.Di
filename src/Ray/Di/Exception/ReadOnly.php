@@ -7,13 +7,13 @@
  */
 namespace Ray\Di\Exception;
 
-use Ray\Di\Exception;
+use RuntimeException;
 
 /**
  * Read only.
  *
  * @package Ray.Di
  */
-class ReadOnly implements Exception
+class ReadOnly extends RuntimeException implements Exception
 {
 }

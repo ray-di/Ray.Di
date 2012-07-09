@@ -7,8 +7,6 @@
  */
 namespace Ray\Di\Exception;
 
-use Ray\Di\Exception;
-
 /**
  *
  * Generic package runtime exception.
