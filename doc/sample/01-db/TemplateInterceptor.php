@@ -7,7 +7,7 @@ Ray\Aop\MethodInvocation;
 /**
  * Template interceptor
  */
-class Template implements MethodInterceptor
+class TemplateInterceptor implements MethodInterceptor
 {
     public function invoke(MethodInvocation $invocation)
     {
@@ -20,6 +20,7 @@ class Template implements MethodInterceptor
             $view .= "Name:{$row['Name']}\tAge:{$row['Age']}\n";
         }
         echo $view;
+
         return $view;
     }
 }

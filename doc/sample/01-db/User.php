@@ -4,6 +4,9 @@ namespace Ray\Di\Sample;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
+use Ray\Di\Sample\Transactional;
+use Ray\Di\Sample\Template;
+
 class User
 {
     private $db;
@@ -42,6 +45,7 @@ class User
     {
         $sth = $this->db->query("SELECT name, age FROM User");
         $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
         return $result;
     }
 }
