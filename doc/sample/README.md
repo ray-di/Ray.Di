@@ -1,39 +1,20 @@
 README sample
 
 $ cd 01-db
-$ php main.php
-
-Timer start
-begin Transaction["Koriym",21]
-commit
-Timer stop:[0.0001881] sec
-
-Timer start
-begin Transaction["Bear",19]
-commit
-Timer stop:[0.0000951] sec
-
-Timer start
-begin Transaction["Yoshi",33]
-commit
-Timer stop:[0.0001090] sec
-
-Timer start
-begin Transaction[]
-commit
-Timer stop:[0.0001211] sec
 
 $ php original.php 
+```php
+<?php
 array (
   0 => 
   array (
     'Name' => 'Koriym',
-    'Age' => '33',
+    'Age' => '19',
   ),
   1 => 
   array (
     'Name' => 'Bear',
-    'Age' => '34',
+    'Age' => '26',
   ),
   2 => 
   array (
@@ -41,3 +22,19 @@ array (
     'Age' => '33',
   ),
 )
+```
+$ php main.php
+```php
+<?php
+begin Transaction["Koriym",18]
+commit
+begin Transaction["Bear",35]
+commit
+begin Transaction["Yoshi",23]
+commit
+Timer start
+Name:Koriym  Age:18
+Name:Bear  Age:35
+Name:Yoshi	Age:23
+Timer stop:[0.0001631] sec
+```
