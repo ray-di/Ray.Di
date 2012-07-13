@@ -93,7 +93,11 @@ class Annotation implements AnnotationInterface
             return $this->definitions[$className];
         }
         $this->definition = clone $this->newDefinition;
-        $class = new ReflectionClass($className);
+        try {
+            $class = new ReflectionClass($className);
+        } catch (\ReflectionException $e) {
+            throw new Exception\NotReadable($className, 0 , $e);
+        }
         $useImports = $this->phpParser->parseClass($class);
         $imports = array_merge($this->defaultImports, $useImports);
         $this->docParser->setImports($imports);
