@@ -7,9 +7,6 @@
  */
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Cache\ApcCache;
 use Ray\Di\Exception\OptionalInjectionNotBinded;
 use Aura\Di\Lazy;
 use Aura\Di\ContainerInterface;

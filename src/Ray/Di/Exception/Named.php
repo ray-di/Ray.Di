@@ -7,8 +7,6 @@
  */
 namespace Ray\Di\Exception;
 
-use LogicException;
-
 /**
  * Invalid @Named annotation.
  *
