@@ -14,9 +14,21 @@ class UserModule extends AbstractModule
      */
     protected function configure()
     {
+        // bind dependency @Inject @Named("pdo_user")
         $pdo = new \PDO('sqlite::memory:', null, null);
         $this->bind('PDO')->annotatedWith('pdo_user')->toInstance($pdo);
-        $this->bindInterceptor($this->matcher->any(), $this->matcher->any(), [new Timer, new Transaction]);
-        //$this->bindInterceptor($this->matcher->any(), $this->matcher->any(), [new Template]);
+
+        // bind aspect @Transaction
+        $this->bindInterceptor(
+            $this->matcher->any(),
+            $this->matcher->annotatedWith('Ray\Di\Sample\Transactional'),
+            [new Transaction]
+        );
+        // bind aspect @Template
+        $this->bindInterceptor(
+            $this->matcher->any(),
+            $this->matcher->annotatedWith('Ray\Di\Sample\Template'),
+            [new Timer, new TemplateInterceptor]
+        );
     }
 }

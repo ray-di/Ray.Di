@@ -13,6 +13,6 @@ namespace Ray\Di\Sample;
  * @Target("METHOD")
  *
  */
-final class Transactional
+final class Template
 {
 }

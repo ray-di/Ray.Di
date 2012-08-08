@@ -12,7 +12,6 @@ class Named
      */
     public $userDb;
 
-
     /**
      * @Inject
      * @Named("user_db")

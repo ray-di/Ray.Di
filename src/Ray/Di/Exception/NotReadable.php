@@ -7,11 +7,13 @@
  */
 namespace Ray\Di\Exception;
 
+use LogicException;
+
 /**
- * Invalid @Named annotation.
+ * Indicates that there was a runtime failure while providing an instance.
  *
  * @package Ray.Di
  */
-class Named extends Binding implements Exception
+class NotReadable extends LogicException implements Exception
 {
 }

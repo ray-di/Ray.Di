@@ -1,16 +1,21 @@
 <?php
 namespace Ray\Di\Sample;
 
-$di = require __DIR__ . '/di.php';
+use Ray\Di\Injector;
 
+require __DIR__ . '/src.php';
 require __DIR__ . '/User.php';
 require __DIR__ . '/UserModule.php';
 require __DIR__ . '/Transaction.php';
 require __DIR__ . '/Timer.php';
-require __DIR__ . '/Template.php';
+require __DIR__ . '/TemplateInterceptor.php';
+require __DIR__ . '/Annotation/Transactional.php';
+require __DIR__ . '/Annotation/Template.php';
 
-$di->setModule(new UserModule);
+// get weaved instance (Ray\Aop\Weaver)
+$di = Injector::create([new UserModule]);
 $user = $di->getInstance('Ray\Di\Sample\User');
+
 /* @var $user \Ray\Di\Sample\User */
 $user->createUser('Koriym', rand(18,35));
 $user->createUser('Bear', rand(18,35));
@@ -18,21 +23,14 @@ $user->createUser('Yoshi', rand(18,35));
 $users = $user->readUsers();
 var_export($users);
 
-// Timer start
-// begin Transaction["Koriym",19]
+// begin Transaction["Koriym",20]
 // commit
-// Timer stop:[0.0002480] sec
-
-// Timer start
-// begin Transaction["Bear",28]
+// begin Transaction["Bear",25]
 // commit
-// Timer stop:[0.0001690] sec
-
-// Timer start
 // begin Transaction["Yoshi",18]
 // commit
-// Timer stop:[0.0001669] sec
-
-// Name:Koriym	Age:19
-// Name:Bear	Age:28
+// Timer start
+// Name:Koriym	Age:20
+// Name:Bear	Age:25
 // Name:Yoshi	Age:18
+// Timer stop:[0.0000741] sec

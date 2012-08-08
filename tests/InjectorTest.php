@@ -358,4 +358,12 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $object = $this->injector->getInstance('Ray\Di\Definition\Basic');
     }
+
+    /**
+     * @expectedException Ray\Di\Exception\NotReadable
+     */
+    public function testNoClass()
+    {
+        $this->injector->getInstance('NotExsitsXXXXXXXXXX');
+    }
 }
