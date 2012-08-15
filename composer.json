@@ -28,7 +28,8 @@
         "Ray/Aop": ">=1.0.*-dev",
         "Aura/Di": ">=1.0.*-dev"
     },
-    "replace": {"Ray/Di": "self.version"}
+    "replace": {
+        "Ray/Di": "self.version"
     },
     "autoload": {
         "psr-0": {
