@@ -20,10 +20,7 @@ $result = 0;
 foreach ($list as $php) {
     echo "$php: ";
     $file = __DIR__ . "/{$php}";
-    passthru("php $file", $return);
-    $result |= $return;
+    passthru("php $file");
     echo "\n";
-    echo $result;
 }
 echo "\nComplete.\n";
-exit($result); // 0 is all test passed "works"
