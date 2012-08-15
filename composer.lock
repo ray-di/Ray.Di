@@ -1,0 +1,33 @@
+{
+    "hash": "5613da4e7267e7ec00099d6ef4518b71",
+    "packages": [
+        {
+            "package": "Ray/Aop",
+            "version": "dev-master",
+            "source-reference": "71843ff9fba774e1c0266f777b6a07c9ba953ecc",
+            "commit-date": "1344486379"
+        },
+        {
+            "package": "aura/di",
+            "version": "dev-master",
+            "source-reference": "1.0.0-beta3",
+            "commit-date": "1343709915"
+        },
+        {
+            "package": "doctrine/common",
+            "version": "2.3.x-dev",
+            "source-reference": "2ec4bc6db13db6a0976a16b71058083c55cbcdbd",
+            "commit-date": "1343847076"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "doctrine/common": 20,
+        "ray/aop": 20,
+        "aura/di": 20
+    }
+}

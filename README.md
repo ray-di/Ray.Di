@@ -36,11 +36,9 @@ If you're using [Composer](https://github.com/composer/composer) to manage depen
 
 	{
 		"require": {
-			"Ray/Di": ">=0.1"
+			"ray/di": "*"
 		}
 	}
-
-*Note that Ray.Di has not yet reached 1.0!*
 
 Testing Ray.Di
 ==============
@@ -50,7 +48,7 @@ Here's how to install Ray.Di from source to run the unit tests and samples.
 ```
 $ git clone git://github.com/koriym/Ray.Di.git
 $ cd Ray.Di
-$ composer.phar install
+$ composer.phar update
 $ phpunit
 $ php doc/sample/00-newsletter.php
 $ php doc/sample/01-db/main.php
