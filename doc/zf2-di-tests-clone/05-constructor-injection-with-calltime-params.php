@@ -26,7 +26,7 @@ namespace {
         'dbFinder' => $di->getInstance('MovieApp\DbFinder')
     );
 
-    $lister = $injector->getInstance('MovieApp\Lister', array(
+    $lister = $di->getInstance('MovieApp\Lister', array(
         'username' => 'my-username',
         'password' => 'my-password'
     ));

@@ -1,11 +1,21 @@
 {
-    "name": "Ray/Di",
+    "name": "ray/di",
     "type": "library",
     "description": "Guice style annotation-driven dependency injection framework",
-    "keywords": ["dependency injection", "di", "container", "guice", "annotation", "ioc",  "aop", "method interception", "jsr"],
+    "keywords": [
+        "dependency injection",
+        "di",
+        "container",
+        "guice",
+        "annotation",
+        "ioc",
+        "aop",
+        "method interception",
+        "jsr"
+    ],
     "homepage": "https://github.com/koriym/Ray.Di",
-    "version": "1.0.0beta1",
-    "license": "BSD",
+    "version": "1.0.0-beta1",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Akihito Koriyama",
@@ -25,5 +35,6 @@
             "Ray\\Di": "src/",
             "Aura\\Di": "vendor/Aura/Di/src/" 
         }
-    }
+    },
+    "minimum-stability": "dev"
 }

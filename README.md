@@ -52,6 +52,7 @@ $ git clone git://github.com/koriym/Ray.Di.git
 $ cd Ray.Di
 $ composer.phar update
 $ phpunit
+$ php doc/sample/00-newsletter.php
 $ php doc/sample/01-db/main.php
 $ cd doc/zf2-di-tests-clone/
 $ php runall.php

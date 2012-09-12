@@ -16,9 +16,14 @@ $list = [
     '12A-setter-injection-with-annotation-interface.php',
 ];
 
-foreach ($list as $run) {
-    echo "$run: ";
-    passthru("php $run");
+$result = 0;
+foreach ($list as $php) {
+    echo "$php: ";
+    $file = __DIR__ . "/{$php}";
+    passthru("php $file", $return);
+    $result |= $return;
     echo "\n";
+    echo $result;
 }
 echo "\nComplete.\n";
+exit($result); // 0 is all test passed "works"

@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL);
 
 // Ensure that composer has installed all dependencies
 if (!file_exists(dirname(__DIR__) . '/composer.lock')) {

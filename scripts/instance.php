@@ -1,6 +1,9 @@
 <?php
 namespace Ray\Di;
 
-require_once dirname(__DIR__) . '/vendor/autoload.php';
-require_once dirname(__DIR__) . '/src.php';
+use Doctrine\Common\Annotations\AnnotationRegistry;
+
+$loader = require dirname(__DIR__) . '/vendor/autoload.php';
+AnnotationRegistry::registerLoader(array($loader, "loadClass"));
+
 return new Injector(new Container(new Forge(new Config(new Annotation(new Definition)))));
