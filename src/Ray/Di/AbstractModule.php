@@ -168,7 +168,7 @@ abstract class AbstractModule implements \ArrayAccess
     public $pointcuts = [];
 
     private $installedModule = [];
-    
+
     /**
      * Constructor
      *

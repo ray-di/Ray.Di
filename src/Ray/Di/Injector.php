@@ -211,6 +211,7 @@ class Injector implements InjectorInterface
             $isToProviderBinding = ($toType === AbstractModule::TO_PROVIDER);
             if ($isToProviderBinding) {
                 $provider = $bindings[$class]['*']['to'][1];
+
                 return $this->getInstance($provider)->get();
             }
             $class = ($toType === AbstractModule::TO_CLASS) ? $bindings[$class]['*']['to'][1] : $class;

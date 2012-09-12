@@ -36,11 +36,9 @@ If you're using [Composer](https://github.com/composer/composer) to manage depen
 
 	{
 		"require": {
-			"Ray/Di": ">=0.1"
+			"ray/di": "*"
 		}
 	}
-
-*Note that Ray.Di has not yet reached 1.0!*
 
 Testing Ray.Di
 ==============

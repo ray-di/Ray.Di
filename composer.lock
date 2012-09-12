@@ -1,5 +1,5 @@
 {
-    "hash": "61781d42cb4991b22a40b89599b7f985",
+    "hash": "ed9594e2657c6cd3ee0199a2972d78cd",
     "packages": [
         {
             "package": "Ray/Aop",
@@ -24,10 +24,9 @@
     "aliases": [
 
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "beta",
     "stability-flags": {
         "doctrine/common": 20,
-        "ray/aop": 20,
         "aura/di": 20
     }
 }

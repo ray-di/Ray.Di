@@ -2,8 +2,8 @@
 
 namespace Ray\Di\Tests;
 
-interface BillingService {
-
+interface BillingService
+{
     /**
      * @var Receipt
      *

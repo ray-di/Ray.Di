@@ -22,19 +22,17 @@
             "email": "akihito.koriyama@gmail.com"
         }
     ],
+    "minimum-stability": "beta",
     "require": {
         "php": ">=5.4.0",
         "doctrine/common": "2.3.*-dev",
-        "Ray/Aop": ">=1.0.*-dev",
-        "Aura/Di": ">=1.0.*-dev"
-    },
-    "replace": {
+        "ray/aop": "*",
+        "aura/di": ">=1.0.*-dev"
     },
     "autoload": {
         "psr-0": {
             "Ray\\Di": "src/",
             "Aura\\Di": "vendor/Aura/Di/src/" 
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
