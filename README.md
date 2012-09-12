@@ -50,7 +50,7 @@ Here's how to install Ray.Di from source to run the unit tests and samples.
 ```
 $ git clone git://github.com/koriym/Ray.Di.git
 $ cd Ray.Di
-$ composer.phar install
+$ composer.phar update
 $ phpunit
 $ php doc/sample/01-db/main.php
 $ cd doc/zf2-di-tests-clone/
