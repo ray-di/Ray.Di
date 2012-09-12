@@ -10,7 +10,7 @@ use Ray\Di\Di\Inject;
  * Setter Injection
  *
  */
-class Basic
+class Basic implements BasicInterface
 {
     /**
      * @var DbInterface

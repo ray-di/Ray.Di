@@ -1,5 +1,6 @@
 <?php
 // Definition class with annotation
+require_once __DIR__ . '/Definition/BasicInterface.php';
 require_once __DIR__ . '/Definition/Basic.php';
 require_once __DIR__ . '/Definition/MockNamed.php';
 require_once __DIR__ . '/Definition/InvalidNamed.php';

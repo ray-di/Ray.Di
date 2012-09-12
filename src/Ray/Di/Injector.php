@@ -194,7 +194,7 @@ class Injector implements InjectorInterface
     /**
      * Get a service object using binding module, optionally with overriding params.
      *
-     * @param string $class The class to instantiate.
+     * @param string $class The class or interface to instantiate.
      * @param AbstractModule binding module
      * @param array $params An associative array of override parameters where
      * the key the name of the constructor parameter and the value is the
@@ -204,6 +204,18 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class, array $params = null)
     {
+        $bindings = $this->module->bindings;
+        $isInterface = isset($bindings[$class]) && isset($bindings[$class]['*']['to']);
+        if ($isInterface) {
+            $toType = $bindings[$class]['*']['to'][0];
+            $isToProviderBinding = ($toType === AbstractModule::TO_PROVIDER);
+            if ($isToProviderBinding) {
+                $provider = $bindings[$class]['*']['to'][1];
+                return $this->getInstance($provider)->get();
+            }
+            $class = ($toType === AbstractModule::TO_CLASS) ? $bindings[$class]['*']['to'][1] : $class;
+        }
+
         list($config, $setter, $definition) = $this->config->fetch($class);
         // annotation dependency
         /* @var $definition Ray\Di\Definition */

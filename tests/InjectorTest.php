@@ -366,4 +366,18 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->injector->getInstance('NotExsitsXXXXXXXXXX');
     }
+
+    public function testGetInsntanceToClassBindedInterfacePassed()
+    {
+        $this->injector->setModule(new Modules\BasicModule);
+        $instance = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
+        $this->assertInstanceOf('Ray\Di\Mock\UserDb', $instance);
+    }
+
+    public function testGetInsntanceToProviderBindindedInterfacePassed()
+    {
+        $this->injector->setModule(new Modules\ProviderModule);
+        $instance = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
+        $this->assertInstanceOf('Ray\Di\Mock\UserDb', $instance);
+    }
 }
