@@ -7,9 +7,7 @@
  */
 namespace Ray\Di;
 
-use Doctrine\Tests\DoctrineTestCase;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Annotations\Annotation\Target;
 use ReflectionClass;
 use ReflectionMethod;
 
