@@ -1,12 +1,15 @@
 <?php
 namespace MovieApp {
-    class Lister {
+    class Lister
+    {
         public $dbFinder;
-        public function __construct(DbFinder $dbFinder){
+        public function __construct(DbFinder $dbFinder)
+        {
             $this->dbFinder = $dbFinder;
         }
     }
-    class DbFinder {
+    class DbFinder
+    {
         public $username, $password = null;
         public function __construct($username, $password)
         {
@@ -18,13 +21,13 @@ namespace MovieApp {
 
 namespace {
     $di = include __DIR__ . '/scripts/instance.php';
-    $di->getContainer()->params['MovieApp\DbFinder'] = array(
+    $di->getContainer()->params['MovieApp\DbFinder'] = [
             'username' => 'my-username',
             'password' => 'my-password'
-    );
-    $di->getContainer()->params['MovieApp\Lister'] = array(
+    ];
+    $di->getContainer()->params['MovieApp\Lister'] = [
         'dbFinder' => $di->getInstance('MovieApp\DbFinder')
-    );
+    ];
     $lister = $di->getInstance('MovieApp\Lister');
 
     // expression to test

@@ -11,6 +11,6 @@ class AnnotateTaxBilling implements BillingService
      */
     public function chargeOrder()
     {
-        return array(100, "yen");
+        return [100, "yen"];
     }
 }

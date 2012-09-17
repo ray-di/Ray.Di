@@ -1,9 +1,11 @@
 <?php
 
 namespace MovieApp {
-    class Lister {
+    class Lister
+    {
         public $finder;
-        public function __construct(Finder $finder){
+        public function __construct(Finder $finder)
+        {
             $this->finder = $finder;
         }
     }

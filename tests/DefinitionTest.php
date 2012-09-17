@@ -18,7 +18,7 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
     public function testOffsetSetWithKey()
     {
         $method = 'onEnd';
-        $this->definition['MockDefiniton'] = array(Definition::PRE_DESTROY => $method);
+        $this->definition['MockDefiniton'] = [Definition::PRE_DESTROY => $method];
         $actual = $this->definition['MockDefiniton'][Definition::PRE_DESTROY];
         $this->assertSame($method, $actual);
     }
@@ -29,14 +29,14 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
     public function testOffsetSetWithoutKey()
     {
         $method = 'onEnd';
-        $this->definition[] = array('MockDefiniton' => array(Definition::PRE_DESTROY => $method));
+        $this->definition[] = ['MockDefiniton' => [Definition::PRE_DESTROY => $method]];
         $actual = $this->definition['MockDefiniton'][Definition::PRE_DESTROY];
     }
 
     public function testOffsetExists()
     {
         $method = 'onEnd';
-        $this->definition['MockDefiniton'] = array(Definition::PRE_DESTROY => $method);
+        $this->definition['MockDefiniton'] = [Definition::PRE_DESTROY => $method];
         $condition = isset($this->definition['MockDefiniton'][Definition::PRE_DESTROY]);
         $this->assertTrue($condition);
     }
@@ -44,7 +44,7 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
     public function testOffsetUnset()
     {
         $method = 'onEnd';
-        $this->definition['MockDefiniton'] = array(Definition::PRE_DESTROY => $method);
+        $this->definition['MockDefiniton'] = [Definition::PRE_DESTROY => $method];
         unset($this->definition['MockDefiniton']);
         $condition = isset($this->definition['MockDefiniton']);
         $this->assertFalse($condition);

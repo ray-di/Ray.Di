@@ -20,6 +20,10 @@ class AopMatcherModule extends AbstractModule
     protected function configure()
     {
         $matcher = new Matcher(new Reader);
-        $this->bindInterceptor($matcher->subclassesOf('Ray\Di\Tests\RealBillingService'), $matcher->any(), array(new TaxCharger));
+        $this->bindInterceptor(
+            $matcher->subclassesOf('Ray\Di\Tests\RealBillingService'),
+            $matcher->any(),
+            [new TaxCharger]
+        );
     }
 }

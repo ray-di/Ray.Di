@@ -6,9 +6,10 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 
 $loader = require dirname(dirname(__DIR__)) . '/vendor/autoload.php';
-AnnotationRegistry::registerLoader(array($loader, "loadClass"));
+AnnotationRegistry::registerLoader([$loader, "loadClass"]);
 
-abstract class MailerInterface {
+abstract class MailerInterface
+{
     private $transport;
 
     /**

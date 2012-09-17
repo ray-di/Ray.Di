@@ -4,7 +4,7 @@ namespace Ray\zftest;
 
 use Ray\Di\AbstractModule;
 
-class TestModule extends AbstractModule
+class testModule extends AbstractModule
 {
     protected function configure()
     {

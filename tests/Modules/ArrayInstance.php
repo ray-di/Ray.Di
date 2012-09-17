@@ -9,6 +9,6 @@ class ArrayInstance extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind('')->annotatedWith('adapters')->toInstance(array('html' =>  new \StdClass, 'http' => new \StdClass));
+        $this->bind('')->annotatedWith('adapters')->toInstance(['html' =>  new \StdClass, 'http' => new \StdClass]);
     }
 }

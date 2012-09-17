@@ -14,6 +14,6 @@ class AopMisMatcher extends AbstractModule
             return false;
         };
         $methodMatcher = function($method) {return true;};
-        $this->bindInterceptor($classMatcher, $methodMatcher, array(new SalesTax));
+        $this->bindInterceptor($classMatcher, $methodMatcher, [new SalesTax]);
     }
 }

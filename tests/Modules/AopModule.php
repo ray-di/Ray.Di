@@ -14,7 +14,6 @@ class AopModule extends AbstractModule
     protected function configure()
     {
         $matcher = new Matcher;
-        $this->bindInterceptor($matcher->any(), $matcher->any(), array(new TaxCharger()));
-//         $this->registerInterceptAnnotation('SalesTax', array(new SalesTax));
+        $this->bindInterceptor($matcher->any(), $matcher->any(), [new TaxCharger]);
     }
 }

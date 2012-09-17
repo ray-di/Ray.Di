@@ -38,7 +38,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigureTo()
     {
-        $expected = array(AbstractModule::TO_CLASS, 'Ray\Di\Mock\UserDb');
+        $expected = [AbstractModule::TO_CLASS, 'Ray\Di\Mock\UserDb'];
         $actual = $this->module['Ray\Di\Mock\DbInterface'][Definition::NAME_UNSPECIFIED][AbstractModule::TO];
         $this->assertSame($expected, $actual);
     }
@@ -46,7 +46,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testConfigureToProvider()
     {
         $module = new Modules\ProviderModule;
-        $expected = array(AbstractModule::TO_PROVIDER, 'Ray\Di\Modules\DbProvider');
+        $expected = [AbstractModule::TO_PROVIDER, 'Ray\Di\Modules\DbProvider'];
         $actual = $module['Ray\Di\Mock\DbInterface'][Definition::NAME_UNSPECIFIED][AbstractModule::TO];
         $this->assertSame($expected, $actual);
     }
@@ -54,7 +54,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testConfigureToInstance()
     {
         $module = new Modules\InstanceModule;
-        $expected = array(AbstractModule::TO_INSTANCE, new Mock\UserDb());
+        $expected = [AbstractModule::TO_INSTANCE, new Mock\UserDb];
         $actual = $module['Ray\Di\Mock\DbInterface'][Definition::NAME_UNSPECIFIED][AbstractModule::TO];
         $this->assertSame($expected[0], AbstractModule::TO_INSTANCE);
         $this->assertSame('\Ray\Di\Mock\UserDb', $actual[1]);

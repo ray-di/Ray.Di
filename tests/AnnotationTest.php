@@ -43,26 +43,26 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     public function testgetDefinitionInjectConstruct()
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
-        $expected = array(
-            '__construct' => array(
-                array(
+        $expected = [
+            '__construct' => [
+                [
                     Definition::PARAM_POS => 0,
                     Definition::PARAM_TYPEHINT => 'Aura\\Di\\ForgeInterface',
                     Definition::PARAM_NAME => 'forge',
                     Definition::PARAM_ANNOTATE => Definition::NAME_UNSPECIFIED,
                     Definition::PARAM_TYPEHINT_BY => [],
                     Definition::OPTIONAL => false
-                ),
-                array(
+                ],
+                [
                     Definition::PARAM_POS => 1,
                     Definition::PARAM_TYPEHINT => '',
                     Definition::PARAM_NAME => 'id',
                     Definition::PARAM_ANNOTATE => 'usr_id',
                     Definition::PARAM_TYPEHINT_BY => [],
                     Definition::OPTIONAL => false
-                )
-            )
-        );
+                ]
+            ]
+        ];
         $actual = $definition['Inject'][Definition::INJECT_SETTER];
         $this->assertContains($expected, $actual);
     }
@@ -70,80 +70,80 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     public function testgetDefinitionInjectMethod0()
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
-        $expected = array(
-            'setDb' => array(
-                array(
+        $expected = [
+            'setDb' => [
+                [
                     Definition::PARAM_POS => 0,
                     Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\DbInterface',
                     Definition::PARAM_NAME => 'db',
                     Definition::PARAM_ANNOTATE => Definition::NAME_UNSPECIFIED,
                     Definition::PARAM_TYPEHINT_BY => [],
                     Definition::OPTIONAL => false
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertContains($expected, $definition['Inject'][Definition::INJECT_SETTER]);
     }
 
     public function testgetDefinitionInjectMethodSetUserDb()
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
-        $expected = array(
-            'setUserDb' => array(
-                array(
+        $expected = [
+            'setUserDb' => [
+                [
                     Definition::PARAM_POS => 0,
                     Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\DbInterface',
                     Definition::PARAM_NAME => 'db',
                     Definition::PARAM_ANNOTATE => 'user_db',
                     Definition::PARAM_TYPEHINT_BY => [],
                     Definition::OPTIONAL => false
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertContains($expected, $definition['Inject'][Definition::INJECT_SETTER]);
     }
 
     public function testgetDefinitionInjectMethodSetAdminDb()
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
-        $expected = array(
-            'setAdminDb' => array(
-                array(
+        $expected = [
+            'setAdminDb' => [
+                [
                     Definition::PARAM_POS => 0,
                     Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\DbInterface',
                     Definition::PARAM_NAME => 'db',
                     Definition::PARAM_ANNOTATE => 'stage_db',
                     Definition::PARAM_TYPEHINT_BY => [],
                     Definition::OPTIONAL => false
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertContains($expected, $definition['Inject'][Definition::INJECT_SETTER]);
     }
 
     public function testgetDefinitionInjectMethodSetDouble()
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
-        $expected = array(
-            'setDouble' => array(
-                array (
+        $expected = [
+            'setDouble' => [
+                [
                     Definition::PARAM_POS => 0,
                     Definition::PARAM_TYPEHINT => 'Ray\Di\Mock\UserInterface',
                     Definition::PARAM_NAME => 'user',
                     Definition::PARAM_ANNOTATE => 'admin_user',
                     Definition::PARAM_TYPEHINT_BY => [],
                     Definition::OPTIONAL => false
-                ),
-                array (
+                ],
+                [
                     Definition::PARAM_POS => 1,
                     Definition::PARAM_TYPEHINT => 'Ray\Di\Mock\DbInterface',
                     Definition::PARAM_NAME => 'db',
                     Definition::PARAM_ANNOTATE => 'production_db',
                     Definition::PARAM_TYPEHINT_BY => [],
                     Definition::OPTIONAL => false
-                )
-            )
-        );
+                ]
+            ]
+        ];
         $actual = $definition['Inject'][Definition::INJECT_SETTER];
         $this->assertContains($expected, $actual);
    }
@@ -159,18 +159,18 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     public function testSingleVarAnnotattion()
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockNamed');
-        $expected = array(
-            'setUserDb' => array(
-                array(
+        $expected = [
+            'setUserDb' => [
+                [
                     Definition::PARAM_POS => 0,
                     Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\DbInterface',
                     Definition::PARAM_NAME => 'db',
                     Definition::PARAM_ANNOTATE => 'user_db',
                     Definition::PARAM_TYPEHINT_BY => [],
                     Definition::OPTIONAL => false
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertContains($expected, $definition['Inject'][Definition::INJECT_SETTER]);
     }
 
@@ -200,18 +200,18 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     public function testImplemetedBy()
     {
         $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\Implemented');
-        $expected = array(
-            'setLog' => array(
-                array(
+        $expected = [
+            'setLog' => [
+                [
                     Definition::PARAM_POS => 0,
                     Definition::PARAM_TYPEHINT => 'Ray\\Di\\Mock\\LogInterface',
                     Definition::PARAM_NAME => 'log',
                     Definition::PARAM_ANNOTATE => Definition::NAME_UNSPECIFIED,
-                    Definition::PARAM_TYPEHINT_BY => array(Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, 'Ray\Di\Mock\Log'),
+                    Definition::PARAM_TYPEHINT_BY => [Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, 'Ray\Di\Mock\Log'],
                     Definition::OPTIONAL => false
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertContains($expected, $definition['Inject'][Definition::INJECT_SETTER]);
     }
 

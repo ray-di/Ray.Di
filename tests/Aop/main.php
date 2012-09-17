@@ -10,7 +10,7 @@ require __DIR__ . '/BillingService.php';
 require __DIR__ . '/RealBillingService.php';
 require __DIR__ . '/SalesTax.php';
 
-$weavedBilling = new Weaver(new RealBillingService, array(new SalesTax));
+$weavedBilling = new Weaver(new RealBillingService, [new SalesTax]);
 try {
     list($amount, $unit) = $weavedBilling->chargeOrder();
     echo "{$amount}{$unit} Charged.\n";

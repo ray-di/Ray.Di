@@ -227,7 +227,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testLazyConstructParameter()
     {
         $lazyNew = $this->injector->lazyNew('Ray\Di\Mock\Db');
-        $instance = $this->injector->getInstance('Ray\Di\Mock\Construct', array('db' => $lazyNew));
+        $instance = $this->injector->getInstance('Ray\Di\Mock\Construct', ['db' => $lazyNew]);
         $this->assertInstanceOf('Ray\Di\Mock\Db', $instance->db);
     }
 

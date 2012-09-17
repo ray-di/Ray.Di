@@ -11,6 +11,6 @@ class InterceptorModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->registerInterceptAnnotation('SalasTax', array(new SalesTax));
+        $this->registerInterceptAnnotation('SalasTax', [new SalesTax]);
     }
 }

@@ -9,13 +9,15 @@ namespace Foo\Bar {
     use Ray\Di\Di\Inject;
     use Ray\Di\Di\Named;
 
-    class Baz {
+    class Baz
+    {
         public $bam;
 
         /**
          * @Inject
          */
-        public function setBam(BamInterface $bam){
+        public function setBam(BamInterface $bam)
+        {
             $this->bam = $bam;
         }
     }
@@ -28,7 +30,8 @@ namespace Foo\Bar {
     /**
      * @ImplementedBy("Foo\Bar\Bam")
      */
-    interface BamInterface {
+    interface BamInterface
+    {
     }
 }
 

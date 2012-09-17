@@ -1,14 +1,15 @@
 <?php
 use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
 /**
  * Linked Binding
  *
  * Linked bindings map a type to its implementation.
  */
-class BillingModule extends AbstractModule {
-    protected function configure() {
+class BillingModule extends AbstractModule
+{
+    protected function configure()
+    {
         $this->bind('TransactionLogInterface')->to('DatabaseTransactionLog');
     }
 }
@@ -17,8 +18,10 @@ class BillingModule extends AbstractModule {
  *
  * The annotation and type together uniquely identify a binding.
  */
-class BillingModule extends AbstractModule {
-    protected function configure() {
+class BillingModule extends AbstractModule
+{
+    protected function configure()
+    {
         $this->bind('TransactionLogInterface')->annotatedWith('Db')->to('DatabaseTransactionLog');
     }
 }
@@ -30,8 +33,10 @@ class BillingModule extends AbstractModule {
  * Avoid using .toInstance with objects that are complicated to create, since it can slow down application startup.
  * You can use an @Provides method instead.
  */
-class BillingModule extends AbstractModule {
-    protected function configure() {
+class BillingModule extends AbstractModule
+{
+    protected function configure()
+    {
         $instance = new DatabaseTransactionLog;
         $this->bind('TransactionLogInterface')->toInantance($instance);
     }
@@ -63,6 +68,7 @@ class DatabaseTransactionLogProvider implements provider
     {
         $transactionLog = $this->di->newInstance('DatabaseTransactionLog');
         $transactionLog->setConnection($this->connection);
+
         return $transactionLog;
     }
 }
@@ -72,8 +78,10 @@ class DatabaseTransactionLogProvider implements provider
  *
  * The provider class implements Provider interface, which is a simple, general interface for supplying values:
  */
-class BillingModule extends AbstractModule {
-    protected function configure() {
+class BillingModule extends AbstractModule
+{
+    protected function configure()
+    {
         $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvider');
     }
 }
@@ -83,7 +91,8 @@ class BillingModule extends AbstractModule {
  *
  * @ImplementedBy("PayPalCreditCardProcessor")
  */
-interface CreditCardProcessor {
+interface CreditCardProcessor
+{
     public function charge(CreditCard $creditCard);
 }
 
@@ -101,7 +110,8 @@ interface CreditCardProcessor {
  *
  * @ProvidedBy("DatabaseTransactionLogProvider")
  */
-interface TransactionLog {
+interface TransactionLog
+{
     public function logConnectException(UnreachableException $e);
     public function logChargeResult(ChargeResult $result);
 }
@@ -114,12 +124,15 @@ interface TransactionLog {
  *
  * @Scope("Singleton")
  */
-class InMemoryTransactionLog implements TransactionLog {
+class InMemoryTransactionLog implements TransactionLog
+{
 }
 
 // Scopes can also be configured in bind statements:
-class BillingModule extends AbstractModule {
-    protected function configure() {
+class BillingModule extends AbstractModule
+{
+    protected function configure()
+    {
         $this->bind('TransactionLog').to('InMemoryTransactionLog').in(Scope::SINGLETON);
     }
 }

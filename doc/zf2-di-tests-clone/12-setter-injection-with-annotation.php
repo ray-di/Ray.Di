@@ -9,13 +9,15 @@ namespace Foo\Bar {
     use Ray\Di\Di\Inject;
     use Ray\Di\Di\Named;
 
-    class Baz {
+    class Baz
+    {
         public $bam;
 
         /**
          * @Inject
          */
-        public function setBam(Bam $bam){
+        public function setBam(Bam $bam)
+        {
             $this->bam = $bam;
         }
     }

@@ -3,7 +3,6 @@
 namespace MovieApp {
 
 use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
 
     class Lister
     {
@@ -12,7 +11,8 @@ use Ray\Di\Di\Named;
         /**
          * @Inject
          */
-        public function setFinder(FinderInterface $finder){
+        public function setFinder(FinderInterface $finder)
+        {
             $this->finder = $finder;
         }
     }

@@ -1,21 +1,24 @@
 <?php
 
 namespace MovieApp {
-    class Lister {
+    class Lister
+    {
         public $finder;
-        public function setFinder(Finder $finder){
+        public function setFinder(Finder $finder)
+        {
             $this->finder = $finder;
         }
     }
-    class Finder {
+    class Finder
+    {
     }
 }
 
 namespace {
     $di = include __DIR__ . '/scripts/instance.php';
-    $di->getContainer()->setter['MovieApp\Lister']['setFinder'] = array(
+    $di->getContainer()->setter['MovieApp\Lister']['setFinder'] = [
         'finder' => new MovieApp\Finder
-    );
+    ];
     $lister = $di->getInstance('MovieApp\Lister');
 
     // expression to test

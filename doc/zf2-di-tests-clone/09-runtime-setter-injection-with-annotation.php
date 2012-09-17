@@ -11,7 +11,8 @@ namespace MovieApp {
         /**
          * @Inject
          */
-        public function setFinder(Finder $finder){
+        public function setFinder(Finder $finder)
+        {
             $this->finder = $finder;
         }
     }

@@ -35,7 +35,7 @@ class User
     public function createUser($name, $age)
     {
         $sth = $this->db->prepare("INSERT INTO User (Name, Age) VALUES (:name, :age)");
-        $sth->execute(array(':name' => $name, ':age' => $age));
+        $sth->execute([':name' => $name, ':age' => $age]);
     }
 
     /**
