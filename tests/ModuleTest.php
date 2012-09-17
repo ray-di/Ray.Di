@@ -90,14 +90,6 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\ToBinding
-     */
-    public function testToInvalid()
-    {
-        new Modules\InvalidToModule;
-    }
-
-    /**
      * @expectedException Ray\Di\Exception\Configuration
      */
     public function testToProviderInvalid()

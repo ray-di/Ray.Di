@@ -259,9 +259,9 @@ abstract class AbstractModule implements \ArrayAccess
      */
     protected function to($class)
     {
-        if (class_exists($class) === false) {
-            throw new Exception\ToBinding($class);
-        }
+//         if (class_exists($class) === false) {
+//             throw new Exception\ToBinding($class);
+//         }
         $this->bindings[$this->currentBinding][$this->currentName] = [self::TO => [self::TO_CLASS, $class]];
 
         return $this;
