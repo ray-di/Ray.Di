@@ -14,8 +14,9 @@ use Aura\Di\ContainerInterface;
 use Aura\Di\Exception\ContainerLocked;
 use Ray\Aop\Bind;
 use Ray\Aop\Weaver;
+use ReflectionClass;
 use ReflectionMethod;
-
+use ReflectionException;
 /**
  * Dependency Injector.
  *
@@ -207,7 +208,11 @@ class Injector implements InjectorInterface
     public function getInstance($class, array $params = null)
     {
         $bindings = $this->module->bindings;
-        $isInterface = isset($bindings[$class]) && isset($bindings[$class]['*']['to']);
+        try {
+            $isInterface = (new ReflectionClass($class))->isInterface();
+        } catch (ReflectionException $e) {
+            throw new Exception\NotReadable($class);
+        }
         if ($isInterface) {
             $toType = $bindings[$class]['*']['to'][0];
             $isToProviderBinding = ($toType === AbstractModule::TO_PROVIDER);
