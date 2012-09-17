@@ -1,6 +1,8 @@
 <?php
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+
 /**
  * Test class for Inject.
  */
@@ -21,7 +23,7 @@ class ApcInjectorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->container = new Container(new Forge(new Config(new Annotation(new Definition))));
+        $this->container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));
     }
 
     /**

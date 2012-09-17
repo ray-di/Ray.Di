@@ -7,6 +7,7 @@
  */
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Ray\Di\Exception\OptionalInjectionNotBinded;
 use Aura\Di\Lazy;
 use Aura\Di\ContainerInterface;
@@ -14,6 +15,7 @@ use Aura\Di\Exception\ContainerLocked;
 use Ray\Aop\Bind;
 use Ray\Aop\Weaver;
 use ReflectionMethod;
+
 /**
  * Dependency Injector.
  *
@@ -128,7 +130,7 @@ class Injector implements InjectorInterface
     public static function create(array $modules = [], $useApcCache = true)
     {
         $config = $useApcCache ? __NAMESPACE__ . '\ApcConfig' : __NAMESPACE__ . '\Config';
-        $injector = new self(new Container(new Forge(new $config(new Annotation(new Definition)))));
+        $injector = new self(new Container(new Forge(new $config(new Annotation(new Definition, new AnnotationReader)))));
         if (count($modules) > 0) {
             $module = array_shift($modules);
             foreach ($modules as $extraModule) {

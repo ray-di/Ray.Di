@@ -1,6 +1,8 @@
 <?php
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -17,7 +19,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->container = new Container(new Forge(new Config(new Annotation(new Definition))));
+        $this->container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));
         $this->injector = new Injector($this->container, new EmptyModule);
     }
 
@@ -215,7 +217,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testEmptyModule()
     {
-        $injector = new Injector(new Container(new Forge(new Config(new Annotation(new Definition)))));
+        $injector = new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))));
         $ref = new \ReflectionProperty($injector, 'module');
         $ref->setAccessible(true);
         $module = $ref->getValue($injector);

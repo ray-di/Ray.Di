@@ -1,6 +1,8 @@
 <?php
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+
 /**
  * Test class for Config.
  */
@@ -11,7 +13,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->config = new Config(new Annotation(new Definition));;
+        $this->config = new Config(new Annotation(new Definition, new AnnotationReader));;
     }
 
     public function testFetchReadsConstructorDefaults()
@@ -41,7 +43,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchCapturesExplicitParams()
     {
-        $this->config = new Config(new Annotation(new Definition));
+        $this->config = new Config(new Annotation(new Definition, new AnnotationReader));
         $params = $this->config->getParams();
         $params['Ray\Di\MockParentClass'] = array('foo' => 'zim');
 
@@ -52,7 +54,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchHonorsExplicitParentParams()
     {
-        $this->config = new Config(new Annotation(new Definition));;
+        $this->config = new Config(new Annotation(new Definition, new AnnotationReader));;
         $params = $this->config->getParams();
         $params['Ray\Di\MockParentClass'] = array('foo' => 'dib');
 
@@ -97,7 +99,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testClone()
     {
-        $this->config = new Config(new Annotation(new Definition));;
+        $this->config = new Config(new Annotation(new Definition, new AnnotationReader));;
         $clone = clone $this->config;
 
         $this->assertNotSame($clone, $this->config);
@@ -160,7 +162,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMethodReflectObject()
     {
-        $methodReflcet = $this->config->getMethodReflect(new \Ray\Di\Definition\MockDefinitionClass(new Forge(new Config(new Annotation(new Definition))), 2), 'setDouble');
+        $methodReflcet = $this->config->getMethodReflect(new \Ray\Di\Definition\MockDefinitionClass(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))), 2), 'setDouble');
         $this->assertInstanceOf('\ReflectionMethod', $methodReflcet);
         $this->assertSame('setDouble', $methodReflcet->name);
         $this->assertSame('Ray\Di\Definition\MockDefinitionClass', $methodReflcet->class);

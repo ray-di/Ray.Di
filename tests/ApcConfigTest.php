@@ -1,6 +1,7 @@
 <?php
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Ray\Di\Definition;
 
 /**
@@ -13,7 +14,7 @@ class ApcConfigTest extends ConfigTest
     protected function setUp()
     {
         parent::setUp();
-        $this->config = new ApcConfig(new Annotation(new Definition));;
+        $this->config = new ApcConfig(new Annotation(new Definition, new AnnotationReader));;
     }
 
     /**

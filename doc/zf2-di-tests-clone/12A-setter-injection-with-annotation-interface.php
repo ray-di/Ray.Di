@@ -23,6 +23,8 @@ namespace Foo\Bar {
 
 namespace Foo\Bar {
 
+    use Ray\Di\Di\ImplementedBy;
+
     /**
      * @ImplementedBy("Foo\Bar\Bam")
      */
