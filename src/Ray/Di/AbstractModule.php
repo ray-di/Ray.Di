@@ -441,7 +441,7 @@ abstract class AbstractModule implements \ArrayAccess
                 $type = $to['to'][0];
                 $output .= ($annoatte !== '*') ? "bind('{$bind}')->annotatedWith('{$annoatte}')" : "bind('{$bind}')";
                 if ($type === 'class') {
-                    $output .= "->to('" . $to['to'][1] . "')\n";
+                    $output .= "->to('" . $to['to'][1] . "')";
                 }
                 if ($type === 'instance') {
                     $instance = $to['to'][1];
@@ -456,8 +456,13 @@ abstract class AbstractModule implements \ArrayAccess
                         default:
                             $instance = "($type) $instance";
                     }
-                    $output .= "->toInstance(" . $instance . ")\n";
+                    $output .= "->toInstance(" . $instance . ")";
                 }
+                if ($type === 'provider') {
+                    $provider = $to['to'][1];
+                    $output .= "->toProvider(" . $provider . ")";
+                }
+                $output .= PHP_EOL;
             }
         }
 
