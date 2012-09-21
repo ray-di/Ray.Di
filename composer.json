@@ -31,8 +31,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Ray\\Di": "src/",
-            "Aura\\Di": "vendor/Aura/Di/src/" 
+            "Ray\\Di": "src/"
         }
     }
 }
