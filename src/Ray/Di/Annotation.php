@@ -259,7 +259,7 @@ class Annotation implements AnnotationInterface
         }
         // this typehint is class, not a interface.
         if (class_exists($typehint)) {
-            $class = new \ReflectionClass($typehint);
+            $class = new ReflectionClass($typehint);
             if ($class->isAbstract() === false) {
                 $result = [Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $typehint];
 
@@ -275,7 +275,7 @@ class Annotation implements AnnotationInterface
      *
      * @param string $nameParameter "value" or "key1=value1,ke2=value2"
      *
-     * @return array           [$paramName => $named][]
+     * @return array [$paramName => $named][]
      * @throws Exception\Named
      */
     private function getNamed($nameParameter)

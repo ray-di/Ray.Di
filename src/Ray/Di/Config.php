@@ -12,7 +12,9 @@
 namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
-
+use ArrayObject;
+use ReflectionClass;
+use ReflectionMethod;
 /**
  * Retains and unifies class configurations.
  *
@@ -120,13 +122,13 @@ class Config implements ConfigInterface
      */
     protected function reset()
     {
-        $this->params = new \ArrayObject;
+        $this->params = new ArrayObject;
         $this->params['*'] = [];
-        $this->setter = new \ArrayObject;
+        $this->setter = new ArrayObject;
         $this->setter['*'] = [];
         $this->definition = new Definition([]);
         $this->definition['*'] = [];
-        $this->methodReflect = new \ArrayObject;
+        $this->methodReflect = new ArrayObject;
     }
 
     /**
@@ -177,7 +179,7 @@ class Config implements ConfigInterface
     public function getReflect($class)
     {
         if (! isset($this->reflect[$class])) {
-            $this->reflect[$class] = new \ReflectionClass($class);
+            $this->reflect[$class] = new ReflectionClass($class);
         }
 
         return $this->reflect[$class];
@@ -281,7 +283,7 @@ class Config implements ConfigInterface
         if (!isset($this->reflect[$class])
                         || !is_array($this->reflect[$class])
                         || ! isset($this->reflect[$class][$method])) {
-            $methodRef = new \ReflectionMethod($class, $method);
+            $methodRef = new ReflectionMethod($class, $method);
             $this->methodReflect[$class][$method] = $methodRef;
         }
 

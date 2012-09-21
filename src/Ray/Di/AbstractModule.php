@@ -12,6 +12,7 @@ use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use ArrayObject;
+use ArrayAccess;
 
 /**
  * A module contributes configuration information, typically interface bindings,
@@ -20,7 +21,7 @@ use ArrayObject;
  * @package Ray.Di
  * @author  Akihito Koriyama <akihito.koriyama@gmail.com>
  */
-abstract class AbstractModule implements \ArrayAccess
+abstract class AbstractModule implements ArrayAccess
 {
     /**
      * Bind
@@ -116,13 +117,13 @@ abstract class AbstractModule implements \ArrayAccess
     /**
      * Pointcuts
      *
-     * @var \ArrayObject
+     * @var ArrayObject
      */
 
     /**
      * Object carry container
      *
-     * @var \ArrayObject
+     * @var ArrayObject
      */
     protected $container;
 
@@ -179,9 +180,9 @@ abstract class AbstractModule implements \ArrayAccess
         Matcher $matcher = null
     ){
         if (is_null($module)) {
-            $this->bindings = new \ArrayObject;
-            $this->pointcuts = new \ArrayObject;
-            $this->container = new \ArrayObject;
+            $this->bindings = new ArrayObject;
+            $this->pointcuts = new ArrayObject;
+            $this->container = new ArrayObject;
         } else {
             $this->bindings = $module->bindings;
             $this->pointcuts = $module->pointcuts;
@@ -323,8 +324,8 @@ abstract class AbstractModule implements \ArrayAccess
     /**
      * Bind interceptor
      *
-     * @param \Closure $classMatcher
-     * @param \Closure $methodMatcher
+     * @param Callable $classMatcher
+     * @param Callable $methodMatcher
      * @param array    $interceptors
      *
      * @return void
