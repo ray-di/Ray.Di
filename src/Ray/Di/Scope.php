@@ -11,7 +11,6 @@ namespace Ray\Di;
  * Scope Definition
  *
  * @package Ray.Di
- * @author  Akihito Koriyama <akihito.koriyama@gmail.com>
  */
 class Scope
 {

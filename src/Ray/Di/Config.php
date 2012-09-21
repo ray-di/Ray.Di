@@ -14,11 +14,9 @@ namespace Ray\Di;
 use Aura\Di\ConfigInterface;
 
 /**
- *
  * Retains and unifies class configurations.
  *
  * @package Ray.Di
- *
  */
 class Config implements ConfigInterface
 {

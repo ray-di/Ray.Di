@@ -11,7 +11,6 @@ use Aura\Di\Container as AuraContainer;
 use Aura\Di\ContainerInterface;
 
 /**
- *
  * Dependency injection container.
  *
  * @package Ray.Di

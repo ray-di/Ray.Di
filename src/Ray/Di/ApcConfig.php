@@ -15,16 +15,13 @@ use ReflectionClass;
 use ReflectionException;
 
 /**
- *
  * Retains and unifies class configurations.
  *
  * @package Ray.Di
- *
  */
 class ApcConfig extends Config
 {
     /**
-     *
      * Fetches the unified constructor params and setter values for a class.
      *
      * @param string $class The class name to fetch values for.

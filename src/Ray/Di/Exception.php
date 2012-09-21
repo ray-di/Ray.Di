@@ -8,10 +8,8 @@
 namespace Ray\Di;
 
 /**
- *
  * Generic package exception.
  *
  * @package Ray.Di
- *
  */
 class Exception extends \Exception {}

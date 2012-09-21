@@ -15,7 +15,6 @@ use Aura\Di\ForgeInterface;
  * Creates objects using reflection and the specified configuration values.
  *
  * @package Ray.Di
- *
  */
 class Forge extends AuraForge implements ForgeInterface
 {

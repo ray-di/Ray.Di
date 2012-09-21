@@ -10,7 +10,6 @@ namespace Ray\Di;
 use ArrayObject;
 
 /**
- *
  * Retains target class inject definition.
  *
  * @package Ray.Di
