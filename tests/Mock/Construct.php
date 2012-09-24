@@ -2,8 +2,7 @@
 
 namespace Ray\Di\Mock;
 
-use Ray\Di\Mock\DbInterface,
-    Ray\Di\Mock\UserInterface;
+use Ray\Di\Mock\DbInterface;
 
 /**
  * Constructor Injection

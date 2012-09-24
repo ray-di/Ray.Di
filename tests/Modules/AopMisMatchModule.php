@@ -2,9 +2,8 @@
 
 namespace Ray\Di\Modules;
 
-use Ray\Di\AbstractModule,
-Ray\Di\Scope,
-Ray\Di\SalesTax;
+use Ray\Di\AbstractModule;
+use Ray\Di\SalesTax;
 
 class AopMisMatcher extends AbstractModule
 {

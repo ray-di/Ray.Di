@@ -2,8 +2,7 @@
 
 namespace Ray\Di\Modules;
 
-use Ray\Di\AbstractModule,
-    Ray\Di\Scope;
+use Ray\Di\AbstractModule;
 
 class ArrayInstance extends AbstractModule
 {

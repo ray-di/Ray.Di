@@ -4,8 +4,7 @@ namespace Ray\Di\Modules;
 
 use Ray\Di\SalesTax;
 
-use Ray\Di\AbstractModule,
-    Ray\Di\Scope;
+use Ray\Di\AbstractModule;
 
 class InterceptorModule extends AbstractModule
 {

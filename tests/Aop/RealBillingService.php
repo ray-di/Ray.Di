@@ -11,11 +11,11 @@ class RealBillingService implements BillingService
      */
     public function chargeOrder()
     {
-        return [100, "yen"];
+        return[100, 'yen'];
     }
 
     public function chargeOrderWithNoTax()
     {
-        return [100, "yen"];
+        return[100, 'yen'];
     }
 }

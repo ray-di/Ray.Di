@@ -173,6 +173,12 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
         $this->assertTrue(isset($module->bindings['Ray\\Di\\Mock\\LogInterface']));
     }
 
+    public function testInstallPointcuts()
+    {
+        $module = new \Ray\Di\Modules\InstallPointcutsModule;
+        $this->assertSame(2, count($module->pointcuts));
+    }
+
     public function testSerializeModule()
     {
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
@@ -204,12 +210,16 @@ bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
         $this->assertInstanceOf('Ray\Di\Mock\UserDb', $module->object->db);
     }
 
+    /**
+     * acount($result) is 4, but latter 2 is ignored.
+     * only first bind is valid.
+     */
     public function test_installModuleTwice()
     {
         $module = new Modules\TwiceInstallModule;
         $bindings = (array) $module->bindings;
         $result = $bindings['']['val_a']['to'];
-        $firstInstallIsOnlyExpected = ['instance', 1];
-        $this->assertSame($firstInstallIsOnlyExpected, $result);
+        $this->assertSame('instance', $result[0]);
+        $this->assertSame(1, $result[1]);
     }
 }

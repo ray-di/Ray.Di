@@ -4,16 +4,18 @@ namespace Ray\Di\Modules;
 
 use Ray\Di\Tests\TaxCharger;
 
-use Ray\Di\AbstractModule,
-    Ray\Di\Matcher,
-    Ray\Di\Scope,
-    Ray\Di\SalesTax;
+use Ray\Di\AbstractModule;
+use Ray\Aop\Matcher;
 
 class AopModule extends AbstractModule
 {
     protected function configure()
     {
-        $matcher = new Matcher;
-        $this->bindInterceptor($matcher->any(), $matcher->any(), [new TaxCharger]);
+        $this->bindInterceptor(
+            $this->matcher->any(),
+            $this->matcher->any(), [
+                new TaxCharger
+            ]
+        );
     }
 }

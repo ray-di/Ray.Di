@@ -2,8 +2,8 @@
 
 namespace Ray\Di\Tests;
 
-use Ray\Aop\MethodInterceptor,
-    Ray\Aop\MethodInvocation;
+use Ray\Aop\MethodInterceptor;
+use Ray\Aop\MethodInvocation;
 
 class TaxCharger implements MethodInterceptor
 {
