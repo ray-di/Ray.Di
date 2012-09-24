@@ -4,9 +4,9 @@ namespace Ray\Di\Definition;
 
 use Aura\Di\ForgeInterface;
 
-use Ray\Di\Mock\DbInterface,
-    Ray\Di\Mock\UserInterface,
-    Ray\Di\Forge;
+use Ray\Di\Mock\DbInterface;
+use Ray\Di\Mock\UserInterface;
+use Ray\Di\Forge;
 
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;

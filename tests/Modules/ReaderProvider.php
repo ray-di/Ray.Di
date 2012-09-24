@@ -2,8 +2,8 @@
 
 namespace Ray\Di\Modules;
 
-use Ray\Di\ProviderInterface,
-    Ray\Di\Mock\Reader;
+use Ray\Di\ProviderInterface;
+use Ray\Di\Mock\Reader;
 
 class ReaderProvider implements ProviderInterface
 {

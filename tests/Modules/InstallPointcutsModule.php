@@ -5,8 +5,8 @@ use Ray\Di\Modules\AopModule;
 namespace Ray\Di\Modules;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\SalesTax,
-Ray\Di\Tests\TaxCharger;
+use Ray\Di\SalesTax;
+use Ray\Di\Tests\TaxCharger;
 use Ray\Di\Tests\ChildTaxCharger;
 
 class InstallPointcutsModule extends AbstractModule

@@ -2,8 +2,8 @@
 
 namespace Ray\Di\Definition;
 
-use Ray\Di\Mock\DbInterface,
-    Ray\Di\Mock\UserInterface;
+use Ray\Di\Mock\DbInterface;
+use Ray\Di\Mock\UserInterface;
 
 use Ray\Di\Di\PreDestroy;
 use Ray\Di\Di\PostConstruct;
