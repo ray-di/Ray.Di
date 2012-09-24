@@ -2,7 +2,6 @@
 namespace Ray\Di\Definition;
 
 use Ray\Di\Mock\logInterface;
-use Ray\Di\Mock\UserInterface;
 use Ray\Di\Di\Inject;
 
 class Implemented

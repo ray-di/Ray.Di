@@ -6,8 +6,6 @@ use Ray\Di\Tests\TaxCharger;
 
 use Ray\Di\AbstractModule;
 use Ray\Aop\Matcher;
-use Ray\Di\Scope;
-use Ray\Di\SalesTax;
 
 class AopModule extends AbstractModule
 {

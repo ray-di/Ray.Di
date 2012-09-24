@@ -3,7 +3,6 @@
 namespace Ray\Di\Mock;
 
 use Ray\Di\Mock\DbInterface;
-use Ray\Di\Mock\UserInterface;
 
 class DefaultDB{}
 

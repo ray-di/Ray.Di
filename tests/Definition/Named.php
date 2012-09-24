@@ -3,7 +3,6 @@
 namespace Ray\Di\Definition;
 
 use Ray\Di\Mock\DbInterface;
-use Ray\Di\Mock\UserInterface;
 
 class Named
 {
