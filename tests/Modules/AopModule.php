@@ -5,16 +5,21 @@ namespace Ray\Di\Modules;
 use Ray\Di\Tests\TaxCharger;
 
 use Ray\Di\AbstractModule,
-    Ray\Di\Matcher,
+    Ray\Aop\Matcher,
     Ray\Di\Scope,
     Ray\Di\SalesTax;
+use Doctrine\Common\Annotations\AnnotationReader;
+
 
 class AopModule extends AbstractModule
 {
     protected function configure()
     {
-        $matcher = new Matcher;
-        $this->bindInterceptor($matcher->any(), $matcher->any(), array(new TaxCharger()));
-//         $this->registerInterceptAnnotation('SalesTax', array(new SalesTax));
+        $this->bindInterceptor(
+            $this->matcher->any(),
+            $this->matcher->any(), [
+                new TaxCharger
+            ]
+        );
     }
 }

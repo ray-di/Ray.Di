@@ -3,6 +3,8 @@
 namespace Ray\Di\Modules;
 
 use Ray\Di\AbstractModule;
+use Ray\Di\SalesTax,
+Ray\Di\Tests\TaxCharger;
 
 class InstallModule extends AbstractModule
 {

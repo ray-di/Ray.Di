@@ -165,9 +165,20 @@ abstract class AbstractModule implements \ArrayAccess
         'Provides'
     ];
 
+    /**
+     * Pointcuts
+     *
+     * @var array
+     */
     public $pointcuts = [];
 
-    private $installedModule = [];
+    /**
+     * Has passed module data from other module ?
+     * install() needs not to duplicate interceptor binding
+     *
+     * @var bool
+     */
+    private $isInherited = false;
 
     /**
      * Constructor
@@ -183,6 +194,7 @@ abstract class AbstractModule implements \ArrayAccess
             $this->pointcuts = new \ArrayObject;
             $this->container = new \ArrayObject;
         } else {
+            $this->isInherited = true;
             $this->bindings = $module->bindings;
             $this->pointcuts = $module->pointcuts;
             $this->container = $module->container;
@@ -331,7 +343,8 @@ abstract class AbstractModule implements \ArrayAccess
      */
     protected function bindInterceptor(Callable $classMatcher, Callable $methodMatcher, array $interceptors)
     {
-        $this->pointcuts[] = new Pointcut($classMatcher, $methodMatcher, $interceptors);
+        $id = uniqid();
+        $this->pointcuts[$id] = new Pointcut($classMatcher, $methodMatcher, $interceptors);
     }
 
     /**
@@ -344,13 +357,12 @@ abstract class AbstractModule implements \ArrayAccess
     public function install(AbstractModule $module)
     {
         $class = get_class($module);
-        if (isset($this->installedModule[$class])) {
-            // ignore second install
-            return ;
+        if ($this->isInherited === true) {
+            $this->pointcuts = $module->pointcuts;
+        } else {
+            $this->pointcuts = new ArrayObject(array_merge((array) $module->pointcuts, (array) $this->pointcuts));
         }
-        $this->installedModule[$class] = true;
         $this->bindings = new ArrayObject(array_merge_recursive((array) $this->bindings, (array) $module->bindings));
-        $this->pointcuts = new ArrayObject(array_merge_recursive((array) $module->pointcuts, (array) $this->pointcuts));
         $this->container = new ArrayObject(array_merge_recursive((array) $module->container, (array) $this->container));
     }
 
