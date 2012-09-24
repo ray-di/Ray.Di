@@ -1,6 +1,6 @@
 <?php
 /**
- * Ray
+ * This file is part of the Ray package.
  *
  * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
@@ -24,6 +24,8 @@ interface LoggerInterface
      * @param array  $setter
      * @param object $object
      * @param Bind   $bind
+     *
+     * @return void
      */
     public function log($class, array $params, array $setter, $object, Bind $bind);
 }

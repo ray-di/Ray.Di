@@ -1,7 +1,5 @@
 <?php
 /**
- * Ray
- *
  * This file is taken from Aura.Di(https://github.com/auraphp/Aura.Di) and modified.
  *
  * @package Ray.Di
@@ -15,6 +13,7 @@ use Aura\Di\ConfigInterface;
 use ArrayObject;
 use ReflectionClass;
 use ReflectionMethod;
+
 /**
  * Retains and unifies class configurations.
  *
@@ -292,6 +291,8 @@ class Config implements ConfigInterface
 
     /**
      * Remove reflection property
+     *
+     * @return array
      */
     public function __sleep()
     {

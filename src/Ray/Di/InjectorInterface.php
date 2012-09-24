@@ -1,11 +1,13 @@
 <?php
 /**
- * Ray
+ * This file is part of the Ray package.
  *
  * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
+
+use Ray\Di\Di\ImplementedBy;
 
 /**
  * Defines the interface for dependency injector.
@@ -27,7 +29,6 @@ interface InjectorInterface
      * parameter value to use.
      *
      * @return object
-     *
      */
     public function getInstance($class, array $params = null);
 

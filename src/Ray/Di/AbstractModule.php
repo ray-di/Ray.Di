@@ -1,6 +1,6 @@
 <?php
 /**
- * Ray
+ * This file is part of the Ray package.
  *
  * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
@@ -19,7 +19,6 @@ use ArrayAccess;
  *  which will be used to create an Injector.
  *
  * @package Ray.Di
- * @author  Akihito Koriyama <akihito.koriyama@gmail.com>
  */
 abstract class AbstractModule implements ArrayAccess
 {
@@ -272,9 +271,6 @@ abstract class AbstractModule implements ArrayAccess
      */
     protected function to($class)
     {
-//         if (class_exists($class) === false) {
-//             throw new Exception\ToBinding($class);
-//         }
         $this->bindings[$this->currentBinding][$this->currentName] = [self::TO => [self::TO_CLASS, $class]];
 
         return $this;

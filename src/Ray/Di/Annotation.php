@@ -1,6 +1,6 @@
 <?php
 /**
- * Ray
+ * This file is part of the Ray package.
  *
  * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
@@ -15,7 +15,6 @@ use ReflectionMethod;
  * Annotation scanner
  *
  * @package Ray.Di
- * @author  Akihito Koriyama <akihito.koriyama@gmail.com>
  */
 class Annotation implements AnnotationInterface
 {
