@@ -6,7 +6,7 @@
          backupStaticAttributes="false"
          strict="true"
          colors="true"
-         stopOnFailure="true"
+         stopOnFailure="false"
          verbose="true">
   <testsuites>
     <testsuite name="Ray.Di">
