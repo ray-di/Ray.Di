@@ -49,6 +49,7 @@ require_once __DIR__ . '/Modules/InjectorModule.php';
 require_once __DIR__ . '/Modules/TwiceInstallModule.php';
 require_once __DIR__ . '/Modules/PassDependencyModule.php';
 require_once __DIR__ . '/Modules/InstallPointcutsModule.php';
+require_once __DIR__ . '/Modules/LeadingBackSlashModule.php';
 
 // Mock class without annotation
 require_once __DIR__ . '/MockParentClass.php';
