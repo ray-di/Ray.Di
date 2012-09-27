@@ -226,6 +226,11 @@ abstract class AbstractModule implements ArrayAccess
      */
     protected function bind($interface = '')
     {
+        if (strlen($interface) > 0 && $interface[0] === '\\') {
+            // remove leading back slash
+            $interface = substr($interface, 1);
+        }
+
         $this->currentBinding = $interface;
         $this->currentName = self::NAME_UNSPECIFIED;
 
