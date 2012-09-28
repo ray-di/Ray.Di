@@ -7,6 +7,8 @@
  */
 namespace Ray\Di;
 
+use Ray\Di\Exception\Binding;
+
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ray\Di\Exception\OptionalInjectionNotBinded;
 use Aura\Di\Lazy;
@@ -208,6 +210,10 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class, array $params = null)
     {
+        $isLeadingBackSlash = (strlen($class) > 0 && $class[0] === '\\');
+        if ($isLeadingBackSlash === true) {
+            $class = substr($class, 1);
+        }
         $bindings = $this->module->bindings;
         try {
             $isInterface = (new ReflectionClass($class))->isInterface();
@@ -215,6 +221,9 @@ class Injector implements InjectorInterface
             throw new Exception\NotReadable($class);
         }
         if ($isInterface) {
+            if (! isset($bindings[$class]['*']['to'][0])) {
+                throw new Binding($class);
+            }
             $toType = $bindings[$class]['*']['to'][0];
             $isToProviderBinding = ($toType === AbstractModule::TO_PROVIDER);
             if ($isToProviderBinding) {

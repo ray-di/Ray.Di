@@ -382,4 +382,27 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $instance = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
         $this->assertInstanceOf('Ray\Di\Mock\UserDb', $instance);
     }
+
+    public function testGetInstanceWithInterfaceNotLeadingBackSlash()
+    {
+        $this->injector->setModule(new Modules\BasicModule);
+        $instance = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance);
+    }
+
+    public function testGetInstanceWithInterfaceLeadingBackSlash()
+    {
+        $this->injector->setModule(new Modules\BasicModule);
+        $instance = $this->injector->getInstance('\Ray\Di\Mock\DbInterface');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance);
+    }
+
+    /**
+     * @expectedException \Ray\Di\Exception\Binding
+     */
+    public function testGetInstanceWithAnnotateBindModule()
+    {
+        $this->injector->setModule(new Modules\AnnotateModule);
+        $instance = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
+    }
 }
