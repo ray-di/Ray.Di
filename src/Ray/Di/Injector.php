@@ -214,6 +214,8 @@ class Injector implements InjectorInterface
         } catch (ReflectionException $e) {
             throw new Exception\NotReadable($class);
         }
+        $interfaceClass = false;
+        $isSingleton = false;
         if ($isInterface) {
             $toType = $bindings[$class]['*']['to'][0];
             $isToProviderBinding = ($toType === AbstractModule::TO_PROVIDER);
@@ -222,6 +224,18 @@ class Injector implements InjectorInterface
 
                 return $this->getInstance($provider)->get();
             }
+
+            $inType = isset($bindings[$class]['*'][AbstractModule::IN])
+                ? $bindings[$class]['*'][AbstractModule::IN] : null;
+            list( , , $definition) = $this->config->fetch($class);
+            $isSingleton = $inType === Scope::SINGLETON || $definition['Scope'] == Scope::SINGLETON;
+            $interfaceClass = $class;
+
+            if ($isSingleton && $this->container->has($interfaceClass)) {
+                $object = $this->container->get($interfaceClass);
+                return $object;
+            }
+
             $class = ($toType === AbstractModule::TO_CLASS) ? $bindings[$class]['*']['to'][1] : $class;
         }
 
@@ -274,6 +288,10 @@ class Injector implements InjectorInterface
         // set life cycle
         if ($definition) {
             $this->setLifeCycle($object, $definition);
+        }
+        // set singleton object
+        if ($isSingleton) {
+            $this->container->set($interfaceClass, $object);
         }
 
         return $object;
