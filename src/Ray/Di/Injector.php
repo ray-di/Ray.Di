@@ -19,13 +19,12 @@ use Ray\Aop\Weaver;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionException;
+use SplObjectStorage;
 
 /**
  * Dependency Injector
  *
  * @package Ray.Di
- *
- * @Scope("singleton")
  */
 class Injector implements InjectorInterface
 {
@@ -101,7 +100,7 @@ class Injector implements InjectorInterface
     {
         $this->container = $container;
         $this->config = $container->getForge()->getConfig();
-        $this->preDestroyObjects = new \SplObjectStorage;
+        $this->preDestroyObjects = new SplObjectStorage;
         if ($module == null) {
             $module = new EmptyModule;
         }
@@ -200,9 +199,8 @@ class Injector implements InjectorInterface
     /**
      * Get a service object using binding module, optionally with overriding params.
      *
-     * @param string $class The class or interface to instantiate.
-     * @param AbstractModule binding module
-     * @param array $params An associative array of override parameters where
+     * @param string $class  The class or interface to instantiate.
+     * @param array  $params An associative array of override parameters where
      * the key the name of the constructor parameter and the value is the
      * parameter value to use.
      *
@@ -210,10 +208,9 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class, array $params = null)
     {
-        $isLeadingBackSlash = (strlen($class) > 0 && $class[0] === '\\');
-        if ($isLeadingBackSlash === true) {
-            $class = substr($class, 1);
-        }
+        $class = $this->removeLeadingBackSlash($class);
+
+        // is interface ?
         $bindings = $this->module->bindings;
         try {
             $isInterface = (new ReflectionClass($class))->isInterface();
@@ -221,31 +218,14 @@ class Injector implements InjectorInterface
             throw new Exception\NotReadable($class);
         }
         list($config, $setter, $definition) = $this->config->fetch($class);
-        $interfaceClass = false;
-        $isSingleton = false;
+        $interfaceClass = $isSingleton = false;
         if ($isInterface) {
-            if (! isset($bindings[$class]['*']['to'][0])) {
-                throw new Binding($class);
+            $bound = $this->getBoundClass($bindings, $definition, $class);
+            if (is_object($bound)) {
+
+                return $bound;
             }
-            $toType = $bindings[$class]['*']['to'][0];
-            $isToProviderBinding = ($toType === AbstractModule::TO_PROVIDER);
-            if ($isToProviderBinding) {
-                $provider = $bindings[$class]['*']['to'][1];
-
-                return $this->getInstance($provider)->get();
-            }
-
-            $inType = isset($bindings[$class]['*'][AbstractModule::IN])
-                ? $bindings[$class]['*'][AbstractModule::IN] : null;
-            $isSingleton = $inType === Scope::SINGLETON || $definition['Scope'] == Scope::SINGLETON;
-            $interfaceClass = $class;
-
-            if ($isSingleton && $this->container->has($interfaceClass)) {
-                $object = $this->container->get($interfaceClass);
-                return $object;
-            }
-
-            $class = ($toType === AbstractModule::TO_CLASS) ? $bindings[$class]['*']['to'][1] : $class;
+            list($class, $isSingleton, $interfaceClass) = $bound;
         }
 
         // annotation dependency
@@ -303,6 +283,60 @@ class Injector implements InjectorInterface
         }
 
         return $object;
+    }
+
+    /**
+     * Remove leading back slash
+     *
+     * @param string $class
+     *
+     * @return string
+     */
+    private function removeLeadingBackSlash($class)
+    {
+        $isLeadingBackSlash = (strlen($class) > 0 && $class[0] === '\\');
+        if ($isLeadingBackSlash === true) {
+            $class = substr($class, 1);
+        }
+
+        return $class;
+    }
+
+    /**
+     * Get bound class or object
+     *
+     * @param mixed  $defnition
+     * @param string $class
+     *
+     * @return mixed class | object
+     * @throws Binding
+     */
+    private function getBoundClass($bindings, $definition, $class)
+    {
+        if (! isset($bindings[$class]['*']['to'][0])) {
+            throw new Binding($class);
+        }
+        $toType = $bindings[$class]['*']['to'][0];
+        $isToProviderBinding = ($toType === AbstractModule::TO_PROVIDER);
+        if ($isToProviderBinding) {
+            $provider = $bindings[$class]['*']['to'][1];
+
+            return $this->getInstance($provider)->get();
+        }
+
+        $inType = isset($bindings[$class]['*'][AbstractModule::IN])
+        ? $bindings[$class]['*'][AbstractModule::IN] : null;
+        $isSingleton = $inType === Scope::SINGLETON || $definition['Scope'] == Scope::SINGLETON;
+        $interfaceClass = $class;
+
+        if ($isSingleton && $this->container->has($interfaceClass)) {
+            $object = $this->container->get($interfaceClass);
+            return $object;
+        }
+
+        $class = ($toType === AbstractModule::TO_CLASS) ? $bindings[$class]['*']['to'][1] : $class;
+
+        return [$class, $isSingleton, $interfaceClass];
     }
 
     /**
@@ -391,9 +425,8 @@ class Injector implements InjectorInterface
      * @param Definition     $definition
      * @param AbstractModule $module
      *
-     * @throws Exception\Binding
-     *
      * @return array <$constructorParams, $setter>
+     * @throws Exception\Binding
      */
     private function bindModule(array $setter, Definition $definition, AbstractModule $module)
     {
@@ -458,6 +491,8 @@ class Injector implements InjectorInterface
      * @param array      $setterDefinition
      * @param Definition $definition
      * @param Callable   $getInstance
+     *
+     * @return array
      */
     private function bindMethod(array $setterDefinition, Definition $definition, Callable $getInstance)
     {
@@ -519,8 +554,7 @@ class Injector implements InjectorInterface
      * @param string $typeHint
      * @param string $annotate
      *
-     * @reutn array
-     *
+     * @return array
      * @throws Exception\Binding
      */
     private function jitBinding(array $param, $typeHint, $annotate)
@@ -559,9 +593,8 @@ class Injector implements InjectorInterface
      * Returns a Lazy that creates a new instance. This allows you to replace
      * the following idiom:
      *
-     * @param string $class The type of class of instantiate.
-     *
-     * @param array $params Override parameters for the instance.
+     * @param string $class  The type of class of instantiate.
+     * @param array  $params Override parameters for the instance.
      *
      * @return Lazy A lazy-load object that creates the new instance.
      */
