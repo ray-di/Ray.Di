@@ -50,6 +50,7 @@ require_once __DIR__ . '/Modules/TwiceInstallModule.php';
 require_once __DIR__ . '/Modules/PassDependencyModule.php';
 require_once __DIR__ . '/Modules/InstallPointcutsModule.php';
 require_once __DIR__ . '/Modules/LeadingBackSlashModule.php';
+require_once __DIR__ . '/Modules/SingletonAnnotationModule.php';
 
 // Mock class without annotation
 require_once __DIR__ . '/MockParentClass.php';
@@ -72,6 +73,11 @@ require_once __DIR__ . '/Mock/AbstractDb.php';
 require_once __DIR__ . '/Mock/MovieApp.php';
 require_once __DIR__ . '/Mock/TestLogger.php';
 require_once __DIR__ . '/Mock/Time.php';
+require_once __DIR__ . '/Mock/NumberInterface.php';
+require_once __DIR__ . '/Mock/Number.php';
+require_once __DIR__ . '/Mock/SingletonNumber.php';
+require_once __DIR__ . '/Mock/SingletonDbInterface.php';
+require_once __DIR__ . '/Mock/SingletonRndDb.php';
 // Ray.Aop
 require_once __DIR__ . '/Aop/BillingService.php';
 require_once __DIR__ . '/Aop/RealBillingService.php';

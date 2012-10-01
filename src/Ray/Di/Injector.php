@@ -220,6 +220,7 @@ class Injector implements InjectorInterface
         } catch (ReflectionException $e) {
             throw new Exception\NotReadable($class);
         }
+        list($config, $setter, $definition) = $this->config->fetch($class);
         $interfaceClass = false;
         $isSingleton = false;
         if ($isInterface) {
@@ -236,7 +237,6 @@ class Injector implements InjectorInterface
 
             $inType = isset($bindings[$class]['*'][AbstractModule::IN])
                 ? $bindings[$class]['*'][AbstractModule::IN] : null;
-            list( , , $definition) = $this->config->fetch($class);
             $isSingleton = $inType === Scope::SINGLETON || $definition['Scope'] == Scope::SINGLETON;
             $interfaceClass = $class;
 
@@ -248,7 +248,6 @@ class Injector implements InjectorInterface
             $class = ($toType === AbstractModule::TO_CLASS) ? $bindings[$class]['*']['to'][1] : $class;
         }
 
-        list($config, $setter, $definition) = $this->config->fetch($class);
         // annotation dependency
         /* @var $definition Ray\Di\Definition */
         $hasDirectBinding =  isset($this->module->bindings[$class]);
@@ -507,7 +506,7 @@ class Injector implements InjectorInterface
         if (isset($binding[AbstractModule::IN])) {
             $in = $binding[AbstractModule::IN];
         } else {
-            list($param, $setter, $definition) = $this->config->fetch($target);
+            list($param, $setter, $definition) = $this->config->fetch($typeHint);
             $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
         }
         $param = $getInstance($in, $bindingToType, $target);
