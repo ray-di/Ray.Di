@@ -19,7 +19,7 @@ interface LoggerInterface
     /**
      * Injection logger
      *
-     * @param strin  $class
+     * @param string $class
      * @param array  $params
      * @param array  $setter
      * @param object $object
