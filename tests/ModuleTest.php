@@ -100,27 +100,27 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testToStringInstance()
     {
         $module = new \Ray\Di\Modules\InstanceModule;
-        $expected = "bind('')->annotatedWith('id')->toInstance((string) PC6001)
-bind('')->annotatedWith('user_name')->toInstance((string) koriym)
-bind('')->annotatedWith('user_age')->toInstance((integer) 21)
-bind('')->annotatedWith('user_gender')->toInstance((string) male)
-bind('Ray\Di\Mock\DbInterface')->to('\Ray\Di\Mock\UserDb')
-bind('Ray\Di\Mock\UserInterface')->toInstance((object) Ray\Di\Mock\User)\n";
+        $expected  = "bind('')->annotatedWith('id')->toInstance((string) PC6001)" . PHP_EOL;
+        $expected .= "bind('')->annotatedWith('user_name')->toInstance((string) koriym)" . PHP_EOL;
+        $expected .= "bind('')->annotatedWith('user_age')->toInstance((integer) 21)" . PHP_EOL;
+        $expected .= "bind('')->annotatedWith('user_gender')->toInstance((string) male)" . PHP_EOL;
+        $expected .= "bind('Ray\Di\Mock\DbInterface')->to('\Ray\Di\Mock\UserDb')" . PHP_EOL;
+        $expected .= "bind('Ray\Di\Mock\UserInterface')->toInstance((object) Ray\Di\Mock\User)" . PHP_EOL;
         $this->assertSame($expected, (string) $module);
     }
 
     public function testToStringInstanceArray()
     {
         $module = new \Ray\Di\Modules\ArrayInstance;
-        $expected = "bind('')->annotatedWith('adapters')->toInstance((array) [\"html\",\"http\"])\n";
+        $expected = "bind('')->annotatedWith('adapters')->toInstance((array) [\"html\",\"http\"])" . PHP_EOL;
         $this->assertSame($expected, (string) $module);
     }
 
     public function testToStringDecoratedModule()
     {
         $module = new \Ray\Di\Modules\BasicModule(new \Ray\Di\Modules\ArrayInstance);
-        $expected = "bind('')->annotatedWith('adapters')->toInstance((array) [\"html\",\"http\"])
-bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')\n";
+        $expected  = "bind('')->annotatedWith('adapters')->toInstance((array) [\"html\",\"http\"])" . PHP_EOL;
+        $expected .= "bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')" . PHP_EOL;
         $this->assertSame($expected, (string) $module);
     }
 
