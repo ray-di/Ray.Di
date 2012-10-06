@@ -228,6 +228,7 @@ class Injector implements InjectorInterface
                 return $bound;
             }
             list($class, $isSingleton, $interfaceClass) = $bound;
+            list($config, $setter, $definition) = $this->config->fetch($class);
         }
 
         // annotation dependency
