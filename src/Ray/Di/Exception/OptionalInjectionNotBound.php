@@ -12,6 +12,6 @@ namespace Ray\Di\Exception;
  *
  * @package Ray.Di
  */
-class OptionalInjectionNotBinded extends Binding implements Exception
+class OptionalInjectionNotBound extends Binding implements Exception
 {
 }

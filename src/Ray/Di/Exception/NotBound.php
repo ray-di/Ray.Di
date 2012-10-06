@@ -12,6 +12,6 @@ namespace Ray\Di\Exception;
  *
  * @package Ray.Di
  */
-class NotBinded extends Binding implements Exception
+class NotBound extends Binding implements Exception
 {
 }

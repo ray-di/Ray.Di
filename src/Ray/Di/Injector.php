@@ -8,7 +8,7 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Ray\Di\Exception\OptionalInjectionNotBinded;
+use Ray\Di\Exception\OptionalInjectionNotBound;
 use Ray\Di\Exception\Binding;
 use Ray\Aop\Bind;
 use Ray\Aop\Weaver;
@@ -354,7 +354,7 @@ class Injector implements InjectorInterface
      * @param AbstractModule $module
      *
      * @return void
-     * @throws Exception\NotBinded
+     * @throws Exception\NotBound
      */
     private function checkNotBound($class, array &$params, AbstractModule $module)
     {
@@ -378,7 +378,7 @@ class Injector implements InjectorInterface
                 if ($parameter->isDefaultValueAvailable() === true) {
                     continue;
                 }
-                throw new Exception\NotBinded("Bind not found. argument #{$index}(\${$parameter->name}) in {$class} constructor.");
+                throw new Exception\NotBound("Bind not found. argument #{$index}(\${$parameter->name}) in {$class} constructor.");
             }
 
             // has default value ?
@@ -464,7 +464,7 @@ class Injector implements InjectorInterface
             foreach ($setterDefinitions as $setterDefinition) {
                 try {
                     $injected[] = $this->bindMethod($setterDefinition, $definition, $getInstance);
-                } catch (OptionalInjectionNotBinded $e) {
+                } catch (OptionalInjectionNotBound $e) {
                 }
             }
             $setter = [];
@@ -512,7 +512,7 @@ class Injector implements InjectorInterface
      * @param array  $userData
      *
      * @return void
-     * @throws Exception\OptionalInjectionNotBinded
+     * @throws Exception\OptionalInjectionNotBound
      */
     private function bindOneParameter(&$param, $key, array $userData)
     {
@@ -527,7 +527,7 @@ class Injector implements InjectorInterface
             // default binding by @ImplementedBy or @ProviderBy
             $binding = $this->jitBinding($param, $typeHint, $annotate);
             if ($binding === self::OPTIONAL_BINDING_NOT_BOUND) {
-                throw new OptionalInjectionNotBinded($key);
+                throw new OptionalInjectionNotBound($key);
             }
         }
         list($bindingToType, $target) = $binding[AbstractModule::TO];
