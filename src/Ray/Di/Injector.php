@@ -379,6 +379,12 @@ class Injector implements InjectorInterface
                 if ($parameter->isDefaultValueAvailable() === true) {
                     continue;
                 }
+                // is typehint class ?
+                $class = $parameter->getClass();
+                if (! $class->isInterface() && $class) {
+                    $params[$index] = $this->getInstance($class->getName());
+                    continue;
+                }
                 throw new Exception\NotBound("Bind not found. argument #{$index}(\${$parameter->name}) in {$class} constructor.");
             }
 

@@ -250,13 +250,12 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\NotBound
      */
     public function testNotBoundException()
     {
         $this->injector = new Injector($this->container, new \Ray\Di\Modules\InvalidBindingModule);
         $lister = $this->injector->getInstance('Ray\Di\Mock\MovieApp\Lister');
-
+        $this->assertInstanceOf('Ray\Di\Mock\MovieApp\Finder', $lister->finder);
     }
 
     /**
