@@ -18,7 +18,8 @@ use ArrayAccess;
  * A module contributes configuration information, typically interface bindings,
  *  which will be used to create an Injector.
  *
- * @package Ray.Di
+ * @package   Ray.Di
+ * @submodule Module
  */
 abstract class AbstractModule implements ArrayAccess
 {
@@ -184,11 +185,13 @@ abstract class AbstractModule implements ArrayAccess
      * Constructor
      *
      * @param AbstractModule $module
+     * @param Matcher        $matcher
      */
     public function __construct(
         AbstractModule $module = null,
         Matcher $matcher = null
-    ){
+    )
+    {
         if (is_null($module)) {
             $this->bindings = new ArrayObject;
             $this->pointcuts = new ArrayObject;
@@ -222,7 +225,7 @@ abstract class AbstractModule implements ArrayAccess
      *
      * @param string $interface
      *
-     * @return $this
+     * @return AbstractModule
      */
     protected function bind($interface = '')
     {
@@ -238,7 +241,7 @@ abstract class AbstractModule implements ArrayAccess
     }
 
     /**
-     * Set binding annotattion.
+     * Set binding annotation.
      *
      * @param string $name
      *
@@ -255,7 +258,7 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * Set scope
      *
-     * @param string $name
+     * @param string $scope
      *
      * @return AbstractModule
      */
@@ -292,12 +295,12 @@ abstract class AbstractModule implements ArrayAccess
     protected function toProvider($provider)
     {
         $hasProviderInterface = class_exists($provider)
-        && in_array('Ray\Di\ProviderInterface', class_implements($provider));
+            && in_array('Ray\Di\ProviderInterface', class_implements($provider));
         if ($hasProviderInterface === false) {
             throw new Exception\Configuration($provider);
         }
         $this->bindings[$this->currentBinding][$this->currentName]
-        = [self::TO => [self::TO_PROVIDER, $provider]];
+            = [self::TO => [self::TO_PROVIDER, $provider]];
 
         return $this;
     }
@@ -312,26 +315,31 @@ abstract class AbstractModule implements ArrayAccess
     protected function toInstance($instance)
     {
         $this->bindings[$this->currentBinding][$this->currentName]
-        = [self::TO => [self::TO_INSTANCE, $instance]];
+            = [self::TO => [self::TO_INSTANCE, $instance]];
     }
 
     /**
      * To closure
      *
-     * @param Closure $closure
+     * @param Callable $callable
      *
      * @return void
      */
     protected function toCallable(Callable $callable)
     {
         $this->bindings[$this->currentBinding][$this->currentName]
-        = [self::TO => [self::TO_CALLABLE, $callable]];
+            = [self::TO => [self::TO_CALLABLE, $callable]];
     }
 
+    /**
+     * To constructor
+     *
+     * @param array $params
+     */
     protected function toConstructor(array $params)
     {
         $this->bindings[$this->currentBinding][$this->currentName]
-        = [self::TO => [self::TO_CONSTRUCTOR, $params]];
+            = [self::TO => [self::TO_CONSTRUCTOR, $params]];
     }
 
     /**
@@ -352,20 +360,17 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * Install module
      *
-     * @params AbstractModule $module
-     *
-     * @return void
+     * @param AbstractModule $module
      */
     public function install(AbstractModule $module)
     {
-        $class = get_class($module);
         if ($this->isInherited === true) {
             $this->pointcuts = $module->pointcuts;
         } else {
-            $this->pointcuts = new ArrayObject(array_merge((array) $module->pointcuts, (array) $this->pointcuts));
+            $this->pointcuts = new ArrayObject(array_merge((array)$module->pointcuts, (array)$this->pointcuts));
         }
-        $this->bindings = new ArrayObject(array_merge_recursive((array) $this->bindings, (array) $module->bindings));
-        $this->container = new ArrayObject(array_merge_recursive((array) $module->container, (array) $this->container));
+        $this->bindings = new ArrayObject(array_merge_recursive((array)$this->bindings, (array)$module->bindings));
+        $this->container = new ArrayObject(array_merge_recursive((array)$module->container, (array)$this->container));
     }
 
     /**
@@ -386,15 +391,16 @@ abstract class AbstractModule implements ArrayAccess
     }
 
     /**
-     * Return matched binder.
+     * Return matched binder
      *
      * @param string $class
+     * @param Bind   $bind
      *
-     * @return \Ray\Aop\Bind
+     * @return Bind $bind
      */
     public function __invoke($class, Bind $bind)
     {
-        $bind->bind($class, (array) $this->pointcuts);
+        $bind->bind($class, (array)$this->pointcuts);
 
         return $bind;
     }
@@ -402,7 +408,9 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * ArrayAccess::offsetExists
      *
-     * @param offset
+     * @param string $offset
+     *
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -412,7 +420,9 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * ArrayAccess::offsetGet
      *
-     * @param offset
+     * @param string $offset
+     *
+     * @return mixed
      */
     public function offsetGet($offset)
     {
@@ -422,8 +432,9 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * ArrayAccess::offsetSet
      *
-     * @param offset
-     * @param value
+     * @param string $offset
+     * @param mixed  $value
+     *
      * @throws Exception\ReadOnly
      */
     public function offsetSet($offset, $value)
@@ -434,7 +445,8 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * ArrayAccess::offsetUnset
      *
-     * @param offset
+     * @param string $offset
+     *
      * @throws Exception\ReadOnly
      */
     public function offsetUnset($offset)
@@ -450,10 +462,10 @@ abstract class AbstractModule implements ArrayAccess
     public function __toString()
     {
         $output = '';
-        foreach ((array) $this->bindings as $bind => $bindTo) {
-            foreach ($bindTo as $annoatte => $to) {
+        foreach ((array)$this->bindings as $bind => $bindTo) {
+            foreach ($bindTo as $annotate => $to) {
                 $type = $to['to'][0];
-                $output .= ($annoatte !== '*') ? "bind('{$bind}')->annotatedWith('{$annoatte}')" : "bind('{$bind}')";
+                $output .= ($annotate !== '*') ? "bind('{$bind}')->annotatedWith('{$annotate}')" : "bind('{$bind}')";
                 if ($type === 'class') {
                     $output .= "->to('" . $to['to'][1] . "')";
                 }
@@ -483,6 +495,11 @@ abstract class AbstractModule implements ArrayAccess
         return $output;
     }
 
+    /**
+     * Keep only bindings and pointcuts.
+     *
+     * @return array
+     */
     public function __sleep()
     {
         return ['bindings', 'pointcuts'];

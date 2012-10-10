@@ -17,7 +17,7 @@ use ArrayObject;
 class Definition extends ArrayObject
 {
     /**
-     * Postconstruct annotation
+     * Post construct annotation
      *
      * @var string
      */
@@ -103,12 +103,12 @@ class Definition extends ArrayObject
     /**
      * Param typehint default concrete class / provider class
      *
-     * @var array [$typehitMethod, $className>]
+     * @var array [$typehintMethod, $className>]
      */
     const PARAM_TYPEHINT_BY = 'typehint_by';
 
     /**
-     * Param typehint default cocrete class
+     * Param typehint default concrete class
      *
      * @var string
      */
@@ -140,7 +140,7 @@ class Definition extends ArrayObject
      *
      * @var string
      */
-    const ASPECT ='Aspect';
+    const ASPECT = 'Aspect';
 
     /**
      * User defined interceptor annotation
@@ -180,7 +180,7 @@ class Definition extends ArrayObject
     /**
      * Optional Inject
      *
-     * @var unknown_type
+     * @var string
      */
     const OPTIONAL = 'optional';
 
@@ -202,11 +202,11 @@ class Definition extends ArrayObject
     /**
      * Constructor
      *
-     * @array $default default defnition set
+     * @param array $defaults default definition set
      */
-    public function __construct($defaults = null)
+    public function __construct(array $defaults = null)
     {
-        $defaults = $defaults ?: $this->defaults;
+        $defaults = $defaults ? : $this->defaults;
         parent::__construct($defaults);
     }
 
@@ -217,18 +217,18 @@ class Definition extends ArrayObject
      */
     public function hasDefinition()
     {
-       $hasDefinition = ($this->getArrayCopy() !== $this->defaults);
+        $hasDefinition = ($this->getArrayCopy() !== $this->defaults);
 
-       return $hasDefinition;
+        return $hasDefinition;
     }
 
     /**
      * Set user annotation by name
      *
-     *  @param string $annotationName
-     *  @param string $methodName
+     * @param string $annotationName
+     * @param string $methodName
      *
-     *  @return void
+     * @return void
      */
     public function setUserAnnotationMethodName($annotationName, $methodName)
     {
@@ -274,7 +274,7 @@ class Definition extends ArrayObject
     public function getUserAnnotationByMethod($methodName)
     {
         $result = isset($this[self::BY_METHOD]) && isset($this[self::BY_METHOD][$methodName]) ?
-        $this[self::BY_METHOD][$methodName] : null;
+            $this[self::BY_METHOD][$methodName] : null;
 
         return $result;
     }

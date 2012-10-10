@@ -49,6 +49,7 @@ class Annotation implements AnnotationInterface
     protected $definitions = [];
 
     /**
+     * Annotation reader
      *
      * @var \Doctrine\Common\Annotations\Reader;
      */
@@ -58,19 +59,22 @@ class Annotation implements AnnotationInterface
      * Constructor
      *
      * @param Definition $definition
+     * @param Reader     $reader
      */
     public function __construct(Definition $definition, Reader $reader)
     {
         $this->newDefinition = $definition;
-        $this->reader = $reader;;
+        $this->reader = $reader;
+        ;
     }
 
     /**
-     * Get class definition by annotation
+     * Return class definition by annotation
      *
      * @param string $className
      *
      * @return array
+     * @throws Exception\NotReadable
      */
     public function getDefinition($className)
     {
@@ -81,7 +85,7 @@ class Annotation implements AnnotationInterface
         try {
             $class = new ReflectionClass($className);
         } catch (\ReflectionException $e) {
-            throw new Exception\NotReadable($className, 0 , $e);
+            throw new Exception\NotReadable($className, 0, $e);
         }
         $annotations = $this->reader->getClassAnnotations($class);
         $classDefinition = $this->getDefinitionFormat($annotations);
@@ -96,23 +100,23 @@ class Annotation implements AnnotationInterface
     }
 
     /**
-     * Get definition format from annotations
+     * Return definition format from annotations
      *
      * @param array $annotations
+     * @param bool  $returnValue
      *
-     * @return [$annotation => $value][]
+     * @return array [$annotation => $value][]
      */
     private function getDefinitionFormat(array $annotations, $returnValue = true)
     {
         $result = [];
         foreach ($annotations as $annotation) {
-            $classPath = explode('\\', get_class($annotation));
-            $key = array_pop($classPath);
+            $annotationName = $this->getAnnotationName($annotation);
             $value = $annotation;
             if ($returnValue === true) {
-                $value = isset($annotation->value) ? $annotation->value : null ;
+                $value = isset($annotation->value) ? $annotation->value : null;
             }
-            $result[$key] = $value;
+            $result[$annotationName] = $value;
         }
 
         return $result;
@@ -121,11 +125,11 @@ class Annotation implements AnnotationInterface
     /**
      * Set method definition
      *
-     * @param \ReflectionClass $class
+     * @param ReflectionClass $class
      *
      * @return void
      */
-    private function setMethodDefinition(\ReflectionClass $class)
+    private function setMethodDefinition(ReflectionClass $class)
     {
         $methods = $class->getMethods();
         foreach ($methods as $method) {
@@ -136,11 +140,25 @@ class Annotation implements AnnotationInterface
             }
             // user land annotation by method
             foreach ($annotations as $annotation) {
-                $classPath = explode('\\', get_class($annotation));
-                $annotationName = array_pop($classPath);
+                $annotationName = $this->getAnnotationName($annotation);
                 $this->definition->setUserAnnotationByMethod($annotationName, $method->name, $annotation);
             }
         }
+    }
+
+    /**
+     * Return annotation name from annotation class name
+     *
+     * @param string $annotation
+     *
+     * @return string
+     */
+    private function getAnnotationName($annotation)
+    {
+        $classPath = explode('\\', get_class($annotation));
+        $annotationName = array_pop($classPath);
+
+        return $annotationName;
     }
 
     /**
@@ -148,7 +166,7 @@ class Annotation implements AnnotationInterface
      *
      * @param string           $name        annotation name
      * @param ReflectionMethod $method
-     * @param \array           $annotations
+     * @param array            $annotations
      *
      * @return void
      * @throws Exception\MultipleAnnotationNotAllowed
@@ -196,7 +214,7 @@ class Annotation implements AnnotationInterface
         $parameters = $method->getParameters();
         $paramsInfo = [];
         foreach ($parameters as $parameter) {
-            /* @var $parameter ReflectionParameter */
+            /** @var $parameter \ReflectionParameter */
             $class = $parameter->getClass();
             $typehint = $class ? $class->getName() : '';
             $typehintBy = $typehint ? $this->getTypeHintDefaultInjection($typehint) : [];
@@ -208,14 +226,14 @@ class Annotation implements AnnotationInterface
             } else {
                 $name = Definition::NAME_UNSPECIFIED;
             }
-            $optinalInject = $methodAnnotation[Definition::INJECT]->optional;
+            $optionalInject = $methodAnnotation[Definition::INJECT]->optional;
             $paramsInfo[] = [
                 Definition::PARAM_POS => $pos,
                 Definition::PARAM_TYPEHINT => $typehint,
                 Definition::PARAM_NAME => $parameter->name,
                 Definition::PARAM_ANNOTATE => $name,
                 Definition::PARAM_TYPEHINT_BY => $typehintBy,
-                Definition::OPTIONAL => $optinalInject
+                Definition::OPTIONAL => $optionalInject
             ];
         }
         $paramInfo[$method->name] = $paramsInfo;
@@ -250,7 +268,7 @@ class Annotation implements AnnotationInterface
 
             return $result;
         }
-        // @ProvidBY as default
+        // @ProvidedBy as default
         if (isset($hintDef[Definition::PROVIDEDBY])) {
             $result = [Definition::PARAM_TYPEHINT_METHOD_PROVIDEDBY, $hintDef[Definition::PROVIDEDBY]];
 
@@ -279,7 +297,7 @@ class Annotation implements AnnotationInterface
      */
     private function getNamed($nameParameter)
     {
-        // signle annotation @Named($annotation)
+        // single annotation @Named($annotation)
         if (preg_match("/^[a-zA-Z0-9_]+$/", $nameParameter)) {
             return $nameParameter;
         }

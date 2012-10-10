@@ -22,17 +22,11 @@ class ApcInjector extends Injector
     private $prefix;
 
     /**
-     * Constructor
+     * (non-PHPdoc)
+     * @see \
      *
-     * @param array    $callableModules Callable[]
-     * @param string   $key
-     * @param Callable $container
-     *
-     * @throws Exception
-     */
-
-    /**
-     * Get a service object using APC cache
+     * @param string $class
+     * @param array  $params
      *
      * @return object
      */
@@ -40,7 +34,7 @@ class ApcInjector extends Injector
     {
         $this->prefix = md5($this->module);
         $object = apc_fetch($this->prefix . $class, $success);
-        $object = $object ?: parent::getInstance($class, $params);
+        $object = $object ? : parent::getInstance($class, $params);
         if ($success !== true) {
             apc_store($this->prefix . $class, $object);
         }

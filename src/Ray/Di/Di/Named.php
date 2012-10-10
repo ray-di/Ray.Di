@@ -18,5 +18,10 @@ namespace Ray\Di\Di;
  */
 final class Named implements Annotation
 {
+    /**
+     * Name
+     *
+     * @var string
+     */
     public $value;
 }

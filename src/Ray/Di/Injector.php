@@ -64,7 +64,7 @@ class Injector implements InjectorInterface
     /**
      * Container
      *
-     * @var Container
+     * @var \Ray\Di\Container
      */
     protected $container;
 
@@ -99,6 +99,7 @@ class Injector implements InjectorInterface
     {
         $this->container = $container;
         $this->config = $container->getForge()->getConfig();
+        /** @var $this->config Config  */
         $this->preDestroyObjects = new SplObjectStorage;
         if ($module == null) {
             $module = new EmptyModule;
@@ -124,8 +125,8 @@ class Injector implements InjectorInterface
     /**
      * Injector builder
      *
-     * @param AbstractModule[] $modules
-     * @param bool $useApcCache
+     * @param       array AbstractModule[] $modules
+     * @param bool  $useApcCache
      *
      * @return Injector
      */
@@ -202,10 +203,17 @@ class Injector implements InjectorInterface
      *
      * @param string $class  The class or interface to instantiate.
      * @param array  $params An associative array of override parameters where
-     * the key the name of the constructor parameter and the value is the
-     * parameter value to use.
+     *                       the key the name of the constructor parameter and the value is the
+     *                       parameter value to use.
      *
      * @return object
+     * @throws Exception\NotReadable
+     */
+
+    /**
+     * (non-PHPDoc)
+     * @see \Ray\Di\InjectorInterface::getInstance()
+     *
      * @throws Exception\NotReadable
      */
     public function getInstance($class, array $params = null)
@@ -233,12 +241,12 @@ class Injector implements InjectorInterface
 
         // annotation dependency
         /* @var $definition \Ray\Di\Definition */
-        $hasDirectBinding =  isset($this->module->bindings[$class]);
+        $hasDirectBinding = isset($this->module->bindings[$class]);
         if ($definition->hasDefinition() || $hasDirectBinding) {
             list($config, $setter) = $this->bindModule($setter, $definition);
         }
 
-        $params = is_null($params) ? $config : array_merge($config, (array) $params);
+        $params = is_null($params) ? $config : array_merge($config, (array)$params);
         // lazy-load params as needed
         foreach ($params as $key => $val) {
             if ($params[$key] instanceof Lazy) {
@@ -251,8 +259,8 @@ class Injector implements InjectorInterface
 
         // create the new instance
         $object = call_user_func_array(
-                        [$this->config->getReflect($class), 'newInstance'],
-                        $params
+            [$this->config->getReflect($class), 'newInstance'],
+            $params
         );
         // call setters after creation
         foreach ($setter as $method => $value) {
@@ -308,7 +316,7 @@ class Injector implements InjectorInterface
     /**
      * Get bound class or object
      *
-     * @param $bindings
+     * @param        $bindings
      * @param mixed  $definition
      * @param string $class
      *
@@ -317,7 +325,7 @@ class Injector implements InjectorInterface
      */
     private function getBoundClass($bindings, $definition, $class)
     {
-        if (! isset($bindings[$class]['*']['to'][0])) {
+        if (!isset($bindings[$class]['*']['to'][0])) {
             throw new Binding($class);
         }
         $toType = $bindings[$class]['*']['to'][0];
@@ -329,12 +337,13 @@ class Injector implements InjectorInterface
         }
 
         $inType = isset($bindings[$class]['*'][AbstractModule::IN])
-        ? $bindings[$class]['*'][AbstractModule::IN] : null;
+            ? $bindings[$class]['*'][AbstractModule::IN] : null;
         $isSingleton = $inType === Scope::SINGLETON || $definition['Scope'] == Scope::SINGLETON;
         $interfaceClass = $class;
 
         if ($isSingleton && $this->container->has($interfaceClass)) {
             $object = $this->container->get($interfaceClass);
+
             return $object;
         }
 
@@ -350,7 +359,7 @@ class Injector implements InjectorInterface
      * 2) If parameter is NOT provided and TO_CONSTRUCTOR binding is available, return parameter with it
      * 3) No binding found, throw exception.
      *
-     * @param string $class
+     * @param string         $class
      * @param array          &$params
      * @param AbstractModule $module
      *
@@ -369,7 +378,7 @@ class Injector implements InjectorInterface
 
             // has binding ?
             $params = array_values($params);
-            if (! isset($params[$index])) {
+            if (!isset($params[$index])) {
                 $hasConstructorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
                 if ($hasConstructorBinding) {
                     $params[$index] = $module[$class]['*'][AbstractModule::TO][1][$parameter->name];
@@ -381,7 +390,7 @@ class Injector implements InjectorInterface
                 }
                 // is typehint class ?
                 $class = $parameter->getClass();
-                if (! $class->isInterface() && $class) {
+                if (!$class->isInterface() && $class) {
                     $params[$index] = $this->getInstance($class->getName());
                     continue;
                 }
@@ -422,7 +431,7 @@ class Injector implements InjectorInterface
         if ($postConstructMethod) {
             call_user_func(array($instance, $postConstructMethod));
         }
-        if (! is_null($definition[Definition::PRE_DESTROY])) {
+        if (!is_null($definition[Definition::PRE_DESTROY])) {
             $this->preDestroyObjects->attach($instance, $definition[Definition::PRE_DESTROY]);
         }
 
@@ -436,6 +445,7 @@ class Injector implements InjectorInterface
      *
      * @return array <$constructorParams, $setter>
      * @throws Exception\Binding
+     * @throws \LogicException
      */
     private function bindModule(array $setter, Definition $definition)
     {
@@ -443,7 +453,7 @@ class Injector implements InjectorInterface
         $container = $this->container;
         /* @var $forge \Ray\Di\Forge */
         $injector = $this;
-        $getInstance = function($in, $bindingToType, $target) use ($container, $definition, $injector) {
+        $getInstance = function ($in, $bindingToType, $target) use ($container, $definition, $injector) {
             if ($in === Scope::SINGLETON && $container->has($target)) {
                 $instance = $container->get($target);
 
@@ -457,6 +467,8 @@ class Injector implements InjectorInterface
                     $provider = $injector->getInstance($target);
                     $instance = $provider->get();
                     break;
+                default:
+                    throw new \LogicException("Binding type:{$bindingToType}");
             }
             if ($in === Scope::SINGLETON) {
                 $container->set($target, $instance);
@@ -520,6 +532,7 @@ class Injector implements InjectorInterface
      *
      * @return void
      * @throws Exception\OptionalInjectionNotBound
+     * @noinspection PhpUnusedPrivateMethodInspection
      */
     private function bindOneParameter(&$param, $key, array $userData)
     {
@@ -527,8 +540,8 @@ class Injector implements InjectorInterface
         $annotate = $param[Definition::PARAM_ANNOTATE];
         $typeHint = $param[Definition::PARAM_TYPEHINT];
         $hasTypeHint = isset($this->module[$typeHint])
-        && isset($this->module[$typeHint][$annotate])
-        && ($this->module[$typeHint][$annotate] !== []);
+            && isset($this->module[$typeHint][$annotate])
+            && ($this->module[$typeHint][$annotate] !== []);
         $binding = $hasTypeHint ? $this->module[$typeHint][$annotate] : false;
         if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
             // default binding by @ImplementedBy or @ProviderBy
@@ -551,7 +564,7 @@ class Injector implements InjectorInterface
         if (isset($binding[AbstractModule::IN])) {
             $in = $binding[AbstractModule::IN];
         } else {
-            list($param,, $definition) = $this->config->fetch($typeHint);
+            list($param, , $definition) = $this->config->fetch($typeHint);
             $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
         }
         /* @var $getInstance \Closure */
@@ -648,7 +661,7 @@ class Injector implements InjectorInterface
      */
     public function __toString()
     {
-        $result = (string) ($this->module);
+        $result = (string)($this->module);
 
         return $result;
     }

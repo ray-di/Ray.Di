@@ -5,7 +5,6 @@
  * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * @see     https://github.com/auraphp/Aura.Di
- *
  */
 namespace Ray\Di;
 
@@ -20,13 +19,8 @@ use ReflectionException;
 class ApcConfig extends Config
 {
     /**
-     * Fetches the unified constructor params and setter values for a class.
-     *
-     * @param string $class The class name to fetch values for.
-     *
-     * @return array An array with two elements; 0 is the constructor values
-     * for the class, and 1 is the setter methods and values for the class.
-     *
+     * (non-PHPdoc)
+     * @see Aura\Di\ConfigInterface::fetch()
      */
     public function fetch($class)
     {
@@ -39,7 +33,7 @@ class ApcConfig extends Config
         }
         $key = '[ray-config]' . __CLASS__ . $file . hash('crc32b', serialize($this->setter));
         $config = apc_fetch($key, $success);
-        $config = $config ? ($config): parent::fetch($class);
+        $config = $config ? ($config) : parent::fetch($class);
         if ($success !== true) {
             apc_store($key, ($config));
         }

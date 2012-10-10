@@ -8,7 +8,7 @@
 namespace Ray\Di\Di;
 
 /**
- * ImplememtedBy
+ * Default implementation
  *
  * @Annotation
  * @Target("CLASS")
@@ -18,5 +18,10 @@ namespace Ray\Di\Di;
  */
 final class ImplementedBy implements Annotation
 {
+    /**
+     * Default class
+     *
+     * @var string
+     */
     public $value;
 }

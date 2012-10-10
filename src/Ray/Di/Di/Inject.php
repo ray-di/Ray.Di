@@ -18,5 +18,10 @@ namespace Ray\Di\Di;
  */
 final class Inject implements Annotation
 {
+    /**
+     * Optional ?
+     *
+     * @var bool
+     */
     public $optional = false;
 }

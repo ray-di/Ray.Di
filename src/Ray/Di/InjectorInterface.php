@@ -23,10 +23,9 @@ interface InjectorInterface
      * optionally with overriding params.
      *
      * @param string         $class  The class to instantiate.
-     * @param AbstractModule $module Binding configuration module
      * @param array          $params An associative array of override parameters where
-     * the key the name of the constructor parameter and the value is the
-     * parameter value to use.
+     *                               the key the name of the constructor parameter and the value is the
+     *                               parameter value to use.
      *
      * @return object
      */
@@ -35,7 +34,7 @@ interface InjectorInterface
     /**
      * Return container
      *
-     * @return Ray\Di\Container;
+     * @return Container;
      */
     public function getContainer();
 }

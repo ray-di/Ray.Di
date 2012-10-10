@@ -18,8 +18,24 @@ namespace Ray\Di\Di;
  */
 final class Scope implements Annotation
 {
+    /**
+     * Singleton
+     *
+     * @var string
+     */
     const SINGLETON = 'singleton';
+
+    /**
+     * Prototype
+     *
+     * @var string
+     */
     const PROTOTYPE = 'prototype';
 
+    /**
+     * Object lifecycle
+     *
+     * @var string
+     */
     public $value = self::PROTOTYPE;
 }

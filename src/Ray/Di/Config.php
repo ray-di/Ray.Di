@@ -4,7 +4,7 @@
  *
  * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
- * @see https://github.com/auraphp/Aura.Di
+ * @see     https://github.com/auraphp/Aura.Di
  *
  */
 namespace Ray\Di;
@@ -70,7 +70,7 @@ class Config implements ConfigInterface
     protected $methodReflect;
 
     /**
-     * Class annotated definition. objcet life cycle, dependency injecttion.
+     * Class annotated definition. object life cycle, dependency injection.
      *
      * `$definition[$class]['Scope'] = $value`
      * `$definition[$class]['PostConstruct'] = $value`
@@ -84,14 +84,14 @@ class Config implements ConfigInterface
     /**
      * Annotation scanner
      *
-     * @var \Ray\Di\AnnotationInterface
+     * @var AnnotationInterface
      */
-    protected $Annotation;
+    protected $annotation;
 
     /**
+     * Constructor
      *
-     * Constructor.
-     *
+     * @param AnnotationInterface $annotation
      */
     public function __construct(AnnotationInterface $annotation)
     {
@@ -177,7 +177,7 @@ class Config implements ConfigInterface
      */
     public function getReflect($class)
     {
-        if (! isset($this->reflect[$class])) {
+        if (!isset($this->reflect[$class])) {
             $this->reflect[$class] = new ReflectionClass($class);
         }
 
@@ -202,34 +202,32 @@ class Config implements ConfigInterface
         }
 
         // fetch the values for parents so we can inherit them
-        $pclass = get_parent_class($class);
-        if ($pclass) {
+        $parentClass = get_parent_class($class);
+        if ($parentClass) {
             // parent class values
-            list($parent_params, $parent_setter, $parent_definition) = $this->fetch($pclass);
+            list($parent_params, $parent_setter, $parent_definition) = $this->fetch($parentClass);
         } else {
             // no more parents; get top-level values for all classes
             $parent_params = $this->params['*'];
             $parent_setter = $this->setter['*'];
-            // class annotated definiton
+            // class annotated definition
             $parent_definition = $this->annotation->getDefinition($class);
         }
         // stores the unified config and setter values
         $unified_params = [];
-        $unified_setter = [];
-        $unified_defenition = [];
 
         // reflect on the class
-        $rclass = $this->getReflect($class);
+        $classReflection = $this->getReflect($class);
 
         // does it have a constructor?
-        $rctor = $rclass->getConstructor();
-        if ($rctor) {
+        $constructorReflection = $classReflection->getConstructor();
+        if ($constructorReflection) {
             // reflect on what params to pass, in which order
-            $params = $rctor->getParameters();
+            $params = $constructorReflection->getParameters();
             foreach ($params as $param) {
                 $name = $param->name;
                 $explicit = $this->params->offsetExists($class)
-                && isset($this->params[$class][$name]);
+                    && isset($this->params[$class][$name]);
                 if ($explicit) {
                     // use the explicit value for this class
                     $unified_params[$name] = $this->params[$class][$name];
@@ -252,7 +250,7 @@ class Config implements ConfigInterface
             $unified_setter = $parent_setter;
         }
 
-        // merge the defenitions
+        // merge the definitions
         $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition($class);
         $unified_definition = new Definition(array_merge($parent_definition->getArrayCopy(), $definition->getArrayCopy()));
         $this->definition[$class] = $unified_definition;
@@ -269,7 +267,8 @@ class Config implements ConfigInterface
      *
      * Returns a \ReflectionClass for a named class.
      *
-     * @param string $class The class to reflect on.
+     * @param string $class  The class to reflect on
+     * @param string $method The method to reflect on
      *
      * @return \ReflectionMethod
      *
@@ -280,8 +279,9 @@ class Config implements ConfigInterface
             $class = get_class($class);
         }
         if (!isset($this->reflect[$class])
-                        || !is_array($this->reflect[$class])
-                        || ! isset($this->reflect[$class][$method])) {
+            || !is_array($this->reflect[$class])
+            || !isset($this->reflect[$class][$method])
+        ) {
             $methodRef = new ReflectionMethod($class, $method);
             $this->methodReflect[$class][$method] = $methodRef;
         }

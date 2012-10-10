@@ -12,4 +12,6 @@ namespace Ray\Di;
  *
  * @package Ray.Di
  */
-class Exception extends \Exception {}
+class Exception extends \Exception
+{
+}
