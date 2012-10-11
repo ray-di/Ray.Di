@@ -257,7 +257,6 @@ class Annotation implements AnnotationInterface
             $hintDef = $definition[$typehint];
         } else {
             //$annotations = $this->docParser->parse($doc, 'class ' . $typehint);
-            //var_dump('class ' . $typehint);
             $annotations = $this->reader->getClassAnnotations(new ReflectionClass($typehint));
             $hintDef = $this->getDefinitionFormat($annotations);
             $definition[$typehint] = $hintDef;
