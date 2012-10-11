@@ -22,6 +22,21 @@ use ReflectionMethod;
 class Config implements ConfigInterface
 {
     /**
+     * Parameter index number
+     */
+    const INDEX_PARAM = 0;
+
+    /**
+     * Setter index number
+     */
+    const INDEX_SETTER = 1;
+
+    /**
+     * Definition index number
+     */
+    const INDEX_DEFINITION = 2;
+
+    /**
      *
      * Constructor params from external configuration in the form
      * `$params[$class][$name] = $value`.
@@ -192,7 +207,7 @@ class Config implements ConfigInterface
      *
      * @return array An array with two elements; 0 is the constructor values
      * for the class, and 1 is the setter methods and values for the class.
-     *
+     * 2 is the class definition.
      */
     public function fetch($class)
     {
