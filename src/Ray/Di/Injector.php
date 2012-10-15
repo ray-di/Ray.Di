@@ -8,6 +8,7 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use LogicException;
 use Ray\Di\Exception\OptionalInjectionNotBound;
 use Ray\Di\Exception\Binding;
 use Ray\Aop\Bind;
@@ -88,6 +89,14 @@ class Injector implements InjectorInterface
      * @var LoggerInterface
      */
     private $log;
+
+    /**
+     * Current working class for exception message
+     *
+     * @var string
+     */
+    private $class;
+
 
     /**
      * Constructor
@@ -218,6 +227,7 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class, array $params = null)
     {
+        $this->class = $class;
         $class = $this->removeLeadingBackSlash($class);
 
         // is interface ?
@@ -588,7 +598,9 @@ class Injector implements InjectorInterface
             if ($param[Definition::OPTIONAL] === true) {
                 return self::OPTIONAL_BINDING_NOT_BOUND;
             }
-            throw new Exception\Binding("$typeHint:$annotate");
+            $name = $param[Definition::PARAM_NAME];
+            $e = new LogicException((string)$this->module);
+            throw new Exception\NotBound("typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$this->class}'", 0, $e);
         }
         if ($typeHintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
             return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typeHintBy[1]]];
