@@ -345,13 +345,13 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * Bind interceptor
      *
-     * @param Callable $classMatcher
-     * @param Callable $methodMatcher
-     * @param array    $interceptors
+     * @param Matcher $classMatcher
+     * @param Matcher $methodMatcher
+     * @param array   $interceptors
      *
      * @return void
      */
-    protected function bindInterceptor(Callable $classMatcher, Callable $methodMatcher, array $interceptors)
+    protected function bindInterceptor(Matcher $classMatcher, Matcher $methodMatcher, array $interceptors)
     {
         $id = uniqid();
         $this->pointcuts[$id] = new Pointcut($classMatcher, $methodMatcher, $interceptors);
