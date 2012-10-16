@@ -7,17 +7,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Di",
-                "reference": "8730acf19625fb74fca9f5ec8a0f80012c754442"
+                "reference": "ab76ec847533fc97d5239f4444b54c3dd4c9a67e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/auraphp/Aura.Di/zipball/8730acf19625fb74fca9f5ec8a0f80012c754442",
-                "reference": "8730acf19625fb74fca9f5ec8a0f80012c754442",
+                "url": "https://github.com/auraphp/Aura.Di/zipball/ab76ec847533fc97d5239f4444b54c3dd4c9a67e",
+                "reference": "ab76ec847533fc97d5239f4444b54c3dd4c9a67e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
+            "time": "1350360847",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -56,8 +57,7 @@
                 "di",
                 "di container",
                 "dependency injection container"
-            ],
-            "time": "1346013492"
+            ]
         },
         {
             "name": "doctrine/common",

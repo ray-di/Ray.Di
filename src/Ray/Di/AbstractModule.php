@@ -308,7 +308,7 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * To instance
      *
-     * @param object $instance
+     * @param mixed $instance
      *
      * @return AbstractModule
      */
