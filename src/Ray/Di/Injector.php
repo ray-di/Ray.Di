@@ -346,8 +346,7 @@ class Injector implements InjectorInterface
             return $this->getInstance($provider)->get();
         }
 
-        $inType = isset($bindings[$class]['*'][AbstractModule::IN])
-            ? $bindings[$class]['*'][AbstractModule::IN] : null;
+        $inType = isset($bindings[$class]['*'][AbstractModule::IN]) ? $bindings[$class]['*'][AbstractModule::IN] : null;
         $isSingleton = $inType === Scope::SINGLETON || $definition['Scope'] == Scope::SINGLETON;
         $interfaceClass = $class;
 
@@ -549,9 +548,7 @@ class Injector implements InjectorInterface
         list(, $getInstance) = $userData;
         $annotate = $param[Definition::PARAM_ANNOTATE];
         $typeHint = $param[Definition::PARAM_TYPEHINT];
-        $hasTypeHint = isset($this->module[$typeHint])
-            && isset($this->module[$typeHint][$annotate])
-            && ($this->module[$typeHint][$annotate] !== []);
+        $hasTypeHint = isset($this->module[$typeHint]) && isset($this->module[$typeHint][$annotate]) && ($this->module[$typeHint][$annotate] !== []);
         $binding = $hasTypeHint ? $this->module[$typeHint][$annotate] : false;
         if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
             // default binding by @ImplementedBy or @ProviderBy
@@ -588,8 +585,8 @@ class Injector implements InjectorInterface
      * @param string $typeHint
      * @param string $annotate
      *
-     * @return array
-     * @throws Exception\Binding
+     * @return array|bool
+     * @throws Exception\NotBound
      */
     private function jitBinding(array $param, $typeHint, $annotate)
     {

@@ -149,9 +149,9 @@ class Annotation implements AnnotationInterface
     /**
      * Return annotation name from annotation class name
      *
-     * @param string $annotation
+     * @param $annotation
      *
-     * @return string
+     * @return mixed
      */
     private function getAnnotationName($annotation)
     {
