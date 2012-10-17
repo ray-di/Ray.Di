@@ -117,6 +117,8 @@ class Injector implements InjectorInterface
         $this->bind = new Bind;
         $this->params = $this->config->getParams();
         $this->setter = $this->config->getSetter();
+        self::reflectModuleOnSelfInjector($module, $this);
+
     }
 
     /**
@@ -149,17 +151,7 @@ class Injector implements InjectorInterface
                 /* @var $module AbstractModule */
                 $module->install($extraModule);
             }
-            // dirty manual bind hack for injector
-            // - set new module if bound injector instance exists, bound injector instance enjoy new module.
-            $isSetInjectorInterfaceBind = isset($module->bindings['Ray\Di\InjectorInterface']) && isset($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]);
-            if ($isSetInjectorInterfaceBind) {
-                $isInjectorInterfaceBoundToInjectorInstance = ($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1] instanceof InjectorInterface);
-                if ($isInjectorInterfaceBoundToInjectorInstance) {
-                    // set new module to bound injector
-                    $module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]->setModule($module);
-                }
-            }
-            $injector->setModule($module);
+            self::reflectModuleOnSelfInjector($module, $injector);
         }
 
         return $injector;
@@ -604,6 +596,27 @@ class Injector implements InjectorInterface
         }
 
         return [AbstractModule::TO => [AbstractModule::TO_PROVIDER, $typeHintBy[1]]];
+    }
+
+    /**
+     * Reflect module setting on own injector bindings.
+     *
+     * @param AbstractModule $module
+     * @param Injector       $injector
+     */
+    private static function reflectModuleOnSelfInjector(AbstractModule $module, Injector $injector)
+    {
+        // dirty manual bind hack for injector
+        // - set new module if bound injector instance exists, bound injector instance enjoy new module.
+        $isSetInjectorInterfaceBind = isset($module->bindings['Ray\Di\InjectorInterface']) && isset($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]);
+        if ($isSetInjectorInterfaceBind) {
+            $isInjectorInterfaceBoundToInjectorInstance = ($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1] instanceof InjectorInterface);
+            if ($isInjectorInterfaceBoundToInjectorInstance) {
+                // set new module to bound injector
+                $module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]->setModule($module);
+            }
+        }
+        $injector->setModule($module);
     }
 
     /**
