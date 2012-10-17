@@ -182,7 +182,7 @@ class Injector implements InjectorInterface
      *
      * @return Injector
      */
-    public static function create(array $modules = [], $useApcCache = true)
+    public static function create(array $modules = [], $useApcCache = false)
     {
         $config = $useApcCache ? __NAMESPACE__ . '\ApcConfig' : __NAMESPACE__ . '\Config';
         $injector = new self(new Container(new Forge(new $config(new Annotation(new Definition, new AnnotationReader)))));
