@@ -174,14 +174,6 @@ abstract class AbstractModule implements ArrayAccess
     public $pointcuts = [];
 
     /**
-     * Has passed module data from other module ?
-     * install() needs not to duplicate interceptor binding
-     *
-     * @var bool
-     */
-    private $isInherited = false;
-
-    /**
      * Constructor
      *
      * @param AbstractModule $module
@@ -196,7 +188,6 @@ abstract class AbstractModule implements ArrayAccess
             $this->pointcuts = new ArrayObject;
             $this->container = new ArrayObject;
         } else {
-            $this->isInherited = true;
             $this->bindings = $module->bindings;
             $this->pointcuts = $module->pointcuts;
             $this->container = $module->container;
@@ -363,11 +354,7 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function install(AbstractModule $module)
     {
-        if ($this->isInherited === true) {
-            $this->pointcuts = $module->pointcuts;
-        } else {
-            $this->pointcuts = new ArrayObject(array_merge((array)$module->pointcuts, (array)$this->pointcuts));
-        }
+        $this->pointcuts = new ArrayObject(array_merge((array)$module->pointcuts, (array)$this->pointcuts));
         $this->bindings = new ArrayObject(array_merge_recursive((array)$this->bindings, (array)$module->bindings));
         $this->container = new ArrayObject(array_merge_recursive((array)$module->container, (array)$this->container));
     }
@@ -476,7 +463,13 @@ abstract class AbstractModule implements ArrayAccess
                             $instance = '(object) ' . get_class($instance);
                             break;
                         case "array":
-                            $instance = '(array) ' . json_encode(array_keys($instance));
+                            $instance = '(array) ' . json_encode($instance);
+                            break;
+                        case "string":
+                            $instance =  "'{$instance}'";
+                            break;
+                        case "boolean":
+                            $instance =  '(bool) ' . ($instance ? 'true' : 'false');
                             break;
                         default:
                             $instance = "($type) $instance";
@@ -485,7 +478,7 @@ abstract class AbstractModule implements ArrayAccess
                 }
                 if ($type === 'provider') {
                     $provider = $to['to'][1];
-                    $output .= "->toProvider(" . $provider . ")";
+                    $output .= "->toProvider('" . $provider . "')";
                 }
                 $output .= PHP_EOL;
             }

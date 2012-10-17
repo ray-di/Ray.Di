@@ -221,4 +221,12 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
         $definition2 = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $this->assertSame($definition1, $definition2);
     }
+
+    /**
+     * @expectedException Ray\Di\Exception\NotReadable
+     */
+    public function testNotReadable()
+    {
+        $this->annotationSacnner->getDefinition('NotReadable');
+    }
 }

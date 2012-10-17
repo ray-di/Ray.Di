@@ -404,4 +404,20 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->setModule(new Modules\AnnotateModule);
         $instance = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
     }
+
+    /**
+     * @expectedException \Ray\Di\Exception\Binding
+     */
+    public function testNotBound()
+    {
+        $instance = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
+    }
+
+    /**
+     * @expectedException \Ray\Di\Exception\Binding
+     */
+    public function testNotBoundClassWithoutAnnotationinInConstructor()
+    {
+        $instance = $this->injector->getInstance('Ray\Di\Definition\ConstructWoAnnotation');
+    }
 }
