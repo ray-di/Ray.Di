@@ -356,8 +356,9 @@ class Injector implements InjectorInterface
      */
     private function getBoundClass($bindings, $definition, $class)
     {
-        if (!isset($bindings[$class]['*']['to'][0])) {
-            throw new Binding($class);
+        if (!isset($bindings[$class]) || !isset($bindings[$class]['*']['to'][0])) {
+            $msg = "Interface \"$class\" is not bound.";
+            throw new Exception\NotBound($msg);
         }
         $toType = $bindings[$class]['*']['to'][0];
         $isToProviderBinding = ($toType === AbstractModule::TO_PROVIDER);
@@ -489,16 +490,12 @@ class Injector implements InjectorInterface
 
                 return $instance;
             }
-            switch ($bindingToType) {
-                case AbstractModule::TO_CLASS:
-                    $instance = $injector->getInstance($target);
-                    break;
-                case AbstractModule::TO_PROVIDER:
-                    $provider = $injector->getInstance($target);
-                    $instance = $provider->get();
-                    break;
-                default:
-                    throw new \LogicException("Binding type:{$bindingToType}");
+            if ($bindingToType === AbstractModule::TO_CLASS) {
+                $instance = $injector->getInstance($target);
+            } else {
+                //  AbstractModule::TO_PROVIDER
+                $provider = $injector->getInstance($target);
+                $instance = $provider->get();
             }
             if ($in === Scope::SINGLETON) {
                 $container->set($target, $instance);

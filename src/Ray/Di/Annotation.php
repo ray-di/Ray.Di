@@ -65,7 +65,6 @@ class Annotation implements AnnotationInterface
     {
         $this->newDefinition = $definition;
         $this->reader = $reader;
-        ;
     }
 
     /**

@@ -86,7 +86,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
      */
     public function testToString()
     {
-        $this->assertTrue(is_string((string) $this->module));
+        $this->assertTrue(is_string((string)$this->module));
     }
 
     /**
@@ -100,28 +100,37 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testToStringInstance()
     {
         $module = new \Ray\Di\Modules\InstanceModule;
-        $expected  = "bind('')->annotatedWith('id')->toInstance((string) PC6001)" . PHP_EOL;
-        $expected .= "bind('')->annotatedWith('user_name')->toInstance((string) koriym)" . PHP_EOL;
+        $expected = "bind('')->annotatedWith('id')->toInstance('PC6001')" . PHP_EOL;
+        $expected .= "bind('')->annotatedWith('user_name')->toInstance('koriym')" . PHP_EOL;
         $expected .= "bind('')->annotatedWith('user_age')->toInstance((integer) 21)" . PHP_EOL;
-        $expected .= "bind('')->annotatedWith('user_gender')->toInstance((string) male)" . PHP_EOL;
+        $expected .= "bind('')->annotatedWith('user_gender')->toInstance('male')" . PHP_EOL;
         $expected .= "bind('Ray\Di\Mock\DbInterface')->to('\Ray\Di\Mock\UserDb')" . PHP_EOL;
         $expected .= "bind('Ray\Di\Mock\UserInterface')->toInstance((object) Ray\Di\Mock\User)" . PHP_EOL;
-        $this->assertSame($expected, (string) $module);
+        $this->assertSame($expected, (string)$module);
     }
+
+    public function testToStringInstance2()
+    {
+        $module = new \Ray\Di\Modules\InstanceModule2;
+        $expected = "bind('')->annotatedWith('id')->toInstance((bool) true)" . PHP_EOL;
+        $expected .= "bind('Ray\Di\Mock\DbInterface')->toProvider('Ray\Di\Modules\DbProvider')" . PHP_EOL;
+        $this->assertSame($expected, (string)$module);
+    }
+
 
     public function testToStringInstanceArray()
     {
         $module = new \Ray\Di\Modules\ArrayInstance;
-        $expected = "bind('')->annotatedWith('adapters')->toInstance((array) [\"html\",\"http\"])" . PHP_EOL;
-        $this->assertSame($expected, (string) $module);
+        $expected = "bind('')->annotatedWith('adapters')->toInstance((array) {\"html\":{},\"http\":{}})" . PHP_EOL;
+        $this->assertSame($expected, (string)$module);
     }
 
     public function testToStringDecoratedModule()
     {
         $module = new \Ray\Di\Modules\BasicModule(new \Ray\Di\Modules\ArrayInstance);
-        $expected  = "bind('')->annotatedWith('adapters')->toInstance((array) [\"html\",\"http\"])" . PHP_EOL;
+        $expected = "bind('')->annotatedWith('adapters')->toInstance((array) {\"html\":{},\"http\":{}})" . PHP_EOL;
         $expected .= "bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')" . PHP_EOL;
-        $this->assertSame($expected, (string) $module);
+        $this->assertSame($expected, (string)$module);
     }
 
     /**
@@ -136,7 +145,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testInvokeReturnBinder()
     {
-        $module = new \Ray\Di\Modules\AopMatcherModule;;
+        $module = new \Ray\Di\Modules\AopMatcherModule;
+        ;
         $binder = $module('Ray\Di\Tests\RealBillingService', new Bind);
         $this->assertInstanceOf('\Ray\Aop\Bind', $binder);
     }
@@ -191,7 +201,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Modules\TimeModule;
         $this->module->install($module);
-        $this->assertSame(2, count((array) ($this->module->bindings)));
+        $this->assertSame(2, count((array)($this->module->bindings)));
     }
 
     public function test_mergeModuleContent()
@@ -199,7 +209,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $module = new Modules\TimeModule;
         $this->module->install($module);
         $bindigs = $this->module->bindings;
-        $bindingClass = array_keys((array) $bindigs);
+        $bindingClass = array_keys((array)$bindigs);
         $this->assertSame($bindingClass, ["Ray\\Di\\Mock\\DbInterface", '']);
     }
 
@@ -217,7 +227,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function test_installModuleTwice()
     {
         $module = new Modules\TwiceInstallModule;
-        $bindings = (array) $module->bindings;
+        $bindings = (array)$module->bindings;
         $result = $bindings['']['val_a']['to'];
         $this->assertSame('instance', $result[0]);
         $this->assertSame(1, $result[1]);
