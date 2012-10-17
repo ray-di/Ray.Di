@@ -1,5 +1,5 @@
 {
-    "hash": "68b98e357c1caa09905265da91caff65",
+    "hash": "17e1cfedf1004a7e782d1613b3a10ae1",
     "packages": [
         {
             "name": "aura/di",
@@ -129,23 +129,23 @@
         },
         {
             "name": "ray/aop",
-            "version": "1.0.0-beta1",
+            "version": "1.0.0-beta2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "1.0.0-beta1"
+                "reference": "1.0.0-beta2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/koriym/Ray.Aop/zipball/1.0.0-beta1",
-                "reference": "1.0.0-beta1",
+                "url": "https://github.com/koriym/Ray.Aop/zipball/1.0.0-beta2",
+                "reference": "1.0.0-beta2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
                 "doctrine/common": "2.3.*-dev"
             },
-            "time": "2012-08-20 03:58:46",
+            "time": "2012-10-17 00:13:53",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
