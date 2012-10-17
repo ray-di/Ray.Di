@@ -99,6 +99,44 @@ class Injector implements InjectorInterface
 
 
     /**
+     * Set binding module
+     *
+     * @param AbstractModule $module
+     *
+     * @return void
+     * @throws \Aura\Di\Exception\ContainerLocked
+     */
+    public function setModule(AbstractModule $module)
+    {
+        if ($this->container->isLocked()) {
+            throw new ContainerLocked;
+        }
+        $this->module = $module;
+    }
+
+    /**
+     * Set Logger
+     *
+     * @param LoggerInterface $logger
+     *
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->log = $logger;
+    }
+
+    /**
+     * Return container
+     *
+     * @return \Aura\Di\Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
      * Constructor
      *
      * @param ContainerInterface $container The class to instantiate.
@@ -118,19 +156,22 @@ class Injector implements InjectorInterface
         $this->params = $this->config->getParams();
         $this->setter = $this->config->getSetter();
         self::reflectModuleOnSelfInjector($module, $this);
-
     }
 
     /**
-     * Set Logger
-     *
-     * @param LoggerInterface $logger
-     *
-     * @return void
+     * Destructor
      */
-    public function setLogger(LoggerInterface $logger)
+    public function __destruct()
     {
-        $this->log = $logger;
+        $this->notifyPreShutdown();
+    }
+
+    /**
+     * Clone
+     */
+    public function __clone()
+    {
+        $this->container = clone $this->container;
     }
 
     /**
@@ -155,48 +196,6 @@ class Injector implements InjectorInterface
         }
 
         return $injector;
-    }
-
-    /**
-     * Set binding module
-     *
-     * @param AbstractModule $module
-     *
-     * @return void
-     * @throws \Aura\Di\Exception\ContainerLocked
-     */
-    public function setModule(AbstractModule $module)
-    {
-        if ($this->container->isLocked()) {
-            throw new ContainerLocked;
-        }
-        $this->module = $module;
-    }
-
-    /**
-     * Return container
-     *
-     * @return \Aura\Di\Container
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        $this->notifyPreShutdown();
-    }
-
-    /**
-     * Clone
-     */
-    public function __clone()
-    {
-        $this->container = clone $this->container;
     }
 
     /**
@@ -264,6 +263,7 @@ class Injector implements InjectorInterface
             [$this->config->getReflect($class), 'newInstance'],
             $params
         );
+
         // call setters after creation
         foreach ($setter as $method => $value) {
             // does the specified setter method exist?
@@ -296,6 +296,35 @@ class Injector implements InjectorInterface
         }
 
         return $object;
+    }
+
+    /**
+     * Lock
+     *
+     * Lock the Container so that configuration cannot be accessed externally,
+     * and no new service definitions can be added.
+     *
+     * @return void
+     */
+    public function lock()
+    {
+        $this->container->lock();
+    }
+
+    /**
+     * Lazy new
+     *
+     * Returns a Lazy that creates a new instance. This allows you to replace
+     * the following idiom:
+     *
+     * @param string $class  The type of class of instantiate.
+     * @param array  $params Override parameters for the instance.
+     *
+     * @return Lazy A lazy-load object that creates the new instance.
+     */
+    public function lazyNew($class, array $params = [])
+    {
+        return $this->container->lazyNew($class, $params);
     }
 
     /**
@@ -395,10 +424,10 @@ class Injector implements InjectorInterface
                     $params[$index] = $this->getInstance($classRef->getName());
                     continue;
                 }
-                throw new Exception\NotBound("Interface \"{$classRef->name}\" is not bound. Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.");
+                $msg = "Interface \"{$classRef->name}\" is not bound.";
+                $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
+                throw new Exception\NotBound($msg);
             }
-
-            // has default value ?
         }
     }
 
@@ -608,44 +637,17 @@ class Injector implements InjectorInterface
     {
         // dirty manual bind hack for injector
         // - set new module if bound injector instance exists, bound injector instance enjoy new module.
-        $isSetInjectorInterfaceBind = isset($module->bindings['Ray\Di\InjectorInterface']) && isset($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]);
+        $injectorIf = 'Ray\Di\InjectorInterface';
+        $isSetInjectorInterfaceBind = isset($module->bindings[$injectorIf]) && isset($module->bindings[$injectorIf]['*']['to'][1]);
         if ($isSetInjectorInterfaceBind) {
-            $isInjectorInterfaceBoundToInjectorInstance = ($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1] instanceof InjectorInterface);
+            $isInjectorInterfaceBoundToInjectorInstance = ($module->bindings[$injectorIf]['*']['to'][1] instanceof InjectorInterface);
             if ($isInjectorInterfaceBoundToInjectorInstance) {
-                // set new module to bound injector
-                $module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]->setModule($module);
+                $boundInjector = $module->bindings[$injectorIf]['*']['to'][1];
+                /** @var $boundInjector Injector */
+                $boundInjector->setModule($module);
             }
         }
         $injector->setModule($module);
-    }
-
-    /**
-     * Lock
-     *
-     * Lock the Container so that configuration cannot be accessed externally,
-     * and no new service definitions can be added.
-     *
-     * @return void
-     */
-    public function lock()
-    {
-        $this->container->lock();
-    }
-
-    /**
-     * Lazy new
-     *
-     * Returns a Lazy that creates a new instance. This allows you to replace
-     * the following idiom:
-     *
-     * @param string $class  The type of class of instantiate.
-     * @param array  $params Override parameters for the instance.
-     *
-     * @return Lazy A lazy-load object that creates the new instance.
-     */
-    public function lazyNew($class, array $params = [])
-    {
-        return $this->container->lazyNew($class, $params);
     }
 
     /**
