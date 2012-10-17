@@ -263,6 +263,7 @@ class Injector implements InjectorInterface
             [$this->config->getReflect($class), 'newInstance'],
             $params
         );
+
         // call setters after creation
         foreach ($setter as $method => $value) {
             // does the specified setter method exist?
@@ -423,7 +424,9 @@ class Injector implements InjectorInterface
                     $params[$index] = $this->getInstance($classRef->getName());
                     continue;
                 }
-                throw new Exception\NotBound("Interface \"{$classRef->name}\" is not bound. Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.");
+                $msg = "Interface \"{$classRef->name}\" is not bound.";
+                $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
+                throw new Exception\NotBound($msg);
             }
         }
     }
@@ -634,12 +637,14 @@ class Injector implements InjectorInterface
     {
         // dirty manual bind hack for injector
         // - set new module if bound injector instance exists, bound injector instance enjoy new module.
-        $isSetInjectorInterfaceBind = isset($module->bindings['Ray\Di\InjectorInterface']) && isset($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]);
+        $injectorIf = 'Ray\Di\InjectorInterface';
+        $isSetInjectorInterfaceBind = isset($module->bindings[$injectorIf]) && isset($module->bindings[$injectorIf]['*']['to'][1]);
         if ($isSetInjectorInterfaceBind) {
-            $isInjectorInterfaceBoundToInjectorInstance = ($module->bindings['Ray\Di\InjectorInterface']['*']['to'][1] instanceof InjectorInterface);
+            $isInjectorInterfaceBoundToInjectorInstance = ($module->bindings[$injectorIf]['*']['to'][1] instanceof InjectorInterface);
             if ($isInjectorInterfaceBoundToInjectorInstance) {
-                // set new module to bound injector
-                $module->bindings['Ray\Di\InjectorInterface']['*']['to'][1]->setModule($module);
+                $boundInjector = $module->bindings[$injectorIf]['*']['to'][1];
+                /** @var $boundInjector Injector */
+                $boundInjector->setModule($module);
             }
         }
         $injector->setModule($module);
