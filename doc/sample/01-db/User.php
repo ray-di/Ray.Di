@@ -3,6 +3,7 @@ namespace Ray\Di\Sample;
 
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use Ray\Di\Di\PostConstruct;
 
 use Ray\Di\Sample\Transactional;
 use Ray\Di\Sample\Template;
