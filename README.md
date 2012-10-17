@@ -14,7 +14,7 @@ _Not all features of Guice have been implemented._
 
 [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=master)](http://travis-ci.org/koriym/Ray.Di)
 
-Requiment
+Requirement
 ---------
 
 * PHP 5.4+
