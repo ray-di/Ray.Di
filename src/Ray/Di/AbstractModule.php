@@ -190,8 +190,7 @@ abstract class AbstractModule implements ArrayAccess
     public function __construct(
         AbstractModule $module = null,
         Matcher $matcher = null
-    )
-    {
+    ) {
         if (is_null($module)) {
             $this->bindings = new ArrayObject;
             $this->pointcuts = new ArrayObject;
