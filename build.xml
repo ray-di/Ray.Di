@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="Ray.Di" default="build">
+    <target name="composer" description="Installing dependencies">
+        <exec executable="composer.phar" failonerror="true">
+            <arg value="install" />
+        </exec>
+    </target>
     <target name="build"
-            depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,phpdoc,apigen"/>
+            depends="composer,prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,phpdoc,apigen"/>
 
     <target name="build-parallel"
-            depends="prepare,lint,tools-parallel,phpunit,phpcb"/>
+            depends="composer,prepare,lint,tools-parallel,phpunit,phpcb"/>
 
     <target name="tools-parallel" description="Run tools in parallel">
         <parallel threadCount="2">
