@@ -82,7 +82,7 @@
         <exec executable="phpmd">
             <arg path="${basedir}/src" />
             <arg value="text" />
-            <arg value="${basedir}/phpmd.xml" />
+            <arg value="${basedir}/cs/phpmd/phpmd.xml" />
         </exec>
     </target>
 
@@ -92,14 +92,15 @@
             <arg value="xml" />
             <arg value="${basedir}/phpmd.xml" />
             <arg value="--reportfile" />
-            <arg value="${basedir}/build/logs/pmd.xml" />
+            <arg value="${basedir}/cs/phpmd/phpmd.xml" />
         </exec>
     </target>
 
     <target name="phpcs"
             description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
         <exec executable="phpcs">
-            <arg value="--standard=${basedir}/build/phpcs.xml" />
+            <arg value="--standard=${basedir}/cs/ruleset.xml" />
+            <arg value="--warning-severity=0" />
             <arg path="${basedir}/src" />
         </exec>
     </target>
