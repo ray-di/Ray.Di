@@ -8,6 +8,7 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Ray\Di\Exception;
 use LogicException;
 use Ray\Di\Exception\OptionalInjectionNotBound;
 use Ray\Di\Exception\Binding;
@@ -421,11 +422,15 @@ class Injector implements InjectorInterface
                 }
                 // is typehint class ?
                 $classRef = $parameter->getClass();
-                if (!$classRef->isInterface() && $classRef) {
+                if (is_null($classRef)) {
+                    $msg = "Invalid interface is not found. (array ?)";
+                } elseif (!$classRef->isInterface() && $classRef) {
                     $params[$index] = $this->getInstance($classRef->getName());
                     continue;
+                } else {
+                    $msg = "Interface [{$classRef->name}] is not bound.";
                 }
-                $msg = "Interface \"{$classRef->name}\" is not bound.";
+
                 $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
                 throw new Exception\NotBound($msg);
             }

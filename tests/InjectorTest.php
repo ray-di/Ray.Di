@@ -420,4 +420,14 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $instance = $this->injector->getInstance('Ray\Di\Definition\ConstructWoAnnotation');
     }
+
+    /**
+     * @expectedException \Ray\Di\Exception\NotBound
+     */
+    public function testArrayTypeHint()
+    {
+        $this->injector->setModule(new Modules\BasicModule);
+        $instance = $this->injector->getInstance('Ray\Di\Definition\ArrayType');
+    }
+
 }

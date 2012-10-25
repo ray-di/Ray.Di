@@ -18,6 +18,8 @@ require_once __DIR__ . '/Definition/MockDefinitionMultiplePostConstructClass.php
 require_once __DIR__ . '/Definition/ClassHint.php';
 require_once __DIR__ . '/Definition/AbstractBasic.php';
 require_once __DIR__ . '/Definition/OptionalInject.php';
+require_once __DIR__ . '/Definition/ArrayType.php';
+
 // Modules
 require_once __DIR__ . '/Modules/AnnotateModule.php';
 require_once __DIR__ . '/Modules/InvalidAnnotateModule.php';
@@ -80,6 +82,7 @@ require_once __DIR__ . '/Mock/Number.php';
 require_once __DIR__ . '/Mock/SingletonNumber.php';
 require_once __DIR__ . '/Mock/SingletonDbInterface.php';
 require_once __DIR__ . '/Mock/SingletonRndDb.php';
+
 // Ray.Aop
 require_once __DIR__ . '/Aop/BillingService.php';
 require_once __DIR__ . '/Aop/RealBillingService.php';
