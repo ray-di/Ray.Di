@@ -55,6 +55,7 @@ require_once __DIR__ . '/Modules/PassDependencyModule.php';
 require_once __DIR__ . '/Modules/InstallPointcutsModule.php';
 require_once __DIR__ . '/Modules/LeadingBackSlashModule.php';
 require_once __DIR__ . '/Modules/SingletonAnnotationModule.php';
+require_once __DIR__ . '/Modules/DoubleBindModule.php';
 
 // Mock class without annotation
 require_once __DIR__ . '/MockParentClass.php';
