@@ -159,6 +159,7 @@ abstract class AbstractModule implements ArrayAccess
      * @var bool
      */
     protected $activated = false;
+
     /**
      * Constructor
      *
@@ -177,11 +178,7 @@ abstract class AbstractModule implements ArrayAccess
             $this->bindings = $module->bindings;
             $this->pointcuts = $module->pointcuts;
         }
-        if (is_null($matcher)) {
-            $reader = new Reader;
-            $matcher = new Matcher($reader);
-        }
-        $this->matcher = $matcher;
+        $this->matcher = $matcher ?: new Matcher(new Reader);
     }
 
     /**
