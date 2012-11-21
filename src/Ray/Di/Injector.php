@@ -107,12 +107,20 @@ class Injector implements InjectorInterface
      * @return void
      * @throws \Aura\Di\Exception\ContainerLocked
      */
-    public function setModule(AbstractModule $module)
+    public function setModule(AbstractModule $module, $activate = true)
     {
         if ($this->container->isLocked()) {
             throw new ContainerLocked;
         }
+        if ($activate === true) {
+            $module->activate($this);
+        }
         $this->module = $module;
+    }
+
+    public function getModule()
+    {
+        return $this->module;
     }
 
     /**
@@ -152,10 +160,11 @@ class Injector implements InjectorInterface
         if ($module == null) {
             $module = new EmptyModule;
         }
-        $this->module = $module;
         $this->bind = new Bind;
         $this->params = $this->config->getParams();
         $this->setter = $this->config->getSetter();
+        $module->activate($this);
+        $this->module = $module;
         self::reflectModuleOnSelfInjector($module, $this);
     }
 
@@ -646,7 +655,7 @@ class Injector implements InjectorInterface
             if ($isInjectorInterfaceBoundToInjectorInstance) {
                 $boundInjector = $module->bindings[$injectorIf]['*']['to'][1];
                 /** @var $boundInjector Injector */
-                $boundInjector->setModule($module);
+                $boundInjector->setModule($module, false);
             }
         }
         $injector->setModule($module);

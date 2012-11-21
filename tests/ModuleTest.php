@@ -25,6 +25,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->module = new Modules\BasicModule();
+        $this->module->activate();
     }
 
     /**
@@ -46,6 +47,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testConfigureToProvider()
     {
         $module = new Modules\ProviderModule;
+        $module->activate();
         $expected = [AbstractModule::TO_PROVIDER, 'Ray\Di\Modules\DbProvider'];
         $actual = $module['Ray\Di\Mock\DbInterface'][Definition::NAME_UNSPECIFIED][AbstractModule::TO];
         $this->assertSame($expected, $actual);
@@ -54,6 +56,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testConfigureToInstance()
     {
         $module = new Modules\InstanceModule;
+        $module->activate();
         $expected = [AbstractModule::TO_INSTANCE, new Mock\UserDb];
         $actual = $module['Ray\Di\Mock\DbInterface'][Definition::NAME_UNSPECIFIED][AbstractModule::TO];
         $this->assertSame($expected[0], AbstractModule::TO_INSTANCE);
@@ -94,12 +97,13 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
      */
     public function testToProviderInvalid()
     {
-        new Modules\InvalidProviderModule;
+        (new Modules\InvalidProviderModule)->activate();
     }
 
     public function testToStringInstance()
     {
         $module = new \Ray\Di\Modules\InstanceModule;
+        $module->activate();
         $expected = "bind('')->annotatedWith('id')->toInstance('PC6001')" . PHP_EOL;
         $expected .= "bind('')->annotatedWith('user_name')->toInstance('koriym')" . PHP_EOL;
         $expected .= "bind('')->annotatedWith('user_age')->toInstance((integer) 21)" . PHP_EOL;
@@ -112,6 +116,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testToStringInstance2()
     {
         $module = new \Ray\Di\Modules\InstanceModule2;
+        $module->activate();
         $expected = "bind('')->annotatedWith('id')->toInstance((bool) true)" . PHP_EOL;
         $expected .= "bind('Ray\Di\Mock\DbInterface')->toProvider('Ray\Di\Modules\DbProvider')" . PHP_EOL;
         $this->assertSame($expected, (string)$module);
@@ -121,6 +126,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testToStringInstanceArray()
     {
         $module = new \Ray\Di\Modules\ArrayInstance;
+        $module->activate();
         $expected = "bind('')->annotatedWith('adapters')->toInstance((array) {\"html\":{},\"http\":{}})" . PHP_EOL;
         $this->assertSame($expected, (string)$module);
     }
@@ -128,6 +134,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testToStringDecoratedModule()
     {
         $module = new \Ray\Di\Modules\BasicModule(new \Ray\Di\Modules\ArrayInstance);
+        $module->activate();
         $expected = "bind('')->annotatedWith('adapters')->toInstance((array) {\"html\":{},\"http\":{}})" . PHP_EOL;
         $expected .= "bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')" . PHP_EOL;
         $this->assertSame($expected, (string)$module);
@@ -139,6 +146,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testInvokeReturnFalse()
     {
         $module = $this->module;
+        $module->activate();
         $binder = $module('Ray\Di\Tests\RealBillingService', new Bind);
         $this->assertSame(false, $binder->hasBinding());
     }
@@ -154,6 +162,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testAopAnyMatcherModule()
     {
         $module = new \Ray\Di\Modules\AopAnyMatcherModule;
+        $module->activate();
         $bind = $module('Ray\Di\Tests\RealBillingService', new Bind);
         $this->assertInstanceOf('Ray\Aop\Bind', $bind);
         $interceptors = $bind('chargeOrderWithNoTax');
@@ -163,6 +172,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testAopAnnotateMatcherModule()
     {
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
+        $module->activate();
         $bind = $module('Ray\Di\Tests\RealBillingService', new Bind);
         $result = $bind('chargeOrderWithNoTax');
         $this->assertSame(false, $result);
@@ -171,6 +181,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testAopAnnotateMatcherModuleGetCorrectIntercecptor()
     {
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
+        $module->activate();
         $bind = $module('Ray\Di\Tests\RealBillingService', new Bind);
         $result = $bind('chargeOrder');
         $this->assertInstanceOf('\Ray\Di\Tests\TaxCharger', $result[0]);
@@ -179,6 +190,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testInstall()
     {
         $module = new \Ray\Di\Modules\InstallModule;
+        $module->activate();
         $this->assertTrue(isset($module->bindings['Ray\\Di\\Mock\\DbInterface']));
         $this->assertTrue(isset($module->bindings['Ray\\Di\\Mock\\LogInterface']));
     }
@@ -186,12 +198,14 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testInstallPointcuts()
     {
         $module = new \Ray\Di\Modules\InstallPointcutsModule;
+        $module->activate();
         $this->assertSame(2, count($module->pointcuts));
     }
 
     public function testSerializeModule()
     {
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
+        $module->activate();
         $wakedModule = unserialize(serialize($module));
         $this->assertObjectHasAttribute('pointcuts', $wakedModule);
         $this->assertTrue($wakedModule->pointcuts instanceof \ArrayObject);
@@ -216,6 +230,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function test_requestInjection()
     {
         $module = new Modules\RequestInjectionModule;
+        $module->activate();
         $this->assertInstanceOf('Ray\Di\Definition\Basic', $module->object);
         $this->assertInstanceOf('Ray\Di\Mock\UserDb', $module->object->db);
     }
@@ -227,6 +242,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function test_installModuleTwice()
     {
         $module = new Modules\TwiceInstallModule;
+        $module->activate();
         $bindings = (array)$module->bindings;
         $result = $bindings['']['val_a']['to'];
         $this->assertSame('instance', $result[0]);

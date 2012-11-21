@@ -7,6 +7,7 @@
  */
 namespace Ray\Di;
 
+use Aura\Di\ContainerInterface;
 use Ray\Aop\Bind;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
@@ -123,9 +124,9 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * Object carry container
      *
-     * @var ArrayObject
+     * @var ContainerInterface
      */
-    protected $container;
+    public $container;
 
     /**
      * Current Binding
@@ -174,6 +175,12 @@ abstract class AbstractModule implements ArrayAccess
     public $pointcuts = [];
 
     /**
+     * @var InjectorInterface
+     */
+    protected $dependencyInjector;
+
+    protected $activated = false;
+    /**
      * Constructor
      *
      * @param AbstractModule $module
@@ -181,13 +188,14 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function __construct(
         AbstractModule $module = null,
-        Matcher $matcher = null
+        Matcher $matcher = null,
+        ContainerInterface $container = null
     ) {
         if (is_null($module)) {
             $this->bindings = new ArrayObject;
             $this->pointcuts = new ArrayObject;
-            $this->container = new ArrayObject;
         } else {
+            $module->activate();
             $this->bindings = $module->bindings;
             $this->pointcuts = $module->pointcuts;
             $this->container = $module->container;
@@ -199,7 +207,20 @@ abstract class AbstractModule implements ArrayAccess
             }
             $matcher = new Matcher($reader);
         }
+        if (is_null($container)) {
+            $this->container = new Container(new Forge(new Config(new Annotation(new Definition, new Reader))));
+        }
         $this->matcher = $matcher;
+//        $this->configure();
+    }
+
+    public function activate(InjectorInterface $injector = null)
+    {
+        if ($this->activated === true) {
+            return;
+        }
+        $this->activated = true;
+        $this->dependencyInjector = $injector ?: Injector::create();
         $this->configure();
     }
 
@@ -354,9 +375,11 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function install(AbstractModule $module)
     {
+        $module->container = $this->container;
+        $module->activate($this->dependencyInjector);
         $this->pointcuts = new ArrayObject(array_merge((array)$module->pointcuts, (array)$this->pointcuts));
         $this->bindings = new ArrayObject(array_merge_recursive((array)$this->bindings, (array)$module->bindings));
-        $this->container = new ArrayObject(array_merge_recursive((array)$module->container, (array)$this->container));
+        $this->container = $module->container;
     }
 
     /**
@@ -370,10 +393,13 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function requestInjection($class)
     {
-        $injector = Injector::create();
-        $injector->setModule($this);
-
-        return $injector->getInstance($class);
+        $module = $this->dependencyInjector->getModule();
+        $this->dependencyInjector->setModule($this, false);
+        $instance = $this->dependencyInjector->getInstance($class);
+        if ($module instanceof AbstractModule) {
+            $this->dependencyInjector->setModule($module, false);
+        }
+        return $instance;
     }
 
     /**
