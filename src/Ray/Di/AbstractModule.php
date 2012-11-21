@@ -7,7 +7,6 @@
  */
 namespace Ray\Di;
 
-use Aura\Di\ContainerInterface;
 use Ray\Aop\Bind;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
@@ -122,13 +121,6 @@ abstract class AbstractModule implements ArrayAccess
      */
 
     /**
-     * Object carry container
-     *
-     * @var ContainerInterface
-     */
-    public $container;
-
-    /**
      * Current Binding
      *
      * @var string
@@ -188,8 +180,7 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function __construct(
         AbstractModule $module = null,
-        Matcher $matcher = null,
-        ContainerInterface $container = null
+        Matcher $matcher = null
     ) {
         if (is_null($module)) {
             $this->bindings = new ArrayObject;
@@ -198,7 +189,6 @@ abstract class AbstractModule implements ArrayAccess
             $module->activate();
             $this->bindings = $module->bindings;
             $this->pointcuts = $module->pointcuts;
-            $this->container = $module->container;
         }
         if (is_null($matcher)) {
             $reader = new Reader;
@@ -207,13 +197,14 @@ abstract class AbstractModule implements ArrayAccess
             }
             $matcher = new Matcher($reader);
         }
-        if (is_null($container)) {
-            $this->container = new Container(new Forge(new Config(new Annotation(new Definition, new Reader))));
-        }
         $this->matcher = $matcher;
-//        $this->configure();
     }
 
+    /**
+     * Activation
+     *
+     * @param InjectorInterface $injector
+     */
     public function activate(InjectorInterface $injector = null)
     {
         if ($this->activated === true) {
@@ -375,11 +366,9 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function install(AbstractModule $module)
     {
-        $module->container = $this->container;
         $module->activate($this->dependencyInjector);
         $this->pointcuts = new ArrayObject(array_merge((array)$module->pointcuts, (array)$this->pointcuts));
         $this->bindings = new ArrayObject(array_merge_recursive((array)$this->bindings, (array)$module->bindings));
-        $this->container = $module->container;
     }
 
     /**
