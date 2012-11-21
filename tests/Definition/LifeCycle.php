@@ -12,8 +12,6 @@ use Ray\Di\Di\PostConstruct;
 class LifeCycle
 {
     /**
-     * After constrct.
-     *
      * @PostConstruct
      */
     public function onInit()
@@ -28,6 +26,6 @@ class LifeCycle
      */
     public function onEnd()
     {
-        $GLOBALS['pre_destoroy'] = '@PreDestroy';
+        $GLOBALS['pre_destroy'] = '@PreDestroy';
     }
 }
