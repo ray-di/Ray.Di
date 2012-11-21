@@ -178,7 +178,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(false, $result);
     }
 
-    public function testAopAnnotateMatcherModuleGetCorrectIntercecptor()
+    public function testAopAnnotateMatcherModuleGetCorrectInterceptor()
     {
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
         $module->activate();
@@ -236,7 +236,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * acount($result) is 4, but latter 2 is ignored.
+     * count($result) is 4, but latter 2 is ignored.
      * only first bind is valid.
      */
     public function test_installModuleTwice()
