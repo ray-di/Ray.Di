@@ -192,7 +192,7 @@ abstract class AbstractModule implements ArrayAccess
             return;
         }
         $this->activated = true;
-        $this->dependencyInjector = $injector ?: Injector::create();
+        $this->dependencyInjector = $injector ?: Injector::create([$this]);
         $this->configure();
     }
 
