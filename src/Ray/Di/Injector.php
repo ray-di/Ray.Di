@@ -118,6 +118,11 @@ class Injector implements InjectorInterface
         $this->module = $module;
     }
 
+    /**
+     * Return module
+     *
+     * @return AbstractModule
+     */
     public function getModule()
     {
         return $this->module;
@@ -154,17 +159,13 @@ class Injector implements InjectorInterface
     public function __construct(ContainerInterface $container, AbstractModule $module = null)
     {
         $this->container = $container;
-        $this->config = $container->getForge()->getConfig();
-        /** @var $this->config Config  */
-        $this->preDestroyObjects = new SplObjectStorage;
-        if ($module == null) {
-            $module = new EmptyModule;
-        }
+        $this->module = $module ?: new EmptyModule;
         $this->bind = new Bind;
+        $this->preDestroyObjects = new SplObjectStorage;
+        $this->config = $container->getForge()->getConfig();
         $this->params = $this->config->getParams();
         $this->setter = $this->config->getSetter();
-        $module->activate($this);
-        $this->module = $module;
+        $this->module->activate($this);
     }
 
     /**
@@ -226,34 +227,11 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class, array $params = null)
     {
-        $this->class = $class;
-        $class = $this->removeLeadingBackSlash($class);
-
-        // is interface ?
-        $bindings = $this->module->bindings;
-        try {
-            $isInterface = (new ReflectionClass($class))->isInterface();
-        } catch (ReflectionException $e) {
-            throw new Exception\NotReadable($class);
+        $bound = $this->getBound($class);
+        if (is_object($bound)) {
+            return $bound;
         }
-        list($config, $setter, $definition) = $this->config->fetch($class);
-        $interfaceClass = $isSingleton = false;
-        if ($isInterface) {
-            $bound = $this->getBoundClass($bindings, $definition, $class);
-            if (is_object($bound)) {
-
-                return $bound;
-            }
-            list($class, $isSingleton, $interfaceClass) = $bound;
-            list($config, $setter, $definition) = $this->config->fetch($class);
-        }
-
-        // annotation dependency
-        /* @var $definition \Ray\Di\Definition */
-        $hasDirectBinding = isset($this->module->bindings[$class]);
-        if ($definition->hasDefinition() || $hasDirectBinding) {
-            list($config, $setter) = $this->bindModule($setter, $definition);
-        }
+        list($class, $isSingleton, $interfaceClass, $config, $setter, $definition) = $bound;
 
         $params = is_null($params) ? $config : array_merge($config, (array)$params);
         // lazy-load params as needed
@@ -262,8 +240,6 @@ class Injector implements InjectorInterface
                 $params[$key] = $params[$key]();
             }
         }
-
-        // check provision
         $this->checkNotBound($class, $params, $this->module);
 
         // create the new instance
@@ -304,6 +280,41 @@ class Injector implements InjectorInterface
         }
 
         return $object;
+    }
+
+    /**
+     * Return bound object or inject info
+     *
+     * @param $class
+     *
+     * @return array|object
+     * @throws Exception\NotReadable
+     */
+    private function getBound($class)
+    {
+        $class = $this->removeLeadingBackSlash($class);
+        // is interface ?
+        try {
+            $isInterface = (new ReflectionClass($class))->isInterface();
+        } catch (ReflectionException $e) {
+            throw new Exception\NotReadable($class);
+        }
+        list($config, $setter, $definition) = $this->config->fetch($class);
+        $interfaceClass = $isSingleton = false;
+        if ($isInterface) {
+            $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
+            if (is_object($bound)) {
+                return $bound;
+            }
+            list($class, $isSingleton, $interfaceClass) = $bound;
+            list($config, $setter, $definition) = $this->config->fetch($class);
+        }
+        $hasDirectBinding = isset($this->module->bindings[$class]);
+        if ($definition->hasDefinition() || $hasDirectBinding) {
+            list($config, $setter) = $this->bindModule($setter, $definition);
+        }
+
+        return [$class, $isSingleton, $interfaceClass, $config, $setter, $definition];
     }
 
     /**
