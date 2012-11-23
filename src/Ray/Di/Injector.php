@@ -12,6 +12,7 @@ use Ray\Di\Exception;
 use LogicException;
 use Ray\Di\Exception\OptionalInjectionNotBound;
 use Ray\Di\Exception\Binding;
+use Ray\Aop\BindInterface;
 use Ray\Aop\Bind;
 use Ray\Aop\Weaver;
 use Aura\Di\Lazy;
@@ -156,11 +157,14 @@ class Injector implements InjectorInterface
      * @param ContainerInterface $container The class to instantiate.
      * @param AbstractModule     $module    Binding configuration module
      */
-    public function __construct(ContainerInterface $container, AbstractModule $module = null)
+    public function __construct(
+        ContainerInterface $container,
+        AbstractModule $module = null,
+        BindInterface $bind = null)
     {
         $this->container = $container;
         $this->module = $module ?: new EmptyModule;
-        $this->bind = new Bind;
+        $this->bind = $bind ?: new Bind;
         $this->preDestroyObjects = new SplObjectStorage;
         $this->config = $container->getForge()->getConfig();
         $this->params = $this->config->getParams();
