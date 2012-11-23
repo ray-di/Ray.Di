@@ -661,21 +661,6 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * Set params or setter
-     *
-     * @param string $key
-     * @param mixed  $val
-     *
-     * @return $this
-     */
-    public function __set($key, $val)
-    {
-        $this->$key = $val;
-
-        return $this;
-    }
-
-    /**
      * Return module information.
      *
      * @return string
