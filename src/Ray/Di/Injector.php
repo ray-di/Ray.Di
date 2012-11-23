@@ -156,6 +156,7 @@ class Injector implements InjectorInterface
      *
      * @param ContainerInterface $container The class to instantiate.
      * @param AbstractModule     $module    Binding configuration module
+     * @param BindInterface      $bind      Aspect binder
      */
     public function __construct(
         ContainerInterface $container,
