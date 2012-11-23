@@ -45,26 +45,6 @@ class Injector implements InjectorInterface
     protected $config;
 
     /**
-     * Params
-     *
-     * A convenient reference to the Config::$params object, which itself
-     * is contained by the Forge object.
-     *
-     * @var \ArrayObject
-     */
-    protected $params;
-
-    /**
-     * Setter
-     *
-     * A convenient reference to the Config::$setter object, which itself
-     * is contained by the Forge object.
-     *
-     * @var \ArrayObject
-     */
-    protected $setter;
-
-    /**
      * Container
      *
      * @var \Ray\Di\Container
@@ -168,8 +148,6 @@ class Injector implements InjectorInterface
         $this->bind = $bind ?: new Bind;
         $this->preDestroyObjects = new SplObjectStorage;
         $this->config = $container->getForge()->getConfig();
-        $this->params = $this->config->getParams();
-        $this->setter = $this->config->getSetter();
         $this->module->activate($this);
     }
 
