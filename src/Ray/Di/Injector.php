@@ -572,7 +572,7 @@ class Injector implements InjectorInterface
     /**
      * Set one parameter with definition, or JIT binding.
      *
-     * @param string &$param
+     * @param array &$param
      * @param string $key
      * @param array  $userData
      *
@@ -580,7 +580,7 @@ class Injector implements InjectorInterface
      * @throws Exception\OptionalInjectionNotBound
      * @noinspection PhpUnusedPrivateMethodInspection
      */
-    private function bindOneParameter(&$param, $key, array $userData)
+    private function bindOneParameter(array &$param, $key, array $userData)
     {
         list(, $getInstance) = $userData;
         $annotate = $param[Definition::PARAM_ANNOTATE];
