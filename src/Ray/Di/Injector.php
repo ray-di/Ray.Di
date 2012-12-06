@@ -211,19 +211,27 @@ class Injector implements InjectorInterface
     public function getInstance($class, array $params = null)
     {
         $bound = $this->getBound($class);
+
+        // return singleton bound object if exists
         if (is_object($bound)) {
             return $bound;
         }
+
+        // get bound config
         list($class, $isSingleton, $interfaceClass, $config, $setter, $definition) = $bound;
 
+        // override construction parameter
         $params = is_null($params) ? $config : array_merge($config, (array)$params);
+
         // lazy-load params as needed
         foreach ($params as $key => $val) {
             if ($params[$key] instanceof Lazy) {
                 $params[$key] = $params[$key]();
             }
         }
-        $this->checkNotBound($class, $params, $this->module);
+
+        // be all parameters ready
+        $this->constructorInject($class, $params, $this->module);
 
         // create the new instance
         $object = call_user_func_array(
@@ -231,7 +239,7 @@ class Injector implements InjectorInterface
             $params
         );
 
-        // call setters after creation
+        // call setter methods
         foreach ($setter as $method => $value) {
             // does the specified setter method exist?
             if (method_exists($object, $method)) {
@@ -243,20 +251,25 @@ class Injector implements InjectorInterface
                 }
             }
         }
+
+        // weave aspect
         $module = $this->module;
         $bind = $module($class, new $this->bind);
         /* @var $bind \Ray\Aop\Bind */
         if ($bind->hasBinding() === true) {
             $object = new Weaver($object, $bind);
         }
-        // injection logging
+
+        // log inject info
         if ($this->log) {
             $this->log->log($class, $params, $setter, $object, $bind);
         }
+
         // set life cycle
         if ($definition) {
             $this->setLifeCycle($object, $definition);
         }
+
         // set singleton object
         if ($isSingleton) {
             $this->container->set($interfaceClass, $object);
@@ -399,7 +412,7 @@ class Injector implements InjectorInterface
      * @return void
      * @throws Exception\NotBound
      */
-    private function checkNotBound($class, array &$params, AbstractModule $module)
+    private function constructorInject($class, array &$params, AbstractModule $module)
     {
         $ref = method_exists($class, '__construct') ? new ReflectionMethod($class, '__construct') : false;
         if ($ref === false) {
@@ -559,7 +572,7 @@ class Injector implements InjectorInterface
     /**
      * Set one parameter with definition, or JIT binding.
      *
-     * @param string &$param
+     * @param array &$param
      * @param string $key
      * @param array  $userData
      *
@@ -567,7 +580,7 @@ class Injector implements InjectorInterface
      * @throws Exception\OptionalInjectionNotBound
      * @noinspection PhpUnusedPrivateMethodInspection
      */
-    private function bindOneParameter(&$param, $key, array $userData)
+    private function bindOneParameter(array &$param, $key, array $userData)
     {
         list(, $getInstance) = $userData;
         $annotate = $param[Definition::PARAM_ANNOTATE];
@@ -620,8 +633,9 @@ class Injector implements InjectorInterface
                 return self::OPTIONAL_BINDING_NOT_BOUND;
             }
             $name = $param[Definition::PARAM_NAME];
-            $e = new LogicException((string)$this->module);
-            throw new Exception\NotBound("typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$this->class}'", 0, $e);
+            $msg = "typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$this->class}'";
+            $e = (new Exception\NotBound($msg))->setModule($this->module);
+            throw $e;
         }
         if ($typeHintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
             return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typeHintBy[1]]];

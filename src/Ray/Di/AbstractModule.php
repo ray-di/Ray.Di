@@ -19,7 +19,6 @@ use ArrayAccess;
  *  which will be used to create an Injector.
  *
  * @package   Ray.Di
- * @submodule Module
  */
 abstract class AbstractModule implements ArrayAccess
 {
@@ -161,6 +160,13 @@ abstract class AbstractModule implements ArrayAccess
     protected $activated = false;
 
     /**
+     * Installed modules
+     *
+     * @var array
+     */
+    public $modules = [];
+
+    /**
      * Constructor
      *
      * @param AbstractModule $module
@@ -178,6 +184,7 @@ abstract class AbstractModule implements ArrayAccess
             $this->bindings = $module->bindings;
             $this->pointcuts = $module->pointcuts;
         }
+        $this->modules[] = get_class($this);
         $this->matcher = $matcher ?: new Matcher(new Reader);
     }
 
@@ -350,6 +357,9 @@ abstract class AbstractModule implements ArrayAccess
         $module->activate($this->dependencyInjector);
         $this->pointcuts = new ArrayObject(array_merge((array)$module->pointcuts, (array)$this->pointcuts));
         $this->bindings = new ArrayObject(array_merge_recursive((array)$this->bindings, (array)$module->bindings));
+        if ($module->modules) {
+            $this->modules = array_merge($this->modules, [], $module->modules);
+        }
     }
 
     /**

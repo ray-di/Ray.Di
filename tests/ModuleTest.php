@@ -248,4 +248,13 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('instance', $result[0]);
         $this->assertSame(1, $result[1]);
     }
+
+    /**
+     * @ignore
+     */
+    public function test_doubleBindWithInstall()
+    {
+        $module = new Modules\DoubleBindModule;
+    }
+
 }
