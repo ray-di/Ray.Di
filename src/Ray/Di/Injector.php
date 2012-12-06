@@ -230,8 +230,8 @@ class Injector implements InjectorInterface
             }
         }
 
-        // verify all parameter ready
-        $this->checkNotBound($class, $params, $this->module);
+        // be all parameters ready
+        $this->constructorInject($class, $params, $this->module);
 
         // create the new instance
         $object = call_user_func_array(
@@ -412,7 +412,7 @@ class Injector implements InjectorInterface
      * @return void
      * @throws Exception\NotBound
      */
-    private function checkNotBound($class, array &$params, AbstractModule $module)
+    private function constructorInject($class, array &$params, AbstractModule $module)
     {
         $ref = method_exists($class, '__construct') ? new ReflectionMethod($class, '__construct') : false;
         if ($ref === false) {
