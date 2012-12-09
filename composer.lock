@@ -1,31 +1,33 @@
 {
-    "hash": "17e1cfedf1004a7e782d1613b3a10ae1",
+    "hash": "33478f75aabb23e3699ed18fce7b1fbf",
     "packages": [
         {
             "name": "aura/di",
-            "version": "dev-master",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/Aura.Di",
-                "reference": "ab76ec847533fc97d5239f4444b54c3dd4c9a67e"
+                "reference": "1.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/auraphp/Aura.Di/zipball/ab76ec847533fc97d5239f4444b54c3dd4c9a67e",
-                "reference": "ab76ec847533fc97d5239f4444b54c3dd4c9a67e",
+                "url": "https://github.com/auraphp/Aura.Di/archive/1.0.1.zip",
+                "reference": "1.0.1",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.4.0",
+                "aura/installer-default": ">=1.0.0"
             },
-            "time": "1350360847",
-            "type": "library",
-            "installation-source": "source",
+            "time": "2012-11-28 00:00:00",
+            "type": "aura-package",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Aura\\Di": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD"
             ],
@@ -60,6 +62,48 @@
             ]
         },
         {
+            "name": "aura/installer-default",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/auraphp/installer-default",
+                "reference": "52f8de3670cc1ef45a916f40f732937436d028c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/auraphp/installer-default/archive/52f8de3670cc1ef45a916f40f732937436d028c8.zip",
+                "reference": "52f8de3670cc1ef45a916f40f732937436d028c8",
+                "shasum": ""
+            },
+            "time": "2012-11-26 21:35:57",
+            "type": "composer-installer",
+            "extra": {
+                "class": "Aura\\Composer\\DefaultInstaller"
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Aura\\Composer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Paul M. Jones",
+                    "email": "pmjones88@gmail.com",
+                    "homepage": "http://paul-m-jones.com"
+                }
+            ],
+            "description": "Installs Aura packages using the Composer defaults.",
+            "keywords": [
+                "installer",
+                "aura"
+            ]
+        },
+        {
             "name": "doctrine/common",
             "version": "2.3.x-dev",
             "source": {
@@ -76,7 +120,7 @@
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "1348120518",
+            "time": "2012-09-20 05:55:18",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -180,6 +224,6 @@
     "minimum-stability": "beta",
     "stability-flags": {
         "doctrine/common": 20,
-        "aura/di": 20
+        "aura/installer-default": 20
     }
 }
