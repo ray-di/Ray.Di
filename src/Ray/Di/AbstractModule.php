@@ -19,7 +19,6 @@ use ArrayAccess;
  *  which will be used to create an Injector.
  *
  * @package   Ray.Di
- * @submodule Module
  */
 abstract class AbstractModule implements ArrayAccess
 {
@@ -121,13 +120,6 @@ abstract class AbstractModule implements ArrayAccess
      */
 
     /**
-     * Object carry container
-     *
-     * @var ArrayObject
-     */
-    protected $container;
-
-    /**
      * Current Binding
      *
      * @var string
@@ -149,29 +141,30 @@ abstract class AbstractModule implements ArrayAccess
     protected $scope = [Scope::PROTOTYPE, Scope::SINGLETON];
 
     /**
-     * A list with annotations that are not causing exceptions when not resolved to an annotation class.
-     *
-     * The names are case sensitive.
-     *
-     * @var array
-     */
-    private $globalIgnoredNames = [
-        'Inject',
-        'Named',
-        'ImplementedBy',
-        'PostConstruct',
-        'PreDestroy',
-        'ProvidedBy',
-        'Scope',
-        'Provides'
-    ];
-
-    /**
      * Pointcuts
      *
      * @var array
      */
     public $pointcuts = [];
+
+    /**
+     * @var InjectorInterface
+     */
+    protected $dependencyInjector;
+
+    /**
+     * Is activated
+     *
+     * @var bool
+     */
+    protected $activated = false;
+
+    /**
+     * Installed modules
+     *
+     * @var array
+     */
+    public $modules = [];
 
     /**
      * Constructor
@@ -186,20 +179,27 @@ abstract class AbstractModule implements ArrayAccess
         if (is_null($module)) {
             $this->bindings = new ArrayObject;
             $this->pointcuts = new ArrayObject;
-            $this->container = new ArrayObject;
         } else {
+            $module->activate();
             $this->bindings = $module->bindings;
             $this->pointcuts = $module->pointcuts;
-            $this->container = $module->container;
         }
-        if (is_null($matcher)) {
-            $reader = new Reader;
-            foreach ($this->globalIgnoredNames as $name) {
-                $reader->addGlobalIgnoredName($name);
-            }
-            $matcher = new Matcher($reader);
+        $this->modules[] = get_class($this);
+        $this->matcher = $matcher ?: new Matcher(new Reader);
+    }
+
+    /**
+     * Activation
+     *
+     * @param InjectorInterface $injector
+     */
+    public function activate(InjectorInterface $injector = null)
+    {
+        if ($this->activated === true) {
+            return;
         }
-        $this->matcher = $matcher;
+        $this->activated = true;
+        $this->dependencyInjector = $injector ?: Injector::create([$this]);
         $this->configure();
     }
 
@@ -354,9 +354,12 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function install(AbstractModule $module)
     {
+        $module->activate($this->dependencyInjector);
         $this->pointcuts = new ArrayObject(array_merge((array)$module->pointcuts, (array)$this->pointcuts));
         $this->bindings = new ArrayObject(array_merge_recursive((array)$this->bindings, (array)$module->bindings));
-        $this->container = new ArrayObject(array_merge_recursive((array)$module->container, (array)$this->container));
+        if ($module->modules) {
+            $this->modules = array_merge($this->modules, [], $module->modules);
+        }
     }
 
     /**
@@ -370,10 +373,13 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function requestInjection($class)
     {
-        $injector = Injector::create();
-        $injector->setModule($this);
-
-        return $injector->getInstance($class);
+        $module = $this->dependencyInjector->getModule();
+        $this->dependencyInjector->setModule($this, false);
+        $instance = $this->dependencyInjector->getInstance($class);
+        if ($module instanceof AbstractModule) {
+            $this->dependencyInjector->setModule($module, false);
+        }
+        return $instance;
     }
 
     /**

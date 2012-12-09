@@ -17,6 +17,8 @@ class InstallPointcutsModule extends AbstractModule
             $this->matcher->annotatedWith('Ray\Di\Tests\SalesTax'),
             [new ChildTaxCharger]
         );
+        // @todo try this;
         $this->install(new AopModule($this));
+//        $this->install(new AopModule);
     }
 }

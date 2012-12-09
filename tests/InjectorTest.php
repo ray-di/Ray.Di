@@ -40,9 +40,10 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testNewInstanceWithPreDestory()
     {
-        $mock = $this->injector->getInstance('Ray\Di\Definition\LifeCycle');
-        unset($this->injector);
-        $this->assertSame('@PreDestroy', $GLOBALS['pre_destoroy']);
+        $injector = clone $this->injector;
+        $injector->getInstance('Ray\Di\Definition\LifeCycle');
+        unset($injector);
+        $this->assertSame('@PreDestroy', $GLOBALS['pre_destroy']);
     }
 
     public function testToClass()
@@ -429,5 +430,14 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->setModule(new Modules\BasicModule);
         $instance = $this->injector->getInstance('Ray\Di\Definition\ArrayType');
     }
+
+    public function testSingletonWithModuleRequestInjection()
+    {
+        $module =  new Modules\RequestInjectionSingletonModule;
+        $injector = new Injector($this->container, $module);
+        $object = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $this->assertSame(spl_object_hash($module->object), spl_object_hash($object));
+    }
+
 
 }
