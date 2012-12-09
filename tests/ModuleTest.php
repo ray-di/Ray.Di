@@ -250,11 +250,42 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @ignore
+     * bind 1;
+     * bind 2;
+     *
+     * -> bind2
      */
     public function test_doubleBindWithInstall()
     {
         $module = new Modules\DoubleBindModule;
+        $module->activate();
+        $bindings = (array)$module->bindings;
+        $result = $bindings['Ray\\Di\\Mock\\DbInterface']['*']['to'][1];
+        $this->assertSame($result, 'Ray\Di\Mock\UserDb2');
+    }
+
+    /**
+     * bind 1;
+     * bind 2;
+     *
+     * -> bind2
+     */
+    public function test_doubleInstall1()
+    {
+        $module = new Modules\InstallDoubleModule1;
+        $module->activate();
+        $bindings = (array)$module->bindings;
+        $result = $bindings['Ray\\Di\\Mock\\DbInterface']['*']['to'][1];
+        $this->assertSame($result, 'Ray\Di\Mock\UserDb1');
+    }
+
+    public function test_doubleInstall2()
+    {
+        $module = new Modules\InstallDoubleModule2;
+        $module->activate();
+        $bindings = (array)$module->bindings;
+        $result = $bindings['Ray\\Di\\Mock\\DbInterface']['*']['to'][1];
+        $this->assertSame($result, 'Ray\Di\Mock\UserDb2');
     }
 
 }

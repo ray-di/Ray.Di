@@ -57,6 +57,10 @@ require_once __DIR__ . '/Modules/InstallPointcutsModule.php';
 require_once __DIR__ . '/Modules/LeadingBackSlashModule.php';
 require_once __DIR__ . '/Modules/SingletonAnnotationModule.php';
 require_once __DIR__ . '/Modules/DoubleBindModule.php';
+require_once __DIR__ . '/Modules/Db1Module.php';
+require_once __DIR__ . '/Modules/Db2Module.php';
+require_once __DIR__ . '/Modules/InstallDoubleModule1.php';
+require_once __DIR__ . '/Modules/InstallDoubleModule2.php';
 
 // Mock class without annotation
 require_once __DIR__ . '/MockParentClass.php';
