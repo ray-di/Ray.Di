@@ -27,7 +27,8 @@
         "php": ">=5.4.0",
         "doctrine/common": "2.3.*-dev",
         "ray/aop": "*",
-        "aura/di": ">=1.0.*-dev"
+        "aura/di": "1.0.*",
+		"aura/installer-default" : "dev-master"
     },
     "autoload": {
         "psr-0": {
