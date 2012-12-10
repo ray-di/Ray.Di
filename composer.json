@@ -26,9 +26,9 @@
     "require": {
         "php": ">=5.4.0",
         "doctrine/common": "2.3.*-dev",
-        "ray/aop": "*",
+        "ray/aop": ">=1.0.0-beta2",
         "aura/di": "1.0.*",
-		"aura/installer-default" : "dev-master"
+		"aura/installer-default" : "1.0.*"
     },
     "autoload": {
         "psr-0": {

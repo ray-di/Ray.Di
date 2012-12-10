@@ -1,5 +1,5 @@
 {
-    "hash": "33478f75aabb23e3699ed18fce7b1fbf",
+    "hash": "a28226b97f864ee74127e7c3a3ca701a",
     "packages": [
         {
             "name": "aura/di",
@@ -63,16 +63,16 @@
         },
         {
             "name": "aura/installer-default",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auraphp/installer-default",
-                "reference": "52f8de3670cc1ef45a916f40f732937436d028c8"
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/auraphp/installer-default/archive/52f8de3670cc1ef45a916f40f732937436d028c8.zip",
-                "reference": "52f8de3670cc1ef45a916f40f732937436d028c8",
+                "url": "https://github.com/auraphp/installer-default/archive/1.0.0.zip",
+                "reference": "1.0.0",
                 "shasum": ""
             },
             "time": "2012-11-26 21:35:57",
@@ -224,6 +224,6 @@
     "minimum-stability": "beta",
     "stability-flags": {
         "doctrine/common": 20,
-        "aura/installer-default": 20
+        "ray/aop": 10
     }
 }
