@@ -22,7 +22,7 @@ class Transaction implements MethodInterceptor
             $db->commit();
             echo "commit\n";
         } catch (\Exception $e) {
-            $db->roleback();
+            $db->rollback();
         }
     }
 }
