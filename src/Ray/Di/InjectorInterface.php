@@ -37,4 +37,21 @@ interface InjectorInterface
      * @return Container;
      */
     public function getContainer();
+
+    /**
+     * Return module
+     *
+     * @return AbstractModule
+     */
+    public function getModule();
+
+    /**
+     * Set Logger
+     *
+     * @param LoggerInterface $logger
+     *
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger);
+
 }
