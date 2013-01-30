@@ -1,5 +1,5 @@
 {
-    "hash": "a28226b97f864ee74127e7c3a3ca701a",
+    "hash": "c40436e6c79d4006e665d46f7a198200",
     "packages": [
         {
             "name": "aura/di",
@@ -219,7 +219,6 @@
     ],
     "minimum-stability": "beta",
     "stability-flags": {
-        "doctrine/common": 20,
-        "ray/aop": 10
+        "doctrine/common": 20
     }
 }
