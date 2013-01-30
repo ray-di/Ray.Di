@@ -134,14 +134,14 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $definition['Scope']);
     }
 
-    public function testConfigRetainDefintionAfterFetch()
+    public function testConfigRetainDefinitionAfterFetch()
     {
         $this->config->fetch('Ray\Di\Definition\MockDefinitionClass');
         $def = $this->config->getDefinition();
         $this->assertTrue($def['Ray\Di\Definition\MockDefinitionClass'] instanceof Definition);
     }
 
-     public function testConfigRetainDefintionAfterFetchChildClass()
+     public function testConfigRetainDefinitionAfterFetchChildClass()
      {
          $this->config->fetch('Ray\Di\Definition\MockDefinitionClass');
          $this->config->fetch('Ray\Di\Definition\MockDefinitionChildClass');

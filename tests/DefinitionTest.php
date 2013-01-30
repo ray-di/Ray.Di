@@ -18,8 +18,8 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
     public function testOffsetSetWithKey()
     {
         $method = 'onEnd';
-        $this->definition['MockDefiniton'] = [Definition::PRE_DESTROY => $method];
-        $actual = $this->definition['MockDefiniton'][Definition::PRE_DESTROY];
+        $this->definition['MockDefinition'] = [Definition::PRE_DESTROY => $method];
+        $actual = $this->definition['MockDefinition'][Definition::PRE_DESTROY];
         $this->assertSame($method, $actual);
     }
 
@@ -29,24 +29,24 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
     public function testOffsetSetWithoutKey()
     {
         $method = 'onEnd';
-        $this->definition[] = ['MockDefiniton' => [Definition::PRE_DESTROY => $method]];
-        $actual = $this->definition['MockDefiniton'][Definition::PRE_DESTROY];
+        $this->definition[] = ['MockDefinition' => [Definition::PRE_DESTROY => $method]];
+        $actual = $this->definition['MockDefinition'][Definition::PRE_DESTROY];
     }
 
     public function testOffsetExists()
     {
         $method = 'onEnd';
-        $this->definition['MockDefiniton'] = [Definition::PRE_DESTROY => $method];
-        $condition = isset($this->definition['MockDefiniton'][Definition::PRE_DESTROY]);
+        $this->definition['MockDefinition'] = [Definition::PRE_DESTROY => $method];
+        $condition = isset($this->definition['MockDefinition'][Definition::PRE_DESTROY]);
         $this->assertTrue($condition);
     }
 
     public function testOffsetUnset()
     {
         $method = 'onEnd';
-        $this->definition['MockDefiniton'] = [Definition::PRE_DESTROY => $method];
-        unset($this->definition['MockDefiniton']);
-        $condition = isset($this->definition['MockDefiniton']);
+        $this->definition['MockDefinition'] = [Definition::PRE_DESTROY => $method];
+        unset($this->definition['MockDefinition']);
+        $condition = isset($this->definition['MockDefinition']);
         $this->assertFalse($condition);
     }
 

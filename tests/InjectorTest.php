@@ -42,7 +42,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('@PostConstruct', $mock->msg);
     }
 
-    public function testNewInstanceWithPreDestory()
+    public function testNewInstanceWithPreDestroy()
     {
         $injector = clone $this->injector;
         $injector->getInstance('Ray\Di\Definition\LifeCycle');
@@ -128,7 +128,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
     }
 
-    public function testImplemetedBy()
+    public function testImplementedBy()
     {
         $instance = $this->injector->getInstance('Ray\Di\Definition\Implemented');
         $this->assertInstanceOf('\Ray\Di\Mock\Log', $instance->log);
@@ -146,7 +146,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($clone, $this->injector);
     }
 
-    public function testInjectSigleton()
+    public function testInjectSingleton()
     {
         $this->injector->setModule(new Modules\SingletonModule);
         $instance = $this->injector->getInstance('Ray\Di\Definition\Basic');
@@ -156,7 +156,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($a, $b);
     }
 
-    public function testInjectProtortype()
+    public function testInjectPrototype()
     {
         $this->injector->setModule(new Modules\PrototypeModule);
         $instance = $this->injector->getInstance('Ray\Di\Definition\Basic');
@@ -166,7 +166,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($a === $b);
     }
 
-    public function estregisterInterceptAnnotation()
+    public function testRegisterInterceptAnnotation()
     {
         $this->injector->setModule(new Modules\AopModule);
         $instance = $this->injector->getInstance('Ray\Di\Tests\RealBillingService');
@@ -186,7 +186,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, (int) $amount);
     }
 
-    public function testBindDobuleInterceptors()
+    public function testBindDoubleInterceptors()
     {
         $module = new Modules\AopMatcherModule;
         $this->injector->setModule(new Modules\AopAnnotateMatcherModule);
@@ -339,8 +339,8 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetContainer()
     {
-        $continaer = $this->injector->getContainer();
-        $this->assertInstanceOf('Ray\Di\Container', $continaer);
+        $container = $this->injector->getContainer();
+        $this->assertInstanceOf('Ray\Di\Container', $container);
     }
 
     public function testOptionalInjection()
@@ -370,17 +370,17 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testNoClass()
     {
-        $this->injector->getInstance('NotExsitsXXXXXXXXXX');
+        $this->injector->getInstance('NotExistsXXXXXXXXXX');
     }
 
-    public function testGetInsntanceToClassBoundInterfacePassed()
+    public function testGetInstanceToClassBoundInterfacePassed()
     {
         $this->injector->setModule(new Modules\BasicModule);
         $instance = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
         $this->assertInstanceOf('Ray\Di\Mock\UserDb', $instance);
     }
 
-    public function testGetInsntanceToProviderBindindedInterfacePassed()
+    public function testGetInstanceToProviderBoundInterfacePassed()
     {
         $this->injector->setModule(new Modules\ProviderModule);
         $instance = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
@@ -421,7 +421,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \Ray\Di\Exception\Binding
      */
-    public function testNotBoundClassWithoutAnnotationinInConstructor()
+    public function testNotBoundClassWithoutAnnotationInConstructor()
     {
         $instance = $this->injector->getInstance('Ray\Di\Definition\ConstructWoAnnotation');
     }

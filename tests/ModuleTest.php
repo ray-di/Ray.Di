@@ -222,8 +222,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Modules\TimeModule;
         $this->module->install($module);
-        $bindigs = $this->module->bindings;
-        $bindingClass = array_keys((array)$bindigs);
+        $bindings = $this->module->bindings;
+        $bindingClass = array_keys((array)$bindings);
         $this->assertSame($bindingClass, ["Ray\\Di\\Mock\\DbInterface", '']);
     }
 

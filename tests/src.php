@@ -7,7 +7,7 @@ require_once __DIR__ . '/Definition/InvalidNamed.php';
 require_once __DIR__ . '/Definition/Instance.php';
 require_once __DIR__ . '/Definition/Construct.php';
 require_once __DIR__ . '/Definition/ConstructWoAnnotation.php';
-require_once __DIR__ . '/Definition/Implemeted.php';
+require_once __DIR__ . '/Definition/Implemented.php';
 require_once __DIR__ . '/Definition/LifeCycle.php';
 require_once __DIR__ . '/Definition/Provided.php';
 require_once __DIR__ . '/Definition/Multi.php';

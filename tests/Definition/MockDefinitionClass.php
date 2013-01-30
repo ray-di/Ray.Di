@@ -27,7 +27,7 @@ class MockDefinitionClass
     public $msg = '';
 
     /**
-     * Reource
+     * Resource
      *
      * @Inject
      *
@@ -77,7 +77,7 @@ class MockDefinitionClass
      */
     public function onEnd()
     {
-        $GLOBALS['pre_destoroy'] = '@PreDestroy';
+        $GLOBALS['pre_destroy'] = '@PreDestroy';
     }
 
     /**
