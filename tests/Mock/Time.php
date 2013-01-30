@@ -8,7 +8,6 @@ use Ray\Di\Di\Named;
 class Time
 {
     public $time;
-    public $oclosure;
 
     /**
      * @Inject

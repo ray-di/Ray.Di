@@ -8,6 +8,7 @@
 namespace Ray\Di;
 
 use Ray\Di\Di\ImplementedBy;
+use Doctrine\Common\Cache\Cache;
 
 /**
  * Defines the interface for dependency injector.
@@ -54,4 +55,12 @@ interface InjectorInterface
      */
     public function setLogger(LoggerInterface $logger);
 
+    /**
+     * Set cache adapter
+     *
+     * @param Cache $cache
+     *
+     * @return self
+     */
+    public function setCache(Cache $cache);
 }

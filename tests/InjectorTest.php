@@ -2,6 +2,10 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\PhpFileCache;
+use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\ArrayCache;
+use Guzzle\Cache\DoctrineCacheAdapter;
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -311,7 +315,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateApcOn()
     {
-        $injector = Injector::create([], true);
+        $injector = Injector::create([], new ArrayCache);
         $this->assertInstanceOf('Ray\Di\Injector', $injector);
     }
 
@@ -439,5 +443,19 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(spl_object_hash($module->object), spl_object_hash($object));
     }
 
+    public function testCacheArray()
+    {
+        $this->injector->setModule(new Modules\TimeModule)->setCache(new ArrayCache);
+        $instance1 = $this->injector->getInstance('Ray\Di\Mock\Time');
+        $instance2 = $this->injector->getInstance('Ray\Di\Mock\Time');
+        $this->assertSame($instance1->time, $instance2->time);
+    }
 
+    public function testCacheFile()
+    {
+        $this->injector->setModule(new Modules\TimeModule)->setCache(new FilesystemCache(sys_get_temp_dir()));
+        $instance1 = $this->injector->getInstance('Ray\Di\Mock\Time');
+        $instance2 = $this->injector->getInstance('Ray\Di\Mock\Time');
+        $this->assertSame($instance1->time, $instance2->time);
+    }
 }
