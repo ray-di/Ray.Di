@@ -241,7 +241,7 @@ class Injector implements InjectorInterface
     {
         // cache read ?
         if ($this->cache instanceof Cache) {
-            $cacheKey = spl_object_hash($this->module);
+            $cacheKey = PHP_SAPI . get_class($this->module) . $class ;
             $object = $this->cache->fetch($cacheKey);
             if ($object) {
                 return $object;
