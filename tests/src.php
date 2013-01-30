@@ -97,5 +97,3 @@ require_once __DIR__ . '/Aop/AnnotateTaxBilling.php';
 require_once __DIR__ . '/Aop/TaxCharger.php';
 require_once __DIR__ . '/Aop/ChildTaxCharger.php';
 require_once __DIR__ . '/Aop/ChildRealBillingService.php';
-
-require_once __DIR__ . '/ConfigTest.php';
