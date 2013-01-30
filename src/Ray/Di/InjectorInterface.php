@@ -49,9 +49,18 @@ interface InjectorInterface
      *
      * @param LoggerInterface $logger
      *
-     * @return void
+     * @return self
      */
     public function setLogger(LoggerInterface $logger);
+
+    /**
+     * Set module
+     *
+     * @param AbstractModule $module
+     *
+     * @return self
+     */
+    public function setModule(AbstractModule $module);
 
     /**
      * Set cache adapter

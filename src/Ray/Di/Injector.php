@@ -94,7 +94,7 @@ class Injector implements InjectorInterface
      * @param AbstractModule $module
      * @param bool           $activate
      *
-     * @return Injector
+     * @return self
      * @throws \Aura\Di\Exception\ContainerLocked
      */
     public function setModule(AbstractModule $module, $activate = true)
@@ -125,11 +125,13 @@ class Injector implements InjectorInterface
      *
      * @param LoggerInterface $logger
      *
-     * @return void
+     * @return self
      */
     public function setLogger(LoggerInterface $logger)
     {
         $this->log = $logger;
+
+        return $this;
     }
 
     /**
@@ -192,7 +194,7 @@ class Injector implements InjectorInterface
     /**
      * Injector builder
      *
-     * @param array AbstractModule[] $modules
+     * @param       array AbstractModule[] $modules
      * @param Cache $cache
      *
      * @return Injector
