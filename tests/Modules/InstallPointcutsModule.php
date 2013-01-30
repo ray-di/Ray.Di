@@ -1,12 +1,11 @@
 <?php
 
-use Ray\Di\Modules\AopModule;
 
 namespace Ray\Di\Modules;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\SalesTax;
 use Ray\Di\Tests\ChildTaxCharger;
+use Ray\Di\Modules\AopModule;
 
 class InstallPointcutsModule extends AbstractModule
 {
@@ -19,6 +18,5 @@ class InstallPointcutsModule extends AbstractModule
         );
         // @todo try this;
         $this->install(new AopModule($this));
-//        $this->install(new AopModule);
     }
 }

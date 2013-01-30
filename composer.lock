@@ -1,5 +1,5 @@
 {
-    "hash": "a28226b97f864ee74127e7c3a3ca701a",
+    "hash": "c40436e6c79d4006e665d46f7a198200",
     "packages": [
         {
             "name": "aura/di",
@@ -21,7 +21,6 @@
             },
             "time": "2012-11-28 00:00:00",
             "type": "aura-package",
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Aura\\Di": "src/"
@@ -80,7 +79,6 @@
             "extra": {
                 "class": "Aura\\Composer\\DefaultInstaller"
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Aura\\Composer\\": "src/"
@@ -127,7 +125,6 @@
                     "dev-master": "2.3.x-dev"
                 }
             },
-            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Common": "lib/"
@@ -191,7 +188,6 @@
             },
             "time": "2012-10-17 00:13:53",
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Ray\\Aop": "src/"
@@ -223,7 +219,6 @@
     ],
     "minimum-stability": "beta",
     "stability-flags": {
-        "doctrine/common": 20,
-        "ray/aop": 10
+        "doctrine/common": 20
     }
 }

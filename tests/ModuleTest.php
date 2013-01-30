@@ -9,7 +9,7 @@ use Ray\Aop\Bind;
 class ModuleTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Forge
+     * @var \Ray\Di\AbstractModule
      */
     protected $module;
 
@@ -69,7 +69,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\ReadOnly
+     * @expectedException \Ray\Di\Exception\ReadOnly
      */
     public function testOffsetSet()
     {
@@ -77,7 +77,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\ReadOnly
+     * @expectedException \Ray\Di\Exception\ReadOnly
      */
     public function testOffsetUnset()
     {
@@ -93,7 +93,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\Configuration
+     * @expectedException \Ray\Di\Exception\Configuration
      */
     public function testToProviderInvalid()
     {
@@ -147,7 +147,9 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = $this->module;
         $module->activate();
+        /** @var $module Callable */
         $binder = $module('Ray\Di\Tests\RealBillingService', new Bind);
+        /** @var $binder Bind */
         $this->assertSame(false, $binder->hasBinding());
     }
 
@@ -222,8 +224,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Modules\TimeModule;
         $this->module->install($module);
-        $bindigs = $this->module->bindings;
-        $bindingClass = array_keys((array)$bindigs);
+        $bindings = $this->module->bindings;
+        $bindingClass = array_keys((array)$bindings);
         $this->assertSame($bindingClass, ["Ray\\Di\\Mock\\DbInterface", '']);
     }
 

@@ -1,8 +1,6 @@
 <?php
 namespace Ray\Di;
 
-use Ray\Aop\Bind;
-
 /**
  * Test class for SingletonModule.
  */
@@ -28,7 +26,7 @@ class GetInstanceTest extends \PHPUnit_Framework_TestCase
 
     public function testInSingletonInterface()
     {
-        $injector = Injector::create([new Modules\SingletonModule()], false);
+        $injector = Injector::create([new Modules\SingletonModule()]);
 
         $dbInstance1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
         $dbInstance2 = $injector->getInstance('Ray\Di\Mock\DbInterface');
@@ -40,7 +38,7 @@ class GetInstanceTest extends \PHPUnit_Framework_TestCase
 
     public function testInSingletonInterfaceWithAnnotation()
     {
-        $injector = Injector::create([new Modules\SingletonAnnotationModule()], false);
+        $injector = Injector::create([new Modules\SingletonAnnotationModule()]);
 
         $dbInstance1 = $injector->getInstance('Ray\Di\Mock\SingletonDbInterface');
         $dbInstance2 = $injector->getInstance('Ray\Di\Mock\SingletonDbInterface');
@@ -52,7 +50,7 @@ class GetInstanceTest extends \PHPUnit_Framework_TestCase
 
     public function testInjectInSingletonInterface()
     {
-        $injector = Injector::create([new Modules\SingletonModule()], false);
+        $injector = Injector::create([new Modules\SingletonModule()]);
 
         $numberInstance1 = $injector->getInstance('Ray\Di\Mock\Number');
         $numberInstance2 = $injector->getInstance('Ray\Di\Mock\Number');
@@ -64,7 +62,7 @@ class GetInstanceTest extends \PHPUnit_Framework_TestCase
 
     public function testInjectInSingletonInterfaceWithAnnotation()
     {
-        $injector = Injector::create([new Modules\SingletonAnnotationModule()], false);
+        $injector = Injector::create([new Modules\SingletonAnnotationModule()]);
 
         $numberInstance1 = $injector->getInstance('Ray\Di\Mock\SingletonNumber');
         $numberInstance2 = $injector->getInstance('Ray\Di\Mock\SingletonNumber');

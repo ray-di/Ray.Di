@@ -4,6 +4,7 @@ namespace Ray\Di\Mock;
 
 use Ray\Di\LoggerInterface;
 use Ray\Aop\Bind;
+use Ray\Aop\Weaver;
 
 class TestLogger implements LoggerInterface
 {
@@ -14,7 +15,7 @@ class TestLogger implements LoggerInterface
         $construct = serialize($params);
         $setter = serialize($setter);
         $intercept = ($object instanceof Weaver) ? (string) $object->___getBind() : '[]';
-        $log = "Injector class={$class} constructor={$construct} setter={$setter} intercepter={$intercept}";
+        $log = "Injector class={$class} constructor={$construct} setter={$setter} interceptor={$intercept}";
         self::$log = $log;
     }
 }

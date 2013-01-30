@@ -11,6 +11,8 @@ use Ray\Di\Di\PostConstruct;
  */
 class LifeCycle
 {
+    public $msg;
+
     /**
      * @PostConstruct
      */

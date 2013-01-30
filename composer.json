@@ -14,7 +14,7 @@
         "jsr"
     ],
     "homepage": "https://github.com/koriym/Ray.Di",
-    "version": "1.0.0-beta3",
+    "version": "1.0.0-beta4",
     "license": "BSD-3-Clause",
     "authors": [
         {
@@ -26,7 +26,7 @@
     "require": {
         "php": ">=5.4.0",
         "doctrine/common": "2.3.*-dev",
-        "ray/aop": ">=1.0.0-beta2",
+        "ray/aop": "1.0.*",
         "aura/di": "1.0.*",
 		"aura/installer-default" : "1.0.*"
     },

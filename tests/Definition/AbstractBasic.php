@@ -19,7 +19,7 @@ class AbstractBasic
     /**
      * @Inject
      *
-     * @param DbInterface $db
+     * @param AbstractDb $db
      */
     public function setDb(AbstractDb $db)
     {
