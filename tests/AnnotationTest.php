@@ -9,8 +9,14 @@ use Doctrine\Common\Annotations\AnnotationReader;
  */
 class AnnotationTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Annotation
+     */
     protected $annotationScanner;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
     protected function setUp()
@@ -149,11 +155,11 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
    }
 
     /**
-     * @expectedException Ray\Di\Exception\MultipleAnnotationNotAllowed
+     * @expectedException \Ray\Di\Exception\MultipleAnnotationNotAllowed
      */
     public function testMultipleAnnotationNotAllowedException()
     {
-        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionMultiplePostConstructClass');
+        $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionMultiplePostConstructClass');
     }
 
     public function testSingleVarAnnotation()
@@ -175,11 +181,11 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * 	@expectedException Ray\Di\Exception\Named
+     * 	@expectedException \Ray\Di\Exception\Named
      */
     public function testInvalidNamed()
     {
-        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\InvalidNamed');
+        $this->annotationScanner->getDefinition('Ray\Di\Definition\InvalidNamed');
     }
 
     public function testImplementedBy()
@@ -197,7 +203,7 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($definition1, $definition2);
     }
 
-    public function testImplementedBy()
+    public function testImplementedBy2()
     {
         $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\Implemented');
         $expected = [
@@ -223,7 +229,7 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\NotReadable
+     * @expectedException \Ray\Di\Exception\NotReadable
      */
     public function testNotReadable()
     {

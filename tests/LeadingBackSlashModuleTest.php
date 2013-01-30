@@ -9,7 +9,7 @@ use Ray\Aop\Bind;
 class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Forge
+     * @var AbstractModule
      */
     protected $module;
 
@@ -69,7 +69,7 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\ReadOnly
+     * @expectedException \Ray\Di\Exception\ReadOnly
      */
     public function testOffsetSet()
     {
@@ -77,7 +77,7 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\ReadOnly
+     * @expectedException \Ray\Di\Exception\ReadOnly
      */
     public function testOffsetUnset()
     {
@@ -93,7 +93,7 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\Configuration
+     * @expectedException \Ray\Di\Exception\Configuration
      */
     public function testToProviderInvalid()
     {
@@ -137,7 +137,9 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = $this->module;
         $module->activate();
+        /** @var $module Callable */
         $binder = $module('Ray\Di\Tests\RealBillingService', new Bind);
+        /** @var $binder Bind */
         $this->assertSame(false, $binder->hasBinding());
     }
 

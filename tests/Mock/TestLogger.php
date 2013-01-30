@@ -4,6 +4,7 @@ namespace Ray\Di\Mock;
 
 use Ray\Di\LoggerInterface;
 use Ray\Aop\Bind;
+use Ray\Aop\Weaver;
 
 class TestLogger implements LoggerInterface
 {

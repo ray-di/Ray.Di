@@ -8,6 +8,9 @@ use Doctrine\Common\Annotations\AnnotationReader;
  */
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Config
+     */
     protected $config;
 
     protected function setUp()
@@ -19,7 +22,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function testFetchReadsConstructorDefaults()
     {
         $expect = ['foo' => 'bar'];
-        list($actual_params, $actual_setter) = $this->config->fetch('Ray\Di\MockParentClass');
+        list($actual_params, ) = $this->config->fetch('Ray\Di\MockParentClass');
         $this->assertSame($expect, $actual_params);
     }
 
@@ -37,7 +40,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     {
         $expect = ['foo' => 'bar', 'zim' => null];
 
-        list($actual_params, $actual_setter) = $this->config->fetch('Ray\Di\MockChildClass');
+        list($actual_params, ) = $this->config->fetch('Ray\Di\MockChildClass');
         $this->assertSame($expect, $actual_params);
     }
 
@@ -48,7 +51,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $params['Ray\Di\MockParentClass'] = ['foo' => 'zim'];
 
         $expect = ['foo' => 'zim'];
-        list($actual_params, $actual_setter) = $this->config->fetch('Ray\Di\MockParentClass');
+        list($actual_params, ) = $this->config->fetch('Ray\Di\MockParentClass');
         $this->assertSame($expect, $actual_params);
     }
 
@@ -60,11 +63,11 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
         $expect = ['foo' => 'dib', 'zim' => null];
 
-        list($actual_params, $actual_setter) = $this->config->fetch('Ray\Di\MockChildClass');
+        list($actual_params, ) = $this->config->fetch('Ray\Di\MockChildClass');
         $this->assertSame($expect, $actual_params);
 
         // for test coverage of the mock class
-        $child = new \Ray\Di\MockChildClass('bar', new \Ray\Di\MockOtherClass());
+        new \Ray\Di\MockChildClass('bar', new \Ray\Di\MockOtherClass());
     }
 
     public function testGetReflection()
@@ -72,7 +75,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $actual = $this->config->getReflect('Ray\Di\MockOtherClass');
         $this->assertInstanceOf('ReflectionClass', $actual);
         $this->assertSame('Ray\Di\MockOtherClass', $actual->getName());
-        $actual = $this->config->getReflect('Ray\Di\MockOtherClass');
+        $this->config->getReflect('Ray\Di\MockOtherClass');
     }
 
     public function testFetchCapturesParentSetter()
@@ -80,7 +83,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $setter = $this->config->getSetter();
         $setter['Ray\Di\MockParentClass']['setFake'] = 'fake1';
 
-        list($actual_config, $actual_setter) = $this->config->fetch('Ray\Di\MockChildClass');
+        list(, $actual_setter) = $this->config->fetch('Ray\Di\MockChildClass');
         $expect = ['setFake' => 'fake1'];
         $this->assertSame($expect, $actual_setter);
 
@@ -92,7 +95,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $setter['Ray\Di\MockParentClass']['setFake'] = 'fake1';
         $setter['Ray\Di\MockChildClass']['setFake'] = 'fake2';
 
-        list($actual_config, $actual_setter) = $this->config->fetch('Ray\Di\MockChildClass');
+        list(, $actual_setter) = $this->config->fetch('Ray\Di\MockChildClass');
         $expect = ['setFake' => 'fake2'];
         $this->assertSame($expect, $actual_setter);
     }
@@ -109,14 +112,14 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchDefinition()
     {
-        list($actual_config, $actual_setter, $definition) = $this->config->fetch('Ray\Di\Definition\MockDefinitionClass');
+        list(, , $definition) = $this->config->fetch('Ray\Di\Definition\MockDefinitionClass');
         $expect = 'onInit';
         $this->assertSame($expect, $definition['PostConstruct']);
     }
 
     public function testFetchParentDefinition()
     {
-        list($actual_config, $actual_setter, $definition) = $this->config->fetch('Ray\Di\Definition\MockDefinitionChildClass');
+        list(, , $definition) = $this->config->fetch('Ray\Di\Definition\MockDefinitionChildClass');
         $expect = 'onInit';
         $this->assertSame($expect, $definition['PostConstruct']);
         // same
@@ -126,7 +129,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testFetchOverrideDefinition()
     {
-        list($actual_config, $actual_setter, $definition) = $this->config->fetch('Ray\Di\Definition\MockDefinitionChildOverrideClass');
+        list(, , $definition) = $this->config->fetch('Ray\Di\Definition\MockDefinitionChildOverrideClass');
         $expect = 'onInit';
         $this->assertSame($expect, $definition['PostConstruct']);
         // changed

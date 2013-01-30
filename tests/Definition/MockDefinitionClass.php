@@ -20,29 +20,11 @@ use Ray\Di\Di\PostConstruct;
 class MockDefinitionClass
 {
     /**
-     * @var Ray\Di\Db
+     * @var DbInterface
      */
     public $db;
 
     public $msg = '';
-
-    /**
-     * Resource
-     *
-     * @Inject
-     *
-     * @var Resource
-     */
-    private $resource;
-
-    /**
-     * Di
-     *
-     * @Inject
-     *
-     * @var Di
-     */
-    private $di;
 
     /**
      * Di
@@ -117,8 +99,8 @@ class MockDefinitionClass
      * @Inject
      * @Named("user=admin_user,db=production_db")
      *
-     * @param DbInterface $db
-     *
+     * @param \Ray\Di\Mock\UserInterface $user
+     * @param \Ray\Di\Mock\DbInterface   $db
      */
     public function setDouble(UserInterface $user, DbInterface $db)
     {
@@ -126,8 +108,6 @@ class MockDefinitionClass
 
     /**
      * @Named("user")
-     *
-     * @return Db
      */
     public function provideDb()
     {

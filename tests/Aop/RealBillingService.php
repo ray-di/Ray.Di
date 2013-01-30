@@ -2,8 +2,6 @@
 
 namespace Ray\Di\Tests;
 
-use Ray\Di\Tests\SalesTax;
-
 class RealBillingService implements BillingService
 {
     /**

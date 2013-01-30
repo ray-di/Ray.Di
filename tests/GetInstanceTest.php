@@ -1,8 +1,6 @@
 <?php
 namespace Ray\Di;
 
-use Ray\Aop\Bind;
-
 /**
  * Test class for SingletonModule.
  */

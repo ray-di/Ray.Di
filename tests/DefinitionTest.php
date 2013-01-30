@@ -2,11 +2,18 @@
 
 namespace Ray\Di;
 
+class MockAnnotation
+{
+}
+
 /**
  * Test class for Annotation.
  */
 class DefinitionTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Definition
+     */
     protected $definition;
 
     protected function setUp()
@@ -24,13 +31,13 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException PHPUnit_Framework_Error_Notice
+     * @expectedException \PHPUnit_Framework_Error_Notice
      */
     public function testOffsetSetWithoutKey()
     {
         $method = 'onEnd';
         $this->definition[] = ['MockDefinition' => [Definition::PRE_DESTROY => $method]];
-        $actual = $this->definition['MockDefinition'][Definition::PRE_DESTROY];
+        $this->definition['MockDefinition'][Definition::PRE_DESTROY];
     }
 
     public function testOffsetExists()
@@ -73,7 +80,6 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
     {
         $annotationName = 'anno1';
         $methodName = 'method1';
-        $methodAnnotation = 'method_annotation1';
         $this->definition->setUserAnnotationMethodName($annotationName, $methodName);
         $result = $this->definition->getUserAnnotationMethodName($annotationName);
         $this->assertSame([$methodName], $result);
@@ -84,7 +90,6 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         $annotationName = 'anno1';
         $methodName = 'method1';
         $methodName2 = 'method2';
-        $methodAnnotation = 'method_annotation1';
         $this->definition->setUserAnnotationMethodName($annotationName, $methodName);
         $this->definition->setUserAnnotationMethodName($annotationName, $methodName2);
         $result = $this->definition->getUserAnnotationMethodName($annotationName);
@@ -95,10 +100,10 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
     {
         $annotationName = 'anno1';
         $methodName = 'method1';
-        $methodAnnotation = 'method_annotation1';
+        $methodAnnotation = new MockAnnotation;
         $this->definition->setUserAnnotationByMethod($annotationName, $methodName, $methodAnnotation);
         $result = $this->definition->getUserAnnotationByMethod($methodName);
-        $expected = ['anno1' => ['method_annotation1']];
+        $expected = ['anno1' => [$methodAnnotation]];
         $this->assertSame($expected,  $result);
     }
 
@@ -107,8 +112,8 @@ class DefinitionTest extends \PHPUnit_Framework_TestCase
         $annotationName = 'anno1';
         $annotationName2 = 'anno2';
         $methodName = 'method1';
-        $methodAnnotation = 'method_annotation1';
-        $methodAnnotation2 = 'method_annotation2';
+        $methodAnnotation =  new MockAnnotation;
+        $methodAnnotation2 =  new MockAnnotation;
         $this->definition->setUserAnnotationByMethod($annotationName, $methodName, $methodAnnotation);
         $this->definition->setUserAnnotationByMethod($annotationName2, $methodName, $methodAnnotation2);
         $result = $this->definition->getUserAnnotationByMethod($methodName);

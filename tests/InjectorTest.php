@@ -5,7 +5,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\ArrayCache;
-use Guzzle\Cache\DoctrineCacheAdapter;
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,6 +14,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     protected $injector;
 
     protected $config;
+    protected $container;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -91,7 +91,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * does not expectedException Ray\Di\Exception\Binding
-     * @expectedException Ray\Di\Exception\Binding
+     * @expectedException \Ray\Di\Exception\Binding
      */
     public function testNamedAnnotation()
     {
@@ -170,8 +170,8 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->injector->setModule(new Modules\AopModule);
         $instance = $this->injector->getInstance('Ray\Di\Tests\RealBillingService');
-        /* @var $instance \Ray\Di\RealBillingService */
-        list($amount, $unit) = $instance->chargeOrder();
+        /* @var $instance \Ray\Di\Tests\RealBillingService */
+        list($amount, ) = $instance->chargeOrder();
         $expected = 105;
         $this->assertSame($expected, (int) $amount);
     }
@@ -180,19 +180,19 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->injector->setModule(new Modules\AopMatcherModule);
         $instance = $this->injector->getInstance('Ray\Di\Tests\RealBillingService');
-        /* @var $instance \Ray\Di\RealBillingService */
-        list($amount, $unit) = $instance->chargeOrder();
+        /* @var $instance \Ray\Di\Tests\RealBillingService */
+        list($amount, ) = $instance->chargeOrder();
         $expected = 105;
         $this->assertSame($expected, (int) $amount);
     }
 
     public function testBindDoubleInterceptors()
     {
-        $module = new Modules\AopMatcherModule;
+        new Modules\AopMatcherModule;
         $this->injector->setModule(new Modules\AopAnnotateMatcherModule);
         $instance = $this->injector->getInstance('Ray\Di\Tests\AnnotateTaxBilling');
-        /* @var $instance \Ray\Di\RealBillingService */
-        list($amount, $unit) = $instance->chargeOrder();
+        /* @var $instance \Ray\Di\Tests\AnnotateTaxBilling */
+        list($amount, ) = $instance->chargeOrder();
         $expected = 110;
         $this->assertSame($expected, (int) $amount);
     }
@@ -201,8 +201,8 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->injector->setModule(new Modules\AopAnnotateMatcherModule);
         $instance = $this->injector->getInstance('Ray\Di\Tests\ChildRealBillingService');
-        /* @var $instance \Ray\Di\RealBillingService */
-        list($amount, $unit) = $instance->chargeOrder();
+        /* @var $instance \Ray\Di\Tests\ChildRealBillingService */
+        list($amount, ) = $instance->chargeOrder();
         $expected = 110;
         $this->assertSame($expected, (int) $amount);
     }
@@ -239,11 +239,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     /**
      * not expectedException Ray\Di\Exception\Binding
      *
-     * @expectedException Ray\Di\Exception\Binding
+     * @expectedException \Ray\Di\Exception\Binding
      */
     public function testAbstractClassBinding()
     {
-        $instance = $this->injector->getInstance('Ray\Di\Definition\AbstractBasic');
+        $this->injector->getInstance('Ray\Di\Definition\AbstractBasic');
     }
 
     public function testConstructorBindings()
@@ -264,7 +264,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\Configuration
+     * @expectedException \Ray\Di\Exception\Configuration
      */
     public function testProviderIsNotExists()
     {
@@ -283,16 +283,16 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Aura\Di\Exception\ContainerLocked
+     * @expectedException \Aura\Di\Exception\ContainerLocked
      */
     public function test_lockWithParam()
     {
         $this->injector->lock();
-        $params = $this->injector->params;
+        $this->injector->params;
     }
 
     /**
-     * @expectedException Aura\Di\Exception\ContainerLocked
+     * @expectedException \Aura\Di\Exception\ContainerLocked
      */
     public function test_lockWhenSetModule()
     {
@@ -353,20 +353,20 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->injector->setLogger(new \Ray\Di\Mock\TestLogger);
         $this->injector->setModule(new Modules\BasicModule);
-        $instance = $this->injector->getInstance('Ray\Di\Definition\Basic');
+        $this->injector->getInstance('Ray\Di\Definition\Basic');
         $this->assertTrue(is_string(\Ray\Di\Mock\TestLogger::$log));
     }
 
     /**
-     * @expectedException Ray\Di\Exception\Binding
+     * @expectedException \Ray\Di\Exception\Binding
      */
     public function testNoBindings()
     {
-        $object = $this->injector->getInstance('Ray\Di\Definition\Basic');
+        $this->injector->getInstance('Ray\Di\Definition\Basic');
     }
 
     /**
-     * @expectedException Ray\Di\Exception\NotReadable
+     * @expectedException \Ray\Di\Exception\NotReadable
      */
     public function testNoClass()
     {
@@ -407,7 +407,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testGetInstanceWithAnnotateBindModule()
     {
         $this->injector->setModule(new Modules\AnnotateModule);
-        $instance = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
+        $this->injector->getInstance('Ray\Di\Mock\DbInterface');
     }
 
     /**
@@ -415,7 +415,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testNotBound()
     {
-        $instance = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
+        $this->injector->getInstance('Ray\Di\Mock\DbInterface');
     }
 
     /**
@@ -423,7 +423,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testNotBoundClassWithoutAnnotationInConstructor()
     {
-        $instance = $this->injector->getInstance('Ray\Di\Definition\ConstructWoAnnotation');
+        $this->injector->getInstance('Ray\Di\Definition\ConstructWoAnnotation');
     }
 
     /**
@@ -432,7 +432,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testArrayTypeHint()
     {
         $this->injector->setModule(new Modules\BasicModule);
-        $instance = $this->injector->getInstance('Ray\Di\Definition\ArrayType');
+        $this->injector->getInstance('Ray\Di\Definition\ArrayType');
     }
 
     public function testSingletonWithModuleRequestInjection()

@@ -37,7 +37,6 @@ require_once __DIR__ . '/Modules/ClosureModule.php';
 require_once __DIR__ . '/Modules/MultiModule.php';
 require_once __DIR__ . '/Modules/AopModule.php';
 require_once __DIR__ . '/Modules/AopMatcherModule.php';
-require_once __DIR__ . '/Modules/AopMisMatchModule.php';
 require_once __DIR__ . '/Modules/InvalidProviderModule.php';
 require_once __DIR__ . '/Modules/InvalidToModule.php';
 require_once __DIR__ . '/Modules/ArrayInstance.php';

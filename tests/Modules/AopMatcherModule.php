@@ -8,11 +8,6 @@ use Ray\Di\AbstractModule;
 use Ray\Aop\Matcher;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
 
-/**
- * @deprecated
- *
- * not to set \Closure for serialize.
- */
 class AopMatcherModule extends AbstractModule
 {
     protected function configure()

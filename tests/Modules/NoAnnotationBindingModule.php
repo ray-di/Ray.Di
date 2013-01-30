@@ -3,10 +3,16 @@
 namespace Ray\Di\Modules;
 
 use Ray\Di\AbstractModule;
+use Ray\Di\InjectorInterface;
 
 class NoAnnotationBindingModule extends AbstractModule
 {
-    public function __construct(&$injector)
+    /**
+     * @var \Ray\Di\InjectorInterface
+     */
+    public $injector;
+
+    public function __construct(InjectorInterface $injector)
     {
         $this->injector = $injector;
         $this->configure();
