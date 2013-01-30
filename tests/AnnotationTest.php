@@ -9,40 +9,46 @@ use Doctrine\Common\Annotations\AnnotationReader;
  */
 class AnnotationTest extends \PHPUnit_Framework_TestCase
 {
-    protected $annotationSacnner;
+    /**
+     * @var Annotation
+     */
+    protected $annotationScanner;
 
+    /**
+     * @var Config
+     */
     protected $config;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->annotationSacnner = new Annotation(new Definition, new AnnotationReader);
+        $this->annotationScanner = new Annotation(new Definition, new AnnotationReader);
     }
 
-    public function testgetDefinitionScope()
+    public function testGetDefinitionScope()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = 'prototype';
         $this->assertSame($expected, $definition['Scope']);
     }
 
-    public function testgetDefinitionPostConstruct()
+    public function testGetDefinitionPostConstruct()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = 'onInit';
         $this->assertSame($expected, $definition['PostConstruct']);
     }
 
-    public function testgetDefinitionPreDestroy()
+    public function testGetDefinitionPreDestroy()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = 'onEnd';
         $this->assertSame($expected, $definition['PreDestroy']);
     }
 
-    public function testgetDefinitionInjectConstruct()
+    public function testGetDefinitionInjectConstruct()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = [
             '__construct' => [
                 [
@@ -67,9 +73,9 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($expected, $actual);
     }
 
-    public function testgetDefinitionInjectMethod0()
+    public function testGetDefinitionInjectMethod0()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = [
             'setDb' => [
                 [
@@ -85,9 +91,9 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($expected, $definition['Inject'][Definition::INJECT_SETTER]);
     }
 
-    public function testgetDefinitionInjectMethodSetUserDb()
+    public function testGetDefinitionInjectMethodSetUserDb()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = [
             'setUserDb' => [
                 [
@@ -103,9 +109,9 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($expected, $definition['Inject'][Definition::INJECT_SETTER]);
     }
 
-    public function testgetDefinitionInjectMethodSetAdminDb()
+    public function testGetDefinitionInjectMethodSetAdminDb()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = [
             'setAdminDb' => [
                 [
@@ -121,9 +127,9 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($expected, $definition['Inject'][Definition::INJECT_SETTER]);
     }
 
-    public function testgetDefinitionInjectMethodSetDouble()
+    public function testGetDefinitionInjectMethodSetDouble()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $expected = [
             'setDouble' => [
                 [
@@ -149,16 +155,16 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
    }
 
     /**
-     * @expectedException Ray\Di\Exception\MultipleAnnotationNotAllowed
+     * @expectedException \Ray\Di\Exception\MultipleAnnotationNotAllowed
      */
-    public function testMultipleAnnotationNotAllowedExcection()
+    public function testMultipleAnnotationNotAllowedException()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionMultiplePostConstructClass');
+        $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionMultiplePostConstructClass');
     }
 
-    public function testSingleVarAnnotattion()
+    public function testSingleVarAnnotation()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockNamed');
+        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockNamed');
         $expected = [
             'setUserDb' => [
                 [
@@ -175,31 +181,31 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * 	@expectedException Ray\Di\Exception\Named
+     * 	@expectedException \Ray\Di\Exception\Named
      */
     public function testInvalidNamed()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\InvalidNamed');
+        $this->annotationScanner->getDefinition('Ray\Di\Definition\InvalidNamed');
     }
 
     public function testImplementedBy()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Mock\LogInterface');
+        $definition = $this->annotationScanner->getDefinition('Ray\Di\Mock\LogInterface');
         $expected ='Ray\Di\Mock\Log';
         $this->assertSame($expected, $definition['ImplementedBy']);
     }
 
     public function testImplementedByTwice()
     {
-        $definition1 = $this->annotationSacnner->getDefinition('Ray\Di\Mock\LogInterface');
+        $definition1 = $this->annotationScanner->getDefinition('Ray\Di\Mock\LogInterface');
         // to be cached
-        $definition2 = $this->annotationSacnner->getDefinition('Ray\Di\Mock\LogInterface');
+        $definition2 = $this->annotationScanner->getDefinition('Ray\Di\Mock\LogInterface');
         $this->assertSame($definition1, $definition2);
     }
 
-    public function testImplemetedBy()
+    public function testImplementedBy2()
     {
-        $definition = $this->annotationSacnner->getDefinition('Ray\Di\Definition\Implemented');
+        $definition = $this->annotationScanner->getDefinition('Ray\Di\Definition\Implemented');
         $expected = [
             'setLog' => [
                 [
@@ -215,18 +221,18 @@ class AnnotationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($expected, $definition['Inject'][Definition::INJECT_SETTER]);
     }
 
-    public function testgetDefinitionDobule()
+    public function testGetDefinitionDouble()
     {
-        $definition1 = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
-        $definition2 = $this->annotationSacnner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $definition1 = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
+        $definition2 = $this->annotationScanner->getDefinition('Ray\Di\Definition\MockDefinitionClass');
         $this->assertSame($definition1, $definition2);
     }
 
     /**
-     * @expectedException Ray\Di\Exception\NotReadable
+     * @expectedException \Ray\Di\Exception\NotReadable
      */
     public function testNotReadable()
     {
-        $this->annotationSacnner->getDefinition('NotReadable');
+        $this->annotationScanner->getDefinition('NotReadable');
     }
 }

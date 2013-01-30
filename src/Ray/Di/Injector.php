@@ -8,6 +8,8 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\Cache;
 use Ray\Di\Exception;
 use LogicException;
 use Ray\Di\Exception\OptionalInjectionNotBound;
@@ -79,13 +81,20 @@ class Injector implements InjectorInterface
      */
     private $class;
 
+    /**
+     * Cache adapter
+     *
+     * @var Cache
+     */
+    private $cache;
 
     /**
      * Set binding module
      *
      * @param AbstractModule $module
+     * @param bool           $activate
      *
-     * @return void
+     * @return self
      * @throws \Aura\Di\Exception\ContainerLocked
      */
     public function setModule(AbstractModule $module, $activate = true)
@@ -97,6 +106,8 @@ class Injector implements InjectorInterface
             $module->activate($this);
         }
         $this->module = $module;
+
+        return $this;
     }
 
     /**
@@ -114,11 +125,13 @@ class Injector implements InjectorInterface
      *
      * @param LoggerInterface $logger
      *
-     * @return void
+     * @return self
      */
     public function setLogger(LoggerInterface $logger)
     {
         $this->log = $logger;
+
+        return $this;
     }
 
     /**
@@ -132,6 +145,17 @@ class Injector implements InjectorInterface
     }
 
     /**
+     * (non-PHPDoc)
+     * @see \Ray\Di\InjectorInterface::setCache()
+     */
+    public function setCache(Cache $cache)
+    {
+        $this->cache = $cache;
+
+        return $this;
+    }
+
+    /**
      * Constructor
      *
      * @param ContainerInterface $container The class to instantiate.
@@ -141,11 +165,11 @@ class Injector implements InjectorInterface
     public function __construct(
         ContainerInterface $container,
         AbstractModule $module = null,
-        BindInterface $bind = null)
-    {
+        BindInterface $bind = null
+    ) {
         $this->container = $container;
-        $this->module = $module ?: new EmptyModule;
-        $this->bind = $bind ?: new Bind;
+        $this->module = $module ? : new EmptyModule;
+        $this->bind = $bind ? : new Bind;
         $this->preDestroyObjects = new SplObjectStorage;
         $this->config = $container->getForge()->getConfig();
         $this->module->activate($this);
@@ -171,14 +195,18 @@ class Injector implements InjectorInterface
      * Injector builder
      *
      * @param       array AbstractModule[] $modules
-     * @param bool  $useApcCache
+     * @param Cache $cache
      *
      * @return Injector
      */
-    public static function create(array $modules = [], $useApcCache = false)
+    public static function create(array $modules = [], Cache $cache = null)
     {
-        $config = $useApcCache ? __NAMESPACE__ . '\ApcConfig' : __NAMESPACE__ . '\Config';
-        $injector = new self(new Container(new Forge(new $config(new Annotation(new Definition, new AnnotationReader)))));
+        if (is_null($cache)) {
+            $injector = new self(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))));
+        } else {
+            $injector = new self(new Container(new Forge(new Config(new Annotation(new Definition, new CachedReader(new AnnotationReader, $cache))))));
+            $injector->setCache($cache);
+        }
         if (count($modules) > 0) {
             $module = array_shift($modules);
             foreach ($modules as $extraModule) {
@@ -187,6 +215,7 @@ class Injector implements InjectorInterface
             }
             $injector->setModule($module);
         }
+
         return $injector;
     }
 
@@ -210,6 +239,14 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class, array $params = null)
     {
+        // cache read ?
+        if ($this->cache instanceof Cache) {
+            $cacheKey = spl_object_hash($this->module);
+            $object = $this->cache->fetch($cacheKey);
+            if ($object) {
+                return $object;
+            }
+        }
         $bound = $this->getBound($class);
 
         // return singleton bound object if exists
@@ -275,6 +312,11 @@ class Injector implements InjectorInterface
             $this->container->set($interfaceClass, $object);
         }
 
+        if ($this->cache instanceof Cache) {
+            /** @noinspection PhpUndefinedVariableInspection */
+            $this->cache->save($cacheKey, $object);
+        }
+
         return $object;
     }
 
@@ -306,6 +348,7 @@ class Injector implements InjectorInterface
             list($config, $setter, $definition) = $this->config->fetch($class);
         }
         $hasDirectBinding = isset($this->module->bindings[$class]);
+        /** @var $definition Definition */
         if ($definition->hasDefinition() || $hasDirectBinding) {
             list($config, $setter) = $this->bindModule($setter, $definition);
         }
@@ -366,8 +409,8 @@ class Injector implements InjectorInterface
      * @param mixed  $definition
      * @param string $class
      *
-     * @return mixed class | object
-     * @throws Exception\Binding
+     * @return array|object
+     * @throws Exception\NotBound
      */
     private function getBoundClass($bindings, $definition, $class)
     {
@@ -572,7 +615,7 @@ class Injector implements InjectorInterface
     /**
      * Set one parameter with definition, or JIT binding.
      *
-     * @param array &$param
+     * @param array  &$param
      * @param string $key
      * @param array  $userData
      *

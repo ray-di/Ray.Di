@@ -9,7 +9,7 @@ use Ray\Aop\Bind;
 class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Forge
+     * @var AbstractModule
      */
     protected $module;
 
@@ -69,7 +69,7 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\ReadOnly
+     * @expectedException \Ray\Di\Exception\ReadOnly
      */
     public function testOffsetSet()
     {
@@ -77,7 +77,7 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\ReadOnly
+     * @expectedException \Ray\Di\Exception\ReadOnly
      */
     public function testOffsetUnset()
     {
@@ -93,7 +93,7 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Ray\Di\Exception\Configuration
+     * @expectedException \Ray\Di\Exception\Configuration
      */
     public function testToProviderInvalid()
     {
@@ -137,7 +137,9 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = $this->module;
         $module->activate();
+        /** @var $module Callable */
         $binder = $module('Ray\Di\Tests\RealBillingService', new Bind);
+        /** @var $binder Bind */
         $this->assertSame(false, $binder->hasBinding());
     }
 
@@ -168,7 +170,7 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(false, $result);
     }
 
-    public function testAopAnnotateMatcherModuleGetCorrectIntercecptor()
+    public function testAopAnnotateMatcherModuleGetCorrectInterceptor()
     {
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
         $module->activate();
@@ -212,8 +214,8 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Modules\TimeModule;
         $this->module->install($module);
-        $bindigs = $this->module->bindings;
-        $bindingClass = array_keys((array) $bindigs);
+        $bindings = $this->module->bindings;
+        $bindingClass = array_keys((array) $bindings);
         $this->assertSame($bindingClass, ["Ray\\Di\\Mock\\DbInterface", '']);
     }
 
@@ -226,7 +228,7 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * acount($result) is 4, but latter 2 is ignored.
+     * account($result) is 4, but latter 2 is ignored.
      * only first bind is valid.
      */
     public function test_installModuleTwice()

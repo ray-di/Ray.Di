@@ -10,6 +10,8 @@ use Ray\Di\Di\PostConstruct;
  */
 class MockDefinitionMultiplePostConstructClass
 {
+    public $inited;
+
     /**
      * Init
      *

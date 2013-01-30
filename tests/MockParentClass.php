@@ -1,5 +1,7 @@
 <?php
+
 namespace Ray\Di;
+
 class MockParentClass
 {
     protected $foo;

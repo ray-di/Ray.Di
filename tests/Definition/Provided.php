@@ -16,7 +16,7 @@ class Provided
     /**
      * @Inject
      *
-     * @param ReaderInterface $log
+     * @param ReaderInterface $reader
      */
     public function setReader(ReaderInterface $reader)
     {

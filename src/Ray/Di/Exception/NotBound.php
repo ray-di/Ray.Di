@@ -19,12 +19,12 @@ use Ray\Di\AbstractModule;
 class NotBound extends Binding implements Exception
 {
     /**
-     * @var Ray\Di\Module
+     * @var AbstractModule
      */
     public $module;
 
     /**
-     * @param \Ray\Di\AbstractModule $module
+     * @param AbstractModule $module
      *
      * @return NotBound
      */

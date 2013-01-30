@@ -34,14 +34,13 @@ class Instance
     /**
      * @param User
      */
-    public $user;
+    public $usr;
 
     /**
      * @Inject
      * @Named("id")
      *
-     * @param string $db
-     *
+     * @param $id
      */
     public function setId($id)
     {
@@ -52,8 +51,9 @@ class Instance
      * @Inject
      * @Named("name=user_name,age=user_age,gender=user_gender")
      *
-     * @param string $db
-     *
+     * @param        $name
+     * @param        $age
+     * @param string $gender
      */
     public function setUser($name, $age, $gender="male")
     {
@@ -66,8 +66,8 @@ class Instance
      * @Inject
      * @Named("userId=id")
      *
-     * @param string $db
-     *
+     * @param                            $userId
+     * @param \Ray\Di\Mock\UserInterface $user
      */
     public function setIdUser($userId, UserInterface $user)
     {

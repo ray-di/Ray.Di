@@ -7,7 +7,7 @@ use Ray\Di\ProviderInterface;
 class DbProvider implements ProviderInterface
 {
     /**
-     * @return UserDb
+     * @return \Ray\Di\Mock\UserDb
      */
     public function get()
     {

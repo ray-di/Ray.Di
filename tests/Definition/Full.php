@@ -11,12 +11,16 @@ use Ray\Di\Di\Named;
  */
 class Full
 {
+    public $name;
+    public $age;
+    public $gender;
+    public $id;
+
     /**
      * @Inject
      * @Named("id")
      *
-     * @param string $db
-     *
+     * @param $id
      */
     public function setId($id)
     {
@@ -27,7 +31,9 @@ class Full
      * @Inject
      * @Named("name=user_name,age=user_age,gender=user_gender")
      *
-     * @param string $db
+     * @param        $name
+     * @param        $age
+     * @param string $gender
      */
     public function setUser($name, $age, $gender="male")
     {

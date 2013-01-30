@@ -15,15 +15,19 @@ use Ray\Di\Di\Named;
 class Multi
 {
     /**
-     * @var Ray\Di\Db
+     * @var DbInterface
      */
     public $db;
 
     /**
-     * @var Ray\Di\UserDb
+     * @var DbInterface
      */
     public $userDb;
 
+    /**
+     * @var DbInterface
+     */
+    public $adminDb;
     /**
      * @Inject
      *
@@ -38,8 +42,7 @@ class Multi
      * @Inject
      * @Named("user_db")
      *
-     * @param DbInterface $db
-     *
+     * @param \Ray\Di\Mock\DbInterface $userDb
      */
     public function setUserDb(DbInterface $userDb)
     {
@@ -50,8 +53,7 @@ class Multi
      * @Inject
      * @Named("adminDb=admin_db")
      *
-     * @param DbInterface $db
-     *
+     * @param \Ray\Di\Mock\DbInterface $adminDb
      */
     public function setAdminDb(DbInterface $adminDb)
     {
@@ -62,8 +64,8 @@ class Multi
      * @Inject
      * @Named("user=admin_user,db=production_db")
      *
-     * @param DbInterface $db
-     *
+     * @param \Ray\Di\Mock\UserInterface $user
+     * @param \Ray\Di\Mock\DbInterface   $db
      */
     public function setDouble(UserInterface $user, DbInterface $db)
     {

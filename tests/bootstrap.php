@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 
 // Ensure that composer has installed all dependencies
 if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
-    die("Dependencies must be installed using composer:\n\nphp composer.phar install --dev\n\n"
+    die("Dependencies must be installed using composer:\n\n php composer.phar install --dev\n\n"
         . "See http://getcomposer.org for help with installing composer\n");
 }
 

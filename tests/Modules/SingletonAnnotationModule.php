@@ -3,7 +3,6 @@
 namespace Ray\Di\Modules;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Scope;
 
 class SingletonAnnotationModule extends AbstractModule
 {
