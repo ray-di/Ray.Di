@@ -7,7 +7,6 @@
  */
 namespace Ray\Di;
 
-use Ray\Di\Di\ImplementedBy;
 use Doctrine\Common\Cache\Cache;
 
 /**
@@ -15,7 +14,6 @@ use Doctrine\Common\Cache\Cache;
  *
  * @package Ray.Di
  *
- * @ImplementedBy("Ray\Di\Injector")
  */
 interface InjectorInterface
 {
