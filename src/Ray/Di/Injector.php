@@ -239,8 +239,10 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class, array $params = null)
     {
+        $isNotRecursive = (debug_backtrace()[0]['file'] !== __FILE__);
+        $useCache = $isNotRecursive && ( $this->cache instanceof Cache);
         // cache read ?
-        if ($this->cache instanceof Cache) {
+        if ($useCache) {
             $cacheKey = PHP_SAPI . get_class($this->module) . $class ;
             $object = $this->cache->fetch($cacheKey);
             if ($object) {
@@ -312,7 +314,7 @@ class Injector implements InjectorInterface
             $this->container->set($interfaceClass, $object);
         }
 
-        if ($this->cache instanceof Cache) {
+        if ($useCache) {
             /** @noinspection PhpUndefinedVariableInspection */
             $this->cache->save($cacheKey, $object);
         }
