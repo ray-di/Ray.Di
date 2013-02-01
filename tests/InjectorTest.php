@@ -458,4 +458,12 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $instance2 = $this->injector->getInstance('Ray\Di\Mock\Time');
         $this->assertSame($instance1->time, $instance2->time);
     }
+
+    /**
+     * @expectedException \Ray\Di\Exception\NotInstantiable
+     */
+    public function testNotInstantiableException()
+    {
+        $this->injector->getInstance('Ray\Di\Mock\AbstractDb');
+    }
 }
