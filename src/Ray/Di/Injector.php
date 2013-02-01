@@ -240,15 +240,16 @@ class Injector implements InjectorInterface
     public function getInstance($class, array $params = null)
     {
         $isNotRecursive = (debug_backtrace()[0]['file'] !== __FILE__);
-        $useCache = $isNotRecursive && ( $this->cache instanceof Cache);
+        $useCache = $isNotRecursive && ($this->cache instanceof Cache);
         // cache read ?
         if ($useCache) {
-            $cacheKey = PHP_SAPI . get_class($this->module) . $class ;
+            $cacheKey = PHP_SAPI . get_class($this->module) . $class;
             $object = $this->cache->fetch($cacheKey);
             if ($object) {
                 return $object;
             }
         }
+
         $bound = $this->getBound($class);
 
         // return singleton bound object if exists
@@ -271,6 +272,11 @@ class Injector implements InjectorInterface
 
         // be all parameters ready
         $this->constructorInject($class, $params, $this->module);
+
+        // is instantiable ?
+        if (!(new \ReflectionClass($class))->isInstantiable()) {
+            throw new Exception\NotInstantiable($class);
+        }
 
         // create the new instance
         $object = call_user_func_array(
@@ -339,6 +345,7 @@ class Injector implements InjectorInterface
         } catch (ReflectionException $e) {
             throw new Exception\NotReadable($class);
         }
+
         list($config, $setter, $definition) = $this->config->fetch($class);
         $interfaceClass = $isSingleton = false;
         if ($isInterface) {
