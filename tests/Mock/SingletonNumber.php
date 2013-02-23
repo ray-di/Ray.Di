@@ -11,7 +11,7 @@ class SingletonNumber implements NumberInterface
     /**
      * @Inject
      */
-    function __construct(SingletonDbInterface $db)
+    public function __construct(SingletonDbInterface $db)
     {
         $this->db = $db;
     }

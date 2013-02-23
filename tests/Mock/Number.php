@@ -11,7 +11,7 @@ class Number implements NumberInterface
     /**
      * @Inject
      */
-    function __construct(DbInterface $db)
+    public function __construct(DbInterface $db)
     {
         $this->db = $db;
     }
