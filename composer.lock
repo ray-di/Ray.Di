@@ -16,10 +16,9 @@
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
-                "aura/installer-default": ">=1.0.0"
+                "aura/installer-default": ">=1.0.0",
+                "php": ">=5.4.0"
             },
-            "time": "2012-11-28 00:00:00",
             "type": "aura-package",
             "autoload": {
                 "psr-0": {
@@ -53,12 +52,13 @@
             "description": "The Aura DI package provides a dependency injection container system with native support for constructor- and setter-based injection, lazy-loading of services, and inheritable configuration of setters and constructor params.",
             "homepage": "http://auraphp.github.com/Aura.Di",
             "keywords": [
-                "dependency injection",
                 "container",
+                "dependency injection",
+                "dependency injection container",
                 "di",
-                "di container",
-                "dependency injection container"
-            ]
+                "di container"
+            ],
+            "time": "2012-11-28 00:00:00"
         },
         {
             "name": "aura/installer-default",
@@ -74,7 +74,6 @@
                 "reference": "1.0.0",
                 "shasum": ""
             },
-            "time": "2012-11-26 21:35:57",
             "type": "composer-installer",
             "extra": {
                 "class": "Aura\\Composer\\DefaultInstaller"
@@ -97,9 +96,10 @@
             ],
             "description": "Installs Aura packages using the Composer defaults.",
             "keywords": [
-                "installer",
-                "aura"
-            ]
+                "aura",
+                "installer"
+            ],
+            "time": "2012-11-26 21:35:57"
         },
         {
             "name": "doctrine/common",
@@ -118,7 +118,6 @@
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "2012-09-20 05:55:18",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -161,12 +160,13 @@
             "description": "Common Library for Doctrine projects",
             "homepage": "http://www.doctrine-project.org",
             "keywords": [
-                "collections",
-                "spl",
-                "eventmanager",
                 "annotations",
-                "persistence"
-            ]
+                "collections",
+                "eventmanager",
+                "persistence",
+                "spl"
+            ],
+            "time": "2012-09-20 05:55:18"
         },
         {
             "name": "ray/aop",
@@ -183,10 +183,9 @@
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
-                "doctrine/common": "2.3.*-dev"
+                "doctrine/common": "2.3.*-dev",
+                "php": ">=5.4.0"
             },
-            "time": "2012-10-17 00:13:53",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -206,11 +205,12 @@
             "description": "Aspect oriented programing framework",
             "homepage": "https://github.com/koriym/Ray.Aop",
             "keywords": [
+                "annotation",
                 "aop",
                 "aspect",
-                "annotation",
                 "method interception"
-            ]
+            ],
+            "time": "2012-10-17 00:13:53"
         }
     ],
     "packages-dev": null,
