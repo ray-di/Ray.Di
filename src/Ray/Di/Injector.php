@@ -436,6 +436,7 @@ class Injector implements InjectorInterface
         }
 
         $inType = isset($bindings[$class]['*'][AbstractModule::IN]) ? $bindings[$class]['*'][AbstractModule::IN] : null;
+        $inType = is_array($inType) ? $inType[0] : $inType;
         $isSingleton = $inType === Scope::SINGLETON || $definition['Scope'] == Scope::SINGLETON;
         $interfaceClass = $class;
 
