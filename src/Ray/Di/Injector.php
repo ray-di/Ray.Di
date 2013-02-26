@@ -239,8 +239,12 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class, array $params = null)
     {
+        static $loaded = [];
+
         $isNotRecursive = (debug_backtrace()[0]['file'] !== __FILE__);
-        $useCache = $isNotRecursive && ($this->cache instanceof Cache);
+        $isFirstLoadInThisSession = (!in_array($class, $loaded));
+        $useCache = ($this->cache instanceof Cache && $isNotRecursive && $isFirstLoadInThisSession);
+        $loaded[] = $class;
         // cache read ?
         if ($useCache) {
             $cacheKey = PHP_SAPI . get_class($this->module) . $class;

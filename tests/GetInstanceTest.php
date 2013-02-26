@@ -71,4 +71,41 @@ class GetInstanceTest extends \PHPUnit_Framework_TestCase
         $b = spl_object_hash($numberInstance2->db);
         $this->assertSame($a, $b);
     }
+
+    public function testInjectInSingletonInterface4times()
+    {
+        $injector = Injector::create([new Modules\SingletonModule()]);
+
+        $numberInstance1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $numberInstance2 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $numberInstance3 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $numberInstance4 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+
+        $result1 = spl_object_hash($numberInstance1);
+        $result2 = spl_object_hash($numberInstance2);
+        $result3 = spl_object_hash($numberInstance3);
+        $result4 = spl_object_hash($numberInstance4);
+        $this->assertSame($result1, $result2);
+        $this->assertSame($result2, $result3);
+        $this->assertSame($result3, $result4);
+    }
+
+    public function testInjectInSingletonWithCache()
+    {
+        $injector = Injector::create([new Modules\SingletonModule()])->setCache(new \Doctrine\Common\Cache\FilesystemCache(sys_get_temp_dir()));
+
+        $numberInstance1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $numberInstance2 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $numberInstance3 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $numberInstance4 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+
+        $result1 = spl_object_hash($numberInstance1);
+        $result2 = spl_object_hash($numberInstance2);
+        $result3 = spl_object_hash($numberInstance3);
+        $result4 = spl_object_hash($numberInstance4);
+        $this->assertSame($result1, $result2);
+        $this->assertSame($result2, $result3);
+        $this->assertSame($result3, $result4);
+    }
+
 }
