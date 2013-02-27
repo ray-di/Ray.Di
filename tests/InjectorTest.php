@@ -474,4 +474,13 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->injector->getInstance('Ray\Di\Mock\AbstractDb');
     }
+
+    public function testCachedObjectOverRequest()
+    {
+        $cmd = 'php ' . __DIR__ . '/scripts/time.php';
+        exec($cmd, $var1);
+        $this->injector->setModule(new Modules\TimeModule)->setCache(new FilesystemCache(__DIR__ . '/scripts/tmp'));
+        $time = $this->injector->getInstance('Ray\Di\Mock\Time2');
+        $this->assertSame((int)$var1[0], (int)$time->time);
+    }
 }
