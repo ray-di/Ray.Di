@@ -251,6 +251,13 @@ class Injector implements InjectorInterface
     {
         static $loaded = [];
 
+        $bound = $this->getBound($class);
+
+        // return singleton bound object if exists
+        if (is_object($bound)) {
+            return $bound;
+        }
+
         $isNotRecursive = (debug_backtrace()[0]['file'] !== __FILE__);
         $isFirstLoadInThisSession = (!in_array($class, $loaded));
         $useCache = ($this->cache instanceof Cache && $isNotRecursive && $isFirstLoadInThisSession);
@@ -262,13 +269,6 @@ class Injector implements InjectorInterface
             if ($object) {
                 return $object;
             }
-        }
-
-        $bound = $this->getBound($class);
-
-        // return singleton bound object if exists
-        if (is_object($bound)) {
-            return $bound;
         }
 
         // get bound config

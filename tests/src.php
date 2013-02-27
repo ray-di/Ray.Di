@@ -82,6 +82,7 @@ require_once __DIR__ . '/Mock/AbstractDb.php';
 require_once __DIR__ . '/Mock/MovieApp.php';
 require_once __DIR__ . '/Mock/TestLogger.php';
 require_once __DIR__ . '/Mock/Time.php';
+require_once __DIR__ . '/Mock/Time2.php';
 require_once __DIR__ . '/Mock/NumberInterface.php';
 require_once __DIR__ . '/Mock/Number.php';
 require_once __DIR__ . '/Mock/SingletonNumber.php';
