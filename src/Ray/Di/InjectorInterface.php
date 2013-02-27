@@ -54,6 +54,13 @@ interface InjectorInterface
     public function setLogger(LoggerInterface $logger);
 
     /**
+     * Get Logger
+     *
+     * @return LoggerInterface
+     */
+    public function getLogger();
+
+    /**
      * Set module
      *
      * @param AbstractModule $module

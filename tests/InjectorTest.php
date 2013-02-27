@@ -357,6 +357,14 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_string(\Ray\Di\Mock\TestLogger::$log));
     }
 
+    public function testGetLogger()
+    {
+        $logger = new \Ray\Di\Mock\TestLogger;
+        $this->injector->setLogger($logger);
+        $takenLogger = $this->injector->getLogger();
+        $this->assertSame(spl_object_hash($logger), spl_object_hash($takenLogger));
+    }
+
     /**
      * @expectedException \Ray\Di\Exception\Binding
      */

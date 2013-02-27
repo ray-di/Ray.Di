@@ -135,6 +135,16 @@ class Injector implements InjectorInterface
     }
 
     /**
+     * Get Logger
+     *
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->log;
+    }
+
+    /**
      * Return container
      *
      * @return \Aura\Di\Container
