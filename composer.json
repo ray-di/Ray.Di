@@ -23,6 +23,7 @@
     "require": {
         "php": ">=5.4.0",
         "doctrine/annotations": "1.*",
+        "doctrine/cache": "1.*",
         "ray/aop": "1.0.*@beta",
         "aura/di": "1.0.*",
 		"aura/installer-default" : "1.0.*"
