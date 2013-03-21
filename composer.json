@@ -1,6 +1,5 @@
 {
     "name": "ray/di",
-    "type": "library",
     "description": "Guice style annotation-driven dependency injection framework",
     "keywords": [
         "dependency injection",
@@ -14,7 +13,6 @@
         "jsr"
     ],
     "homepage": "https://github.com/koriym/Ray.Di",
-    "version": "1.0.0-beta5",
     "license": "BSD-3-Clause",
     "authors": [
         {
@@ -22,11 +20,10 @@
             "email": "akihito.koriyama@gmail.com"
         }
     ],
-    "minimum-stability": "beta",
     "require": {
         "php": ">=5.4.0",
-        "doctrine/common": "2.3.*-dev",
-        "ray/aop": "1.0.*",
+        "doctrine/annotations": "1.*",
+        "ray/aop": "1.0.*@beta",
         "aura/di": "1.0.*",
 		"aura/installer-default" : "1.0.*"
     },
