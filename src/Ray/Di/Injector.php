@@ -226,8 +226,6 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class, array $params = null)
     {
-        static $loaded = [];
-
         $bound = $this->getBound($class);
 
         // return singleton bound object if exists
@@ -235,17 +233,10 @@ class Injector implements InjectorInterface
             return $bound;
         }
 
-        $isNotRecursive = (debug_backtrace()[0]['file'] !== __FILE__);
-        $isFirstLoadInThisSession = (!in_array($class, $loaded));
-        $useCache = ($this->cache instanceof Cache && $isNotRecursive && $isFirstLoadInThisSession);
-        $loaded[] = $class;
-        // cache read ?
-        if ($useCache) {
-            $cacheKey = PHP_SAPI . get_class($this->module) . $class;
-            $object = $this->cache->fetch($cacheKey);
-            if ($object) {
-                return $object;
-            }
+        // return cached object
+        list($cacheKey, $cachedObject) = $this->getCachedObject(debug_backtrace(), $class);
+        if ($cachedObject) {
+            return $cachedObject;
         }
 
         // get bound config
@@ -276,17 +267,7 @@ class Injector implements InjectorInterface
         );
 
         // call setter methods
-        foreach ($setter as $method => $value) {
-            // does the specified setter method exist?
-            if (method_exists($object, $method)) {
-                if (!is_array($value)) {
-                    // call the setter
-                    $object->$method($value);
-                } else {
-                    call_user_func_array([$object, $method], $value);
-                }
-            }
-        }
+        $this->setterMethod($setter, $object);
 
         // weave aspect
         $module = $this->module;
@@ -311,7 +292,7 @@ class Injector implements InjectorInterface
             $this->container->set($interfaceClass, $object);
         }
 
-        if ($useCache) {
+        if ($cacheKey) {
             /** @noinspection PhpUndefinedVariableInspection */
             $this->cache->save($cacheKey, $object);
         }
@@ -482,7 +463,7 @@ class Injector implements InjectorInterface
      *
      * @param array      $setterDefinition
      * @param Definition $definition
-     * @param Callable   $getInstance
+     * @param callable   $getInstance
      *
      * @return array
      */
@@ -493,6 +474,34 @@ class Injector implements InjectorInterface
         array_walk($settings, [$this, 'bindOneParameter'], [$definition, $getInstance]);
 
         return [$method, $settings];
+    }
+
+    /**
+     * @param array $trace
+     * @param       $class
+     *
+     * @return array|mixed
+     */
+    private function getCachedObject(array $trace, $class)
+    {
+        static $loaded = [];
+
+        $isNotRecursive = ($trace[0]['file'] !== __FILE__);
+        $isFirstLoadInThisSession = (!in_array($class, $loaded));
+        $useCache = ($this->cache instanceof Cache && $isNotRecursive && $isFirstLoadInThisSession);
+        $loaded[] = $class;
+        // cache read ?
+        if ($useCache) {
+            $cacheKey = PHP_SAPI . get_class($this->module) . $class;
+            $object = $this->cache->fetch($cacheKey);
+            if ($object) {
+                return [$cacheKey, $object];
+            }
+        } else {
+            $cacheKey = null;
+        }
+
+        return [$cacheKey, null];
     }
 
     /**
@@ -544,6 +553,25 @@ class Injector implements InjectorInterface
 
                 $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
                 throw new Exception\NotBound($msg);
+            }
+        }
+    }
+
+    /**
+     * @param array $setter
+     * @param       $object
+     */
+    private function setterMethod(array $setter, $object)
+    {
+        foreach ($setter as $method => $value) {
+            // does the specified setter method exist?
+            if (method_exists($object, $method)) {
+                if (!is_array($value)) {
+                    // call the setter
+                    $object->$method($value);
+                } else {
+                    call_user_func_array([$object, $method], $value);
+                }
             }
         }
     }
