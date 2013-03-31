@@ -266,8 +266,6 @@ class Annotation implements AnnotationInterface
     /**
      * Get default injection by typehint
      *
-     * this works as default bindings.
-     *
      * @param string $typehint
      *
      * @return array
@@ -279,7 +277,6 @@ class Annotation implements AnnotationInterface
         if (isset($definition[$typehint])) {
             $hintDef = $definition[$typehint];
         } else {
-            //$annotations = $this->docParser->parse($doc, 'class ' . $typehint);
             $annotations = $this->reader->getClassAnnotations(new ReflectionClass($typehint));
             $hintDef = $this->getDefinitionFormat($annotations);
             $definition[$typehint] = $hintDef;
