@@ -241,8 +241,7 @@ class Config implements ConfigInterface
             $params = $constructorReflection->getParameters();
             foreach ($params as $param) {
                 $name = $param->name;
-                $explicit = $this->params->offsetExists($class)
-                    && isset($this->params[$class][$name]);
+                $explicit = $this->params->offsetExists($class) && isset($this->params[$class][$name]);
                 if ($explicit) {
                     // use the explicit value for this class
                     $unified_params[$name] = $this->params[$class][$name];
@@ -266,8 +265,13 @@ class Config implements ConfigInterface
         }
 
         // merge the definitions
-        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition($class);
-        $unified_definition = new Definition(array_merge($parent_definition->getArrayCopy(), $definition->getArrayCopy()));
+        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition(
+            $class
+        );
+        $unified_definition = new Definition(array_merge(
+            $parent_definition->getArrayCopy(),
+            $definition->getArrayCopy()
+        ));
         $this->definition[$class] = $unified_definition;
 
         // done, return the unified values

@@ -557,8 +557,8 @@ class Injector implements InjectorInterface
     /**
      * Return dependency using modules.
      *
-     * @param array          $setter
-     * @param Definition     $definition
+     * @param array      $setter
+     * @param Definition $definition
      *
      * @return array <$constructorParams, $setter>
      * @throws Exception\Binding
