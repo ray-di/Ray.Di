@@ -46,8 +46,7 @@ class NewsletterModule extends AbstractModule
     }
 }
 
-$useApcCache = false;
-$di = Injector::create([new NewsletterModule], $useApcCache);
+$di = Injector::create([new NewsletterModule]);
 
 $newsletterManager = $di->getInstance('NewsletterManager');
 var_dump($newsletterManager);

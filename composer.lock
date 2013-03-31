@@ -282,16 +282,16 @@
         },
         {
             "name": "ray/aop",
-            "version": "1.0.0-beta4",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "1.0.0-beta4"
+                "reference": "1.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/1.0.0-beta4",
-                "reference": "1.0.0-beta4",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/1.0.0",
+                "reference": "1.0.0",
                 "shasum": ""
             },
             "require": {
@@ -322,7 +322,7 @@
                 "aspect",
                 "method interception"
             ],
-            "time": "2013-03-21 09:39:57"
+            "time": "2013-03-31 11:58:17"
         }
     ],
     "packages-dev": [

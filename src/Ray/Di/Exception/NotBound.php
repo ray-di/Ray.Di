@@ -31,6 +31,7 @@ class NotBound extends Binding implements Exception
     public function setModule(AbstractModule $module)
     {
         $this->module = $module;
+
         return $this;
     }
 }

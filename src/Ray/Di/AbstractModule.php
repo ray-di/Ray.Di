@@ -185,7 +185,7 @@ abstract class AbstractModule implements ArrayAccess
             $this->pointcuts = $module->pointcuts;
         }
         $this->modules[] = get_class($this);
-        $this->matcher = $matcher ?: new Matcher(new Reader);
+        $this->matcher = $matcher ? : new Matcher(new Reader);
     }
 
     /**
@@ -199,7 +199,7 @@ abstract class AbstractModule implements ArrayAccess
             return;
         }
         $this->activated = true;
-        $this->dependencyInjector = $injector ?: Injector::create([$this]);
+        $this->dependencyInjector = $injector ? : Injector::create([$this]);
         $this->configure();
     }
 
@@ -284,13 +284,14 @@ abstract class AbstractModule implements ArrayAccess
      */
     protected function toProvider($provider)
     {
-        $hasProviderInterface = class_exists($provider)
-            && in_array('Ray\Di\ProviderInterface', class_implements($provider));
+        $hasProviderInterface = class_exists($provider) && in_array(
+            'Ray\Di\ProviderInterface',
+            class_implements($provider)
+        );
         if ($hasProviderInterface === false) {
             throw new Exception\Configuration($provider);
         }
-        $this->bindings[$this->currentBinding][$this->currentName]
-            = [self::TO => [self::TO_PROVIDER, $provider]];
+        $this->bindings[$this->currentBinding][$this->currentName] = [self::TO => [self::TO_PROVIDER, $provider]];
 
         return $this;
     }
@@ -304,8 +305,7 @@ abstract class AbstractModule implements ArrayAccess
      */
     protected function toInstance($instance)
     {
-        $this->bindings[$this->currentBinding][$this->currentName]
-            = [self::TO => [self::TO_INSTANCE, $instance]];
+        $this->bindings[$this->currentBinding][$this->currentName] = [self::TO => [self::TO_INSTANCE, $instance]];
     }
 
     /**
@@ -317,8 +317,7 @@ abstract class AbstractModule implements ArrayAccess
      */
     protected function toCallable(Callable $callable)
     {
-        $this->bindings[$this->currentBinding][$this->currentName]
-            = [self::TO => [self::TO_CALLABLE, $callable]];
+        $this->bindings[$this->currentBinding][$this->currentName] = [self::TO => [self::TO_CALLABLE, $callable]];
     }
 
     /**
@@ -328,8 +327,7 @@ abstract class AbstractModule implements ArrayAccess
      */
     protected function toConstructor(array $params)
     {
-        $this->bindings[$this->currentBinding][$this->currentName]
-            = [self::TO => [self::TO_CONSTRUCTOR, $params]];
+        $this->bindings[$this->currentBinding][$this->currentName] = [self::TO => [self::TO_CONSTRUCTOR, $params]];
     }
 
     /**
@@ -379,6 +377,7 @@ abstract class AbstractModule implements ArrayAccess
         if ($module instanceof AbstractModule) {
             $this->dependencyInjector->setModule($module, false);
         }
+
         return $instance;
     }
 
@@ -472,10 +471,10 @@ abstract class AbstractModule implements ArrayAccess
                             $instance = '(array) ' . json_encode($instance);
                             break;
                         case "string":
-                            $instance =  "'{$instance}'";
+                            $instance = "'{$instance}'";
                             break;
                         case "boolean":
-                            $instance =  '(bool) ' . ($instance ? 'true' : 'false');
+                            $instance = '(bool) ' . ($instance ? 'true' : 'false');
                             break;
                         default:
                             $instance = "($type) $instance";
