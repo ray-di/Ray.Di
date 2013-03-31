@@ -146,11 +146,7 @@ class Config implements ConfigInterface
     }
 
     /**
-     *
-     * Gets the $params property.
-     *
-     * @return \ArrayObject
-     *
+     * {@inheritdoc}
      */
     public function getParams()
     {
@@ -158,11 +154,7 @@ class Config implements ConfigInterface
     }
 
     /**
-     *
-     * Gets the $setter property.
-     *
-     * @return \ArrayObject
-     *
+     * {@inheritdoc}
      */
     public function getSetter()
     {
@@ -182,13 +174,7 @@ class Config implements ConfigInterface
     }
 
     /**
-     *
-     * Returns a \ReflectionClass for a named class.
-     *
-     * @param string $class The class to reflect on.
-     *
-     * @return \ReflectionClass
-     *
+     * {@inheritdoc}
      */
     public function getReflect($class)
     {
@@ -200,14 +186,7 @@ class Config implements ConfigInterface
     }
 
     /**
-     *
-     * Fetches the unified constructor params and setter values for a class.
-     *
-     * @param string $class The class name to fetch values for.
-     *
-     * @return array An array with two elements; 0 is the constructor values
-     * for the class, and 1 is the setter methods and values for the class.
-     * 2 is the class definition.
+     * {@inheritdoc}
      */
     public function fetch($class)
     {

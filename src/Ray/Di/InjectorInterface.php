@@ -18,6 +18,16 @@ use Doctrine\Common\Cache\Cache;
 interface InjectorInterface
 {
     /**
+     * Injector builder
+     *
+     * @param       array AbstractModule[] $modules
+     * @param Cache $cache
+     *
+     * @return Injector
+     */
+    public static function create(array $modules = [], Cache $cache = null);
+
+    /**
      * Creates and returns a new instance of a class using 'module,
      * optionally with overriding params.
      *

@@ -68,12 +68,7 @@ class Annotation implements AnnotationInterface
     }
 
     /**
-     * Return class definition by annotation
-     *
-     * @param string $className
-     *
-     * @return array
-     * @throws Exception\NotReadable
+     * {@inheritdoc}
      */
     public function getDefinition($className)
     {
@@ -122,6 +117,21 @@ class Annotation implements AnnotationInterface
     }
 
     /**
+     * Return annotation name from annotation class name
+     *
+     * @param $annotation
+     *
+     * @return mixed
+     */
+    private function getAnnotationName($annotation)
+    {
+        $classPath = explode('\\', get_class($annotation));
+        $annotationName = array_pop($classPath);
+
+        return $annotationName;
+    }
+
+    /**
      * Set method definition
      *
      * @param ReflectionClass $class
@@ -143,21 +153,6 @@ class Annotation implements AnnotationInterface
                 $this->definition->setUserAnnotationByMethod($annotationName, $method->name, $annotation);
             }
         }
-    }
-
-    /**
-     * Return annotation name from annotation class name
-     *
-     * @param $annotation
-     *
-     * @return mixed
-     */
-    private function getAnnotationName($annotation)
-    {
-        $classPath = explode('\\', get_class($annotation));
-        $annotationName = array_pop($classPath);
-
-        return $annotationName;
     }
 
     /**
@@ -240,6 +235,35 @@ class Annotation implements AnnotationInterface
     }
 
     /**
+     * Get Named
+     *
+     * @param string $nameParameter "value" or "key1=value1,ke2=value2"
+     *
+     * @return array [$paramName => $named][]
+     * @throws Exception\Named
+     */
+    private function getNamed($nameParameter)
+    {
+        // single annotation @Named($annotation)
+        if (preg_match("/^[a-zA-Z0-9_]+$/", $nameParameter)) {
+            return $nameParameter;
+        }
+        // multi annotation @Named($varName1=$annotate1,$varName2=$annotate2)
+        // http://stackoverflow.com/questions/168171/regular-expression-for-parsing-name-value-pairs
+        preg_match_all('/([^=,]*)=("[^"]*"|[^,"]*)/', $nameParameter, $matches);
+        if ($matches[0] === []) {
+            throw new Exception\Named;
+        }
+        $result = [];
+        $count = count($matches[0]);
+        for ($i = 0; $i < $count; $i++) {
+            $result[$matches[1][$i]] = $matches[2][$i];
+        }
+
+        return $result;
+    }
+
+    /**
      * Get default injection by typehint
      *
      * this works as default bindings.
@@ -283,34 +307,5 @@ class Annotation implements AnnotationInterface
         }
 
         return [];
-    }
-
-    /**
-     * Get Named
-     *
-     * @param string $nameParameter "value" or "key1=value1,ke2=value2"
-     *
-     * @return array [$paramName => $named][]
-     * @throws Exception\Named
-     */
-    private function getNamed($nameParameter)
-    {
-        // single annotation @Named($annotation)
-        if (preg_match("/^[a-zA-Z0-9_]+$/", $nameParameter)) {
-            return $nameParameter;
-        }
-        // multi annotation @Named($varName1=$annotate1,$varName2=$annotate2)
-        // http://stackoverflow.com/questions/168171/regular-expression-for-parsing-name-value-pairs
-        preg_match_all('/([^=,]*)=("[^"]*"|[^,"]*)/', $nameParameter, $matches);
-        if ($matches[0] === []) {
-            throw new Exception\Named;
-        }
-        $result = [];
-        $count = count($matches[0]);
-        for ($i = 0; $i < $count; $i++) {
-            $result[$matches[1][$i]] = $matches[2][$i];
-        }
-
-        return $result;
     }
 }
