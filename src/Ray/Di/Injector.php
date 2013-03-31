@@ -89,85 +89,6 @@ class Injector implements InjectorInterface
     private $cache;
 
     /**
-     * Set binding module
-     *
-     * @param AbstractModule $module
-     * @param bool           $activate
-     *
-     * @return self
-     * @throws \Aura\Di\Exception\ContainerLocked
-     */
-    public function setModule(AbstractModule $module, $activate = true)
-    {
-        if ($this->container->isLocked()) {
-            throw new ContainerLocked;
-        }
-        if ($activate === true) {
-            $module->activate($this);
-        }
-        $this->module = $module;
-
-        return $this;
-    }
-
-    /**
-     * Return module
-     *
-     * @return AbstractModule
-     */
-    public function getModule()
-    {
-        return $this->module;
-    }
-
-    /**
-     * Set Logger
-     *
-     * @param LoggerInterface $logger
-     *
-     * @return self
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->log = $logger;
-
-        return $this;
-    }
-
-    /**
-     * Get Logger
-     *
-     * @return LoggerInterface
-     */
-    public function getLogger()
-    {
-        return $this->log;
-    }
-
-    /**
-     * Return container
-     *
-     * @return \Aura\Di\Container
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * (non-PHPDoc)
-     * @see \Ray\Di\InjectorInterface::setCache()
-     */
-    public function setCache(Cache $cache)
-    {
-        $this->cache = $cache;
-
-        return $this;
-    }
-
-    /**
-     * Constructor
-     *
      * @param ContainerInterface $container The class to instantiate.
      * @param AbstractModule     $module    Binding configuration module
      * @param BindInterface      $bind      Aspect binder
@@ -186,28 +107,7 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        $this->notifyPreShutdown();
-    }
-
-    /**
-     * Clone
-     */
-    public function __clone()
-    {
-        $this->container = clone $this->container;
-    }
-
-    /**
-     * Injector builder
-     *
-     * @param       array AbstractModule[] $modules
-     * @param Cache $cache
-     *
-     * @return Injector
+     * {@inheritdoc
      */
     public static function create(array $modules = [], Cache $cache = null)
     {
@@ -230,27 +130,102 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * Get a service object using binding module, optionally with overriding params.
-     *
-     * @param string $class  The class or interface to instantiate.
-     * @param array  $params An associative array of override parameters where
-     *                       the key the name of the constructor parameter and the value is the
-     *                       parameter value to use.
-     *
-     * @return object
-     * @throws Exception\NotReadable
+     * {@inheritdoc}
      */
+    public function getModule()
+    {
+        return $this->module;
+    }
 
     /**
-     * (non-PHPDoc)
-     * @see \Ray\Di\InjectorInterface::getInstance()
+     * {@inheritdoc}
+     */
+    public function setModule(AbstractModule $module, $activate = true)
+    {
+        if ($this->container->isLocked()) {
+            throw new ContainerLocked;
+        }
+        if ($activate === true) {
+            $module->activate($this);
+        }
+        $this->module = $module;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->log = $logger;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLogger()
+    {
+        return $this->log;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCache(Cache $cache)
+    {
+        $this->cache = $cache;
+
+        return $this;
+    }
+
+    /**
+     * Destructor
+     */
+    public function __destruct()
+    {
+        $this->notifyPreShutdown();
+    }
+
+    /**
+     * Notify pre-destroy
      *
-     * @throws Exception\NotReadable
+     * @return void
+     */
+    private function notifyPreShutdown()
+    {
+        $this->preDestroyObjects->rewind();
+        while ($this->preDestroyObjects->valid()) {
+            $object = $this->preDestroyObjects->current();
+            $method = $this->preDestroyObjects->getInfo();
+            $object->$method();
+            $this->preDestroyObjects->next();
+        }
+    }
+
+    /**
+     * Clone
+     */
+    public function __clone()
+    {
+        $this->container = clone $this->container;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getInstance($class, array $params = null)
     {
-        static $loaded = [];
-
         $bound = $this->getBound($class);
 
         // return singleton bound object if exists
@@ -258,17 +233,10 @@ class Injector implements InjectorInterface
             return $bound;
         }
 
-        $isNotRecursive = (debug_backtrace()[0]['file'] !== __FILE__);
-        $isFirstLoadInThisSession = (!in_array($class, $loaded));
-        $useCache = ($this->cache instanceof Cache && $isNotRecursive && $isFirstLoadInThisSession);
-        $loaded[] = $class;
-        // cache read ?
-        if ($useCache) {
-            $cacheKey = PHP_SAPI . get_class($this->module) . $class;
-            $object = $this->cache->fetch($cacheKey);
-            if ($object) {
-                return $object;
-            }
+        // return cached object
+        list($cacheKey, $cachedObject) = $this->getCachedObject(debug_backtrace(), $class);
+        if ($cachedObject) {
+            return $cachedObject;
         }
 
         // get bound config
@@ -299,17 +267,7 @@ class Injector implements InjectorInterface
         );
 
         // call setter methods
-        foreach ($setter as $method => $value) {
-            // does the specified setter method exist?
-            if (method_exists($object, $method)) {
-                if (!is_array($value)) {
-                    // call the setter
-                    $object->$method($value);
-                } else {
-                    call_user_func_array([$object, $method], $value);
-                }
-            }
-        }
+        $this->setterMethod($setter, $object);
 
         // weave aspect
         $module = $this->module;
@@ -334,7 +292,7 @@ class Injector implements InjectorInterface
             $this->container->set($interfaceClass, $object);
         }
 
-        if ($useCache) {
+        if ($cacheKey) {
             /** @noinspection PhpUndefinedVariableInspection */
             $this->cache->save($cacheKey, $object);
         }
@@ -377,35 +335,6 @@ class Injector implements InjectorInterface
         }
 
         return [$class, $isSingleton, $interfaceClass, $config, $setter, $definition];
-    }
-
-    /**
-     * Lock
-     *
-     * Lock the Container so that configuration cannot be accessed externally,
-     * and no new service definitions can be added.
-     *
-     * @return void
-     */
-    public function lock()
-    {
-        $this->container->lock();
-    }
-
-    /**
-     * Lazy new
-     *
-     * Returns a Lazy that creates a new instance. This allows you to replace
-     * the following idiom:
-     *
-     * @param string $class  The type of class of instantiate.
-     * @param array  $params Override parameters for the instance.
-     *
-     * @return Lazy A lazy-load object that creates the new instance.
-     */
-    public function lazyNew($class, array $params = [])
-    {
-        return $this->container->lazyNew($class, $params);
     }
 
     /**
@@ -466,99 +395,10 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * Return parameter using TO_CONSTRUCTOR
-     *
-     * 1) If parameter is provided, return. (check)
-     * 2) If parameter is NOT provided and TO_CONSTRUCTOR binding is available, return parameter with it
-     * 3) No binding found, throw exception.
-     *
-     * @param string         $class
-     * @param array          &$params
-     * @param AbstractModule $module
-     *
-     * @return void
-     * @throws Exception\NotBound
-     */
-    private function constructorInject($class, array &$params, AbstractModule $module)
-    {
-        $ref = method_exists($class, '__construct') ? new ReflectionMethod($class, '__construct') : false;
-        if ($ref === false) {
-            return;
-        }
-        $parameters = $ref->getParameters();
-        foreach ($parameters as $index => $parameter) {
-            /* @var $parameter \ReflectionParameter */
-
-            // has binding ?
-            $params = array_values($params);
-            if (!isset($params[$index])) {
-                $hasConstructorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
-                if ($hasConstructorBinding) {
-                    $params[$index] = $module[$class]['*'][AbstractModule::TO][1][$parameter->name];
-                    continue;
-                }
-                // has constructor default value ?
-                if ($parameter->isDefaultValueAvailable() === true) {
-                    continue;
-                }
-                // is typehint class ?
-                $classRef = $parameter->getClass();
-                if (is_null($classRef)) {
-                    $msg = "Invalid interface is not found. (array ?)";
-                } elseif (!$classRef->isInterface() && $classRef) {
-                    $params[$index] = $this->getInstance($classRef->getName());
-                    continue;
-                } else {
-                    $msg = "Interface [{$classRef->name}] is not bound.";
-                }
-
-                $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
-                throw new Exception\NotBound($msg);
-            }
-        }
-    }
-
-    /**
-     * Notify pre-destroy
-     *
-     * @return void
-     */
-    private function notifyPreShutdown()
-    {
-        $this->preDestroyObjects->rewind();
-        while ($this->preDestroyObjects->valid()) {
-            $object = $this->preDestroyObjects->current();
-            $method = $this->preDestroyObjects->getInfo();
-            $object->$method();
-            $this->preDestroyObjects->next();
-        }
-    }
-
-    /**
-     * Set object life cycle
-     *
-     * @param object     $instance
-     * @param Definition $definition
-     *
-     * @return void
-     */
-    private function setLifeCycle($instance, Definition $definition = null)
-    {
-        $postConstructMethod = $definition[Definition::POST_CONSTRUCT];
-        if ($postConstructMethod) {
-            call_user_func(array($instance, $postConstructMethod));
-        }
-        if (!is_null($definition[Definition::PRE_DESTROY])) {
-            $this->preDestroyObjects->attach($instance, $definition[Definition::PRE_DESTROY]);
-        }
-
-    }
-
-    /**
      * Return dependency using modules.
      *
-     * @param array          $setter
-     * @param Definition     $definition
+     * @param array      $setter
+     * @param Definition $definition
      *
      * @return array <$constructorParams, $setter>
      * @throws Exception\Binding
@@ -623,7 +463,7 @@ class Injector implements InjectorInterface
      *
      * @param array      $setterDefinition
      * @param Definition $definition
-     * @param Callable   $getInstance
+     * @param callable   $getInstance
      *
      * @return array
      */
@@ -634,6 +474,180 @@ class Injector implements InjectorInterface
         array_walk($settings, [$this, 'bindOneParameter'], [$definition, $getInstance]);
 
         return [$method, $settings];
+    }
+
+    /**
+     * @param array $trace
+     * @param       $class
+     *
+     * @return array|mixed
+     */
+    private function getCachedObject(array $trace, $class)
+    {
+        static $loaded = [];
+
+        $isNotRecursive = ($trace[0]['file'] !== __FILE__);
+        $isFirstLoadInThisSession = (!in_array($class, $loaded));
+        $useCache = ($this->cache instanceof Cache && $isNotRecursive && $isFirstLoadInThisSession);
+        $loaded[] = $class;
+        // cache read ?
+        if ($useCache) {
+            $cacheKey = PHP_SAPI . get_class($this->module) . $class;
+            $object = $this->cache->fetch($cacheKey);
+            if ($object) {
+                return [$cacheKey, $object];
+            }
+        } else {
+            $cacheKey = null;
+        }
+
+        return [$cacheKey, null];
+    }
+
+    /**
+     * Return parameter using TO_CONSTRUCTOR
+     *
+     * 1) If parameter is provided, return. (check)
+     * 2) If parameter is NOT provided and TO_CONSTRUCTOR binding is available, return parameter with it
+     * 3) No binding found, throw exception.
+     *
+     * @param string         $class
+     * @param array          &$params
+     * @param AbstractModule $module
+     *
+     * @return void
+     * @throws Exception\NotBound
+     */
+    private function constructorInject($class, array &$params, AbstractModule $module)
+    {
+        $ref = method_exists($class, '__construct') ? new ReflectionMethod($class, '__construct') : false;
+        if ($ref === false) {
+            return;
+        }
+        $parameters = $ref->getParameters();
+        foreach ($parameters as $index => $parameter) {
+            /* @var $parameter \ReflectionParameter */
+
+            // has binding ?
+            $params = array_values($params);
+            if (!isset($params[$index])) {
+                $hasConstructorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
+                if ($hasConstructorBinding) {
+                    $params[$index] = $module[$class]['*'][AbstractModule::TO][1][$parameter->name];
+                    continue;
+                }
+                // has constructor default value ?
+                if ($parameter->isDefaultValueAvailable() === true) {
+                    continue;
+                }
+                // is typehint class ?
+                $classRef = $parameter->getClass();
+                if (is_null($classRef)) {
+                    $msg = "Invalid interface is not found. (array ?)";
+                } elseif (!$classRef->isInterface() && $classRef) {
+                    $params[$index] = $this->getInstance($classRef->getName());
+                    continue;
+                } else {
+                    $msg = "Interface [{$classRef->name}] is not bound.";
+                }
+
+                $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
+                throw new Exception\NotBound($msg);
+            }
+        }
+    }
+
+    /**
+     * @param array $setter
+     * @param       $object
+     */
+    private function setterMethod(array $setter, $object)
+    {
+        foreach ($setter as $method => $value) {
+            // does the specified setter method exist?
+            if (method_exists($object, $method)) {
+                if (!is_array($value)) {
+                    // call the setter
+                    $object->$method($value);
+                } else {
+                    call_user_func_array([$object, $method], $value);
+                }
+            }
+        }
+    }
+
+    /**
+     * Set object life cycle
+     *
+     * @param object     $instance
+     * @param Definition $definition
+     *
+     * @return void
+     */
+    private function setLifeCycle($instance, Definition $definition = null)
+    {
+        $postConstructMethod = $definition[Definition::POST_CONSTRUCT];
+        if ($postConstructMethod) {
+            call_user_func(array($instance, $postConstructMethod));
+        }
+        if (!is_null($definition[Definition::PRE_DESTROY])) {
+            $this->preDestroyObjects->attach($instance, $definition[Definition::PRE_DESTROY]);
+        }
+
+    }
+
+    /**
+     * Lock
+     *
+     * Lock the Container so that configuration cannot be accessed externally,
+     * and no new service definitions can be added.
+     *
+     * @return void
+     */
+    public function lock()
+    {
+        $this->container->lock();
+    }
+
+    /**
+     * Lazy new
+     *
+     * Returns a Lazy that creates a new instance. This allows you to replace
+     * the following idiom:
+     *
+     * @param string $class  The type of class of instantiate.
+     * @param array  $params Override parameters for the instance.
+     *
+     * @return Lazy A lazy-load object that creates the new instance.
+     */
+    public function lazyNew($class, array $params = [])
+    {
+        return $this->container->lazyNew($class, $params);
+    }
+
+    /**
+     * Magic get to provide access to the Config::$params and $setter
+     * objects.
+     *
+     * @param string $key The property to retrieve ('params' or 'setter').
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        return $this->container->__get($key);
+    }
+
+    /**
+     * Return module information.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $result = (string)($this->module);
+
+        return $result;
     }
 
     /**
@@ -709,30 +723,5 @@ class Injector implements InjectorInterface
         }
 
         return [AbstractModule::TO => [AbstractModule::TO_PROVIDER, $typeHintBy[1]]];
-    }
-
-    /**
-     * Magic get to provide access to the Config::$params and $setter
-     * objects.
-     *
-     * @param string $key The property to retrieve ('params' or 'setter').
-     *
-     * @return mixed
-     */
-    public function __get($key)
-    {
-        return $this->container->__get($key);
-    }
-
-    /**
-     * Return module information.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        $result = (string)($this->module);
-
-        return $result;
     }
 }
