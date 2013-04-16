@@ -185,6 +185,11 @@ class Definition extends ArrayObject
     const OPTIONAL = 'optional';
 
     /**
+     * Default value
+     */
+    const DEFAULT_VAL = 'default_val';
+
+    /**
      * Definition default
      *
      * @var array

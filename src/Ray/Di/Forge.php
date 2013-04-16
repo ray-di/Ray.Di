@@ -7,8 +7,10 @@
  */
 namespace Ray\Di;
 
+use Aura\Di\ConfigInterface;
 use Aura\Di\Forge as AuraForge;
 use Aura\Di\ForgeInterface;
+use Ray\Di\Di\Inject;
 
 /**
  *
@@ -18,4 +20,13 @@ use Aura\Di\ForgeInterface;
  */
 class Forge extends AuraForge implements ForgeInterface
 {
+    /**
+     * @param ConfigInterface $config
+     *
+     * @Inject
+     */
+    public function __construct(ConfigInterface $config)
+    {
+        parent::__construct($config);
+    }
 }

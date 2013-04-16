@@ -221,7 +221,7 @@ class Annotation implements AnnotationInterface
                 $name = Definition::NAME_UNSPECIFIED;
             }
             $optionalInject = $methodAnnotation[Definition::INJECT]->optional;
-            $paramsInfo[] = [
+            $definition = [
                 Definition::PARAM_POS => $pos,
                 Definition::PARAM_TYPEHINT => $typehint,
                 Definition::PARAM_NAME => $parameter->name,
@@ -229,6 +229,10 @@ class Annotation implements AnnotationInterface
                 Definition::PARAM_TYPEHINT_BY => $typehintBy,
                 Definition::OPTIONAL => $optionalInject
             ];
+            if ($parameter->isOptional()) {
+                $definition[Definition::DEFAULT_VAL] = $parameter->getDefaultValue();
+            }
+            $paramsInfo[] = $definition;
         }
         $paramInfo[$method->name] = $paramsInfo;
         $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
