@@ -7,12 +7,12 @@
  */
 namespace Ray\Di;
 
+use ArrayAccess;
+use ArrayObject;
+use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Ray\Aop\Bind;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
-use Doctrine\Common\Annotations\AnnotationReader as Reader;
-use ArrayObject;
-use ArrayAccess;
 
 /**
  * A module contributes configuration information, typically interface bindings,
@@ -311,11 +311,11 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * To closure
      *
-     * @param Callable $callable
+     * @param callable $callable
      *
      * @return void
      */
-    protected function toCallable(Callable $callable)
+    protected function toCallable(callable $callable)
     {
         $this->bindings[$this->currentBinding][$this->currentName] = [self::TO => [self::TO_CALLABLE, $callable]];
     }

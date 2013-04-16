@@ -7,23 +7,25 @@
  */
 namespace Ray\Di;
 
+use Aura\Di\ContainerInterface;
+use Aura\Di\Exception\ContainerLocked;
+use Aura\Di\Lazy;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
-use Ray\Di\Exception;
 use LogicException;
-use Ray\Di\Exception\OptionalInjectionNotBound;
-use Ray\Di\Exception\Binding;
-use Ray\Aop\BindInterface;
 use Ray\Aop\Bind;
+use Ray\Aop\BindInterface;
 use Ray\Aop\Weaver;
-use Aura\Di\Lazy;
-use Aura\Di\ContainerInterface;
-use Aura\Di\Exception\ContainerLocked;
+use Ray\Di\Exception;
+use Ray\Di\Exception\Binding;
+use Ray\Di\Exception\OptionalInjectionNotBound;
 use ReflectionClass;
-use ReflectionMethod;
 use ReflectionException;
+use ReflectionMethod;
 use SplObjectStorage;
+use Ray\Di\Di\Inject;
+
 
 /**
  * Dependency Injector
@@ -92,6 +94,8 @@ class Injector implements InjectorInterface
      * @param ContainerInterface $container The class to instantiate.
      * @param AbstractModule     $module    Binding configuration module
      * @param BindInterface      $bind      Aspect binder
+     *
+     * @Inject
      */
     public function __construct(
         ContainerInterface $container,
@@ -311,6 +315,7 @@ class Injector implements InjectorInterface
     private function getBound($class)
     {
         $class = $this->removeLeadingBackSlash($class);
+
         // is interface ?
         try {
             $isInterface = (new ReflectionClass($class))->isInterface();
@@ -389,7 +394,11 @@ class Injector implements InjectorInterface
             return $object;
         }
 
-        $class = ($toType === AbstractModule::TO_CLASS) ? $bindings[$class]['*']['to'][1] : $class;
+        if ($toType === AbstractModule::TO_CLASS) {
+            $class = $bindings[$class]['*']['to'][1];
+        } elseif ($toType === AbstractModule::TO_INSTANCE) {
+            return $bindings[$class]['*']['to'][1];
+        }
 
         return [$class, $isSingleton, $interfaceClass];
     }
@@ -467,7 +476,7 @@ class Injector implements InjectorInterface
      *
      * @return array
      */
-    private function bindMethod(array $setterDefinition, Definition $definition, Callable $getInstance)
+    private function bindMethod(array $setterDefinition, Definition $definition, callable $getInstance)
     {
         list($method, $settings) = each($setterDefinition);
 
@@ -543,7 +552,7 @@ class Injector implements InjectorInterface
                 // is typehint class ?
                 $classRef = $parameter->getClass();
                 if (is_null($classRef)) {
-                    $msg = "Invalid interface is not found. (array ?)";
+                    $msg = "Valid interface is not found. (array ?)";
                 } elseif (!$classRef->isInterface() && $classRef) {
                     $params[$index] = $this->getInstance($classRef->getName());
                     continue;
@@ -669,6 +678,11 @@ class Injector implements InjectorInterface
         $hasTypeHint = isset($this->module[$typeHint]) && isset($this->module[$typeHint][$annotate]) && ($this->module[$typeHint][$annotate] !== []);
         $binding = $hasTypeHint ? $this->module[$typeHint][$annotate] : false;
         if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
+            // default value
+            if (array_key_exists(Definition::DEFAULT_VAL, $param)) {
+                $param = $param[Definition::DEFAULT_VAL];
+                return;
+            }
             // default binding by @ImplementedBy or @ProviderBy
             $binding = $this->jitBinding($param, $typeHint, $annotate);
             if ($binding === self::OPTIONAL_BINDING_NOT_BOUND) {
