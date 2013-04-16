@@ -1,18 +1,22 @@
 {
-    "hash": "b52f025923f142686d841b502a08ba4f",
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "0c80dec3dc5e2338aad53f3204dff6af",
     "packages": [
         {
             "name": "aura/di",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/auraphp/Aura.Di",
-                "reference": "1.0.1"
+                "url": "https://github.com/auraphp/Aura.Di.git",
+                "reference": "1.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/auraphp/Aura.Di/archive/1.0.1.zip",
-                "reference": "1.0.1",
+                "url": "https://api.github.com/repos/auraphp/Aura.Di/zipball/1.1.0",
+                "reference": "1.1.0",
                 "shasum": ""
             },
             "require": {
@@ -27,7 +31,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
@@ -58,7 +62,7 @@
                 "di",
                 "di container"
             ],
-            "time": "2012-11-28 00:00:00"
+            "time": "2013-04-07 00:00:00"
         },
         {
             "name": "aura/installer-default",
@@ -332,9 +336,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "ray/aop": 10
-    },
+    "stability-flags": [
+
+    ],
     "platform": {
         "php": ">=5.4.0"
     },

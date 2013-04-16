@@ -3,13 +3,11 @@
     "description": "Guice style annotation-driven dependency injection framework",
     "keywords": [
         "dependency injection",
+        "aspect oriented programming",
         "di",
-        "container",
+        "aop",
         "guice",
         "annotation",
-        "ioc",
-        "aop",
-        "method interception",
         "jsr"
     ],
     "homepage": "https://github.com/koriym/Ray.Di",
@@ -25,8 +23,7 @@
         "doctrine/annotations": "1.*",
         "doctrine/cache": "1.*",
         "ray/aop": "1.0.*",
-        "aura/di": "1.0.*",
-		"aura/installer-default" : "1.0.*"
+        "aura/di": "1.1.*"
     },
     "autoload": {
         "psr-0": {
