@@ -476,7 +476,7 @@ class Injector implements InjectorInterface
      *
      * @return array
      */
-    private function bindMethod(array $setterDefinition, Definition $definition, Callable $getInstance)
+    private function bindMethod(array $setterDefinition, Definition $definition, callable $getInstance)
     {
         list($method, $settings) = each($setterDefinition);
 
@@ -672,7 +672,7 @@ class Injector implements InjectorInterface
      */
     private function bindOneParameter(array &$param, $key, array $userData)
     {
-        list($definition, $getInstance) = $userData;
+        list(, $getInstance) = $userData;
         $annotate = $param[Definition::PARAM_ANNOTATE];
         $typeHint = $param[Definition::PARAM_TYPEHINT];
         $hasTypeHint = isset($this->module[$typeHint]) && isset($this->module[$typeHint][$annotate]) && ($this->module[$typeHint][$annotate] !== []);

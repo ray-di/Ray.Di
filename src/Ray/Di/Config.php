@@ -5,7 +5,6 @@
  * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * @see     https://github.com/auraphp/Aura.Di
- *
  */
 namespace Ray\Di;
 

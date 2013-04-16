@@ -21,7 +21,7 @@ use Ray\Di\Di\Inject;
 class Forge extends AuraForge implements ForgeInterface
 {
     /**
-     * @param ConfigInterface $forge
+     * @param ConfigInterface $config
      *
      * @Inject
      */
