@@ -5,6 +5,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Ray\Di\Modules\InstanceModule;
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -482,5 +483,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->setModule(new Modules\TimeModule)->setCache(new FilesystemCache(__DIR__ . '/scripts/tmp'));
         $time = $this->injector->getInstance('Ray\Di\Mock\Time2');
         $this->assertSame((int)$var1[0], (int)$time->time);
+    }
+
+    public function testBoundInstance()
+    {
+        $user = Injector::create([new InstanceModule])->getInstance('Ray\Di\Mock\UserInterface');
+        $this->assertInstanceOf('Ray\Di\Mock\User', $user);
     }
 }

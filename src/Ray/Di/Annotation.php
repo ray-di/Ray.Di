@@ -83,11 +83,7 @@ class Annotation implements AnnotationInterface
             return $this->definitions[$className];
         }
         $this->definition = clone $this->newDefinition;
-        try {
-            $class = new ReflectionClass($className);
-        } catch (\ReflectionException $e) {
-            throw new Exception\NotReadable($className, 0, $e);
-        }
+        $class = new ReflectionClass($className);
         $annotations = $this->reader->getClassAnnotations($class);
         $classDefinition = $this->getDefinitionFormat($annotations);
         foreach ($classDefinition as $key => $value) {
