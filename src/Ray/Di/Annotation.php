@@ -8,8 +8,10 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
+use Ray\Di\Exception\NotReadable;
 use ReflectionClass;
 use ReflectionMethod;
+use Ray\Di\Di\Inject;
 
 /**
  * Annotation scanner
@@ -60,6 +62,8 @@ class Annotation implements AnnotationInterface
      *
      * @param Definition $definition
      * @param Reader     $reader
+     *
+     * @Inject
      */
     public function __construct(Definition $definition, Reader $reader)
     {
@@ -72,6 +76,9 @@ class Annotation implements AnnotationInterface
      */
     public function getDefinition($className)
     {
+        if (! class_exists($className) && ! interface_exists($className)) {
+            throw new NotReadable($className);
+        }
         if (isset($this->definitions[$className])) {
             return $this->definitions[$className];
         }
