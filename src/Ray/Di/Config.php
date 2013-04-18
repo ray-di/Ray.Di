@@ -12,6 +12,7 @@ use Aura\Di\ConfigInterface;
 use ArrayObject;
 use ReflectionClass;
 use ReflectionMethod;
+use Ray\Di\Di\Inject;
 
 /**
  * Retains and unifies class configurations.
@@ -106,6 +107,8 @@ class Config implements ConfigInterface
      * Constructor
      *
      * @param AnnotationInterface $annotation
+     *
+     * @Inject
      */
     public function __construct(AnnotationInterface $annotation)
     {
