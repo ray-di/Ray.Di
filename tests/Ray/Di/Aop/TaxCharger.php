@@ -1,6 +1,6 @@
 <?php
 
-namespace Ray\Di\Tests;
+namespace Ray\Di\Aop;
 
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;

@@ -2,7 +2,7 @@
 
 namespace Ray\Di\Modules;
 
-use Ray\Di\Tests\TaxCharger;
+use Ray\Di\Aop\TaxCharger;
 use Ray\Di\AbstractModule;
 
 use Ray\Aop\Matcher;
@@ -14,7 +14,7 @@ class AopMatcherModule extends AbstractModule
     {
         $matcher = new Matcher(new Reader);
         $this->bindInterceptor(
-            $matcher->subclassesOf('Ray\Di\Tests\RealBillingService'),
+            $matcher->subclassesOf('Ray\Di\Aop\RealBillingService'),
             $matcher->any(),
             [new TaxCharger]
         );

@@ -138,7 +138,7 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
         $module = $this->module;
         $module->activate();
         /** @var $module Callable */
-        $binder = $module('Ray\Di\Tests\RealBillingService', new Bind);
+        $binder = $module('Ray\Di\Aop\RealBillingService', new Bind);
         /** @var $binder Bind */
         $this->assertSame(false, $binder->hasBinding());
     }
@@ -147,7 +147,7 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new \Ray\Di\Modules\AopMatcherModule;
         $module->activate();
-        $binder = $module('Ray\Di\Tests\RealBillingService', new Bind);
+        $binder = $module('Ray\Di\Aop\RealBillingService', new Bind);
         $this->assertInstanceOf('\Ray\Aop\Bind', $binder);
     }
 
@@ -155,17 +155,17 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new \Ray\Di\Modules\AopAnyMatcherModule;
         $module->activate();
-        $bind = $module('Ray\Di\Tests\RealBillingService', new Bind);
+        $bind = $module('Ray\Di\Aop\RealBillingService', new Bind);
         $this->assertInstanceOf('Ray\Aop\Bind', $bind);
         $interceptors = $bind('chargeOrderWithNoTax');
-        $this->assertInstanceOf('\Ray\Di\Tests\TaxCharger', $interceptors[0]);
+        $this->assertInstanceOf('\Ray\Di\Aop\TaxCharger', $interceptors[0]);
     }
 
     public function testAopAnnotateMatcherModule()
     {
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
         $module->activate();
-        $bind = $module('Ray\Di\Tests\RealBillingService', new Bind);
+        $bind = $module('Ray\Di\Aop\RealBillingService', new Bind);
         $result = $bind('chargeOrderWithNoTax');
         $this->assertSame(false, $result);
     }
@@ -174,9 +174,9 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
         $module->activate();
-        $bind = $module('Ray\Di\Tests\RealBillingService', new Bind);
+        $bind = $module('Ray\Di\Aop\RealBillingService', new Bind);
         $result = $bind('chargeOrder');
-        $this->assertInstanceOf('\Ray\Di\Tests\TaxCharger', $result[0]);
+        $this->assertInstanceOf('\Ray\Di\Aop\TaxCharger', $result[0]);
     }
 
     public function testInstall()
