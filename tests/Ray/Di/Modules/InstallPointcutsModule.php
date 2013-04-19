@@ -4,7 +4,7 @@
 namespace Ray\Di\Modules;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Tests\ChildTaxCharger;
+use Ray\Di\Aop\ChildTaxCharger;
 use Ray\Di\Modules\AopModule;
 
 class InstallPointcutsModule extends AbstractModule
@@ -13,7 +13,7 @@ class InstallPointcutsModule extends AbstractModule
     {
         $this->bindInterceptor(
             $this->matcher->any(),
-            $this->matcher->annotatedWith('Ray\Di\Tests\SalesTax'),
+            $this->matcher->annotatedWith('Ray\Di\Aop\SalesTax'),
             [new ChildTaxCharger]
         );
         // @todo try this;

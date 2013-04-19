@@ -170,8 +170,8 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testRegisterInterceptAnnotation()
     {
         $this->injector->setModule(new Modules\AopModule);
-        $instance = $this->injector->getInstance('Ray\Di\Tests\RealBillingService');
-        /* @var $instance \Ray\Di\Tests\RealBillingService */
+        $instance = $this->injector->getInstance('Ray\Di\Aop\RealBillingService');
+        /* @var $instance \Ray\Di\Aop\RealBillingService */
         list($amount, ) = $instance->chargeOrder();
         $expected = 105;
         $this->assertSame($expected, (int) $amount);
@@ -180,8 +180,8 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testBindInterceptors()
     {
         $this->injector->setModule(new Modules\AopMatcherModule);
-        $instance = $this->injector->getInstance('Ray\Di\Tests\RealBillingService');
-        /* @var $instance \Ray\Di\Tests\RealBillingService */
+        $instance = $this->injector->getInstance('Ray\Di\Aop\RealBillingService');
+        /* @var $instance \Ray\Di\Aop\RealBillingService */
         list($amount, ) = $instance->chargeOrder();
         $expected = 105;
         $this->assertSame($expected, (int) $amount);
@@ -191,8 +191,8 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         new Modules\AopMatcherModule;
         $this->injector->setModule(new Modules\AopAnnotateMatcherModule);
-        $instance = $this->injector->getInstance('Ray\Di\Tests\AnnotateTaxBilling');
-        /* @var $instance \Ray\Di\Tests\AnnotateTaxBilling */
+        $instance = $this->injector->getInstance('Ray\Di\Aop\AnnotateTaxBilling');
+        /* @var $instance \Ray\Di\Aop\AnnotateTaxBilling */
         list($amount, ) = $instance->chargeOrder();
         $expected = 110;
         $this->assertSame($expected, (int) $amount);
@@ -201,8 +201,8 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testBindInterceptorsToChildClass()
     {
         $this->injector->setModule(new Modules\AopAnnotateMatcherModule);
-        $instance = $this->injector->getInstance('Ray\Di\Tests\ChildRealBillingService');
-        /* @var $instance \Ray\Di\Tests\ChildRealBillingService */
+        $instance = $this->injector->getInstance('Ray\Di\Aop\ChildRealBillingService');
+        /* @var $instance \Ray\Di\Aop\ChildRealBillingService */
         list($amount, ) = $instance->chargeOrder();
         $expected = 110;
         $this->assertSame($expected, (int) $amount);
@@ -478,9 +478,9 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testCachedObjectOverRequest()
     {
-        $cmd = 'php ' . __DIR__ . '/scripts/time.php';
+        $cmd = 'php ' . dirname(dirname(__DIR__)) . '/scripts/time.php';
         exec($cmd, $var1);
-        $this->injector->setModule(new Modules\TimeModule)->setCache(new FilesystemCache(__DIR__ . '/scripts/tmp'));
+        $this->injector->setModule(new Modules\TimeModule)->setCache(new FilesystemCache(dirname(dirname(__DIR__)) . '/scripts/tmp'));
         $time = $this->injector->getInstance('Ray\Di\Mock\Time2');
         $this->assertSame((int)$var1[0], (int)$time->time);
     }
