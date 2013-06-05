@@ -147,7 +147,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = $this->module;
         $module->activate();
-        /** @var $module Callable */
+        /** @var $module callable */
         $binder = $module('Ray\Di\Aop\RealBillingService', new Bind);
         /** @var $binder Bind */
         $this->assertSame(false, $binder->hasBinding());
