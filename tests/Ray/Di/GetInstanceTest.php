@@ -36,6 +36,18 @@ class GetInstanceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($a, $b);
     }
 
+    public function testInSingletonByProviderInterface()
+    {
+        $injector = Injector::create([new Modules\SingletonProviderModule()]);
+
+        $dbInstance1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $dbInstance2 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+
+        $a = spl_object_hash($dbInstance1);
+        $b = spl_object_hash($dbInstance2);
+        $this->assertSame($a, $b);
+    }
+
     public function testInSingletonInterfaceWithAnnotation()
     {
         $injector = Injector::create([new Modules\SingletonAnnotationModule()]);

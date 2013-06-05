@@ -318,7 +318,9 @@ class Injector implements InjectorInterface
 
         // is interface ?
         try {
-            $isInterface = (new ReflectionClass($class))->isInterface();
+            $refClass = new ReflectionClass($class);
+            $isInterface = $refClass->isInterface();
+            $isProvider = $refClass->isSubclassOf('\Ray\Di\ProviderInterface');
         } catch (ReflectionException $e) {
             throw new Exception\NotReadable($class);
         }
@@ -379,8 +381,16 @@ class Injector implements InjectorInterface
         $isToProviderBinding = ($toType === AbstractModule::TO_PROVIDER);
         if ($isToProviderBinding) {
             $provider = $bindings[$class]['*']['to'][1];
+            $in = isset($bindings[$class]['*']['in']) ? $bindings[$class]['*']['in'] : null;
+            if ($in !== Scope::SINGLETON) {
+                return $this->getInstance($provider)->get();
+            }
+            if (! $this->container->has($class)) {
+                $object = $this->getInstance($provider)->get();
+                $this->container->set($class, $object);
 
-            return $this->getInstance($provider)->get();
+            }
+            return $this->container->get($class);
         }
 
         $inType = isset($bindings[$class]['*'][AbstractModule::IN]) ? $bindings[$class]['*'][AbstractModule::IN] : null;
