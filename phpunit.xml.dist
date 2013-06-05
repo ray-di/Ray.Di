@@ -4,7 +4,6 @@
 <phpunit bootstrap="tests/bootstrap.php"
          backupGlobals="false"
          backupStaticAttributes="false"
-         strict="true"
          colors="true"
          stopOnFailure="false"
          verbose="true">
