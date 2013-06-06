@@ -9,11 +9,11 @@
 namespace Ray\Di\Exception;
 
 /**
- * Configuration
+ * InvalidProvider
  *
  * @package    Ray.Di
  * @subpackage Exception
  */
-class Configuration extends Binding implements Exception
+class InvalidProvider extends Binding implements Exception
 {
 }

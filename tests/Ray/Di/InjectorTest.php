@@ -265,7 +265,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Ray\Di\Exception\Configuration
+     * @expectedException \Ray\Di\Exception\InvalidProvider
      */
     public function testProviderIsNotExists()
     {

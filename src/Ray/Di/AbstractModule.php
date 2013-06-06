@@ -107,9 +107,9 @@ abstract class AbstractModule implements ArrayAccess
     const NAME_UNSPECIFIED = '*';
 
     /**
-     * Binding definition
+     * Binding
      *
-     * @var Definition
+     * @var ArrayObject
      */
     public $bindings;
 
@@ -280,7 +280,7 @@ abstract class AbstractModule implements ArrayAccess
      * @param string $provider provider class
      *
      * @return AbstractModule
-     * @throws Exception\Configuration
+     * @throws Exception\InvalidProvider
      */
     protected function toProvider($provider)
     {
@@ -289,7 +289,7 @@ abstract class AbstractModule implements ArrayAccess
             class_implements($provider)
         );
         if ($hasProviderInterface === false) {
-            throw new Exception\Configuration($provider);
+            throw new Exception\InvalidProvider($provider);
         }
         $this->bindings[$this->currentBinding][$this->currentName] = [self::TO => [self::TO_PROVIDER, $provider]];
 

@@ -24,9 +24,8 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use SplObjectStorage;
+use Ray\Di\Exception\NotBound;
 use Ray\Di\Di\Inject;
-
-
 /**
  * Dependency Injector
  *
@@ -136,6 +135,16 @@ class Injector implements InjectorInterface
     /**
      * {@inheritdoc}
      */
+    public function setCache(Cache $cache)
+    {
+        $this->cache = $cache;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getModule()
     {
         return $this->module;
@@ -181,16 +190,6 @@ class Injector implements InjectorInterface
     public function getContainer()
     {
         return $this->container;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCache(Cache $cache)
-    {
-        $this->cache = $cache;
-
-        return $this;
     }
 
     /**
@@ -318,7 +317,9 @@ class Injector implements InjectorInterface
 
         // is interface ?
         try {
-            $isInterface = (new ReflectionClass($class))->isInterface();
+            $refClass = new ReflectionClass($class);
+            $isInterface = $refClass->isInterface();
+            $isInstantiable = $refClass->isInstantiable();
         } catch (ReflectionException $e) {
             throw new Exception\NotReadable($class);
         }
@@ -332,6 +333,15 @@ class Injector implements InjectorInterface
             }
             list($class, $isSingleton, $interfaceClass) = $bound;
             list($config, $setter, $definition) = $this->config->fetch($class);
+        } elseif ($isInstantiable) {
+            try {
+                $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
+                if (is_object($bound)) {
+                    return $bound;
+                }
+            } catch (NotBound $e) {
+
+            }
         }
         $hasDirectBinding = isset($this->module->bindings[$class]);
         /** @var $definition Definition */
@@ -379,8 +389,17 @@ class Injector implements InjectorInterface
         $isToProviderBinding = ($toType === AbstractModule::TO_PROVIDER);
         if ($isToProviderBinding) {
             $provider = $bindings[$class]['*']['to'][1];
+            $in = isset($bindings[$class]['*']['in']) ? $bindings[$class]['*']['in'] : null;
+            if ($in !== Scope::SINGLETON) {
+                return $this->getInstance($provider)->get();
+            }
+            if (!$this->container->has($class)) {
+                $object = $this->getInstance($provider)->get();
+                $this->container->set($class, $object);
 
-            return $this->getInstance($provider)->get();
+            }
+
+            return $this->container->get($class);
         }
 
         $inType = isset($bindings[$class]['*'][AbstractModule::IN]) ? $bindings[$class]['*'][AbstractModule::IN] : null;
@@ -681,6 +700,7 @@ class Injector implements InjectorInterface
             // default value
             if (array_key_exists(Definition::DEFAULT_VAL, $param)) {
                 $param = $param[Definition::DEFAULT_VAL];
+
                 return;
             }
             // default binding by @ImplementedBy or @ProviderBy
@@ -702,6 +722,8 @@ class Injector implements InjectorInterface
         }
         if (isset($binding[AbstractModule::IN])) {
             $in = $binding[AbstractModule::IN];
+        } elseif (isset($binding[AbstractModule::IN][0])) {
+            $in = $binding[AbstractModule::IN][0];
         } else {
             list($param, , $definition) = $this->config->fetch($typeHint);
             $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
