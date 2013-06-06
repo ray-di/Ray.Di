@@ -8,6 +8,9 @@ class RndDbProvider implements ProviderInterface
 {
     public function get()
     {
-        return new RndDb;
+        $db = new RndDb;
+        $db->madeBy = __METHOD__;
+
+        return $db;
     }
 }

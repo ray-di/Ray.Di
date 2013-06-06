@@ -24,9 +24,8 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use SplObjectStorage;
+use Ray\Di\Exception\NotBound;
 use Ray\Di\Di\Inject;
-
-
 /**
  * Dependency Injector
  *
@@ -136,6 +135,16 @@ class Injector implements InjectorInterface
     /**
      * {@inheritdoc}
      */
+    public function setCache(Cache $cache)
+    {
+        $this->cache = $cache;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getModule()
     {
         return $this->module;
@@ -181,16 +190,6 @@ class Injector implements InjectorInterface
     public function getContainer()
     {
         return $this->container;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCache(Cache $cache)
-    {
-        $this->cache = $cache;
-
-        return $this;
     }
 
     /**
@@ -320,7 +319,7 @@ class Injector implements InjectorInterface
         try {
             $refClass = new ReflectionClass($class);
             $isInterface = $refClass->isInterface();
-            $isProvider = $refClass->isSubclassOf('\Ray\Di\ProviderInterface');
+            $isInstantiable = $refClass->isInstantiable();
         } catch (ReflectionException $e) {
             throw new Exception\NotReadable($class);
         }
@@ -334,6 +333,15 @@ class Injector implements InjectorInterface
             }
             list($class, $isSingleton, $interfaceClass) = $bound;
             list($config, $setter, $definition) = $this->config->fetch($class);
+        } elseif ($isInstantiable) {
+            try {
+                $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
+                if (is_object($bound)) {
+                    return $bound;
+                }
+            } catch (NotBound $e) {
+
+            }
         }
         $hasDirectBinding = isset($this->module->bindings[$class]);
         /** @var $definition Definition */
@@ -385,11 +393,12 @@ class Injector implements InjectorInterface
             if ($in !== Scope::SINGLETON) {
                 return $this->getInstance($provider)->get();
             }
-            if (! $this->container->has($class)) {
+            if (!$this->container->has($class)) {
                 $object = $this->getInstance($provider)->get();
                 $this->container->set($class, $object);
 
             }
+
             return $this->container->get($class);
         }
 
@@ -691,6 +700,7 @@ class Injector implements InjectorInterface
             // default value
             if (array_key_exists(Definition::DEFAULT_VAL, $param)) {
                 $param = $param[Definition::DEFAULT_VAL];
+
                 return;
             }
             // default binding by @ImplementedBy or @ProviderBy

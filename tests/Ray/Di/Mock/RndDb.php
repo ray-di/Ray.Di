@@ -5,6 +5,7 @@ namespace Ray\Di\Mock;
 class RndDb implements DbInterface
 {
     public $rnd;
+    public $madeBy = '';
 
     public function __construct()
     {

@@ -1,6 +1,9 @@
 <?php
 namespace Ray\Di;
 
+use Ray\Di\Mock\SingletonRndDb;
+use Ray\Di\Mock\RndDb;
+
 /**
  * Test class for SingletonModule.
  */
@@ -46,6 +49,63 @@ class GetInstanceTest extends \PHPUnit_Framework_TestCase
         $a = spl_object_hash($dbInstance1);
         $b = spl_object_hash($dbInstance2);
         $this->assertSame($a, $b);
+
+        return $dbInstance1;
+    }
+
+    /**
+     * @depends testInSingletonByProviderInterface
+     *
+     * @param RndDb $a
+     */
+    public function testInSingletonByProviderInterfaceMadeByProvider(RndDb $a)
+    {
+        $this->assertSame('Ray\Di\Mock\RndDbProvider::get', $a->madeBy);
+    }
+
+    public function testInSingletonByProviderClass()
+    {
+        $injector = Injector::create([new Modules\SingletonProviderForClassModule()]);
+
+        $dbInstance1 = $injector->getInstance('Ray\Di\Mock\RndDb');
+        $dbInstance2 = $injector->getInstance('Ray\Di\Mock\RndDb');
+        $a = spl_object_hash($dbInstance1);
+        $b = spl_object_hash($dbInstance2);
+        $this->assertSame($a, $b);
+
+        return $dbInstance1;
+    }
+
+    /**
+     * @depends testInSingletonByProviderClass
+     *
+     * @param RndDb $a
+     */
+    public function testInSingletonByProviderClassMadeByProvider(RndDb $a)
+    {
+        $this->assertSame('Ray\Di\Mock\RndDbProvider::get', $a->madeBy);
+    }
+
+    public function testConsumerAskSingletonByClass()
+    {
+        $injector = Injector::create([new Modules\SingletonProviderForClassModule()]);
+        $consumer = $injector->getInstance('Ray\Di\Mock\RndDbConsumer');
+
+        $a = spl_object_hash($consumer->db1);
+        $b = spl_object_hash($consumer->db2);
+        $this->assertSame($a, $b);
+
+        return $consumer->db1;
+    }
+
+    /**
+     * @depends testConsumerAskSingletonByClass
+     *
+     * @param RndDb $a
+     */
+    public function testConsumerAskSingletonByClassMadeByProvider(RndDb $a)
+    {
+        $this->assertSame('Ray\Di\Mock\RndDbProvider::get', $a->madeBy);
     }
 
     public function testInSingletonInterfaceWithAnnotation()
