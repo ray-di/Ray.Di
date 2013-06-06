@@ -107,9 +107,9 @@ abstract class AbstractModule implements ArrayAccess
     const NAME_UNSPECIFIED = '*';
 
     /**
-     * Binding definition
+     * Binding
      *
-     * @var Definition
+     * @var ArrayObject
      */
     public $bindings;
 
