@@ -280,7 +280,7 @@ abstract class AbstractModule implements ArrayAccess
      * @param string $provider provider class
      *
      * @return AbstractModule
-     * @throws Exception\Configuration
+     * @throws Exception\InvalidProvider
      */
     protected function toProvider($provider)
     {
