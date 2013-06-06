@@ -21,7 +21,7 @@ require __DIR__ . '/src/Ray/Di/Exception/MultipleAnnotationNotAllowed.php';
 require __DIR__ . '/src/Ray/Di/Exception/ReadOnly.php';
 require __DIR__ . '/src/Ray/Di/Exception/Named.php';
 require __DIR__ . '/src/Ray/Di/Exception/ToBinding.php';
-require __DIR__ . '/src/Ray/Di/Exception/Configuration.php';
+require __DIR__ . '/src/Ray/Di/Exception/InvalidProvider.php';
 require __DIR__ . '/src/Ray/Di/Exception/NotBound.php';
 require __DIR__ . '/src/Ray/Di/Exception/NotReadable.php';
 require __DIR__ . '/src/Ray/Di/Exception/NotInstantiable.php';

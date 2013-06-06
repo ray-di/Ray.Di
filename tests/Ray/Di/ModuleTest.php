@@ -93,7 +93,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Ray\Di\Exception\Configuration
+     * @expectedException \Ray\Di\Exception\InvalidProvider
      */
     public function testToProviderInvalid()
     {

@@ -722,6 +722,8 @@ class Injector implements InjectorInterface
         }
         if (isset($binding[AbstractModule::IN])) {
             $in = $binding[AbstractModule::IN];
+        } elseif (isset($binding[AbstractModule::IN][0])) {
+            $in = $binding[AbstractModule::IN][0];
         } else {
             list($param, , $definition) = $this->config->fetch($typeHint);
             $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;

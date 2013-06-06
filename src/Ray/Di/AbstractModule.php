@@ -289,7 +289,7 @@ abstract class AbstractModule implements ArrayAccess
             class_implements($provider)
         );
         if ($hasProviderInterface === false) {
-            throw new Exception\Configuration($provider);
+            throw new Exception\InvalidProvider($provider);
         }
         $this->bindings[$this->currentBinding][$this->currentName] = [self::TO => [self::TO_PROVIDER, $provider]];
 
