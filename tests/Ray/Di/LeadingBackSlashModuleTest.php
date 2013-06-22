@@ -239,5 +239,6 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
         $result = $bindings['']['val_a']['to'];
         $this->assertSame('instance', $result[0]);
         $this->assertSame(1, $result[1]);
+        $this->assertSame(2, count($result));
     }
 }

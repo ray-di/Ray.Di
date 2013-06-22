@@ -354,10 +354,43 @@ abstract class AbstractModule implements ArrayAccess
     {
         $module->activate($this->dependencyInjector);
         $this->pointcuts = new ArrayObject(array_merge((array)$module->pointcuts, (array)$this->pointcuts));
-        $this->bindings = new ArrayObject(array_merge_recursive((array)$this->bindings, (array)$module->bindings));
+        $this->bindings = $this->mergeBindings($module);
         if ($module->modules) {
-            $this->modules = array_merge($this->modules, [], $module->modules);
+            $this->modules = array_merge($this->modules, $module->modules);
         }
+    }
+
+    /**
+     * Merge binding
+     *
+     * @param AbstractModule $module
+     *
+     * @return ArrayObject
+     */
+    private function mergeBindings(AbstractModule $module)
+    {
+        return new ArrayObject($this->mergeArray((array)$this->bindings, (array)$module->bindings));
+    }
+
+    /**
+     * Merge array recursive but not add array in same key like merge_array_recursive()
+     *
+     * @param array $origin
+     * @param array $new
+     *
+     * @return array
+     */
+    private function mergeArray(array $origin, array $new)
+    {
+        foreach ($new as $key => $value) {
+            if (isset($origin[$key]) && is_array($value) && is_array($origin[$key])) {
+                $origin[$key] = $this->mergeArray($value, $origin[$key]);
+            } else {
+                $origin[$key] = $value;
+            }
+        }
+
+        return $origin;
     }
 
     /**
