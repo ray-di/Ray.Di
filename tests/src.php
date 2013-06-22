@@ -27,6 +27,7 @@ require_once __DIR__ . '/Ray/Di/Modules/DbProvider.php';
 require_once __DIR__ . '/Ray/Di/Modules/BasicModule.php';
 require_once __DIR__ . '/Ray/Di/Modules/InstanceModule.php';
 require_once __DIR__ . '/Ray/Di/Modules/InstanceModule2.php';
+require_once __DIR__ . '/Ray/Di/Modules/InstanceInstallModule.php';
 require_once __DIR__ . '/Ray/Di/Modules/MultiModule.php';
 require_once __DIR__ . '/Ray/Di/Modules/ProviderModule.php';
 require_once __DIR__ . '/Ray/Di/Modules/InstanceModule.php';

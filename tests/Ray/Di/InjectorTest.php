@@ -5,6 +5,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Ray\Di\Modules\InstanceInstallModule;
 use Ray\Di\Modules\InstanceModule;
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
@@ -489,5 +490,14 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $user = Injector::create([new InstanceModule])->getInstance('Ray\Di\Mock\UserInterface');
         $this->assertInstanceOf('Ray\Di\Mock\User', $user);
+    }
+
+    public function testInstallDuplication()
+    {
+        $module = (new InstanceInstallModule);
+        $module->activate();
+        $actual = ((array)$module->bindings['']['id']['to']);
+        $expected = ['instance', 'PC6001'];
+        $this->assertSame($expected, $actual);
     }
 }
