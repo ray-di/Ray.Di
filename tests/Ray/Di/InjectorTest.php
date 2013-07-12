@@ -75,6 +75,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('koriym', $instance->name);
         $this->assertSame(21, $instance->age);
         $this->assertSame('male', $instance->gender);
+        $this->assertSame(['ballet', 'travel', 'php'], $instance->userFavorites);
     }
 
     public function testToProvider()
