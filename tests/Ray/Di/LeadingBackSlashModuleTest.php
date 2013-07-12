@@ -108,6 +108,7 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
         $expected .= "bind('')->annotatedWith('user_name')->toInstance('koriym')" . PHP_EOL;
         $expected .= "bind('')->annotatedWith('user_age')->toInstance((integer) 21)" . PHP_EOL;
         $expected .= "bind('')->annotatedWith('user_gender')->toInstance('male')" . PHP_EOL;
+        $expected .= "bind('')->annotatedWith('user_favorites')->toInstance((array) [\"ballet\",\"travel\",\"php\"])" . PHP_EOL;
         $expected .= "bind('Ray\Di\Mock\DbInterface')->to('\Ray\Di\Mock\UserDb')" . PHP_EOL;
         $expected .= "bind('Ray\Di\Mock\UserInterface')->toInstance((object) Ray\Di\Mock\User)" . PHP_EOL;
         $this->assertSame($expected, (string) $module);

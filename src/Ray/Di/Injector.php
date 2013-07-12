@@ -469,8 +469,7 @@ class Injector implements InjectorInterface
             }
             $setter = [];
             foreach ($injected as $item) {
-                $setterMethod = $item[0];
-                $object = (count($item[1]) === 1 && $setterMethod !== '__construct') ? $item[1][0] : $item[1];
+                list($setterMethod, $object) = $item;
                 $setter[$setterMethod] = $object;
             }
         }
