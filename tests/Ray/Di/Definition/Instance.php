@@ -37,6 +37,11 @@ class Instance
     public $usr;
 
     /**
+     * @param array
+     */
+    public $userFavorites;
+
+    /**
      * @Inject
      * @Named("id")
      *
@@ -75,4 +80,14 @@ class Instance
         $this->usr = $user;
     }
 
+    /**
+     * @Inject
+     * @Named("userFavorites=user_favorites")
+     *
+     * @param array $userFavorites
+     */
+    public function setUserFavorites(array $userFavorites)
+    {
+        $this->userFavorites = $userFavorites;
+    }
 }
