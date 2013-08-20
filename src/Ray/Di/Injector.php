@@ -16,6 +16,8 @@ use Doctrine\Common\Cache\Cache;
 use LogicException;
 use Ray\Aop\Bind;
 use Ray\Aop\BindInterface;
+use Ray\Aop\Compiler;
+use Ray\Aop\CompilerInterface;
 use Ray\Aop\Weaver;
 use Ray\Di\Exception;
 use Ray\Di\Exception\Binding;
@@ -90,6 +92,13 @@ class Injector implements InjectorInterface
     private $cache;
 
     /**
+     * Compiler(Aspect Weaver)
+     *
+     * @var \Ray\Aop\CompilerInterface
+     */
+    private $compiler;
+
+    /**
      * @param ContainerInterface $container The class to instantiate.
      * @param AbstractModule     $module    Binding configuration module
      * @param BindInterface      $bind      Aspect binder
@@ -99,11 +108,13 @@ class Injector implements InjectorInterface
     public function __construct(
         ContainerInterface $container,
         AbstractModule $module = null,
-        BindInterface $bind = null
+        BindInterface $bind = null,
+        CompilerInterface $compiler = null
     ) {
         $this->container = $container;
         $this->module = $module ? : new EmptyModule;
         $this->bind = $bind ? : new Bind;
+        $this->compiler = $compiler ?: new Compiler;
         $this->preDestroyObjects = new SplObjectStorage;
         $this->config = $container->getForge()->getConfig();
         $this->module->activate($this);
@@ -263,22 +274,22 @@ class Injector implements InjectorInterface
             throw new Exception\NotInstantiable($class);
         }
 
-        // create the new instance
-        $object = call_user_func_array(
-            [$this->config->getReflect($class), 'newInstance'],
-            $params
-        );
-
-        // call setter methods
-        $this->setterMethod($setter, $object);
-
         // weave aspect
         $module = $this->module;
         $bind = $module($class, new $this->bind);
         /* @var $bind \Ray\Aop\Bind */
         if ($bind->hasBinding() === true) {
-            $object = new Weaver($object, $bind);
+            // create the new instance with aspect
+            $object = $this->compiler->newInstance($class, $params, $bind);
+        } else {
+            // create the new instance
+            $object = call_user_func_array(
+                [$this->config->getReflect($class), 'newInstance'],
+                $params
+            );
         }
+        // call setter methods
+        $this->setterMethod($setter, $object);
 
         // log inject info
         if ($this->log) {

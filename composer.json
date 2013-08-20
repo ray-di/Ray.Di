@@ -28,7 +28,8 @@
         "php": ">=5.4.0",
         "doctrine/annotations": "1.*",
         "doctrine/cache": "1.*",
-        "ray/aop": "1.0.*",
+        "nikic/php-parser": "*",
+        "ray/aop": "1.*",
         "aura/di": "1.1.*"
     },
     "autoload": {
