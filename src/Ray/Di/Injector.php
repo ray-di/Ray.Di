@@ -18,16 +18,16 @@ use Ray\Aop\Bind;
 use Ray\Aop\BindInterface;
 use Ray\Aop\Compiler;
 use Ray\Aop\CompilerInterface;
-use Ray\Aop\Weaver;
 use Ray\Di\Exception;
 use Ray\Di\Exception\Binding;
+use Ray\Di\Exception\NotBound;
 use Ray\Di\Exception\OptionalInjectionNotBound;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use SplObjectStorage;
-use Ray\Di\Exception\NotBound;
 use Ray\Di\Di\Inject;
+
 /**
  * Dependency Injector
  *
@@ -102,6 +102,7 @@ class Injector implements InjectorInterface
      * @param ContainerInterface $container The class to instantiate.
      * @param AbstractModule     $module    Binding configuration module
      * @param BindInterface      $bind      Aspect binder
+     * @param CompilerInterface  $compiler  Aspect weaver
      *
      * @Inject
      */

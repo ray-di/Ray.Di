@@ -59,7 +59,7 @@ class Module extends AbstractModule
     }
 }
 
-class InjectorModuleInjectorTest extends \PHPUnit_Framework_TestCase
+class CompilerTest extends \PHPUnit_Framework_TestCase
 {
 
     protected function setUp()
