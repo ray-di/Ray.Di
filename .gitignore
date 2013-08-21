@@ -6,5 +6,6 @@ nbproject
 .idea
 .project
 .settings
+tmp
 vendor
 cache.properties

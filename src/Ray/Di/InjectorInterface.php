@@ -87,4 +87,11 @@ interface InjectorInterface
      * @return self
      */
     public function setCache(Cache $cache);
+
+    /**
+     * Return PreDestroyObject container
+     *
+     * @return \SplObjectStorage
+     */
+    public function getPreDestroyObjects();
 }

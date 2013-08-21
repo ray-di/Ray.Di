@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "0c8958cc8be0a4931f85f3cd5d0e1131",
+    "hash": "57f6a84cc2fff76e8478ffc36911ef12",
     "packages": [
         {
             "name": "aura/di",
@@ -178,22 +178,30 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.0",
+            "version": "v1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "v1.0"
+                "reference": "2c9761ff1d13e188d5f7378066c1ce2882d7a336"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/cache/archive/v1.0.zip",
-                "reference": "v1.0",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/2c9761ff1d13e188d5f7378066c1ce2882d7a336",
+                "reference": "2c9761ff1d13e188d5f7378066c1ce2882d7a336",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
+            "conflict": {
+                "doctrine/common": ">2.2,<2.4"
+            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Common\\Cache\\": "lib/"
@@ -235,7 +243,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2013-01-10 22:43:46"
+            "time": "2013-08-07 16:04:25"
         },
         {
             "name": "doctrine/lexer",
@@ -330,20 +338,21 @@
         },
         {
             "name": "ray/aop",
-            "version": "1.0.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "1.0.0"
+                "reference": "bd2af8655aaf90ce12d09de72ddc62649b24f231"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/1.0.0",
-                "reference": "1.0.0",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/bd2af8655aaf90ce12d09de72ddc62649b24f231",
+                "reference": "bd2af8655aaf90ce12d09de72ddc62649b24f231",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "1.*",
+                "nikic/php-parser": "*",
                 "php": ">=5.4.0"
             },
             "type": "library",
@@ -370,7 +379,7 @@
                 "aspect",
                 "method interception"
             ],
-            "time": "2013-03-31 11:58:17"
+            "time": "2013-08-21 10:30:57"
         }
     ],
     "packages-dev": [
@@ -380,9 +389,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "ray/aop": 20
+    },
     "platform": {
         "php": ">=5.4.0"
     },
