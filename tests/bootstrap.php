@@ -14,3 +14,17 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/src.php';
 // tests
 require __DIR__ . '/src.php';
+
+$tmpDir = sys_get_temp_dir() . '/ray/';
+if (! file_exists($tmpDir)) {
+    @mkdir($tmpDir);
+}
+$rm = function ($dir) use (&$rm) {
+    foreach (glob($dir . '/*') as $file) {
+        is_dir($file) ? $rm($file) : unlink($file);
+        @rmdir($file);
+    }
+};
+// clear cache folder
+$rm($tmpDir);
+$_ENV['RAY_TMP'] = $tmpDir;
