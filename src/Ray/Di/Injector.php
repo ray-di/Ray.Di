@@ -205,6 +205,14 @@ class Injector implements InjectorInterface
     }
 
     /**
+     * @return SplObjectStorage
+     */
+    public function getPreDestroyObjects()
+    {
+        return $this->preDestroyObjects;
+    }
+
+    /**
      * Destructor
      */
     public function __destruct()
