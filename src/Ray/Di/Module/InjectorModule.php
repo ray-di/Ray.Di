@@ -7,9 +7,6 @@
  */
 namespace Ray\Di\Module;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
-use LogicException;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception;
 use Ray\Di\Scope;
