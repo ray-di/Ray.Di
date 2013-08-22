@@ -25,7 +25,7 @@ class CacheInjector
     /**
      * @var string
      */
-    private $tmpDir;
+    private $aopDir;
 
     /**
      * @var Callable
@@ -44,14 +44,14 @@ class CacheInjector
 
     /**
      * @param callable $module   return module
-     * @param null     $tmpDir   aop file dir
+     * @param null     $aopDir   aop file dir
      * @param Cache    $cache    cache
      * @param callable $logger   injection logger
      * @param callable $injector injector
      */
     public function __construct(
         Callable $module = null,
-        $tmpDir = null,
+        $aopDir = null,
         Cache $cache = null,
         Callable $logger = null,
         Callable $injector = null
@@ -59,17 +59,17 @@ class CacheInjector
         $this->module = $module ? : function () {
             return new EmptyModule;
         };
-        $this->tmpDir = $tmpDir ? : sys_get_temp_dir();
-        $this->cache = $cache ? : new FilesystemCache($this->tmpDir);
+        $this->aopDir = $aopDir ? : sys_get_temp_dir();
+        $this->cache = $cache ? : new FilesystemCache($this->aopDir);
         $this->logger = $logger;
         $this->injector = $injector ? : function () {
             $module = $this->module;
 
             return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), $module(
-                ), new Bind, new Compiler($this->tmpDir));
+                ), new Bind, new Compiler($this->aopDir));
         };
         spl_autoload_register(function ($class) {
-            include $this->tmpDir . $class . '.php';
+            include $this->aopDir . $class . '.php';
         });
 
     }
