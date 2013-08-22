@@ -68,6 +68,10 @@ class CacheInjector
             return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), $module(
                 ), new Bind, new Compiler($this->tmpDir));
         };
+        spl_autoload_register(function ($class) {
+            include $this->tmpDir . $class . '.php';
+        });
+
     }
 
     /**
