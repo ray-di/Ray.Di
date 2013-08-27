@@ -3,6 +3,7 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Aop\Bind;
@@ -38,11 +39,6 @@ class CacheInjector
     private $init;
 
     /**
-     * @var SplObjectStorage
-     */
-    private $preDestroy;
-
-    /**
      * @param callable $module   return module
      * @param null     $aopDir   aop file dir
      * @param Cache    $cache    cache
@@ -60,7 +56,11 @@ class CacheInjector
             return new EmptyModule;
         };
         $this->aopDir = $aopDir ? : sys_get_temp_dir();
+        if (is_null($cache)) {
+            $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($this->aopDir);
+        }
         $this->cache = $cache ? : new FilesystemCache($this->aopDir);
+        $this->cache = $cache;
         $this->logger = $logger;
         $this->injector = $injector ? : function () {
             $module = $this->module;
@@ -68,20 +68,14 @@ class CacheInjector
             return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), $module(
                 ), new Bind, new Compiler($this->aopDir));
         };
-        spl_autoload_register(function ($class) {
-            include $this->aopDir . $class . '.php';
-        });
-
-    }
-
-    /**
-     * Notify preDestroy method
-     */
-    public function __destruct()
-    {
-        if ($this->preDestroy instanceof SplObjectStorage) {
-            $this->notifyPreShutdown($this->preDestroy);
-        }
+        spl_autoload_register(
+            function ($class) {
+                $file = $this->aopDir . DIRECTORY_SEPARATOR . $class . '.php';
+                if (file_exists($file)) {
+                    include $file;
+                }
+            }
+        );
     }
 
     /**
@@ -113,22 +107,54 @@ class CacheInjector
     {
         if ($this->cache->contains($class)) {
             list($instance, $preDestroy) = $this->cache->fetch($class);
-            $this->preDestroy = $preDestroy;
-
-            return $instance;
+        } else {
+            $injector = $this->injector;
+            $injector = $injector();
+            /** @var $injector InjectorInterface */
+            $this->setLogger($injector, $this->logger);
+            $this->removeAopFiles($this->aopDir);
+            $instance = $injector->getInstance($class);
+            $preDestroy = $injector->getPreDestroyObjects();
+            $this->cache->save($class, [$instance, $preDestroy]);
+            if ($this->init) {
+                $init = $this->init;
+                $init($injector, $instance);
+            }
         }
-        $injector = $this->injector;
-        $injector = $injector();
-        /** @var $injector InjectorInterface */
-        $instance = $injector->getInstance($class);
-        $preDestroy = $injector->getPreDestroyObjects();
-        $this->cache->save($class, [$instance, $preDestroy]);
-        if ($this->init) {
-            $init = $this->init;
-            $init($injector, $instance);
-        }
+        register_shutdown_function(
+            function () use ($preDestroy) {
+                $this->notifyPreShutdown($preDestroy);
+            }
+        );
 
         return $instance;
+    }
+
+    /**
+     * Set injection logger
+     *
+     * @param InjectorInterface $injector
+     * @param callable          $logger
+     */
+    private function setLogger(InjectorInterface $injector, callable $logger = null)
+    {
+        if (is_callable($logger)) {
+            $logger = $logger();
+            /** @var $logger LoggerInterface */
+            $injector->setLogger($logger);
+        }
+    }
+
+    /**
+     * Clear generated aop files
+     *
+     * @param $dir
+     */
+    private function removeAopFiles($dir)
+    {
+        foreach (glob($dir . '/*Aop.php') as $file) {
+            unlink($file);
+        }
     }
 
     /**

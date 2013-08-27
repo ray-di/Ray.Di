@@ -34,25 +34,6 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('@PostConstruct', $mock->msg);
     }
 
-    /**
-     * Destructor of cached injector should notify all "PreDestroy" annotated method
-     */
-    public function testPreDestroy()
-    {
-        $injector = clone $this->injector;
-        $injector->getInstance('Ray\Di\Definition\LifeCycle');
-        unset($injector);
-        $this->assertSame('@PreDestroy', $GLOBALS['pre_destroy']);
-    }
-
-    public function testPreDestroyCached()
-    {
-        $injector = clone $this->injector;
-        $injector->getInstance('Ray\Di\Definition\LifeCycle');
-        unset($injector);
-        $this->assertSame('@PreDestroy', $GLOBALS['pre_destroy']);
-    }
-
     public function testToClass()
     {
         $injector = new CacheInjector(
