@@ -11,6 +11,7 @@ use Aura\Di\ContainerInterface;
 use Aura\Di\Exception\ContainerLocked;
 use Aura\Di\Lazy;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
 use LogicException;
@@ -119,6 +120,8 @@ class Injector implements InjectorInterface
         $this->preDestroyObjects = new SplObjectStorage;
         $this->config = $container->getForge()->getConfig();
         $this->module->activate($this);
+
+        AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di', __DIR__ . '/Di');
     }
 
     /**
