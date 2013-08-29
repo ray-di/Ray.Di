@@ -174,9 +174,8 @@ class Annotation implements AnnotationInterface
             if (isset($this->definition[$name]) && $this->definition[$name]) {
                 $msg = "@{$name} in " . $method->getDeclaringClass()->name;
                 throw new Exception\MultipleAnnotationNotAllowed($msg);
-            } else {
-                $this->definition[$name] = $method->name;
             }
+            $this->definition[$name] = $method->name;
 
             return;
         }
