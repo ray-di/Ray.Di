@@ -383,11 +383,8 @@ abstract class AbstractModule implements ArrayAccess
     private function mergeArray(array $origin, array $new)
     {
         foreach ($new as $key => $value) {
-            if (isset($origin[$key]) && is_array($value) && is_array($origin[$key])) {
-                $origin[$key] = $this->mergeArray($value, $origin[$key]);
-            } else {
-                $origin[$key] = $value;
-            }
+            $beMergeable = isset($origin[$key]) && is_array($value) && is_array($origin[$key]);
+            $origin[$key] = $beMergeable ? $this->mergeArray($value, $origin[$key]) : $value;
         }
 
         return $origin;
