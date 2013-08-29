@@ -176,16 +176,16 @@ abstract class AbstractModule implements ArrayAccess
         AbstractModule $module = null,
         Matcher $matcher = null
     ) {
+        $this->modules[] = get_class($this);
+        $this->matcher = $matcher ? : new Matcher(new Reader);
         if (is_null($module)) {
             $this->bindings = new ArrayObject;
             $this->pointcuts = new ArrayObject;
-        } else {
-            $module->activate();
-            $this->bindings = $module->bindings;
-            $this->pointcuts = $module->pointcuts;
+            return;
         }
-        $this->modules[] = get_class($this);
-        $this->matcher = $matcher ? : new Matcher(new Reader);
+        $module->activate();
+        $this->bindings = $module->bindings;
+        $this->pointcuts = $module->pointcuts;
     }
 
     /**
