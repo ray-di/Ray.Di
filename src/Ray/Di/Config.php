@@ -239,13 +239,9 @@ class Config implements ConfigInterface
         }
 
         // merge the definitions
-        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition(
-            $class
-        );
-        $unified_definition = new Definition(array_merge(
-            $parent_definition->getArrayCopy(),
-            $definition->getArrayCopy()
-        ));
+        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition($class);
+        $defaults = array_merge($parent_definition->getArrayCopy(), $definition->getArrayCopy());
+        $unified_definition = new Definition($defaults);
         $this->definition[$class] = $unified_definition;
 
         // done, return the unified values
