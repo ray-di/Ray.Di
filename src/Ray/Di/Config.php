@@ -232,11 +232,7 @@ class Config implements ConfigInterface
             }
         }
         // merge the setters
-        if (isset($this->setter[$class])) {
-            $unified_setter = array_merge($parent_setter, $this->setter[$class]);
-        } else {
-            $unified_setter = $parent_setter;
-        }
+        $unified_setter = isset($this->setter[$class]) ? array_merge($parent_setter, $this->setter[$class]) : $parent_setter;
 
         // merge the definitions
         $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition($class);
