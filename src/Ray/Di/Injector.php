@@ -129,12 +129,9 @@ class Injector implements InjectorInterface
      */
     public static function create(array $modules = [], Cache $cache = null)
     {
-        if (is_null($cache)) {
-            $injector = new self(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))));
-        } else {
-            $injector = new self(new Container(new Forge(new Config(new Annotation(new Definition, new CachedReader(new AnnotationReader, $cache))))));
-            $injector->setCache($cache);
-        }
+        $annotationReader = ($cache instanceof Cache) ? new CachedReader(new AnnotationReader, $cache) : new AnnotationReader;
+        $injector = new self(new Container(new Forge(new Config(new Annotation(new Definition, $annotationReader)))));
+
         if (count($modules) > 0) {
             $module = array_shift($modules);
             foreach ($modules as $extraModule) {
@@ -149,6 +146,8 @@ class Injector implements InjectorInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated
      */
     public function setCache(Cache $cache)
     {
