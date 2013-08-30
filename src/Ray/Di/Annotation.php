@@ -278,15 +278,10 @@ class Annotation implements AnnotationInterface
      */
     private function getTypeHintDefaultInjection($typehint)
     {
-        static $definition = [];
-
-        if (isset($definition[$typehint])) {
-            $hintDef = $definition[$typehint];
-        } else {
-            $annotations = $this->reader->getClassAnnotations(new ReflectionClass($typehint));
-            $hintDef = $this->getDefinitionFormat($annotations);
-            $definition[$typehint] = $hintDef;
-        }
+        $annotations = $this->reader->getClassAnnotations(new ReflectionClass($typehint));
+        $hintDef = $this->getDefinitionFormat($annotations);
+        $definition[$typehint] = $hintDef;
+        
         // @ImplementBy as default
         if (isset($hintDef[Definition::IMPLEMENTEDBY])) {
             $result = [Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $hintDef[Definition::IMPLEMENTEDBY]];
