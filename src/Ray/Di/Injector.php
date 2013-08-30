@@ -738,15 +738,19 @@ class Injector implements InjectorInterface
 
             return;
         }
-        if (isset($binding[AbstractModule::IN])) {
-            $in = $binding[AbstractModule::IN];
-        } elseif (isset($binding[AbstractModule::IN][0])) {
-            $in = $binding[AbstractModule::IN][0];
-        } else {
-            list($param, , $definition) = $this->config->fetch($typeHint);
-            $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
-        }
         /* @var $getInstance \Closure */
+        
+        if (isset($binding[AbstractModule::IN])) {
+            $param = $getInstance($binding[AbstractModule::IN], $bindingToType, $target);
+            return;
+        }
+        if (isset($binding[AbstractModule::IN][0])) {
+            $param = $getInstance($binding[AbstractModule::IN][0], $bindingToType, $target);
+            return;
+        }
+
+        list($param, , $definition) = $this->config->fetch($typeHint);
+        $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
         $param = $getInstance($in, $bindingToType, $target);
     }
 
