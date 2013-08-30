@@ -11,6 +11,7 @@ use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Exception\NotReadable;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionParameter;
 use Ray\Di\Di\Inject;
 
 /**
@@ -215,13 +216,7 @@ class Annotation implements AnnotationInterface
             $typehint = $class ? $class->getName() : '';
             $typehintBy = $typehint ? $this->getTypeHintDefaultInjection($typehint) : [];
             $pos = $parameter->getPosition();
-            if (is_string($named)) {
-                $name = $named;
-            } elseif (isset($named[$parameter->name])) {
-                $name = $named[$parameter->name];
-            } else {
-                $name = Definition::NAME_UNSPECIFIED;
-            }
+            $name = $this->getName($named, $parameter);
             $optionalInject = $methodAnnotation[Definition::INJECT]->optional;
             $definition = [
                 Definition::PARAM_POS => $pos,
@@ -240,6 +235,25 @@ class Annotation implements AnnotationInterface
         $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
     }
 
+    /**
+     * Return name
+     * 
+     * @param mixed $named
+     * @param $parameter
+     *
+     * @return string
+     */
+    private function getName($named, ReflectionParameter $parameter)
+    {
+        if (is_string($named)) {
+            return $named;
+        }
+        if (is_array($named) && isset($named[$parameter->name])) {
+            return $named[$parameter->name];
+        }
+
+        return Definition::NAME_UNSPECIFIED;
+    }
     /**
      * Get Named
      *
