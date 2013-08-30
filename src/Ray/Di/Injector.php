@@ -289,16 +289,10 @@ class Injector implements InjectorInterface
         $module = $this->module;
         $bind = $module($class, new $this->bind);
         /* @var $bind \Ray\Aop\Bind */
-        if ($bind->hasBinding() === true) {
-            // create the new instance with aspect
-            $object = $this->compiler->newInstance($class, $params, $bind);
-        } else {
-            // create the new instance
-            $object = call_user_func_array(
-                [$this->config->getReflect($class), 'newInstance'],
-                $params
-            );
-        }
+
+        $object = $bind->hasBinding() ?
+            $this->compiler->newInstance($class, $params, $bind) : $this->newInstance($class, $params) ;
+
         // call setter methods
         $this->setterMethod($setter, $object);
 
@@ -323,6 +317,22 @@ class Injector implements InjectorInterface
         }
 
         return $object;
+    }
+
+    /**
+     * Return new instance
+     *
+     * @param string $class
+     * @param array  $params
+     *
+     * @return object
+     */
+    private function newInstance($class, array $params)
+    {
+        return call_user_func_array(
+            [$this->config->getReflect($class), 'newInstance'],
+            $params
+        );
     }
 
     /**
