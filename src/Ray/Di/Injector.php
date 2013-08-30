@@ -547,11 +547,10 @@ class Injector implements InjectorInterface
             if ($object) {
                 return [$cacheKey, $object];
             }
-        } else {
-            $cacheKey = null;
+            return [$cacheKey, null];
         }
 
-        return [$cacheKey, null];
+        return [null, null];
     }
 
     /**
