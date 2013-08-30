@@ -502,12 +502,7 @@ class Injector implements InjectorInterface
             }
         }
         // constructor injection ?
-        if (isset($setter['__construct'])) {
-            $params = $setter['__construct'];
-            unset($setter['__construct']);
-        } else {
-            $params = [];
-        }
+        $params = isset($setter['__construct']) ? $setter['__construct'] : [];
         $result = [$params, $setter];
 
         return $result;
