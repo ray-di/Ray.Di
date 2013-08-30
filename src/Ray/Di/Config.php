@@ -219,16 +219,18 @@ class Config implements ConfigInterface
                 if ($explicit) {
                     // use the explicit value for this class
                     $unified_params[$name] = $this->params[$class][$name];
+                    continue;
                 } elseif (isset($parent_params[$name])) {
                     // use the implicit value for the parent class
                     $unified_params[$name] = $parent_params[$name];
+                    continue;
                 } elseif ($param->isDefaultValueAvailable()) {
                     // use the external value from the constructor
                     $unified_params[$name] = $param->getDefaultValue();
-                } else {
-                    // no value, use a null placeholder
-                    $unified_params[$name] = null;
+                    continue;
                 }
+                // no value, use a null placeholder
+                $unified_params[$name] = null;
             }
         }
         // merge the setters
