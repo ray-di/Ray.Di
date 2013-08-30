@@ -148,7 +148,8 @@ class Annotation implements AnnotationInterface
         foreach ($methods as $method) {
             $annotations = $this->reader->getMethodAnnotations($method);
             $methodAnnotation = $this->getDefinitionFormat($annotations, false);
-            foreach ($methodAnnotation as $key => $value) {
+            $keys = array_keys($methodAnnotation);
+            foreach ($keys as $key) {
                 $this->setAnnotationName($key, $method, $methodAnnotation);
             }
             // user land annotation by method
