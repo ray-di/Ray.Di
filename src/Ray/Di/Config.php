@@ -199,17 +199,10 @@ class Config implements ConfigInterface
 
         // fetch the values for parents so we can inherit them
         $parentClass = get_parent_class($class);
-        if ($parentClass) {
-            // parent class values
-            list($parent_params, $parent_setter, $parent_definition) = $this->fetch($parentClass);
-        } else {
-            // no more parents; get top-level values for all classes
-            $parent_params = $this->params['*'];
-            $parent_setter = $this->setter['*'];
-            // class annotated definition
-            $parent_definition = $this->annotation->getDefinition($class);
-        }
+        list($parent_params, $parent_setter, $parent_definition) =
+        $parentClass ? $this->fetch($parentClass) : [$this->params['*'], $this->setter['*'], $this->annotation->getDefinition($class)];
         // stores the unified config and setter values
+
         $unified_params = [];
 
         // reflect on the class
