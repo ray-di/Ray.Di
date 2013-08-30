@@ -476,13 +476,9 @@ class Injector implements InjectorInterface
 
                 return $instance;
             }
-            if ($bindingToType === AbstractModule::TO_CLASS) {
-                $instance = $injector->getInstance($target);
-            } else {
-                //  AbstractModule::TO_PROVIDER
-                $provider = $injector->getInstance($target);
-                $instance = $provider->get();
-            }
+            $isToClassBinding = $bindingToType === AbstractModule::TO_CLASS;
+            $instance = $isToClassBinding ? $injector->getInstance($target) : $injector->getInstance($target)->get();
+
             if ($in === Scope::SINGLETON) {
                 $container->set($target, $instance);
             }
