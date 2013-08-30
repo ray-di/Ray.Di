@@ -591,15 +591,11 @@ class Injector implements InjectorInterface
                 }
                 // is typehint class ?
                 $classRef = $parameter->getClass();
-                if (is_null($classRef)) {
-                    $msg = "Valid interface is not found. (array ?)";
-                } elseif (!$classRef->isInterface() && $classRef) {
+                if ($classRef && !$classRef->isInterface()) {
                     $params[$index] = $this->getInstance($classRef->getName());
                     continue;
-                } else {
-                    $msg = "Interface [{$classRef->name}] is not bound.";
                 }
-
+                $msg = is_null($classRef) ? "Valid interface is not found. (array ?)" : "Interface [{$classRef->name}] is not bound.";
                 $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
                 throw new Exception\NotBound($msg);
             }
