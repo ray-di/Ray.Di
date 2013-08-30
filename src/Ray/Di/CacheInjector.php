@@ -105,22 +105,9 @@ class CacheInjector
      */
     public function getInstance($class)
     {
-        if ($this->cache->contains($class)) {
-            list($instance, $preDestroy) = $this->cache->fetch($class);
-        } else {
-            $injector = $this->injector;
-            $injector = $injector();
-            /** @var $injector InjectorInterface */
-            $this->setLogger($injector, $this->logger);
-            $this->removeAopFiles($this->aopDir);
-            $instance = $injector->getInstance($class);
-            $preDestroy = $injector->getPreDestroyObjects();
-            $this->cache->save($class, [$instance, $preDestroy]);
-            if ($this->init) {
-                $init = $this->init;
-                $init($injector, $instance);
-            }
-        }
+        list($instance, $preDestroy) =
+            $this->cache->contains($class) ? $this->cache->fetch($class) : $this->createInstance($class);
+
         register_shutdown_function(
             function () use ($preDestroy) {
                 $this->notifyPreShutdown($preDestroy);
@@ -128,6 +115,31 @@ class CacheInjector
         );
 
         return $instance;
+    }
+
+    /**
+     * Return injected instance and $preDestroy
+     *
+     * @param $class
+     *
+     * @return array [object $instance, SplObjectStorage $preDestroy]
+     */
+    private function createInstance($class)
+    {
+        $injector = $this->injector;
+        $injector = $injector();
+        /** @var $injector InjectorInterface */
+        $this->setLogger($injector, $this->logger);
+        $this->removeAopFiles($this->aopDir);
+        $instance = $injector->getInstance($class);
+        $preDestroy = $injector->getPreDestroyObjects();
+        $this->cache->save($class, [$instance, $preDestroy]);
+        if ($this->init) {
+            $init = $this->init;
+            $init($injector, $instance);
+        }
+
+        return [$instance, $preDestroy];
     }
 
     /**
