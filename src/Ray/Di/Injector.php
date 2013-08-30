@@ -610,14 +610,15 @@ class Injector implements InjectorInterface
     {
         foreach ($setter as $method => $value) {
             // does the specified setter method exist?
-            if (method_exists($object, $method)) {
-                if (!is_array($value)) {
-                    // call the setter
-                    $object->$method($value);
-                } else {
-                    call_user_func_array([$object, $method], $value);
-                }
+            if (! method_exists($object, $method)) {
+                continue;
             }
+            if (!is_array($value)) {
+                // call the setter
+                $object->$method($value);
+                continue;
+            }
+            call_user_func_array([$object, $method], $value);
         }
     }
 
