@@ -491,7 +491,7 @@ class Injector implements InjectorInterface
             $injected = [];
             foreach ($setterDefinitions as $setterDefinition) {
                 try {
-                    $injected[] = $this->bindMethod($setterDefinition, $definition, $getInstance);
+                    $injected[] = $this->bindMethod($setterDefinition, $getInstance);
                 } catch (OptionalInjectionNotBound $e) {
                 }
             }
@@ -512,16 +512,15 @@ class Injector implements InjectorInterface
      * Bind method
      *
      * @param array      $setterDefinition
-     * @param Definition $definition
      * @param callable   $getInstance
      *
      * @return array
      */
-    private function bindMethod(array $setterDefinition, Definition $definition, callable $getInstance)
+    private function bindMethod(array $setterDefinition, callable $getInstance)
     {
         list($method, $settings) = each($setterDefinition);
 
-        array_walk($settings, [$this, 'bindOneParameter'], [$definition, $getInstance]);
+        array_walk($settings, [$this, 'bindOneParameter'], [$getInstance]);
 
         return [$method, $settings];
     }
@@ -709,7 +708,7 @@ class Injector implements InjectorInterface
      */
     private function bindOneParameter(array &$param, $key, array $userData)
     {
-        list(, $getInstance) = $userData;
+        list($getInstance) = $userData;
         $annotate = $param[Definition::PARAM_ANNOTATE];
         $typeHint = $param[Definition::PARAM_TYPEHINT];
         $hasTypeHint = isset($this->module[$typeHint]) && isset($this->module[$typeHint][$annotate]) && ($this->module[$typeHint][$annotate] !== []);
