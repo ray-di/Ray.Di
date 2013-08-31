@@ -176,14 +176,19 @@ class Injector implements InjectorInterface
     /**
      * {@inheritdoc}
      */
-    public function setModule(AbstractModule $module, $activate = true)
+    public function setModule(AbstractModule $module)
     {
         if ($this->container->isLocked()) {
             throw new ContainerLocked;
         }
-        if ($activate === true) {
-            $module->activate($this);
-        }
+        $module->activate($this);
+        $this->module = $module;
+
+        return $this;
+    }
+
+    public function setSelfInjectorModule(AbstractModule $module)
+    {
         $this->module = $module;
 
         return $this;

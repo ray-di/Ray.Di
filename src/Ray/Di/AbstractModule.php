@@ -411,10 +411,10 @@ abstract class AbstractModule implements ArrayAccess
     public function requestInjection($class)
     {
         $module = $this->dependencyInjector->getModule();
-        $this->dependencyInjector->setModule($this, false);
+        $this->dependencyInjector->setSelfInjectorModule($this);
         $instance = $this->dependencyInjector->getInstance($class);
         if ($module instanceof AbstractModule) {
-            $this->dependencyInjector->setModule($module, false);
+            $this->dependencyInjector->setSelfInjectorModule($module);
         }
 
         return $instance;
