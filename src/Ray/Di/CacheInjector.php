@@ -46,11 +46,11 @@ class CacheInjector
      * @param callable $injector injector
      */
     public function __construct(
-        Callable $module = null,
+        callable $module = null,
         $aopDir = null,
         Cache $cache = null,
-        Callable $logger = null,
-        Callable $injector = null
+        callable $logger = null,
+        callable $injector = null
     ) {
         $this->module = $module ? : function () {
             return new EmptyModule;
@@ -78,7 +78,7 @@ class CacheInjector
      *
      * @return self
      */
-    public function setInit(Callable $init)
+    public function setInit(callable $init)
     {
         $this->init = $init;
 
@@ -114,8 +114,7 @@ class CacheInjector
         return function () {
             $module = $this->module;
 
-            return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), $module(
-            ), new Bind, new Compiler($this->aopDir));
+            return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), $module(), new Bind, new Compiler($this->aopDir));
         };
     }
 

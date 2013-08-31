@@ -282,7 +282,7 @@ class Injector implements InjectorInterface
         list($class, $isSingleton, $interfaceClass, $config, $setter, $definition) = $bound;
 
 
-        $params = $this->getParams($params, $config);
+        $params = $this->getParams($config, $params);
 
         // be all parameters ready
         $this->constructorInject($class, $params, $this->module);
@@ -321,7 +321,7 @@ class Injector implements InjectorInterface
      *
      * @return array
      */
-    private function getParams(array $params = null, array $config)
+    private function getParams(array $config, array $params = null)
     {
         // override construction parameter
         $params = is_null($params) ? $config : array_merge($config, (array)$params);
