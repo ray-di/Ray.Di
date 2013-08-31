@@ -27,6 +27,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use SplObjectStorage;
+use ArrayObject;
 use Ray\Di\Di\Inject;
 
 /**
@@ -405,7 +406,7 @@ class Injector implements InjectorInterface
     /**
      * Get bound class or object
      *
-     * @param        $bindings
+     * @param mixed  $bindings   array | \ArrayAccess
      * @param mixed  $definition
      * @param string $class
      *
@@ -419,20 +420,9 @@ class Injector implements InjectorInterface
             throw new Exception\NotBound($msg);
         }
         $toType = $bindings[$class]['*']['to'][0];
-        $isToProviderBinding = ($toType === AbstractModule::TO_PROVIDER);
-        if ($isToProviderBinding) {
-            $provider = $bindings[$class]['*']['to'][1];
-            $in = isset($bindings[$class]['*']['in']) ? $bindings[$class]['*']['in'] : null;
-            if ($in !== Scope::SINGLETON) {
-                return $this->getInstance($provider)->get();
-            }
-            if (!$this->container->has($class)) {
-                $object = $this->getInstance($provider)->get();
-                $this->container->set($class, $object);
 
-            }
-
-            return $this->container->get($class);
+        if ($toType === AbstractModule::TO_PROVIDER) {
+            return $this->getToProviderBound($bindings, $class);
         }
 
         $inType = isset($bindings[$class]['*'][AbstractModule::IN]) ? $bindings[$class]['*'][AbstractModule::IN] : null;
@@ -459,6 +449,28 @@ class Injector implements InjectorInterface
     }
 
     /**
+     * @param ArrayObject $bindings
+     * @param $class
+     *
+     * @return object
+     */
+    private function getToProviderBound(ArrayObject $bindings, $class)
+    {
+        $provider = $bindings[$class]['*']['to'][1];
+        $in = isset($bindings[$class]['*']['in']) ? $bindings[$class]['*']['in'] : null;
+        if ($in !== Scope::SINGLETON) {
+            return $this->getInstance($provider)->get();
+        }
+        if (!$this->container->has($class)) {
+            $object = $this->getInstance($provider)->get();
+            $this->container->set($class, $object);
+
+        }
+
+        return $this->container->get($class);
+
+    }
+    /**
      * Return dependency using modules.
      *
      * @param array      $setter
@@ -470,11 +482,54 @@ class Injector implements InjectorInterface
      */
     private function bindModule(array $setter, Definition $definition)
     {
-        // @return array [AbstractModule::TO => [$toMethod, $toTarget]]
-        $container = $this->container;
-        /* @var $forge \Ray\Di\Forge */
-        $injector = $this;
-        $getInstance = function ($in, $bindingToType, $target) use ($container, $definition, $injector) {
+        $getInstance = $this->getGetInstanceClosure($this, $definition);
+        // main
+        $setterDefinitions = (isset($definition[Definition::INJECT][Definition::INJECT_SETTER])) ? $definition[Definition::INJECT][Definition::INJECT_SETTER] : null;
+        if ($setterDefinitions) {
+            $setter = $this->getSetter($setterDefinitions, $getInstance);
+        }
+
+        // constructor injection ?
+        $params = isset($setter['__construct']) ? $setter['__construct'] : [];
+        $result = [$params, $setter];
+
+        return $result;
+    }
+
+    /**
+     * @param array    $setterDefinitions
+     * @param callable $getInstance
+     *
+     * @return array
+     */
+    private function getSetter(array $setterDefinitions, callable $getInstance)
+    {
+        $injected = [];
+        foreach ($setterDefinitions as $setterDefinition) {
+            try {
+                $injected[] = $this->bindMethod($setterDefinition, $getInstance);
+            } catch (OptionalInjectionNotBound $e) {
+            }
+        }
+        $setter = [];
+        foreach ($injected as $item) {
+            list($setterMethod, $object) = $item;
+            $setter[$setterMethod] = $object;
+        }
+
+        return $setter;
+    }
+
+    /**
+     * @param InjectorInterface $injector
+     * @param Definition $definition
+     *
+     * @return callable
+     */
+    private function getGetInstanceClosure(InjectorInterface $injector, Definition $definition)
+    {
+        $container = $injector->getContainer();
+        return function ($in, $bindingToType, $target) use ($container, $definition, $injector) {
             if ($in === Scope::SINGLETON && $container->has($target)) {
                 $instance = $container->get($target);
 
@@ -489,27 +544,6 @@ class Injector implements InjectorInterface
 
             return $instance;
         };
-        // main
-        $setterDefinitions = (isset($definition[Definition::INJECT][Definition::INJECT_SETTER])) ? $definition[Definition::INJECT][Definition::INJECT_SETTER] : null;
-        if ($setterDefinitions !== null) {
-            $injected = [];
-            foreach ($setterDefinitions as $setterDefinition) {
-                try {
-                    $injected[] = $this->bindMethod($setterDefinition, $getInstance);
-                } catch (OptionalInjectionNotBound $e) {
-                }
-            }
-            $setter = [];
-            foreach ($injected as $item) {
-                list($setterMethod, $object) = $item;
-                $setter[$setterMethod] = $object;
-            }
-        }
-        // constructor injection ?
-        $params = isset($setter['__construct']) ? $setter['__construct'] : [];
-        $result = [$params, $setter];
-
-        return $result;
     }
 
     /**
