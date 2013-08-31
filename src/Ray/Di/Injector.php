@@ -448,7 +448,10 @@ class Injector implements InjectorInterface
 
         if ($toType === AbstractModule::TO_CLASS) {
             $class = $bindings[$class]['*']['to'][1];
-        } elseif ($toType === AbstractModule::TO_INSTANCE) {
+            return [$class, $isSingleton, $interfaceClass];
+        }
+
+        if ($toType === AbstractModule::TO_INSTANCE) {
             return $bindings[$class]['*']['to'][1];
         }
 
