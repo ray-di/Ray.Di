@@ -462,7 +462,7 @@ class Injector implements InjectorInterface
 
     }
     /**
-     * Throw exception if not boud
+     * Throw exception if not bound
      *
      * @param mixed  $bindings
      * @param string $class
@@ -525,8 +525,7 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * @param array    $setterDefinitions
-     * @param callable $getInstance
+     * @param array $setterDefinitions
      *
      * @return array
      */
@@ -551,8 +550,7 @@ class Injector implements InjectorInterface
     /**
      * Bind method
      *
-     * @param array      $setterDefinition
-     * @param callable   $getInstance
+     * @param array $setterDefinition
      *
      * @return array
      */
@@ -759,7 +757,7 @@ class Injector implements InjectorInterface
      * @return void
      * @throws Exception\OptionalInjectionNotBound
      * @noinspection PhpUnusedPrivateMethodInspection
-     * @SuppressWarnings(PHPMD.)
+     * @SuppressWarnings(PHPMD)
      */
     private function bindOneParameter(array &$param, $key)
     {
@@ -867,8 +865,10 @@ class Injector implements InjectorInterface
      * @param array  $param
      * @param string $typeHint
      * @param string $annotate
+     * @param $key
      *
-     * @return array|bool
+     * @return array
+     * @throws Exception\OptionalInjectionNotBound
      * @throws Exception\NotBound
      */
     private function jitBinding(array $param, $typeHint, $annotate, $key)

@@ -349,6 +349,8 @@ abstract class AbstractModule implements ArrayAccess
      * Install module
      *
      * @param AbstractModule $module
+     *
+     * @return void
      */
     public function install(AbstractModule $module)
     {
@@ -429,7 +431,7 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * ArrayAccess::offsetExists
      *
-     * @param string $offset
+     * @param mixed $offset
      *
      * @return bool
      */

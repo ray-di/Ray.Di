@@ -27,7 +27,7 @@ class EmptyModule extends AbstractModule
     }
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see Ray\Di.AbstractModule::configure()
      */
     protected function configure()
