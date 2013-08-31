@@ -281,16 +281,8 @@ class Injector implements InjectorInterface
         // get bound config
         list($class, $isSingleton, $interfaceClass, $config, $setter, $definition) = $bound;
 
-        // override construction parameter
-        $params = is_null($params) ? $config : array_merge($config, (array)$params);
 
-        // lazy-load params as needed
-        $keys = array_keys($params);
-        foreach ($keys as $key) {
-            if ($params[$key] instanceof Lazy) {
-                $params[$key] = $params[$key]();
-            }
-        }
+        $params = $this->getParams($params, $config);
 
         // be all parameters ready
         $this->constructorInject($class, $params, $this->module);
@@ -316,6 +308,46 @@ class Injector implements InjectorInterface
             $this->log->log($class, $params, $setter, $object, $bind);
         }
 
+        // Object life cycle, Singleton, and Save cache
+        $this->postInject($object, $definition, $isSingleton, $cacheKey, $interfaceClass);
+
+
+        return $object;
+    }
+
+    /**
+     * @param array $params
+     * @param array $config
+     *
+     * @return array
+     */
+    private function getParams(array $params = null, array $config)
+    {
+        // override construction parameter
+        $params = is_null($params) ? $config : array_merge($config, (array)$params);
+
+        // lazy-load params as needed
+        $keys = array_keys($params);
+        foreach ($keys as $key) {
+            if ($params[$key] instanceof Lazy) {
+                $params[$key] = $params[$key]();
+            }
+        }
+
+        return $params;
+    }
+
+    /**
+     * Post inject procedure
+     *
+     * @param object     $object
+     * @param Definition $definition
+     * @param bool       $isSingleton
+     * @param string     $cacheKey
+     * @param string     $interfaceClass
+     */
+    private function postInject($object, Definition $definition, $isSingleton, $cacheKey, $interfaceClass)
+    {
         // set life cycle
         if ($definition) {
             $this->setLifeCycle($object, $definition);
@@ -326,12 +358,11 @@ class Injector implements InjectorInterface
             $this->container->set($interfaceClass, $object);
         }
 
+        // save cache
         if ($cacheKey) {
             /** @noinspection PhpUndefinedVariableInspection */
             $this->cache->save($cacheKey, $object);
         }
-
-        return $object;
     }
 
     /**
