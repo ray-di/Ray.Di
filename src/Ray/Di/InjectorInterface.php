@@ -80,6 +80,15 @@ interface InjectorInterface
     public function setModule(AbstractModule $module);
 
     /**
+     * Set module for module builtin injector
+     *
+     * @param AbstractModule $module
+     *
+     * @return self
+     */
+    public function setSelfInjectorModule(AbstractModule $module);
+
+    /**
      * Set cache adapter
      *
      * @param Cache $cache
