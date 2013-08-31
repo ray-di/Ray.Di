@@ -9,5 +9,6 @@ nbproject
 tmp
 vendor
 cache.properties
+build
 
 composer.phar

@@ -225,6 +225,25 @@ class Annotation implements AnnotationInterface
         }
         $named = ($nameParameter !== false) ? $this->getNamed($nameParameter) : [];
         $parameters = $method->getParameters();
+        $paramInfo[$method->name] = $this->getParamInfo($methodAnnotation, $parameters, $named);
+        $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
+    }
+
+    /**
+     * @param ReflectionParameter[] $parameters
+     *
+     * @return array
+     */
+
+    /**
+     * @param array $methodAnnotation
+     * @param array $parameters
+     * @param $named
+     *
+     * @return array
+     */
+    private function getParamInfo($methodAnnotation, array $parameters, $named)
+    {
         $paramsInfo = [];
         foreach ($parameters as $parameter) {
             /** @var $parameter \ReflectionParameter */
@@ -247,8 +266,8 @@ class Annotation implements AnnotationInterface
             }
             $paramsInfo[] = $definition;
         }
-        $paramInfo[$method->name] = $paramsInfo;
-        $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
+
+        return $paramsInfo;
     }
 
     /**
