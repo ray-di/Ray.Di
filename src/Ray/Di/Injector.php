@@ -613,30 +613,45 @@ class Injector implements InjectorInterface
         $parameters = $ref->getParameters();
         foreach ($parameters as $index => $parameter) {
             /* @var $parameter \ReflectionParameter */
-
-            // has binding ?
-            $params = array_values($params);
-            if (!isset($params[$index])) {
-                $hasConstructorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
-                if ($hasConstructorBinding) {
-                    $params[$index] = $module[$class]['*'][AbstractModule::TO][1][$parameter->name];
-                    continue;
-                }
-                // has constructor default value ?
-                if ($parameter->isDefaultValueAvailable() === true) {
-                    continue;
-                }
-                // is typehint class ?
-                $classRef = $parameter->getClass();
-                if ($classRef && !$classRef->isInterface()) {
-                    $params[$index] = $this->getInstance($classRef->getName());
-                    continue;
-                }
-                $msg = is_null($classRef) ? "Valid interface is not found. (array ?)" : "Interface [{$classRef->name}] is not bound.";
-                $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
-                throw new Exception\NotBound($msg);
-            }
+            $this->constructParams($params, $index, $parameter, $module, $class);
         }
+    }
+
+    /**
+     * @param array                &$params
+     * @param int                  $index
+     * @param \ReflectionParameter $parameter
+     * @param AbstractModule       $module
+     * @param string               $class
+     *
+     * @return void
+     * @throws Exception\NotBound
+     */
+    private function constructParams(&$params, $index, \ReflectionParameter $parameter, AbstractModule $module, $class)
+    {
+        // has binding ?
+        $params = array_values($params);
+        if (!isset($params[$index])) {
+            $hasConstructorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
+            if ($hasConstructorBinding) {
+                $params[$index] = $module[$class]['*'][AbstractModule::TO][1][$parameter->name];
+                return;
+            }
+            // has constructor default value ?
+            if ($parameter->isDefaultValueAvailable() === true) {
+                return;
+            }
+            // is typehint class ?
+            $classRef = $parameter->getClass();
+            if ($classRef && !$classRef->isInterface()) {
+                $params[$index] = $this->getInstance($classRef->getName());
+                return;
+            }
+            $msg = is_null($classRef) ? "Valid interface is not found. (array ?)" : "Interface [{$classRef->name}] is not bound.";
+            $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
+            throw new Exception\NotBound($msg);
+        }
+
     }
 
     /**
