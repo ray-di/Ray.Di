@@ -62,20 +62,9 @@ class CacheInjector
         $this->cache = $cache ? : new FilesystemCache($this->aopDir);
         $this->cache = $cache;
         $this->logger = $logger;
-        $this->injector = $injector ? : function () {
-            $module = $this->module;
+        $this->injector = $injector ? : $this->getInjectorClosure();
 
-            return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), $module(
-                ), new Bind, new Compiler($this->aopDir));
-        };
-        spl_autoload_register(
-            function ($class) {
-                $file = $this->aopDir . DIRECTORY_SEPARATOR . $class . '.php';
-                if (file_exists($file)) {
-                    include $file;
-                }
-            }
-        );
+        $this->registerGeneratedAopFileAutoLoader();
     }
 
     /**
@@ -117,6 +106,34 @@ class CacheInjector
         return $instance;
     }
 
+    /**
+     * @return callable
+     */
+    private function getInjectorClosure()
+    {
+        return function () {
+            $module = $this->module;
+
+            return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), $module(
+            ), new Bind, new Compiler($this->aopDir));
+        };
+    }
+
+    /**
+     * @return void
+     */
+    private function registerGeneratedAopFileAutoLoader()
+    {
+        spl_autoload_register(
+            function ($class) {
+                $file = $this->aopDir . DIRECTORY_SEPARATOR . $class . '.php';
+                if (file_exists($file)) {
+                    /** @noinspection PhpIncludeInspection */
+                    include $file;
+                }
+            }
+        );
+    }
     /**
      * Return injected instance and $preDestroy
      *
