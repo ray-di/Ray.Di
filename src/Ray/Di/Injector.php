@@ -631,27 +631,27 @@ class Injector implements InjectorInterface
     {
         // has binding ?
         $params = array_values($params);
-        if (!isset($params[$index])) {
-            $hasConstructorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
-            if ($hasConstructorBinding) {
-                $params[$index] = $module[$class]['*'][AbstractModule::TO][1][$parameter->name];
-                return;
-            }
-            // has constructor default value ?
-            if ($parameter->isDefaultValueAvailable() === true) {
-                return;
-            }
-            // is typehint class ?
-            $classRef = $parameter->getClass();
-            if ($classRef && !$classRef->isInterface()) {
-                $params[$index] = $this->getInstance($classRef->getName());
-                return;
-            }
-            $msg = is_null($classRef) ? "Valid interface is not found. (array ?)" : "Interface [{$classRef->name}] is not bound.";
-            $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
-            throw new Exception\NotBound($msg);
+        if (isset($params[$index])) {
+            return;
         }
-
+        $hasConstructorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
+        if ($hasConstructorBinding) {
+            $params[$index] = $module[$class]['*'][AbstractModule::TO][1][$parameter->name];
+            return;
+        }
+        // has constructor default value ?
+        if ($parameter->isDefaultValueAvailable() === true) {
+            return;
+        }
+        // is typehint class ?
+        $classRef = $parameter->getClass();
+        if ($classRef && !$classRef->isInterface()) {
+            $params[$index] = $this->getInstance($classRef->getName());
+            return;
+        }
+        $msg = is_null($classRef) ? "Valid interface is not found. (array ?)" : "Interface [{$classRef->name}] is not bound.";
+        $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
+        throw new Exception\NotBound($msg);
     }
 
     /**
