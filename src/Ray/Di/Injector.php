@@ -101,10 +101,16 @@ class Injector implements InjectorInterface
     private $compiler;
 
     /**
-     * @param ContainerInterface $container The class to instantiate.
-     * @param AbstractModule     $module    Binding configuration module
-     * @param BindInterface      $bind      Aspect binder
-     * @param CompilerInterface  $compiler  Aspect weaver
+     * @var ModuleStringer
+     */
+    private $stringer;
+
+    /**
+     * @param ContainerInterface      $container
+     * @param AbstractModule          $module
+     * @param BindInterface           $bind
+     * @param CompilerInterface       $compiler
+     * @param ModuleStringerInterface $stringer
      *
      * @Inject
      */
@@ -112,12 +118,14 @@ class Injector implements InjectorInterface
         ContainerInterface $container,
         AbstractModule $module = null,
         BindInterface $bind = null,
-        CompilerInterface $compiler = null
+        CompilerInterface $compiler = null,
+        ModuleStringerInterface $stringer = null
     ) {
         $this->container = $container;
         $this->module = $module ? : new EmptyModule;
         $this->bind = $bind ? : new Bind;
         $this->compiler = $compiler ?: new Compiler;
+        $this->stringer = $stringer ?: new ModuleStringer;
         $this->preDestroyObjects = new SplObjectStorage;
         $this->config = $container->getForge()->getConfig();
         $this->module->activate($this);
@@ -737,15 +745,13 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * Return module information.
+     * Return module information as string
      *
      * @return string
      */
     public function __toString()
     {
-        $result = (string)($this->module);
-
-        return $result;
+        return $this->stringer->toString($this->module);
     }
 
     /**

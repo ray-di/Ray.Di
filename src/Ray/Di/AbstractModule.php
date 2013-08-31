@@ -166,18 +166,25 @@ abstract class AbstractModule implements ArrayAccess
      */
     public $modules = [];
 
+
     /**
-     * Constructor
-     *
-     * @param AbstractModule $module
-     * @param Matcher        $matcher
+     * @var ModuleStringerInterface
+     */
+    private $stringer;
+
+    /**
+     * @param AbstractModule          $module
+     * @param Matcher                 $matcher
+     * @param ModuleStringerInterface $stringer
      */
     public function __construct(
         AbstractModule $module = null,
-        Matcher $matcher = null
+        Matcher $matcher = null,
+        ModuleStringerInterface $stringer = null
     ) {
         $this->modules[] = get_class($this);
         $this->matcher = $matcher ? : new Matcher(new Reader);
+        $this->stringer = $stringer ?: new ModuleStringer;
         if (is_null($module)) {
             $this->bindings = new ArrayObject;
             $this->pointcuts = new ArrayObject;
@@ -484,44 +491,9 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function __toString()
     {
-        $output = '';
-        foreach ((array)$this->bindings as $bind => $bindTo) {
-            foreach ($bindTo as $annotate => $to) {
-                $type = $to['to'][0];
-                $output .= ($annotate !== '*') ? "bind('{$bind}')->annotatedWith('{$annotate}')" : "bind('{$bind}')";
-                if ($type === 'class') {
-                    $output .= "->to('" . $to['to'][1] . "')";
-                }
-                if ($type === 'instance') {
-                    $instance = $to['to'][1];
-                    $type = gettype($instance);
-                    switch ($type) {
-                        case "object":
-                            $instance = '(object) ' . get_class($instance);
-                            break;
-                        case "array":
-                            $instance = '(array) ' . json_encode($instance);
-                            break;
-                        case "string":
-                            $instance = "'{$instance}'";
-                            break;
-                        case "boolean":
-                            $instance = '(bool) ' . ($instance ? 'true' : 'false');
-                            break;
-                        default:
-                            $instance = "($type) $instance";
-                    }
-                    $output .= "->toInstance(" . $instance . ")";
-                }
-                if ($type === 'provider') {
-                    $provider = $to['to'][1];
-                    $output .= "->toProvider('" . $provider . "')";
-                }
-                $output .= PHP_EOL;
-            }
-        }
+        $this->stringer = new ModuleStringer();
+        return $this->stringer->toString($this);
 
-        return $output;
     }
 
     /**
