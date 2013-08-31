@@ -415,20 +415,15 @@ class Injector implements InjectorInterface
      */
     private function getBoundClass($bindings, $definition, $class)
     {
-        if (!isset($bindings[$class]) || !isset($bindings[$class]['*']['to'][0])) {
-            $msg = "Interface \"$class\" is not bound.";
-            throw new Exception\NotBound($msg);
-        }
+        $this->checkNotBound($bindings, $class);
+
         $toType = $bindings[$class]['*']['to'][0];
 
         if ($toType === AbstractModule::TO_PROVIDER) {
             return $this->getToProviderBound($bindings, $class);
         }
 
-        $inType = isset($bindings[$class]['*'][AbstractModule::IN]) ? $bindings[$class]['*'][AbstractModule::IN] : null;
-        $inType = is_array($inType) ? $inType[0] : $inType;
-        $isSingleton = $inType === Scope::SINGLETON || $definition['Scope'] == Scope::SINGLETON;
-        $interfaceClass = $class;
+        list($isSingleton, $interfaceClass) = $this->getBindingInfo($class, $definition, $bindings);
 
         if ($isSingleton && $this->container->has($interfaceClass)) {
             $object = $this->container->get($interfaceClass);
@@ -436,16 +431,50 @@ class Injector implements InjectorInterface
             return $object;
         }
 
-        if ($toType === AbstractModule::TO_CLASS) {
-            $class = $bindings[$class]['*']['to'][1];
-            return [$class, $isSingleton, $interfaceClass];
-        }
-
         if ($toType === AbstractModule::TO_INSTANCE) {
             return $bindings[$class]['*']['to'][1];
         }
 
+        if ($toType === AbstractModule::TO_CLASS) {
+            $class = $bindings[$class]['*']['to'][1];
+        }
+
         return [$class, $isSingleton, $interfaceClass];
+    }
+
+    /**
+     * Return $isSingleton, $interfaceClass
+     *
+     * @param string $class
+     * @param array  $definition
+     * @param mixed  $bindings
+     *
+     * @return array [$isSingleton, $interfaceClass]
+     */
+    private function getBindingInfo($class, $definition, $bindings)
+    {
+        $inType = isset($bindings[$class]['*'][AbstractModule::IN]) ? $bindings[$class]['*'][AbstractModule::IN] : null;
+        $inType = is_array($inType) ? $inType[0] : $inType;
+        $isSingleton = $inType === Scope::SINGLETON || $definition['Scope'] == Scope::SINGLETON;
+        $interfaceClass = $class;
+
+        return [$isSingleton, $interfaceClass];
+
+    }
+    /**
+     * Throw exception if not boud
+     *
+     * @param mixed  $bindings
+     * @param string $class
+     *
+     * @throws Exception\NotBound
+     */
+    private function checkNotBound($bindings, $class)
+    {
+        if (!isset($bindings[$class]) || !isset($bindings[$class]['*']['to'][0])) {
+            $msg = "Interface \"$class\" is not bound.";
+            throw new Exception\NotBound($msg);
+        }
     }
 
     /**
