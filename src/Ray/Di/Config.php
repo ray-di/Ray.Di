@@ -206,6 +206,21 @@ class Config implements ConfigInterface
         $constructorReflection = $this->getReflect($class)->getConstructor();
         $unifiedParams = $constructorReflection ? $this->getUnifiedParams($constructorReflection, $parentParams, $class) : [];
 
+        $this->unified[$class] = $this->mergeConfig($class, $unifiedParams, $parentSetter, $parentDefinition);
+
+        return $this->unified[$class];
+    }
+
+    /**
+     * @param string     $class
+     * @param array      $unifiedParams
+     * @param array      $parentSetter
+     * @param Definition $parentDefinition
+     *
+     * @return mixed
+     */
+    private function mergeConfig($class, $unifiedParams, $parentSetter, Definition $parentDefinition)
+    {
         // merge the setters
         $unifiedSetter = isset($this->setter[$class]) ? array_merge($parentSetter, $this->setter[$class]) : $parentSetter;
 
