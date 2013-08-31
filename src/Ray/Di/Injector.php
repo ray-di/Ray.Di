@@ -271,7 +271,8 @@ class Injector implements InjectorInterface
         $params = is_null($params) ? $config : array_merge($config, (array)$params);
 
         // lazy-load params as needed
-        foreach ($params as $key => $val) {
+        $keys = array_keys($params);
+        foreach ($keys as $key) {
             if ($params[$key] instanceof Lazy) {
                 $params[$key] = $params[$key]();
             }
