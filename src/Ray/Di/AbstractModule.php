@@ -466,6 +466,7 @@ abstract class AbstractModule implements ArrayAccess
      * @param mixed  $value
      *
      * @throws Exception\ReadOnly
+     * @SuppressWarnings(PHPMD)
      */
     public function offsetSet($offset, $value)
     {
@@ -478,6 +479,7 @@ abstract class AbstractModule implements ArrayAccess
      * @param string $offset
      *
      * @throws Exception\ReadOnly
+     * @SuppressWarnings(PHPMD)
      */
     public function offsetUnset($offset)
     {
