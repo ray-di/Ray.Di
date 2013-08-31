@@ -482,11 +482,10 @@ class Injector implements InjectorInterface
      */
     private function bindModule(array $setter, Definition $definition)
     {
-        $getInstance = $this->getGetInstanceClosure($this, $definition);
         // main
         $setterDefinitions = (isset($definition[Definition::INJECT][Definition::INJECT_SETTER])) ? $definition[Definition::INJECT][Definition::INJECT_SETTER] : null;
         if ($setterDefinitions) {
-            $setter = $this->getSetter($setterDefinitions, $getInstance);
+            $setter = $this->getSetter($setterDefinitions);
         }
 
         // constructor injection ?
@@ -502,12 +501,12 @@ class Injector implements InjectorInterface
      *
      * @return array
      */
-    private function getSetter(array $setterDefinitions, callable $getInstance)
+    private function getSetter(array $setterDefinitions)
     {
         $injected = [];
         foreach ($setterDefinitions as $setterDefinition) {
             try {
-                $injected[] = $this->bindMethod($setterDefinition, $getInstance);
+                $injected[] = $this->bindMethod($setterDefinition);
             } catch (OptionalInjectionNotBound $e) {
             }
         }
@@ -521,32 +520,6 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * @param InjectorInterface $injector
-     * @param Definition $definition
-     *
-     * @return callable
-     */
-    private function getGetInstanceClosure(InjectorInterface $injector, Definition $definition)
-    {
-        $container = $injector->getContainer();
-        return function ($in, $bindingToType, $target) use ($container, $definition, $injector) {
-            if ($in === Scope::SINGLETON && $container->has($target)) {
-                $instance = $container->get($target);
-
-                return $instance;
-            }
-            $isToClassBinding = $bindingToType === AbstractModule::TO_CLASS;
-            $instance = $isToClassBinding ? $injector->getInstance($target) : $injector->getInstance($target)->get();
-
-            if ($in === Scope::SINGLETON) {
-                $container->set($target, $instance);
-            }
-
-            return $instance;
-        };
-    }
-
-    /**
      * Bind method
      *
      * @param array      $setterDefinition
@@ -554,11 +527,11 @@ class Injector implements InjectorInterface
      *
      * @return array
      */
-    private function bindMethod(array $setterDefinition, callable $getInstance)
+    private function bindMethod(array $setterDefinition)
     {
         list($method, $settings) = each($setterDefinition);
 
-        array_walk($settings, [$this, 'bindOneParameter'], [$getInstance]);
+        array_walk($settings, [$this, 'bindOneParameter']);
 
         return [$method, $settings];
     }
@@ -753,57 +726,110 @@ class Injector implements InjectorInterface
      *
      * @param array  &$param
      * @param string $key
-     * @param array  $userData
      *
      * @return void
      * @throws Exception\OptionalInjectionNotBound
      * @noinspection PhpUnusedPrivateMethodInspection
+     * @SuppressWarnings(PHPMD.)
      */
-    private function bindOneParameter(array &$param, $key, array $userData)
+    private function bindOneParameter(array &$param, $key)
     {
-        list($getInstance) = $userData;
         $annotate = $param[Definition::PARAM_ANNOTATE];
         $typeHint = $param[Definition::PARAM_TYPEHINT];
         $hasTypeHint = isset($this->module[$typeHint]) && isset($this->module[$typeHint][$annotate]) && ($this->module[$typeHint][$annotate] !== []);
         $binding = $hasTypeHint ? $this->module[$typeHint][$annotate] : false;
-        if ($binding === false || isset($binding[AbstractModule::TO]) === false) {
+        $isNotBinding = $binding === false || isset($binding[AbstractModule::TO]) === false;
+        if ($isNotBinding && array_key_exists(Definition::DEFAULT_VAL, $param)) {
             // default value
-            if (array_key_exists(Definition::DEFAULT_VAL, $param)) {
-                $param = $param[Definition::DEFAULT_VAL];
-
-                return;
-            }
+            $param = $param[Definition::DEFAULT_VAL];
+            return;
+        }
+        if ($isNotBinding) {
             // default binding by @ImplementedBy or @ProviderBy
-            $binding = $this->jitBinding($param, $typeHint, $annotate);
-            if ($binding === self::OPTIONAL_BINDING_NOT_BOUND) {
-                throw new OptionalInjectionNotBound($key);
-            }
+            $binding = $this->jitBinding($param, $typeHint, $annotate, $key);
         }
         list($bindingToType, $target) = $binding[AbstractModule::TO];
-        if ($bindingToType === AbstractModule::TO_INSTANCE) {
-            $param = $target;
 
-            return;
-        } elseif ($bindingToType === AbstractModule::TO_CALLABLE) {
-            /* @var $target \Closure */
-            $param = $target();
+        $bound = $this->instanceBound($param, $bindingToType, $target, $binding);
+        if (! $bound) {
+            $this->typeBound($param, $typeHint, $bindingToType, $target);
+        }
+    }
 
-            return;
-        }
-        /* @var $getInstance \Closure */
-        
-        if (isset($binding[AbstractModule::IN])) {
-            $param = $getInstance($binding[AbstractModule::IN], $bindingToType, $target);
-            return;
-        }
-        if (isset($binding[AbstractModule::IN][0])) {
-            $param = $getInstance($binding[AbstractModule::IN][0], $bindingToType, $target);
-            return;
-        }
-
+    /**
+     * Set param by type bound
+     *
+     * @param mixed  $param
+     * @param string $typeHint
+     * @param string $bindingToType
+     * @param mixed  $target
+     */
+    private function typeBound(&$param, $typeHint, $bindingToType, $target)
+    {
         list($param, , $definition) = $this->config->fetch($typeHint);
         $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
-        $param = $getInstance($in, $bindingToType, $target);
+        $param = $this->getInstanceWithContainer($in, $bindingToType, $target);
+    }
+    /**
+     * Set param by instance bound(TO_INSTANCE, TO_CALLABLE, or already set in container)
+     *
+     * @param $param
+     * @param $bindingToType
+     * @param $target
+     * @param $binding
+     * @return bool
+     */
+    private function instanceBound(&$param, $bindingToType, $target, $binding)
+    {
+        if ($bindingToType === AbstractModule::TO_INSTANCE) {
+            $param = $target;
+            return true;
+        }
+
+        if ($bindingToType === AbstractModule::TO_CALLABLE) {
+            /* @var $target \Closure */
+            $param = $target();
+            return true;
+        }
+
+        if (isset($binding[AbstractModule::IN])) {
+            $param = $this->getInstanceWithContainer($binding[AbstractModule::IN], $bindingToType, $target);
+            return true;
+        }
+
+        if (isset($binding[AbstractModule::IN][0])) {
+            $param = $this->getInstanceWithContainer($binding[AbstractModule::IN][0], $bindingToType, $target);
+            return true;
+        }
+
+        return false;
+
+    }
+
+    /**
+     * Get instance with container
+     *
+     * @param string $in (Scope::SINGLETON | Scope::PROTOTYPE)
+     * @param string $bindingToType
+     * @param mixed  $target
+     *
+     * @return mixed
+     */
+    private function getInstanceWithContainer($in, $bindingToType, $target)
+    {
+        if ($in === Scope::SINGLETON && $this->container->has($target)) {
+            $instance = $this->container->get($target);
+
+            return $instance;
+        }
+        $isToClassBinding = ($bindingToType === AbstractModule::TO_CLASS);
+        $instance = $isToClassBinding ? $this->getInstance($target) : $this->getInstance($target)->get();
+
+        if ($in === Scope::SINGLETON) {
+            $this->container->set($target, $instance);
+        }
+
+        return $instance;
     }
 
     /**
@@ -816,12 +842,12 @@ class Injector implements InjectorInterface
      * @return array|bool
      * @throws Exception\NotBound
      */
-    private function jitBinding(array $param, $typeHint, $annotate)
+    private function jitBinding(array $param, $typeHint, $annotate, $key)
     {
         $typeHintBy = $param[Definition::PARAM_TYPEHINT_BY];
         if ($typeHintBy == []) {
             if ($param[Definition::OPTIONAL] === true) {
-                return self::OPTIONAL_BINDING_NOT_BOUND;
+                throw new OptionalInjectionNotBound($key);
             }
             $name = $param[Definition::PARAM_NAME];
             $msg = "typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$this->class}'";
