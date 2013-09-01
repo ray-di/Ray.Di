@@ -77,7 +77,7 @@ class Injector implements InjectorInterface
      *
      * @var LoggerInterface
      */
-    private $log;
+    private $logger;
 
     /**
      * Current working class for exception message
@@ -101,16 +101,11 @@ class Injector implements InjectorInterface
     private $compiler;
 
     /**
-     * @var ModuleStringer
-     */
-    private $stringer;
-
-    /**
-     * @param ContainerInterface      $container
-     * @param AbstractModule          $module
-     * @param BindInterface           $bind
-     * @param CompilerInterface       $compiler
-     * @param ModuleStringerInterface $stringer
+     * @param ContainerInterface $container
+     * @param AbstractModule     $module
+     * @param BindInterface      $bind
+     * @param CompilerInterface  $compiler
+     * @param LoggerInterface    $logger
      *
      * @Inject
      */
@@ -119,13 +114,14 @@ class Injector implements InjectorInterface
         AbstractModule $module = null,
         BindInterface $bind = null,
         CompilerInterface $compiler = null,
-        ModuleStringerInterface $stringer = null
+        LoggerInterface $logger = null
     ) {
         $this->container = $container;
         $this->module = $module ? : new EmptyModule;
         $this->bind = $bind ? : new Bind;
         $this->compiler = $compiler ?: new Compiler;
-        $this->stringer = $stringer ?: new ModuleStringer;
+        $this->logger = $logger ? : new Logger;
+
         $this->preDestroyObjects = new SplObjectStorage;
         $this->config = $container->getForge()->getConfig();
         $this->module->activate($this);
@@ -192,24 +188,6 @@ class Injector implements InjectorInterface
         $this->module = $module;
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->log = $logger;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLogger()
-    {
-        return $this->log;
     }
 
     /**
@@ -303,9 +281,9 @@ class Injector implements InjectorInterface
         // call setter methods
         $this->setterMethod($setter, $object);
 
-        // log inject info
-        if ($this->log) {
-            $this->log->log($class, $params, $setter, $object, $bind);
+        // logger inject info
+        if ($this->logger) {
+            $this->logger->log($class, $params, $setter, $object, $bind);
         }
 
         // Object life cycle, Singleton, and Save cache
@@ -785,7 +763,7 @@ class Injector implements InjectorInterface
      */
     public function __toString()
     {
-        return $this->stringer->toString($this->module);
+        return (string)($this->module);
     }
 
     /**

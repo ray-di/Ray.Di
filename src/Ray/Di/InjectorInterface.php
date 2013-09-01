@@ -42,22 +42,6 @@ interface InjectorInterface
     public function getModule();
 
     /**
-     * Set Logger
-     *
-     * @param LoggerInterface $logger
-     *
-     * @return self
-     */
-    public function setLogger(LoggerInterface $logger);
-
-    /**
-     * Get Logger
-     *
-     * @return LoggerInterface
-     */
-    public function getLogger();
-
-    /**
      * Set module
      *
      * @param AbstractModule $module

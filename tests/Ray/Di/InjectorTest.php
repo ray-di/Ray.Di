@@ -8,6 +8,16 @@ use Doctrine\Common\Cache\ArrayCache;
 use Ray\Di\Modules\InstanceInstallModule;
 use Ray\Di\Modules\InstanceModule;
 
+class Lister
+{
+    public $finder;
+    public function __construct(Finder $finder)
+    {
+        $this->finder = $finder;
+    }
+}
+class Finder {}
+
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -345,22 +355,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($object->userDb, 'NOT_INJECTED');
     }
 
-    public function testSetLogger()
-    {
-        $this->injector->setLogger(new \Ray\Di\Mock\TestLogger);
-        $this->injector->setModule(new Modules\BasicModule);
-        $this->injector->getInstance('Ray\Di\Definition\Basic');
-        $this->assertTrue(is_string(\Ray\Di\Mock\TestLogger::$log));
-    }
-
-    public function testGetLogger()
-    {
-        $logger = new \Ray\Di\Mock\TestLogger;
-        $this->injector->setLogger($logger);
-        $takenLogger = $this->injector->getLogger();
-        $this->assertSame(spl_object_hash($logger), spl_object_hash($takenLogger));
-    }
-
     /**
      * @expectedException \Ray\Di\Exception\Binding
      */
@@ -494,4 +488,20 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $expected = ['instance', 'PC6001'];
         $this->assertSame($expected, $actual);
     }
+
+    public function testLazyParam()
+    {
+        $this->injector->getContainer()->params['Ray\Di\Lister'] = [
+            'finder' => $this->injector->getContainer()->lazyNew('Ray\Di\Finder')
+        ];
+        $lister = $this->injector->getInstance('Ray\Di\Lister');
+        $this->assertInstanceOf('Ray\Di\Lister', $lister);
+    }
+
+    public function testGetPreDestroyObjects()
+    {
+        $preDestroyObjects = $this->injector->getPreDestroyObjects();
+        $this->assertInstanceOf('SplObjectStorage', $preDestroyObjects);
+    }
+
 }
