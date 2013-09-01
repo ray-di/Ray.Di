@@ -77,7 +77,7 @@ class Injector implements InjectorInterface
      *
      * @var LoggerInterface
      */
-    private $log;
+    private $logger;
 
     /**
      * Current working class for exception message
@@ -101,16 +101,11 @@ class Injector implements InjectorInterface
     private $compiler;
 
     /**
-     * @var ModuleStringer
-     */
-    private $stringer;
-
-    /**
-     * @param ContainerInterface      $container
-     * @param AbstractModule          $module
-     * @param BindInterface           $bind
-     * @param CompilerInterface       $compiler
-     * @param ModuleStringerInterface $stringer
+     * @param ContainerInterface $container
+     * @param AbstractModule     $module
+     * @param BindInterface      $bind
+     * @param CompilerInterface  $compiler
+     * @param LoggerInterface    $logger
      *
      * @Inject
      */
@@ -119,13 +114,14 @@ class Injector implements InjectorInterface
         AbstractModule $module = null,
         BindInterface $bind = null,
         CompilerInterface $compiler = null,
-        ModuleStringerInterface $stringer = null
+        LoggerInterface $logger = null
     ) {
         $this->container = $container;
         $this->module = $module ? : new EmptyModule;
         $this->bind = $bind ? : new Bind;
         $this->compiler = $compiler ?: new Compiler;
-        $this->stringer = $stringer ?: new ModuleStringer;
+        $this->logger = $logger ? : new Logger;
+
         $this->preDestroyObjects = new SplObjectStorage;
         $this->config = $container->getForge()->getConfig();
         $this->module->activate($this);
@@ -178,9 +174,6 @@ class Injector implements InjectorInterface
      */
     public function setModule(AbstractModule $module)
     {
-        if ($this->container->isLocked()) {
-            throw new ContainerLocked;
-        }
         $module->activate($this);
         $this->module = $module;
 
@@ -192,24 +185,6 @@ class Injector implements InjectorInterface
         $this->module = $module;
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->log = $logger;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLogger()
-    {
-        return $this->log;
     }
 
     /**
@@ -263,7 +238,7 @@ class Injector implements InjectorInterface
     /**
      * {@inheritdoc}
      */
-    public function getInstance($class, array $params = null)
+    public function getInstance($class)
     {
         $bound = $this->getBound($class);
 
@@ -279,10 +254,10 @@ class Injector implements InjectorInterface
         }
 
         // get bound config
-        list($class, $isSingleton, $interfaceClass, $config, $setter, $definition) = $bound;
+        list($class, $isSingleton, $interfaceClass, $params, $setter, $definition) = $bound;
 
-
-        $params = $this->getParams($config, $params);
+        // instantiate parameters
+        $params = $this->instantiateParams($params);
 
         // be all parameters ready
         $this->constructorInject($class, $params, $this->module);
@@ -303,9 +278,9 @@ class Injector implements InjectorInterface
         // call setter methods
         $this->setterMethod($setter, $object);
 
-        // log inject info
-        if ($this->log) {
-            $this->log->log($class, $params, $setter, $object, $bind);
+        // logger inject info
+        if ($this->logger) {
+            $this->logger->log($class, $params, $setter, $object, $bind);
         }
 
         // Object life cycle, Singleton, and Save cache
@@ -316,16 +291,14 @@ class Injector implements InjectorInterface
     }
 
     /**
+     * Return parameters
+     *
      * @param array $params
-     * @param array $config
      *
      * @return array
      */
-    private function getParams(array $config, array $params = null)
+    private function instantiateParams(array $params)
     {
-        // override construction parameter
-        $params = is_null($params) ? $config : array_merge($config, (array)$params);
-
         // lazy-load params as needed
         $keys = array_keys($params);
         foreach ($keys as $key) {
@@ -705,15 +678,6 @@ class Injector implements InjectorInterface
     private function setterMethod(array $setter, $object)
     {
         foreach ($setter as $method => $value) {
-            // does the specified setter method exist?
-            if (! method_exists($object, $method)) {
-                continue;
-            }
-            if (!is_array($value)) {
-                // call the setter
-                $object->$method($value);
-                continue;
-            }
             call_user_func_array([$object, $method], $value);
         }
     }
@@ -739,55 +703,13 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * Lock
-     *
-     * Lock the Container so that configuration cannot be accessed externally,
-     * and no new service definitions can be added.
-     *
-     * @return void
-     */
-    public function lock()
-    {
-        $this->container->lock();
-    }
-
-    /**
-     * Lazy new
-     *
-     * Returns a Lazy that creates a new instance. This allows you to replace
-     * the following idiom:
-     *
-     * @param string $class  The type of class of instantiate.
-     * @param array  $params Override parameters for the instance.
-     *
-     * @return Lazy A lazy-load object that creates the new instance.
-     */
-    public function lazyNew($class, array $params = [])
-    {
-        return $this->container->lazyNew($class, $params);
-    }
-
-    /**
-     * Magic get to provide access to the Config::$params and $setter
-     * objects.
-     *
-     * @param string $key The property to retrieve ('params' or 'setter').
-     *
-     * @return mixed
-     */
-    public function __get($key)
-    {
-        return $this->container->__get($key);
-    }
-
-    /**
      * Return module information as string
      *
      * @return string
      */
     public function __toString()
     {
-        return $this->stringer->toString($this->module);
+        return (string)($this->module);
     }
 
     /**
@@ -866,11 +788,6 @@ class Injector implements InjectorInterface
             return true;
         }
 
-        if (isset($binding[AbstractModule::IN][0])) {
-            $param = $this->getInstanceWithContainer($binding[AbstractModule::IN][0], $bindingToType, $target);
-            return true;
-        }
-
         return false;
 
     }
@@ -930,5 +847,15 @@ class Injector implements InjectorInterface
         }
 
         return [AbstractModule::TO => [AbstractModule::TO_PROVIDER, $typeHintBy[1]]];
+    }
+
+    /**
+     * Return aop generated file path
+     *
+     * @return string
+     */
+    public function getAopClassDir()
+    {
+        return $this->compiler->classDir;
     }
 }

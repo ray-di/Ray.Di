@@ -26,7 +26,7 @@ class scriptTest extends \PHPUnit_Framework_TestCase
 
     public function testInstance()
     {
-         $instance = require_once dirname(dirname(dirname(__DIR__))) . '/scripts/instance.php';
+        $instance = require_once dirname(dirname(dirname(__DIR__))) . '/scripts/instance.php';
         $this->assertInstanceOf('Ray\Di\Injector', $instance);
     }
 }

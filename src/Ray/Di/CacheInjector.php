@@ -6,7 +6,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
-use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
 use SplObjectStorage;
 
@@ -16,7 +15,7 @@ use SplObjectStorage;
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-class CacheInjector
+class CacheInjector implements InstanceInterface
 {
     /**
      * @var \Doctrine\Common\Cache\Cache
@@ -24,65 +23,42 @@ class CacheInjector
     private $cache;
 
     /**
-     * @var string
-     */
-    private $aopDir;
-
-    /**
-     * @var Callable
+     * @var callable
      */
     private $injector;
 
     /**
-     * @var Callable
+     * @var callable
      */
-    private $init;
+    private $postInject;
+
+    private $tmpDir;
 
     /**
-     * @param callable $module   return module
-     * @param null     $aopDir   aop file dir
-     * @param Cache    $cache    cache
-     * @param callable $logger   injection logger
-     * @param callable $injector injector
+     * @param callable $injector
+     * @param callable $postInject
+     * @param          $key
+     * @param Cache    $cache
+     * @param          $tmpDir
+     *
+     * $injector = function() {return Injector::create([new Module]);}
+     * $postInject = function($instance, InjectorInterface $injector){};
      */
     public function __construct(
-        callable $module = null,
-        $aopDir = null,
+        callable $injector,
+        callable $postInject,
+        $key,
         Cache $cache = null,
-        callable $logger = null,
-        callable $injector = null
+        $tmpDir = null
     ) {
-        $this->module = $module ? : function () {
-            return new EmptyModule;
-        };
-        $this->aopDir = $aopDir ? : sys_get_temp_dir();
+        $this->injector = $injector;
+        $this->postInject = $postInject;
         if (is_null($cache)) {
-            $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($this->aopDir);
+            $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($this->tmpDir);
         }
-        $this->cache = $cache ? : new FilesystemCache($this->aopDir);
+        $cache->setNamespace($key);
         $this->cache = $cache;
-        $this->logger = $logger;
-        $this->injector = $injector ? : $this->getInjectorClosure();
-
-        $this->registerGeneratedAopFileAutoLoader();
-    }
-
-    /**
-     * Set initialization process
-     *
-     * This $init closure is called after first injection.
-     *
-     * $init($this->injector, $instance)
-     *
-     * @param callable $init
-     *
-     * @return self
-     */
-    public function setInit(callable $init)
-    {
-        $this->init = $init;
-
-        return $this;
+        $this->tmpDir = $tmpDir ?: sys_get_temp_dir();
     }
 
     /**
@@ -94,8 +70,12 @@ class CacheInjector
      */
     public function getInstance($class)
     {
-        list($instance, $preDestroy) =
-            $this->cache->contains($class) ? $this->cache->fetch($class) : $this->createInstance($class);
+        list($instance, $preDestroy, $classDir) =
+            $this->cache->contains($class) ?
+                $this->cache->fetch($class) :
+                $this->createInstance($class);
+
+        $this->registerAopFileLoader($classDir);
 
         register_shutdown_function(
             function () use ($preDestroy) {
@@ -107,25 +87,15 @@ class CacheInjector
     }
 
     /**
-     * @return callable
+     * Register generated aop file auto loader
+     *
+     * @param $classDir
      */
-    private function getInjectorClosure()
-    {
-        return function () {
-            $module = $this->module;
-
-            return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), $module(), new Bind, new Compiler($this->aopDir));
-        };
-    }
-
-    /**
-     * @return void
-     */
-    private function registerGeneratedAopFileAutoLoader()
+    private function registerAopFileLoader($classDir)
     {
         spl_autoload_register(
-            function ($class) {
-                $file = $this->aopDir . DIRECTORY_SEPARATOR . $class . '.php';
+            function ($class) use ($classDir) {
+                $file = $classDir . DIRECTORY_SEPARATOR . $class . '.php';
                 if (file_exists($file)) {
                     /** @noinspection PhpIncludeInspection */
                     include $file;
@@ -142,36 +112,19 @@ class CacheInjector
      */
     private function createInstance($class)
     {
-        $injector = $this->injector;
-        $injector = $injector();
-        /** @var $injector InjectorInterface */
-        $this->setLogger($injector, $this->logger);
-        $this->removeAopFiles($this->aopDir);
+        $injector = call_user_func($this->injector);
+        /** @var $injector Injector */
+        $this->removeAopFiles($this->tmpDir);
         $instance = $injector->getInstance($class);
         $preDestroy = $injector->getPreDestroyObjects();
-        $this->cache->save($class, [$instance, $preDestroy]);
-        if ($this->init) {
-            $init = $this->init;
-            $init($injector, $instance);
-        }
+        $this->cache->save($class, [$instance, $preDestroy, $injector->getAopClassDir()]);
 
-        return [$instance, $preDestroy];
+        // post injection
+        call_user_func_array($this->postInject, [$instance, $injector]);
+
+        return [$instance, $preDestroy, $injector->getAopClassDir()];
     }
 
-    /**
-     * Set injection logger
-     *
-     * @param InjectorInterface $injector
-     * @param callable          $logger
-     */
-    private function setLogger(InjectorInterface $injector, callable $logger = null)
-    {
-        if (is_callable($logger)) {
-            $logger = $logger();
-            /** @var $logger LoggerInterface */
-            $injector->setLogger($logger);
-        }
-    }
 
     /**
      * Clear generated aop files

@@ -232,13 +232,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Ray\Di\EmptyModule', $module);
     }
 
-    public function testLazyConstructParameter()
-    {
-        $lazyNew = $this->injector->lazyNew('Ray\Di\Mock\Db');
-        $instance = $this->injector->getInstance('Ray\Di\Mock\Construct', ['db' => $lazyNew]);
-        $this->assertInstanceOf('Ray\Di\Mock\Db', $instance->db);
-    }
-
     /**
      * not expectedException Ray\Di\Exception\Binding
      *
@@ -273,34 +266,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->injector = new Injector($this->container, new \Ray\Di\Modules\ProvideNotExistsModule);
 
-    }
-
-    public function test__get()
-    {
-        $params = $this->injector->params;
-        $params['dummy'] = ['a' => 'fake1'];
-        $getParams = $this->injector->params;
-        $expected = $getParams['dummy'];
-        $actual = $getParams['dummy'];
-        $this->assertSame($actual, $expected);
-    }
-
-    /**
-     * @expectedException \Aura\Di\Exception\ContainerLocked
-     */
-    public function test_lockWithParam()
-    {
-        $this->injector->lock();
-        $this->injector->params;
-    }
-
-    /**
-     * @expectedException \Aura\Di\Exception\ContainerLocked
-     */
-    public function test_lockWhenSetModule()
-    {
-        $this->injector->lock();
-        $this->injector->setModule(new Modules\BasicModule);
     }
 
     public function testConstructorBindingsWithDefault()
@@ -350,22 +315,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $object = $this->injector->getInstance('Ray\Di\Definition\OptionalInject');
         $this->assertSame($object->userDb, 'NOT_INJECTED');
-    }
-
-    public function testSetLogger()
-    {
-        $this->injector->setLogger(new \Ray\Di\Mock\TestLogger);
-        $this->injector->setModule(new Modules\BasicModule);
-        $this->injector->getInstance('Ray\Di\Definition\Basic');
-        $this->assertTrue(is_string(\Ray\Di\Mock\TestLogger::$log));
-    }
-
-    public function testGetLogger()
-    {
-        $logger = new \Ray\Di\Mock\TestLogger;
-        $this->injector->setLogger($logger);
-        $takenLogger = $this->injector->getLogger();
-        $this->assertSame(spl_object_hash($logger), spl_object_hash($takenLogger));
     }
 
     /**
@@ -501,4 +450,20 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $expected = ['instance', 'PC6001'];
         $this->assertSame($expected, $actual);
     }
+
+    public function testLazyParam()
+    {
+        $this->injector->getContainer()->params['Ray\Di\Mock\MovieApp\Lister'] = [
+            'finder' => $this->injector->getContainer()->lazyNew('Ray\Di\Mock\MovieApp\Finder')
+        ];
+        $lister = $this->injector->getInstance('Ray\Di\Mock\MovieApp\Lister');
+        $this->assertInstanceOf('Ray\Di\Mock\MovieApp\Lister', $lister);
+    }
+
+    public function testGetPreDestroyObjects()
+    {
+        $preDestroyObjects = $this->injector->getPreDestroyObjects();
+        $this->assertInstanceOf('SplObjectStorage', $preDestroyObjects);
+    }
+
 }
