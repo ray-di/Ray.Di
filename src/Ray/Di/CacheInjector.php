@@ -40,6 +40,9 @@ class CacheInjector implements InstanceInterface
      * @param          $key
      * @param Cache    $cache
      * @param          $tmpDir
+     *
+     * $injector = function() {return Injector::create([new Module]);}
+     * $postInject = function($instance, InjectorInterface $injector){};
      */
     public function __construct(
         callable $injector,
@@ -117,7 +120,7 @@ class CacheInjector implements InstanceInterface
         $this->cache->save($class, [$instance, $preDestroy, $injector->getAopClassDir()]);
 
         // post injection
-        call_user_func($this->postInject, [$instance, $injector]);
+        call_user_func_array($this->postInject, [$instance, $injector]);
 
         return [$instance, $preDestroy, $injector->getAopClassDir()];
     }
