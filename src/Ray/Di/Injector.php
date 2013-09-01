@@ -174,9 +174,6 @@ class Injector implements InjectorInterface
      */
     public function setModule(AbstractModule $module)
     {
-        if ($this->container->isLocked()) {
-            throw new ContainerLocked;
-        }
         $module->activate($this);
         $this->module = $module;
 
@@ -791,10 +788,10 @@ class Injector implements InjectorInterface
             return true;
         }
 
-        if (isset($binding[AbstractModule::IN][0])) {
-            $param = $this->getInstanceWithContainer($binding[AbstractModule::IN][0], $bindingToType, $target);
-            return true;
-        }
+//        if (isset($binding[AbstractModule::IN][0])) {
+//            $param = $this->getInstanceWithContainer($binding[AbstractModule::IN][0], $bindingToType, $target);
+//            return true;
+//        }
 
         return false;
 
@@ -855,5 +852,15 @@ class Injector implements InjectorInterface
         }
 
         return [AbstractModule::TO => [AbstractModule::TO_PROVIDER, $typeHintBy[1]]];
+    }
+
+    /**
+     * Return aop generated file path
+     *
+     * @return string
+     */
+    public function getAopClassDir()
+    {
+        return $this->compiler->classDir;
     }
 }
