@@ -706,48 +706,6 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * Lock
-     *
-     * Lock the Container so that configuration cannot be accessed externally,
-     * and no new service definitions can be added.
-     *
-     * @return void
-     */
-    public function lock()
-    {
-        $this->container->lock();
-    }
-
-    /**
-     * Lazy new
-     *
-     * Returns a Lazy that creates a new instance. This allows you to replace
-     * the following idiom:
-     *
-     * @param string $class  The type of class of instantiate.
-     * @param array  $params Override parameters for the instance.
-     *
-     * @return Lazy A lazy-load object that creates the new instance.
-     */
-    public function lazyNew($class, array $params = [])
-    {
-        return $this->container->lazyNew($class, $params);
-    }
-
-    /**
-     * Magic get to provide access to the Config::$params and $setter
-     * objects.
-     *
-     * @param string $key The property to retrieve ('params' or 'setter').
-     *
-     * @return mixed
-     */
-    public function __get($key)
-    {
-        return $this->container->__get($key);
-    }
-
-    /**
      * Return module information as string
      *
      * @return string
