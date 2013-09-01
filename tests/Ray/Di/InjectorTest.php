@@ -8,16 +8,6 @@ use Doctrine\Common\Cache\ArrayCache;
 use Ray\Di\Modules\InstanceInstallModule;
 use Ray\Di\Modules\InstanceModule;
 
-class Lister
-{
-    public $finder;
-    public function __construct(Finder $finder)
-    {
-        $this->finder = $finder;
-    }
-}
-class Finder {}
-
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -463,11 +453,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testLazyParam()
     {
-        $this->injector->getContainer()->params['Ray\Di\Lister'] = [
-            'finder' => $this->injector->getContainer()->lazyNew('Ray\Di\Finder')
+        $this->injector->getContainer()->params['Ray\Di\Mock\MovieApp\Lister'] = [
+            'finder' => $this->injector->getContainer()->lazyNew('Ray\Di\Mock\MovieApp\Finder')
         ];
-        $lister = $this->injector->getInstance('Ray\Di\Lister');
-        $this->assertInstanceOf('Ray\Di\Lister', $lister);
+        $lister = $this->injector->getInstance('Ray\Di\Mock\MovieApp\Lister');
+        $this->assertInstanceOf('Ray\Di\Mock\MovieApp\Lister', $lister);
     }
 
     public function testGetPreDestroyObjects()

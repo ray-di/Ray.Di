@@ -15,18 +15,8 @@ use Doctrine\Common\Cache\Cache;
  * @package Ray.Di
  *
  */
-interface InjectorInterface
+interface InjectorInterface extends InstanceInterface
 {
-    /**
-     * Creates and returns a new instance of a class using 'module,
-     * optionally with overriding params.
-     *
-     * @param string $class The class to instantiate.
-     *
-     * @return object
-     */
-    public function getInstance($class);
-
     /**
      * Return container
      *
@@ -42,15 +32,6 @@ interface InjectorInterface
     public function getModule();
 
     /**
-     * Set module
-     *
-     * @param AbstractModule $module
-     *
-     * @return self
-     */
-    public function setModule(AbstractModule $module);
-
-    /**
      * Set module for module builtin injector
      *
      * @param AbstractModule $module
@@ -58,6 +39,15 @@ interface InjectorInterface
      * @return self
      */
     public function setSelfInjectorModule(AbstractModule $module);
+
+    /**
+     * Set module
+     *
+     * @param AbstractModule $module
+     *
+     * @return self
+     */
+    public function setModule(AbstractModule $module);
 
     /**
      * Set cache adapter
