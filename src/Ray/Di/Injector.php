@@ -788,11 +788,6 @@ class Injector implements InjectorInterface
             return true;
         }
 
-//        if (isset($binding[AbstractModule::IN][0])) {
-//            $param = $this->getInstanceWithContainer($binding[AbstractModule::IN][0], $bindingToType, $target);
-//            return true;
-//        }
-
         return false;
 
     }

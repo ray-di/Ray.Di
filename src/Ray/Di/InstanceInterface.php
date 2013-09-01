@@ -7,7 +7,8 @@
  */
 namespace Ray\Di;
 
-interface InstanceInterface {
+interface InstanceInterface
+{
 
     /**
      * Creates and returns a new instance of a class using 'module,
