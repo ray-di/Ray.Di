@@ -11,6 +11,4 @@ vendor
 cache.properties
 build
 composer.phar
-tests/Ray/Di/scripts/object_files/*
-tests/Ray/Di/scripts/aop_files/*.php
-
+*doctrinecache.data

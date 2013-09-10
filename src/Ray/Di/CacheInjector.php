@@ -48,17 +48,15 @@ class CacheInjector implements InstanceInterface
         callable $injector,
         callable $postInject,
         $key,
-        Cache $cache = null,
-        $tmpDir = null
+        Cache $cache,
+        $tmpDir
     ) {
         $this->injector = $injector;
         $this->postInject = $postInject;
-        if (is_null($cache)) {
-            $cache = function_exists('apc_fetch') ? new ApcCache : new FilesystemCache($this->tmpDir);
-        }
+        $this->cache = $cache;
         $cache->setNamespace($key);
         $this->cache = $cache;
-        $this->tmpDir = $tmpDir ?: sys_get_temp_dir();
+        $this->tmpDir = $tmpDir;
     }
 
     /**

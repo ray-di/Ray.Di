@@ -9,7 +9,7 @@ class InstallDoubleModule1 extends AbstractModule
 {
     protected function configure()
     {
-        $this->install(new \Ray\Di\Modules\Db1Module);
-        $this->install(new \Ray\Di\Modules\Db2Module);
+        $this->install(new Db1Module);
+        $this->install(new Db2Module);
     }
 }

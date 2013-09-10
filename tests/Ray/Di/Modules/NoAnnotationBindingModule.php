@@ -4,6 +4,7 @@ namespace Ray\Di\Modules;
 
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
+use Ray\Di\Mock\MovieApp\Finder;
 
 class NoAnnotationBindingModule extends AbstractModule
 {
@@ -20,6 +21,6 @@ class NoAnnotationBindingModule extends AbstractModule
 
     protected function configure()
     {
-        $this->bind('Ray\Di\Mock\MovieApp\Lister')->toConstructor(['finder' => new \Ray\Di\Mock\MovieApp\Finder]);
+        $this->bind('Ray\Di\Mock\MovieApp\Lister')->toConstructor(['finder' => new Finder]);
     }
 }

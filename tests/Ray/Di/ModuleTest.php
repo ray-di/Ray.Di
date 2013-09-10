@@ -28,10 +28,6 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $this->module->activate();
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
     protected function tearDown()
     {
         parent::tearDown();
@@ -102,7 +98,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testToStringInstance()
     {
-        $module = new \Ray\Di\Modules\InstanceModule;
+        $module = new Modules\InstanceModule;
         $module->activate();
         $expected = "bind('')->annotatedWith('id')->toInstance('PC6001')" . PHP_EOL;
         $expected .= "bind('')->annotatedWith('user_name')->toInstance('koriym')" . PHP_EOL;
@@ -116,7 +112,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testToStringInstance2()
     {
-        $module = new \Ray\Di\Modules\InstanceModule2;
+        $module = new Modules\InstanceModule2;
         $module->activate();
         $expected = "bind('')->annotatedWith('id')->toInstance((bool) true)" . PHP_EOL;
         $expected .= "bind('Ray\Di\Mock\DbInterface')->toProvider('Ray\Di\Modules\DbProvider')" . PHP_EOL;
@@ -126,7 +122,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testToStringInstanceArray()
     {
-        $module = new \Ray\Di\Modules\ArrayInstance;
+        $module = new Modules\ArrayInstance;
         $module->activate();
         $expected = "bind('')->annotatedWith('adapters')->toInstance((array) {\"html\":{},\"http\":{}})" . PHP_EOL;
         $this->assertSame($expected, (string)$module);
@@ -134,7 +130,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testToStringDecoratedModule()
     {
-        $module = new \Ray\Di\Modules\BasicModule(new \Ray\Di\Modules\ArrayInstance);
+        $module = new Modules\BasicModule(new Modules\ArrayInstance);
         $module->activate();
         $expected = "bind('')->annotatedWith('adapters')->toInstance((array) {\"html\":{},\"http\":{}})" . PHP_EOL;
         $expected .= "bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb')" . PHP_EOL;
@@ -156,15 +152,14 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testInvokeReturnBinder()
     {
-        $module = new \Ray\Di\Modules\AopMatcherModule;
-        ;
+        $module = new Modules\AopMatcherModule;
         $binder = $module('Ray\Di\Aop\RealBillingService', new Bind);
         $this->assertInstanceOf('\Ray\Aop\Bind', $binder);
     }
 
     public function testAopAnyMatcherModule()
     {
-        $module = new \Ray\Di\Modules\AopAnyMatcherModule;
+        $module = new Modules\AopAnyMatcherModule;
         $module->activate();
         $bind = $module('Ray\Di\Aop\RealBillingService', new Bind);
         $this->assertInstanceOf('Ray\Aop\Bind', $bind);
@@ -174,7 +169,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testAopAnnotateMatcherModule()
     {
-        $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
+        $module = new Modules\AopAnnotateMatcherModule;
         $module->activate();
         $bind = $module('Ray\Di\Aop\RealBillingService', new Bind);
         $result = $bind('chargeOrderWithNoTax');
@@ -183,7 +178,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testAopAnnotateMatcherModuleGetCorrectInterceptor()
     {
-        $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
+        $module = new Modules\AopAnnotateMatcherModule;
         $module->activate();
         $bind = $module('Ray\Di\Aop\RealBillingService', new Bind);
         $result = $bind('chargeOrder');
@@ -192,7 +187,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testInstall()
     {
-        $module = new \Ray\Di\Modules\InstallModule;
+        $module = new Modules\InstallModule;
         $module->activate();
         $this->assertTrue(isset($module->bindings['Ray\\Di\\Mock\\DbInterface']));
         $this->assertTrue(isset($module->bindings['Ray\\Di\\Mock\\LogInterface']));
@@ -200,14 +195,14 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testInstallPointcuts()
     {
-        $module = new \Ray\Di\Modules\InstallPointcutsModule;
+        $module = new Modules\InstallPointcutsModule;
         $module->activate();
         $this->assertSame(2, count($module->pointcuts));
     }
 
     public function testSerializeModule()
     {
-        $module = new \Ray\Di\Modules\AopAnnotateMatcherModule;
+        $module = new Modules\AopAnnotateMatcherModule;
         $module->activate();
         $wakedModule = unserialize(serialize($module));
         $this->assertObjectHasAttribute('pointcuts', $wakedModule);

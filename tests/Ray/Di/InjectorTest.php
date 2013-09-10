@@ -50,10 +50,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
     protected function tearDown()
     {
         parent::tearDown();
@@ -265,7 +261,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorBindings()
     {
-        $this->injector->setModule(new \Ray\Di\Modules\NoAnnotationBindingModule($this->injector));
+        $this->injector->setModule(new NoAnnotationBindingModule($this->injector));
         $lister = $this->injector->getInstance('Ray\Di\Mock\MovieApp\Lister');
         $this->assertInstanceOf('Ray\Di\Mock\MovieApp\Finder', $lister->finder);
 
@@ -273,7 +269,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testNotBoundException()
     {
-        $this->injector->setModule(new \Ray\Di\Modules\InvalidBindingModule);
+        $this->injector->setModule(new Modules\InvalidBindingModule);
         $lister = $this->injector->getInstance('Ray\Di\Mock\MovieApp\Lister');
         $this->assertInstanceOf('Ray\Di\Mock\MovieApp\Finder', $lister->finder);
     }
@@ -285,7 +281,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->injector = new Injector(
             $this->container,
-            new \Ray\Di\Modules\ProvideNotExistsModule,
+            new Modules\ProvideNotExistsModule,
             new Bind,
             new Compiler(
                 $_ENV['RAY_TMP'],
@@ -319,7 +315,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateInjectorBindModule()
     {
-        $injector = Injector::create([new \Ray\Di\Modules\InjectorModule]);
+        $injector = Injector::create([new Modules\InjectorModule]);
         $this->assertInstanceOf('Ray\Di\Injector', $injector);
     }
 

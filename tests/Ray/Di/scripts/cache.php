@@ -2,7 +2,6 @@
 
 namespace Ray\Di;
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
@@ -21,7 +20,7 @@ $injector = function () {
         new Modules\AopModule,
         new Bind,
         new Compiler(
-            $_ENV['RAY_TMP'],
+            sys_get_temp_dir(),
             new PHPParser_PrettyPrinter_Default,
             new PHPParser_Parser(new PHPParser_Lexer),
             new PHPParser_BuilderFactory
@@ -29,7 +28,7 @@ $injector = function () {
     );
 };
 $postInject = function($instance) {};
-$injector = new CacheInjector($injector, $postInject, 'test', new FilesystemCache(__DIR__ . '/object_files'));
+$injector = new CacheInjector($injector, $postInject, 'test', new FilesystemCache(__DIR__ . '/object_files'), $_ENV['RAY_TMP']);
 $billing = $injector->getInstance('Ray\Di\Aop\CacheBilling');
 
 return serialize($billing);

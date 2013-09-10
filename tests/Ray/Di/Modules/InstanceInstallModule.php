@@ -3,6 +3,7 @@
 namespace Ray\Di\Modules;
 
 use Ray\Di\AbstractModule;
+use Ray\Di\Mock\User;
 
 class InstanceInstallModule extends AbstractModule
 {
@@ -13,7 +14,7 @@ class InstanceInstallModule extends AbstractModule
         $this->bind()->annotatedWith('user_age')->toInstance(21);
         $this->bind()->annotatedWith('user_gender')->toInstance('male');
         $this->bind('Ray\Di\Mock\DbInterface')->to('\Ray\Di\Mock\UserDb');
-        $this->bind('Ray\Di\Mock\UserInterface')->toInstance(new \Ray\Di\Mock\User);
+        $this->bind('Ray\Di\Mock\UserInterface')->toInstance(new User);
         $this->install(new InstanceModule);
     }
 }

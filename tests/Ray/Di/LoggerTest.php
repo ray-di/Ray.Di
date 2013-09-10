@@ -30,6 +30,9 @@ function someFunction()
 class DiLoggerTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * @var LoggerInterface
+     */
     private $diLogger;
 
     protected function setUp()

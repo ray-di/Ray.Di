@@ -67,7 +67,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $actual_params);
 
         // for test coverage of the mock class
-        new \Ray\Di\MockChildClass('bar', new \Ray\Di\MockOtherClass());
+        new MockChildClass('bar', new MockOtherClass());
     }
 
     public function testGetReflection()
@@ -165,7 +165,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMethodReflectObject()
     {
-        $methodReflcet = $this->config->getMethodReflect(new \Ray\Di\Definition\MockDefinitionClass(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))), 2), 'setDouble');
+        $methodReflcet = $this->config->getMethodReflect(new Definition\MockDefinitionClass(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))), 2), 'setDouble');
         $this->assertInstanceOf('\ReflectionMethod', $methodReflcet);
         $this->assertSame('setDouble', $methodReflcet->name);
         $this->assertSame('Ray\Di\Definition\MockDefinitionClass', $methodReflcet->class);
