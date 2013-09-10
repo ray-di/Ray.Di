@@ -7,6 +7,10 @@ use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
 use Doctrine\Common\Annotations\AnnotationReader;
+use PHPParser_PrettyPrinter_Default;
+use PHPParser_Parser;
+use PHPParser_Lexer;
+use PHPParser_BuilderFactory;
 
 require_once dirname(dirname(dirname(__DIR__))) . '/bootstrap.php';
 
@@ -16,7 +20,12 @@ $injector = function () {
         $container,
         new Modules\AopModule,
         new Bind,
-        new Compiler(__DIR__ . '/aop_files')
+        new Compiler(
+            $_ENV['RAY_TMP'],
+            new PHPParser_PrettyPrinter_Default,
+            new PHPParser_Parser(new PHPParser_Lexer),
+            new PHPParser_BuilderFactory
+        )
     );
 };
 $postInject = function($instance) {};
