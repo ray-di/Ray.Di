@@ -8,7 +8,6 @@
 namespace Ray\Di;
 
 use Aura\Di\ContainerInterface;
-use Aura\Di\Exception\ContainerLocked;
 use Aura\Di\Lazy;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
@@ -28,6 +27,10 @@ use ReflectionException;
 use ReflectionMethod;
 use SplObjectStorage;
 use ArrayObject;
+use PHPParser_PrettyPrinter_Default;
+use PHPParser_Parser;
+use PHPParser_Lexer;
+use PHPParser_BuilderFactory;
 use Ray\Di\Di\Inject;
 
 /**
@@ -111,16 +114,16 @@ class Injector implements InjectorInterface
      */
     public function __construct(
         ContainerInterface $container,
-        AbstractModule $module = null,
-        BindInterface $bind = null,
-        CompilerInterface $compiler = null,
+        AbstractModule $module,
+        BindInterface $bind,
+        CompilerInterface $compiler,
         LoggerInterface $logger = null
     ) {
         $this->container = $container;
-        $this->module = $module ? : new EmptyModule;
-        $this->bind = $bind ? : new Bind;
-        $this->compiler = $compiler ?: new Compiler;
-        $this->logger = $logger ? : new Logger;
+        $this->module = $module;
+        $this->bind = $bind;
+        $this->compiler = $compiler;
+        $this->logger = $logger;
 
         $this->preDestroyObjects = new SplObjectStorage;
         $this->config = $container->getForge()->getConfig();
@@ -135,7 +138,17 @@ class Injector implements InjectorInterface
     public static function create(array $modules = [], Cache $cache = null)
     {
         $annotationReader = ($cache instanceof Cache) ? new CachedReader(new AnnotationReader, $cache) : new AnnotationReader;
-        $injector = new self(new Container(new Forge(new Config(new Annotation(new Definition, $annotationReader)))));
+        $injector = new self(
+            new Container(new Forge(new Config(new Annotation(new Definition, $annotationReader)))),
+            new EmptyModule,
+            new Bind,
+            new Compiler(
+                sys_get_temp_dir(),
+                new PHPParser_PrettyPrinter_Default,
+                new PHPParser_Parser(new PHPParser_Lexer),
+                new PHPParser_BuilderFactory
+            )
+        );
 
         if (count($modules) > 0) {
             $module = array_shift($modules);

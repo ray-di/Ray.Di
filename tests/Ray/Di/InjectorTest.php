@@ -5,8 +5,15 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Ray\Aop\Bind;
+use Ray\Aop\Compiler;
 use Ray\Di\Modules\InstanceInstallModule;
 use Ray\Di\Modules\InstanceModule;
+use Ray\Di\Modules\NoAnnotationBindingModule;
+use PHPParser_PrettyPrinter_Default;
+use PHPParser_Parser;
+use PHPParser_Lexer;
+use PHPParser_BuilderFactory;
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,18 +22,32 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
      */
     protected $injector;
 
+    /**
+     * @var Config
+     */
     protected $config;
-    protected $container;
 
     /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
+     * @var Container
      */
+    protected $container;
+
     protected function setUp()
     {
         parent::setUp();
         $this->container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));
-        $this->injector = new Injector($this->container, new EmptyModule);
+        $this->injector = new Injector(
+            $this->container,
+            new EmptyModule,
+            new Bind,
+            new Compiler(
+                $_ENV['RAY_TMP'],
+                new PHPParser_PrettyPrinter_Default,
+                new PHPParser_Parser(new PHPParser_Lexer),
+                new PHPParser_BuilderFactory
+            ),
+            new Logger
+        );
     }
 
     /**
@@ -225,7 +246,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testEmptyModule()
     {
-        $injector = new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))));
+        $injector = require dirname(dirname(dirname(__DIR__))) . '/scripts/instance.php';
         $ref = new \ReflectionProperty($injector, 'module');
         $ref->setAccessible(true);
         $module = $ref->getValue($injector);
@@ -244,17 +265,15 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorBindings()
     {
-        $this->injector = new Injector($this->container, new \Ray\Di\Modules\NoAnnotationBindingModule($this->injector));
+        $this->injector->setModule(new \Ray\Di\Modules\NoAnnotationBindingModule($this->injector));
         $lister = $this->injector->getInstance('Ray\Di\Mock\MovieApp\Lister');
         $this->assertInstanceOf('Ray\Di\Mock\MovieApp\Finder', $lister->finder);
 
     }
 
-    /**
-     */
     public function testNotBoundException()
     {
-        $this->injector = new Injector($this->container, new \Ray\Di\Modules\InvalidBindingModule);
+        $this->injector->setModule(new \Ray\Di\Modules\InvalidBindingModule);
         $lister = $this->injector->getInstance('Ray\Di\Mock\MovieApp\Lister');
         $this->assertInstanceOf('Ray\Di\Mock\MovieApp\Finder', $lister->finder);
     }
@@ -264,13 +283,24 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testProviderIsNotExists()
     {
-        $this->injector = new Injector($this->container, new \Ray\Di\Modules\ProvideNotExistsModule);
+        $this->injector = new Injector(
+            $this->container,
+            new \Ray\Di\Modules\ProvideNotExistsModule,
+            new Bind,
+            new Compiler(
+                $_ENV['RAY_TMP'],
+                new PHPParser_PrettyPrinter_Default,
+                new PHPParser_Parser(new PHPParser_Lexer),
+                new PHPParser_BuilderFactory
+            ),
+            new Logger
+        );
 
     }
 
     public function testConstructorBindingsWithDefault()
     {
-        $this->injector = new Injector($this->container, new \Ray\Di\Modules\NoAnnotationBindingModule($this->injector));
+        $this->injector->setModule(new NoAnnotationBindingModule($this->injector));
         $constructWithDefault = $this->injector->getInstance('Ray\Di\Mock\ConstructWithDefault');
         $this->assertInstanceOf('Ray\Di\Mock\DefaultDB', $constructWithDefault->db);
     }
@@ -398,8 +428,8 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testSingletonWithModuleRequestInjection()
     {
         $module =  new Modules\RequestInjectionSingletonModule;
-        $injector = new Injector($this->container, $module);
-        $object = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $this->injector->setModule($module);
+        $object = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
         $this->assertSame(spl_object_hash($module->object), spl_object_hash($object));
     }
 
