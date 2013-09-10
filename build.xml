@@ -186,7 +186,7 @@
 
     <target name="apigen" description="Generate API documentation using ApiGen">
         <exec executable="apigen">
-            <arg line="--source src --destination ${basedir}/build/apin" />
+            <arg line="--source src --destination ${basedir}/build/api" />
         </exec>
     </target>
 
