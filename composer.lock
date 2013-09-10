@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "57f6a84cc2fff76e8478ffc36911ef12",
+    "hash": "1378662dab0b81b05e233c7023b95d25",
     "packages": [
         {
             "name": "aura/di",
@@ -73,13 +73,13 @@
             "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/auraphp/installer-default",
-                "reference": "1.0.0"
+                "url": "https://github.com/auraphp/installer-default.git",
+                "reference": "52f8de3670cc1ef45a916f40f732937436d028c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/auraphp/installer-default/archive/1.0.0.zip",
-                "reference": "1.0.0",
+                "url": "https://api.github.com/repos/auraphp/installer-default/zipball/52f8de3670cc1ef45a916f40f732937436d028c8",
+                "reference": "52f8de3670cc1ef45a916f40f732937436d028c8",
                 "shasum": ""
             },
             "type": "composer-installer",
@@ -115,12 +115,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "v1.1.2"
+                "reference": "40db0c96985aab2822edbc4848b3bd2429e02670"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/v1.1.2",
-                "reference": "v1.1.2",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/40db0c96985aab2822edbc4848b3bd2429e02670",
+                "reference": "40db0c96985aab2822edbc4848b3bd2429e02670",
                 "shasum": ""
             },
             "require": {
@@ -165,7 +165,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -255,12 +255,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/lexer.git",
-                "reference": "v1.0"
+                "reference": "2f708a85bb3aab5d99dab8be435abd73e0b18acb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/lexer/archive/v1.0.zip",
-                "reference": "v1.0",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/2f708a85bb3aab5d99dab8be435abd73e0b18acb",
+                "reference": "2f708a85bb3aab5d99dab8be435abd73e0b18acb",
                 "shasum": ""
             },
             "require": {
@@ -287,9 +287,9 @@
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -351,12 +351,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "bd2af8655aaf90ce12d09de72ddc62649b24f231"
+                "reference": "414a4bee4b542791bc41444df98e1908d7ff953c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/05d35342ade6cc6cd6f31aabbbf30e333ce97161",
-                "reference": "bd2af8655aaf90ce12d09de72ddc62649b24f231",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/414a4bee4b542791bc41444df98e1908d7ff953c",
+                "reference": "414a4bee4b542791bc41444df98e1908d7ff953c",
                 "shasum": ""
             },
             "require": {
@@ -388,7 +388,7 @@
                 "aspect",
                 "method interception"
             ],
-            "time": "2013-08-21 10:30:57"
+            "time": "2013-09-10 09:49:50"
         }
     ],
     "packages-dev": [

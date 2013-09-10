@@ -29,7 +29,7 @@
         "doctrine/annotations": "1.*",
         "doctrine/cache": "1.*",
         "nikic/php-parser": "*",
-        "ray/aop": "dev-develop#bd2af8655aaf90ce12d09de72ddc62649b24f231",
+        "ray/aop": "dev-develop",
         "aura/di": "1.1.*"
     },
     "autoload": {
