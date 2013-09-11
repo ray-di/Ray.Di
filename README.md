@@ -65,10 +65,12 @@ This is  **Linked Bindings**. Linked bindings map a type to its implementation.
 
 ### Provider Bindings
 
+[Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) map a type to its provider.
+
 ```php
 $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvider');
 ```
-[Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) map a type to its provider.
+
 
 ### Named Binding
 
@@ -97,7 +99,7 @@ protected function configure()
 ```php
 protected function configure()
 {
-    $this->bind('User')->toInstance(new User);
+    $this->bind('UserIntetrface')->toInstance(new User);
 }
 ```
 You can bind a type to a specific instance of that type. This is usually only useful only for objects that don't have dependencies of their own, such as value objects:
@@ -105,7 +107,7 @@ You can bind a type to a specific instance of that type. This is usually only us
 ```php
 protected function configure()
 {
-    $this->bind()->annotatedWith("login_timeout_seconds")->toInstance(10);
+    $this->bind()->annotatedWith("login_id")->toInstance('bear');
 }
 ```
 
@@ -141,6 +143,8 @@ protected function configure()
 
 ## Object life cycle
 
+このメソッドはすべての注入が行なわれた後、クラスのサービスが開始される前に呼び出されます。
+
 ```php
 /**
  * @PostConstruct
@@ -150,6 +154,9 @@ public function onInit()
     //....
 }
 ```
+
+This method registered by  *register_shutdown_function , 
+ executed after script execution finishes or exit() is called.
 
 ```php
 /**
