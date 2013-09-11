@@ -26,6 +26,6 @@ $rm = function ($dir) use (&$rm) {
 // clear cache folder
 $rm(__DIR__ . 'Ray/Di/scripts/aop_files');
 $rm(__DIR__ . 'Ray/Di/scripts/object_files');
-$rm(__DIR__ . '/tmp');
-
+$rm(sys_get_temp_dir());
 $_ENV['RAY_TMP'] = __DIR__ . '/tmp';
+$rm($_ENV['RAY_TMP']);

@@ -23,8 +23,8 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $injector = function () {return Injector::create([new Modules\BasicModule]);};
-        $postInject = function() { $this->flag = true; };
-        $this->injector = new CacheInjector($injector, $postInject, 'test', new FilesystemCache($_ENV['RAY_TMP']), $_ENV['RAY_TMP']);
+        $initialization = function() { $this->flag = true; };
+        $this->injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['RAY_TMP']));
     }
 
     public function testNew()
@@ -37,7 +37,6 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $instance = $this->injector->getInstance('Ray\Di\Definition\Basic');
         $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
-
         return $this->injector;
     }
 
@@ -54,8 +53,8 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     public function testToInstance()
     {
         $injector = function () {return Injector::create([new Modules\InstanceModule]);};
-        $postInject = function() {};
-        $injector = new CacheInjector($injector, $postInject, 'test', new FilesystemCache($_ENV['RAY_TMP']), $_ENV['RAY_TMP']);
+        $initialization = function() {};
+        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['RAY_TMP']));
 
         $instance = $injector->getInstance('Ray\Di\Definition\Instance');
         $this->assertSame('PC6001', $instance->userId);
@@ -64,8 +63,8 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     public function testAop()
     {
         $injector = function () {return Injector::create([new Modules\AopModule]);};
-        $postInject = function() {};
-        $injector = new CacheInjector($injector, $postInject, 'test', new FilesystemCache($_ENV['RAY_TMP']), $_ENV['RAY_TMP']);
+        $initialization = function() {};
+        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['RAY_TMP']));
         $instance = $injector->getInstance('Ray\Di\Aop\RealBillingService');
         /* @var $instance \Ray\Di\Aop\RealBillingService */
         list($amount, ) = $instance->chargeOrder();
@@ -93,24 +92,14 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $flag = false;
         $injector = function () {return Injector::create([new Modules\AopModule]);};
-        $postInject = function($instance) use (&$flag){ $flag = true;};
-        $injector = new CacheInjector($injector, $postInject, 'test', new ArrayCache, $_ENV['RAY_TMP']);
+        $initialization = function($instance) use (&$flag){ $flag = true;};
+        $injector = new CacheInjector($injector, $initialization, 'test', new ArrayCache);
         $injector->getInstance('Ray\Di\Aop\RealBillingService');
         $this->assertTrue($flag);
     }
 
     public function testCachedAopInject()
     {
-        $this->assertFalse(class_exists('Ray\Di\Aop\CacheBilling', false));
-
-        $cli = 'php ' . __DIR__ . '/scripts/cache.php';
-        passthru($cli, $return);
-        $this->assertFalse(class_exists('Ray\Di\Aop\CacheBilling', false));
-
-        $this->assertFalse(class_exists('Ray\Di\Aop\CacheBilling', false));
-        $cli = 'php ' . __DIR__ . '/scripts/cache.php';
-        passthru($cli, $return);
-
         require __DIR__ . '/scripts/cache.php';
         $serialized = require __DIR__ . '/scripts/cache.php';
         $instance = unserialize($serialized);
@@ -139,4 +128,14 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @expectedException \Ray\Di\Exception\NoInjectorReturn
+     */
+    public function testInjectorNotReturned()
+    {
+        $injector = function () {return null;};
+        $initialization = function($instance) use (&$flag){ $flag = true;};
+        $injector = new CacheInjector($injector, $initialization, __FUNCTION__, new ArrayCache);
+        $injector->getInstance('Ray\Di\Definition\LifeCycleOnShutdown');
+    }
 }

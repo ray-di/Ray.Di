@@ -1,20 +1,21 @@
 <?php
 
-namespace Ray\Di;
-
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Cache\ApcCache;
-use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\Cache\FilesystemCache;
-use Ray\Aop\Compiler;
-use SplObjectStorage;
-
 /**
  * This file is part of the BEAR.Package package
  *
  * @package BEAR.Package
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
+namespace Ray\Di;
+
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\FilesystemCache;
+use Ray\Di\Exception\LogicException;
+use Ray\Aop\Compiler;
+use Ray\Di\Exception\NoInjectorReturn;
+use SplObjectStorage;
+
 class CacheInjector implements InstanceInterface
 {
     /**
@@ -30,33 +31,31 @@ class CacheInjector implements InstanceInterface
     /**
      * @var callable
      */
-    private $postInject;
-
-    private $tmpDir;
+    private $initialization;
 
     /**
-     * @param callable $injector
-     * @param callable $postInject
-     * @param          $key
+     * @var string
+     */
+    private $namespace;
+
+    /**
+     * @param callable $injector       = function() {return Injector::create([new Module])};
+     * @param callable $initialization = function($instance, InjectorInterface $injector){};
+     * @param string   $namespace      cache namespace
      * @param Cache    $cache
-     * @param          $tmpDir
-     *
-     * $injector = function() {return Injector::create([new Module]);}
-     * $postInject = function($instance, InjectorInterface $injector){};
      */
     public function __construct(
         callable $injector,
-        callable $postInject,
-        $key,
-        Cache $cache,
-        $tmpDir
+        callable $initialization,
+        $namespace,
+        Cache $cache
     ) {
         $this->injector = $injector;
-        $this->postInject = $postInject;
+        $this->initialization = $initialization;
+        $this->namespace = $namespace;
         $this->cache = $cache;
-        $cache->setNamespace($key);
+        $cache->setNamespace($namespace);
         $this->cache = $cache;
-        $this->tmpDir = $tmpDir;
     }
 
     /**
@@ -68,12 +67,10 @@ class CacheInjector implements InstanceInterface
      */
     public function getInstance($class)
     {
-        list($instance, $preDestroy, $classDir) =
-            $this->cache->contains($class) ?
-                $this->cache->fetch($class) :
-                $this->createInstance($class);
-
-        $this->registerAopFileLoader($classDir);
+        $key = $this->namespace . $class;
+        list($instance, $preDestroy)= $this->cache->contains($key) ?
+            $this->cachedInstance($class, $key) :
+            $this->createInstance($class, $key);
 
         register_shutdown_function(
             function () use ($preDestroy) {
@@ -82,6 +79,54 @@ class CacheInjector implements InstanceInterface
         );
 
         return $instance;
+    }
+
+    /**
+     * Return cached injected instance
+     *
+     * @param $class
+     * @param $key
+     *
+     * @return array
+     */
+    private function cachedInstance($class, $key)
+    {
+        $classDir = $this->cache->fetch($key);
+        $this->registerAopFileLoader($classDir);
+        if ($this->cache->contains($key . $class)) {
+            list($instance, $preDestroy) = $this->cache->fetch("{$key}{$class}");
+        }
+
+        return [$instance, $preDestroy];
+    }
+
+    /**
+     * Return injected instance and $preDestroy
+     *
+     * @param $class
+     * @param $key
+     *
+     * @return array [object $instance, SplObjectStorage $preDestroy]
+     * @throws Exception\CachedInjector
+     */
+    private function createInstance($class, $key)
+    {
+        $injector = call_user_func($this->injector);
+        if (! $injector instanceof InjectorInterface) {
+            throw new NoInjectorReturn;
+        }
+        /** @var $injector Injector */
+        $aopFileDir = $injector->getAopClassDir();
+        /** @var $injector Injector */
+        $this->removeAopFiles($aopFileDir);
+        $instance = $injector->getInstance($class);
+        $preDestroy = $injector->getPreDestroyObjects();
+        $this->cache->save($key, $aopFileDir);
+        $this->cache->save("{$key}{$class}", [$instance, $preDestroy]);
+
+        // post injection
+        call_user_func_array($this->initialization, [$instance, $injector]);
+        return [$instance, $preDestroy];
     }
 
     /**
@@ -101,28 +146,6 @@ class CacheInjector implements InstanceInterface
             }
         );
     }
-    /**
-     * Return injected instance and $preDestroy
-     *
-     * @param $class
-     *
-     * @return array [object $instance, SplObjectStorage $preDestroy]
-     */
-    private function createInstance($class)
-    {
-        $injector = call_user_func($this->injector);
-        /** @var $injector Injector */
-        $this->removeAopFiles($this->tmpDir);
-        $instance = $injector->getInstance($class);
-        $preDestroy = $injector->getPreDestroyObjects();
-        $this->cache->save($class, [$instance, $preDestroy, $injector->getAopClassDir()]);
-
-        // post injection
-        call_user_func_array($this->postInject, [$instance, $injector]);
-
-        return [$instance, $preDestroy, $injector->getAopClassDir()];
-    }
-
 
     /**
      * Clear generated aop files

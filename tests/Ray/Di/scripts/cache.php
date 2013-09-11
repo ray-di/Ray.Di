@@ -20,15 +20,15 @@ $injector = function () {
         new Modules\AopModule,
         new Bind,
         new Compiler(
-            sys_get_temp_dir(),
+            __DIR__ . '/aop_files',
             new PHPParser_PrettyPrinter_Default,
             new PHPParser_Parser(new PHPParser_Lexer),
             new PHPParser_BuilderFactory
         )
     );
 };
-$postInject = function($instance) {};
-$injector = new CacheInjector($injector, $postInject, 'test', new FilesystemCache(__DIR__ . '/object_files'), $_ENV['RAY_TMP']);
+$initialization = function($instance) {};
+$injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache(__DIR__ . '/cache'));
 $billing = $injector->getInstance('Ray\Di\Aop\CacheBilling');
 
 return serialize($billing);

@@ -7,6 +7,6 @@
  */
 namespace Ray\Di\Exception;
 
-class CachedInjector implements ExceptionInterface
+class NoInjectorReturn extends \LogicException implements ExceptionInterface
 {
 }
