@@ -1,7 +1,8 @@
-Ray.Di
-=======
-Annotation-driven dependency injection framework
---------------------------------------------------------------------
+Dependency Injection framework for PHP
+======================================
+
+[![Latest Stable Version](https://poser.pugx.org/ray/di/v/stable.png)](https://packagist.org/packages/ray/di)
+[![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=master)](http://travis-ci.org/koriym/Ray.Di)
 
 This project was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google. 
 
@@ -12,8 +13,6 @@ This project was created in order to get Guice style dependency injection in PHP
 
 _Not all features of Guice have been implemented._
 
-[![Latest Stable Version](https://poser.pugx.org/ray/di/v/stable.png)](https://packagist.org/packages/ray/di)
-[![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=master)](http://travis-ci.org/koriym/Ray.Di)
 
 Getting Stated
 --------------
@@ -143,7 +142,7 @@ protected function configure()
 
 ## Object life cycle
 
-このメソッドはすべての注入が行なわれた後、クラスのサービスが開始される前に呼び出されます。
+This method called after all dependencies are injected in this class.
 
 ```php
 /**
@@ -261,45 +260,55 @@ Call Stack:
     0.0056     318784   5. Ray\Aop\Sample\WeekendBlocker->invoke() /libs/Ray.Aop/src/ReflectiveMethodInvocation.php:65
 ```
 
-他にも様々な方法でインターセプターを束縛できます。
+You can bind interceptors in variouas ways as follows.
 
 ```php
-    public function configure()
-    {
-        $this->matcher
-          ->any()                       // In any class,
-          ->startWith('delete')         // bind method start with "delete"
-          ->toInterceptor(new Logger);
-    }
+public function configure()
+{
+    $this->matcher
+      ->any()                       // In any class,
+      ->startWith('delete')         // bind method start with "delete"
+      ->toInterceptor(new Logger);
+}
 ```
 
 ```php
-    public function configure()
-    {
-        $this->matcher
-          ->subClassOf('CreditCardTransaction')  // In any method in CreditCardTransaction
-          ->any()
-          ->toInterceptor(new Logger);
-    }
+public function configure()
+{
+    // In any method in CreditCardTransaction class
+    $this->matcher
+      ->subClassOf('CreditCardTransaction')  
+      ->any()                               
+      ->toInterceptor(new Logger);
+}
+
 ```
 
-Injection Cache
----------------
+Best practice
+-------------
+Your code should deal directly with the Injector as little as possible. Instead, you want to bootstrap your application by injecting one root object.
+The class of this object should use injection to obtain references to other objects on which it depends. The classes of those objects should do the same.
+
+Caching dependency-injected objects 
+-----------------------------------
+
+Storing dependency-injected objects in cache container gets huge performance boosts.
+**CacheInjector** also handles *object life cycle* as well as auto loading of generated aspect weaved objects.
 
 ```php
 $injector = function()  {
     return Injector::create([new AppModule]);
 };
-$initialize = function() {
-    // init
+$initialization = function() {
+    // initialize per system startup (not per each request)
 };
-$cacheInjector = new CacheInjector($injector, $initialize, 'key', new ApcCache, sys_get_temp_dir());
-$app = $cacheInjector->getInsntance('Application');
+$injector = new CacheInjector($injector, $initialization, 'cache-namespace', new ApcCache);
+$app = $injector->getInsntance('ApplicationInterface');
 $app->run();
 ```
 
 Requirement
----------
+-----------
 
 * PHP 5.4+
 
