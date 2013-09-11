@@ -7,6 +7,6 @@
  */
 namespace Ray\Di\Exception;
 
-class MultipleAnnotationNotAllowed extends Binding implements ExceptionInterface
+class CachedInjector implements ExceptionInterface
 {
 }
