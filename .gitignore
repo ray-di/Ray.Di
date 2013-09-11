@@ -12,3 +12,4 @@ cache.properties
 build
 composer.phar
 *doctrinecache.data
+Ray*Aop.php
