@@ -72,6 +72,8 @@ $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvid
 
 ### Named Binding
 
+Ray comes with a built-in binding annotation @Named that uses a string.
+
 ```php
 /**
  *  @Inject
@@ -82,20 +84,29 @@ public RealBillingService(CreditCardProcessor $processor)
 ...
 ```
 
+To bind a specific name, pass specific string to annotatedWith() method.
 ```php
-$this->bind('CreditCardProcessorInterface')->annotatedWith('Checkout')->to('CheckoutCreditCardProcessor');
+protected function configure()
+{
+    $this->bind('CreditCardProcessorInterface')->annotatedWith('Checkout')->to('CheckoutCreditCardProcessor');
+}
 ```
 
 ### Instance Bindings
 
 ```php
-$this->bind('User')->toInstance(new User);
+protected function configure()
+{
+    $this->bind('User')->toInstance(new User);
+}
 ```
 You can bind a type to a specific instance of that type. This is usually only useful only for objects that don't have dependencies of their own, such as value objects:
 
 ```php
-$this->bind()->annotatedWith("login_timeout_seconds")->toInstance(10);
-
+protected function configure()
+{
+    $this->bind()->annotatedWith("login_timeout_seconds")->toInstance(10);
+}
 ```
 
 ### Constructor Binfings
@@ -111,7 +122,10 @@ class TransactionLog
 ```
 
 ```php
-$this->bind('TransactionLog')->toConstructor(['db' => new Database]);
+protected function configure()
+{
+    $this->bind('TransactionLog')->toConstructor(['db' => new Database]);
+}
 ```
 
 ## Scopes
@@ -119,29 +133,32 @@ $this->bind('TransactionLog')->toConstructor(['db' => new Database]);
 By default, Ray returns a new instance each time it supplies a value. This behaviour is configurable via scopes. 
 
 ```php
-$this->bind('TransactionLog')->to('InMemoryTransactionLog')->in(Scope::SINGLETON);
+protected function configure()
+{
+    $this->bind('TransactionLog')->to('InMemoryTransactionLog')->in(Scope::SINGLETON);
+}
 ```
 
 ## Object life cycle
 
 ```php
-    /**
-     * @PostConstruct
-     */
-    public function onInit()
-    {
-        //....
-    }
+/**
+ * @PostConstruct
+ */
+public function onInit()
+{
+    //....
+}
 ```
 
 ```php
-    /**
-     * @PreDestoroy
-     */
-    public function onShutdown()
-    {
-        //....
-    }
+/**
+ * @PreDestoroy
+ */
+public function onShutdown()
+{
+    //....
+}
 ```
 
 ## Automatic Injection
