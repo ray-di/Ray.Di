@@ -165,7 +165,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -287,7 +287,7 @@
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -351,18 +351,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "414a4bee4b542791bc41444df98e1908d7ff953c"
+                "reference": "2b7836d4839ee8b9df954b683efdf038193f1bf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/414a4bee4b542791bc41444df98e1908d7ff953c",
-                "reference": "414a4bee4b542791bc41444df98e1908d7ff953c",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/2b7836d4839ee8b9df954b683efdf038193f1bf0",
+                "reference": "2b7836d4839ee8b9df954b683efdf038193f1bf0",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "1.*",
                 "nikic/php-parser": "*",
                 "php": ">=5.4.0"
+            },
+            "suggest": {
+                "ray/di": "DI framework supports Ray.Aop"
             },
             "type": "library",
             "autoload": {
@@ -388,7 +391,7 @@
                 "aspect",
                 "method interception"
             ],
-            "time": "2013-09-10 09:49:50"
+            "time": "2013-09-12 07:14:20"
         }
     ],
     "packages-dev": [
