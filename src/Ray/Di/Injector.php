@@ -346,7 +346,6 @@ class Injector implements InjectorInterface
 
         // save cache
         if ($cacheKey) {
-            /** @noinspection PhpUndefinedVariableInspection */
             $this->cache->save($cacheKey, $object);
         }
     }
@@ -733,7 +732,6 @@ class Injector implements InjectorInterface
      *
      * @return void
      * @throws Exception\OptionalInjectionNotBound
-     * @noinspection PhpUnusedPrivateMethodInspection
      * @SuppressWarnings(PHPMD)
      */
     private function bindOneParameter(array &$param, $key)
