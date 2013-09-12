@@ -1,7 +1,8 @@
 <?php
-namespace Ray\Di\Sample;
 
-require __DIR__ . '/User.php';
+use Ray\Di\Injector;
+
+require __DIR__ . '/src.php';
 
 $pdo = new \PDO('sqlite::memory:', null, null);
 $user = new User($pdo);

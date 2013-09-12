@@ -11,6 +11,7 @@ use PHPParser_Lexer;
 use PHPParser_BuilderFactory;
 
 $loader = require dirname(__DIR__) . '/vendor/autoload.php';
+/** @var $loader \Composer\Autoload\ClassLoader */
 AnnotationRegistry::registerLoader([$loader, "loadClass"]);
 
 return new Injector(

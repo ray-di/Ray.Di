@@ -49,7 +49,6 @@ class NewsletterModule extends AbstractModule
 $di = Injector::create([new NewsletterModule]);
 
 $newsletterManager = $di->getInstance('NewsletterManager');
-var_dump($newsletterManager);
 
 // display result
 $works = ($newsletterManager->mailer instanceof MailerInterface);

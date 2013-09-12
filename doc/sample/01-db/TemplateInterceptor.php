@@ -1,14 +1,18 @@
 <?php
-namespace Ray\Di\Sample;
 
-use Ray\Aop\MethodInterceptor,
-Ray\Aop\MethodInvocation;
+use Ray\Aop\MethodInterceptor;
+use Ray\Aop\MethodInvocation;
 
 /**
  * Template interceptor
  */
 class TemplateInterceptor implements MethodInterceptor
 {
+    /**
+     * @param MethodInvocation $invocation
+     *
+     * @return mixed|object|string
+     */
     public function invoke(MethodInvocation $invocation)
     {
         $view = '';

@@ -1,8 +1,7 @@
 <?php
-namespace Ray\Di\Sample;
 
-use Ray\Aop\MethodInterceptor,
-Ray\Aop\MethodInvocation;
+use Ray\Aop\MethodInterceptor;
+use Ray\Aop\MethodInvocation;
 
 /**
  * Timer interceptor

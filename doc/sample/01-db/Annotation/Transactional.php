@@ -1,10 +1,6 @@
 <?php
-/**
- * Ray
- *
- * @license http://opensource.org/licenses/bsd-license.php BSD
- */
-namespace Ray\Di\Sample;
+
+namespace Annotation;
 
 /**
  * Transactional
