@@ -74,8 +74,10 @@ class CacheInjector implements InstanceInterface
 
         register_shutdown_function(
             function () use ($preDestroy) {
+                // @codeCoverageIgnoreStart
                 $this->notifyPreShutdown($preDestroy);
             }
+            // @codeCoverageIgnoreEnd
         );
 
         return $instance;
@@ -167,6 +169,7 @@ class CacheInjector implements InstanceInterface
      */
     private function notifyPreShutdown(SplObjectStorage $preDestroyObjects)
     {
+        // @codeCoverageIgnoreStart
         $preDestroyObjects->rewind();
         while ($preDestroyObjects->valid()) {
             $object = $preDestroyObjects->current();
@@ -175,4 +178,5 @@ class CacheInjector implements InstanceInterface
             $preDestroyObjects->next();
         }
     }
+    // @codeCoverageIgnoreEnd
 }
