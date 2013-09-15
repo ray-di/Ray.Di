@@ -10,11 +10,6 @@ namespace Ray\Di;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Ray\Aop\Matcher;
 
-/**
- * Class ModuleStringer
- *
- * @package Ray\Di
- */
 class ModuleStringer
 {
     /**

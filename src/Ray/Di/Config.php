@@ -2,7 +2,6 @@
 /**
  * This file is taken from Aura.Di(https://github.com/auraphp/Aura.Di) and modified.
  *
- * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * @see     https://github.com/auraphp/Aura.Di
  */
@@ -16,8 +15,6 @@ use Ray\Di\Di\Inject;
 
 /**
  * Retains and unifies class configurations.
- *
- * @package Ray.Di
  */
 class Config implements ConfigInterface
 {

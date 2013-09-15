@@ -10,9 +10,7 @@ namespace Ray\Di;
 use Ray\Aop\Bind;
 
 /**
- * Defines the interface for dependency injector logger.
- *
- * @package Ray.Di
+ * Interface for dependency injector logger.
  */
 interface LoggerInterface
 {

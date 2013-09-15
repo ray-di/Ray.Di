@@ -3,7 +3,6 @@
  * This file is part of the Ray package.
  *
  * @package Ray.Di
- * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di\Module\Provider;
 
@@ -14,6 +13,9 @@ use PHPParser_Lexer;
 use PHPParser_BuilderFactory;
 use Ray\Di\ProviderInterface;
 
+/**
+ * Compiler provider for InjectorModule.
+ */
 class CompilerProvider implements ProviderInterface
 {
     public function get()
