@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1378662dab0b81b05e233c7023b95d25",
+    "hash": "afbf2168bb2ada985f5b9e31adf97188",
     "packages": [
         {
             "name": "aura/di",
@@ -347,7 +347,7 @@
         },
         {
             "name": "ray/aop",
-            "version": "dev-develop",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
@@ -400,9 +400,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "ray/aop": 20
-    },
+    "stability-flags": [
+
+    ],
     "platform": {
         "php": ">=5.4.0"
     },
