@@ -2,7 +2,6 @@
 /**
  * This file is part of the Ray package.
  *
- * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
@@ -10,9 +9,7 @@ namespace Ray\Di;
 use Ray\Aop\Bind;
 
 /**
- * Defines the interface for dependency injector logger.
- *
- * @package Ray.Di
+ * Interface for dependency injector logger.
  */
 interface LoggerInterface
 {

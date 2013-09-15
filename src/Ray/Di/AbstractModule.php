@@ -2,7 +2,6 @@
 /**
  * This file is part of the Ray package.
  *
- * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
@@ -17,8 +16,6 @@ use Ray\Aop\Pointcut;
 /**
  * A module contributes configuration information, typically interface bindings,
  *  which will be used to create an Injector.
- *
- * @package   Ray.Di
  */
 abstract class AbstractModule implements ArrayAccess
 {
@@ -166,26 +163,33 @@ abstract class AbstractModule implements ArrayAccess
      */
     public $modules = [];
 
+
     /**
-     * Constructor
-     *
-     * @param AbstractModule $module
-     * @param Matcher        $matcher
+     * @var ModuleStringerInterface
+     */
+    private $stringer;
+
+    /**
+     * @param AbstractModule          $module
+     * @param Matcher                 $matcher
+     * @param ModuleStringerInterface $stringer
      */
     public function __construct(
         AbstractModule $module = null,
-        Matcher $matcher = null
+        Matcher $matcher = null,
+        ModuleStringerInterface $stringer = null
     ) {
+        $this->modules[] = get_class($this);
+        $this->matcher = $matcher ? : new Matcher(new Reader);
+        $this->stringer = $stringer ?: new ModuleStringer;
         if (is_null($module)) {
             $this->bindings = new ArrayObject;
             $this->pointcuts = new ArrayObject;
-        } else {
-            $module->activate();
-            $this->bindings = $module->bindings;
-            $this->pointcuts = $module->pointcuts;
+            return;
         }
-        $this->modules[] = get_class($this);
-        $this->matcher = $matcher ? : new Matcher(new Reader);
+        $module->activate();
+        $this->bindings = $module->bindings;
+        $this->pointcuts = $module->pointcuts;
     }
 
     /**
@@ -349,6 +353,8 @@ abstract class AbstractModule implements ArrayAccess
      * Install module
      *
      * @param AbstractModule $module
+     *
+     * @return void
      */
     public function install(AbstractModule $module)
     {
@@ -383,11 +389,8 @@ abstract class AbstractModule implements ArrayAccess
     private function mergeArray(array $origin, array $new)
     {
         foreach ($new as $key => $value) {
-            if (isset($origin[$key]) && is_array($value) && is_array($origin[$key])) {
-                $origin[$key] = $this->mergeArray($value, $origin[$key]);
-            } else {
-                $origin[$key] = $value;
-            }
+            $beMergeable = isset($origin[$key]) && is_array($value) && is_array($origin[$key]);
+            $origin[$key] = $beMergeable ? $this->mergeArray($value, $origin[$key]) : $value;
         }
 
         return $origin;
@@ -405,10 +408,10 @@ abstract class AbstractModule implements ArrayAccess
     public function requestInjection($class)
     {
         $module = $this->dependencyInjector->getModule();
-        $this->dependencyInjector->setModule($this, false);
+        $this->dependencyInjector->setSelfInjectorModule($this);
         $instance = $this->dependencyInjector->getInstance($class);
         if ($module instanceof AbstractModule) {
-            $this->dependencyInjector->setModule($module, false);
+            $this->dependencyInjector->setSelfInjectorModule($module);
         }
 
         return $instance;
@@ -432,7 +435,7 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * ArrayAccess::offsetExists
      *
-     * @param string $offset
+     * @param mixed $offset
      *
      * @return bool
      */
@@ -460,6 +463,7 @@ abstract class AbstractModule implements ArrayAccess
      * @param mixed  $value
      *
      * @throws Exception\ReadOnly
+     * @SuppressWarnings(PHPMD)
      */
     public function offsetSet($offset, $value)
     {
@@ -472,6 +476,7 @@ abstract class AbstractModule implements ArrayAccess
      * @param string $offset
      *
      * @throws Exception\ReadOnly
+     * @SuppressWarnings(PHPMD)
      */
     public function offsetUnset($offset)
     {
@@ -485,44 +490,9 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function __toString()
     {
-        $output = '';
-        foreach ((array)$this->bindings as $bind => $bindTo) {
-            foreach ($bindTo as $annotate => $to) {
-                $type = $to['to'][0];
-                $output .= ($annotate !== '*') ? "bind('{$bind}')->annotatedWith('{$annotate}')" : "bind('{$bind}')";
-                if ($type === 'class') {
-                    $output .= "->to('" . $to['to'][1] . "')";
-                }
-                if ($type === 'instance') {
-                    $instance = $to['to'][1];
-                    $type = gettype($instance);
-                    switch ($type) {
-                        case "object":
-                            $instance = '(object) ' . get_class($instance);
-                            break;
-                        case "array":
-                            $instance = '(array) ' . json_encode($instance);
-                            break;
-                        case "string":
-                            $instance = "'{$instance}'";
-                            break;
-                        case "boolean":
-                            $instance = '(bool) ' . ($instance ? 'true' : 'false');
-                            break;
-                        default:
-                            $instance = "($type) $instance";
-                    }
-                    $output .= "->toInstance(" . $instance . ")";
-                }
-                if ($type === 'provider') {
-                    $provider = $to['to'][1];
-                    $output .= "->toProvider('" . $provider . "')";
-                }
-                $output .= PHP_EOL;
-            }
-        }
+        $this->stringer = new ModuleStringer();
+        return $this->stringer->toString($this);
 
-        return $output;
     }
 
     /**

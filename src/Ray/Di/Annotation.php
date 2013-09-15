@@ -2,7 +2,6 @@
 /**
  * This file is part of the Ray package.
  *
- * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
@@ -11,12 +10,11 @@ use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Exception\NotReadable;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionParameter;
 use Ray\Di\Di\Inject;
 
 /**
- * Annotation scanner
- *
- * @package Ray.Di
+ * Annotation scanner.
  */
 class Annotation implements AnnotationInterface
 {
@@ -85,7 +83,7 @@ class Annotation implements AnnotationInterface
         $this->definition = clone $this->newDefinition;
         $class = new ReflectionClass($className);
         $annotations = $this->reader->getClassAnnotations($class);
-        $classDefinition = $this->getDefinitionFormat($annotations);
+        $classDefinition = $this->getClassDefinition($annotations);
         foreach ($classDefinition as $key => $value) {
             $this->definition[$key] = $value;
         }
@@ -97,22 +95,37 @@ class Annotation implements AnnotationInterface
     }
 
     /**
-     * Return definition format from annotations
+     * Return class definition from annotations
      *
-     * @param array $annotations
-     * @param bool  $returnValue
+     * @param Annotation[] $annotations
      *
-     * @return array [$annotation => $value][]
+     * @return array
      */
-    private function getDefinitionFormat(array $annotations, $returnValue = true)
+    private function getClassDefinition(array $annotations)
+    {
+        $result = [];
+        foreach ($annotations as $annotation) {
+            $annotationName = $this->getAnnotationName($annotation);
+            $value = isset($annotation->value) ? $annotation->value : null;
+            $result[$annotationName] = $value;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return method definition from annotations
+     *
+     * @param Annotation[] $annotations
+     *
+     * @return array
+     */
+    private function getMethodDefinition(array $annotations)
     {
         $result = [];
         foreach ($annotations as $annotation) {
             $annotationName = $this->getAnnotationName($annotation);
             $value = $annotation;
-            if ($returnValue === true) {
-                $value = isset($annotation->value) ? $annotation->value : null;
-            }
             $result[$annotationName] = $value;
         }
 
@@ -146,8 +159,9 @@ class Annotation implements AnnotationInterface
         $methods = $class->getMethods();
         foreach ($methods as $method) {
             $annotations = $this->reader->getMethodAnnotations($method);
-            $methodAnnotation = $this->getDefinitionFormat($annotations, false);
-            foreach ($methodAnnotation as $key => $value) {
+            $methodAnnotation = $this->getMethodDefinition($annotations);
+            $keys = array_keys($methodAnnotation);
+            foreach ($keys as $key) {
                 $this->setAnnotationName($key, $method, $methodAnnotation);
             }
             // user land annotation by method
@@ -174,9 +188,8 @@ class Annotation implements AnnotationInterface
             if (isset($this->definition[$name]) && $this->definition[$name]) {
                 $msg = "@{$name} in " . $method->getDeclaringClass()->name;
                 throw new Exception\MultipleAnnotationNotAllowed($msg);
-            } else {
-                $this->definition[$name] = $method->name;
             }
+            $this->definition[$name] = $method->name;
 
             return;
         }
@@ -209,6 +222,25 @@ class Annotation implements AnnotationInterface
         }
         $named = ($nameParameter !== false) ? $this->getNamed($nameParameter) : [];
         $parameters = $method->getParameters();
+        $paramInfo[$method->name] = $this->getParamInfo($methodAnnotation, $parameters, $named);
+        $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
+    }
+
+    /**
+     * @param ReflectionParameter[] $parameters
+     *
+     * @return array
+     */
+
+    /**
+     * @param array $methodAnnotation
+     * @param array $parameters
+     * @param $named
+     *
+     * @return array
+     */
+    private function getParamInfo($methodAnnotation, array $parameters, $named)
+    {
         $paramsInfo = [];
         foreach ($parameters as $parameter) {
             /** @var $parameter \ReflectionParameter */
@@ -216,13 +248,7 @@ class Annotation implements AnnotationInterface
             $typehint = $class ? $class->getName() : '';
             $typehintBy = $typehint ? $this->getTypeHintDefaultInjection($typehint) : [];
             $pos = $parameter->getPosition();
-            if (is_string($named)) {
-                $name = $named;
-            } elseif (isset($named[$parameter->name])) {
-                $name = $named[$parameter->name];
-            } else {
-                $name = Definition::NAME_UNSPECIFIED;
-            }
+            $name = $this->getName($named, $parameter);
             $optionalInject = $methodAnnotation[Definition::INJECT]->optional;
             $definition = [
                 Definition::PARAM_POS => $pos,
@@ -237,10 +263,29 @@ class Annotation implements AnnotationInterface
             }
             $paramsInfo[] = $definition;
         }
-        $paramInfo[$method->name] = $paramsInfo;
-        $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
+
+        return $paramsInfo;
     }
 
+    /**
+     * Return name
+     *
+     * @param mixed $named
+     * @param $parameter
+     *
+     * @return string
+     */
+    private function getName($named, ReflectionParameter $parameter)
+    {
+        if (is_string($named)) {
+            return $named;
+        }
+        if (is_array($named) && isset($named[$parameter->name])) {
+            return $named[$parameter->name];
+        }
+
+        return Definition::NAME_UNSPECIFIED;
+    }
     /**
      * Get Named
      *
@@ -279,24 +324,18 @@ class Annotation implements AnnotationInterface
      */
     private function getTypeHintDefaultInjection($typehint)
     {
-        static $definition = [];
+        $annotations = $this->reader->getClassAnnotations(new ReflectionClass($typehint));
+        $classDefinition = $this->getClassDefinition($annotations);
 
-        if (isset($definition[$typehint])) {
-            $hintDef = $definition[$typehint];
-        } else {
-            $annotations = $this->reader->getClassAnnotations(new ReflectionClass($typehint));
-            $hintDef = $this->getDefinitionFormat($annotations);
-            $definition[$typehint] = $hintDef;
-        }
         // @ImplementBy as default
-        if (isset($hintDef[Definition::IMPLEMENTEDBY])) {
-            $result = [Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $hintDef[Definition::IMPLEMENTEDBY]];
+        if (isset($classDefinition[Definition::IMPLEMENTEDBY])) {
+            $result = [Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY, $classDefinition[Definition::IMPLEMENTEDBY]];
 
             return $result;
         }
         // @ProvidedBy as default
-        if (isset($hintDef[Definition::PROVIDEDBY])) {
-            $result = [Definition::PARAM_TYPEHINT_METHOD_PROVIDEDBY, $hintDef[Definition::PROVIDEDBY]];
+        if (isset($classDefinition[Definition::PROVIDEDBY])) {
+            $result = [Definition::PARAM_TYPEHINT_METHOD_PROVIDEDBY, $classDefinition[Definition::PROVIDEDBY]];
 
             return $result;
         }

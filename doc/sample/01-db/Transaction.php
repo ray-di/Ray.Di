@@ -1,14 +1,15 @@
 <?php
-namespace Ray\Di\Sample;
 
-use Ray\Aop\MethodInterceptor,
-    Ray\Aop\MethodInvocation;
+use Ray\Aop\MethodInterceptor;
+use Ray\Aop\MethodInvocation;
 
-/**
- * Transaction interceptor
- */
 class Transaction implements MethodInterceptor
 {
+    /**
+     * @param MethodInvocation $invocation
+     *
+     * @return mixed|void
+     */
     public function invoke(MethodInvocation $invocation)
     {
         $object = $invocation->getThis();

@@ -1,17 +1,10 @@
 <?php
 
-namespace Ray\Di\Sample;
-
-use Ray\Di\AbstractModule,
-    Ray\Di\Scope,
-    Ray\Di\Sample\Transaction;
+use Ray\Di\AbstractModule;
+use Ray\Di\Scope;
 
 class UserModule extends AbstractModule
 {
-    /**
-     * (non-PHPdoc)
-     * @see Ray\Di.AbstractModule::configure()
-     */
     protected function configure()
     {
         // bind dependency @Inject @Named("pdo_user")
@@ -21,13 +14,13 @@ class UserModule extends AbstractModule
         // bind aspect @Transaction
         $this->bindInterceptor(
             $this->matcher->any(),
-            $this->matcher->annotatedWith('Ray\Di\Sample\Transactional'),
+            $this->matcher->annotatedWith('Annotation\Transactional'),
             [new Transaction]
         );
         // bind aspect @Template
         $this->bindInterceptor(
             $this->matcher->any(),
-            $this->matcher->annotatedWith('Ray\Di\Sample\Template'),
+            $this->matcher->annotatedWith('Annotation\Template'),
             [new Timer, new TemplateInterceptor]
         );
     }

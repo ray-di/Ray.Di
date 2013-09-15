@@ -8,7 +8,7 @@ class InstallModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->install(new \Ray\Di\Modules\BasicModule);
+        $this->install(new BasicModule);
         $this->bind('Ray\Di\Mock\LogInterface')->to('Ray\Di\Mock\Log');
     }
 }

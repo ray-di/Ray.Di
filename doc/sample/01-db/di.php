@@ -1,7 +1,8 @@
 <?php
 
-$system = dirname(dirname(dirname(__DIR__)));
-require_once $system . '/vendor/autoload.php';
+chdir(dirname(dirname(dirname(__DIR__))));
 
-$injector = require dirname(dirname(dirname(__DIR__))) . '/scripts/instance.php';
+require_once 'vendor/autoload.php';
+
+$injector = require 'scripts/instance.php';
 return $injector;

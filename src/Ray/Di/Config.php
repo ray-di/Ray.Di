@@ -2,7 +2,6 @@
 /**
  * This file is taken from Aura.Di(https://github.com/auraphp/Aura.Di) and modified.
  *
- * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * @see     https://github.com/auraphp/Aura.Di
  */
@@ -16,8 +15,6 @@ use Ray\Di\Di\Inject;
 
 /**
  * Retains and unifies class configurations.
- *
- * @package Ray.Di
  */
 class Config implements ConfigInterface
 {
@@ -199,70 +196,79 @@ class Config implements ConfigInterface
 
         // fetch the values for parents so we can inherit them
         $parentClass = get_parent_class($class);
-        if ($parentClass) {
-            // parent class values
-            list($parent_params, $parent_setter, $parent_definition) = $this->fetch($parentClass);
-        } else {
-            // no more parents; get top-level values for all classes
-            $parent_params = $this->params['*'];
-            $parent_setter = $this->setter['*'];
-            // class annotated definition
-            $parent_definition = $this->annotation->getDefinition($class);
-        }
-        // stores the unified config and setter values
-        $unified_params = [];
+        list($parentParams, $parentSetter, $parentDefinition) =
+        $parentClass ? $this->fetch($parentClass) : [$this->params['*'], $this->setter['*'], $this->annotation->getDefinition($class)];
 
-        // reflect on the class
-        $classReflection = $this->getReflect($class);
+        // class have a constructor?
+        $constructorReflection = $this->getReflect($class)->getConstructor();
+        $unifiedParams = $constructorReflection ? $this->getUnifiedParams($constructorReflection, $parentParams, $class) : [];
 
-        // does it have a constructor?
-        $constructorReflection = $classReflection->getConstructor();
-        if ($constructorReflection) {
-            // reflect on what params to pass, in which order
-            $params = $constructorReflection->getParameters();
-            foreach ($params as $param) {
-                $name = $param->name;
-                $explicit = $this->params->offsetExists($class) && isset($this->params[$class][$name]);
-                if ($explicit) {
-                    // use the explicit value for this class
-                    $unified_params[$name] = $this->params[$class][$name];
-                } elseif (isset($parent_params[$name])) {
-                    // use the implicit value for the parent class
-                    $unified_params[$name] = $parent_params[$name];
-                } elseif ($param->isDefaultValueAvailable()) {
-                    // use the external value from the constructor
-                    $unified_params[$name] = $param->getDefaultValue();
-                } else {
-                    // no value, use a null placeholder
-                    $unified_params[$name] = null;
-                }
-            }
-        }
-        // merge the setters
-        if (isset($this->setter[$class])) {
-            $unified_setter = array_merge($parent_setter, $this->setter[$class]);
-        } else {
-            $unified_setter = $parent_setter;
-        }
-
-        // merge the definitions
-        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition(
-            $class
-        );
-        $unified_definition = new Definition(array_merge(
-            $parent_definition->getArrayCopy(),
-            $definition->getArrayCopy()
-        ));
-        $this->definition[$class] = $unified_definition;
-
-        // done, return the unified values
-        $this->unified[$class][0] = $unified_params;
-        $this->unified[$class][1] = $unified_setter;
-        $this->unified[$class][2] = $unified_definition;
+        $this->unified[$class] = $this->mergeConfig($class, $unifiedParams, $parentSetter, $parentDefinition);
 
         return $this->unified[$class];
     }
 
+    /**
+     * @param string     $class
+     * @param array      $unifiedParams
+     * @param array      $parentSetter
+     * @param Definition $parentDefinition
+     *
+     * @return mixed
+     */
+    private function mergeConfig($class, $unifiedParams, $parentSetter, Definition $parentDefinition)
+    {
+        // merge the setters
+        $unifiedSetter = isset($this->setter[$class]) ? array_merge($parentSetter, $this->setter[$class]) : $parentSetter;
+
+        // merge the definitions
+        $definition = isset($this->definition[$class]) ? $this->definition[$class] : $this->annotation->getDefinition($class);
+        /** @var $parentDefinition \ArrayObject */
+        $unifiedDefinition = new Definition(array_merge($parentDefinition->getArrayCopy(), $definition->getArrayCopy()));
+        $this->definition[$class] = $unifiedDefinition;
+
+        // done, return the unified values
+        $this->unified[$class] = [$unifiedParams, $unifiedSetter, $unifiedDefinition];
+
+        return $this->unified[$class];
+    }
+
+    /**
+     * @param ReflectionMethod $constructorReflection
+     * @param string           $parentParams
+     * @param string           $class
+     *
+     * @return array
+     */
+    private function getUnifiedParams(\ReflectionMethod $constructorReflection, $parentParams, $class)
+    {
+        $unifiedParams = [];
+
+        // reflect on what params to pass, in which order
+        $params = $constructorReflection->getParameters();
+        foreach ($params as $param) {
+            /* @var $param \ReflectionParameter */
+            $name = $param->name;
+            $explicit = $this->params->offsetExists($class) && isset($this->params[$class][$name]);
+            if ($explicit) {
+                // use the explicit value for this class
+                $unifiedParams[$name] = $this->params[$class][$name];
+                continue;
+            } elseif (isset($parentParams[$name])) {
+                // use the implicit value for the parent class
+                $unifiedParams[$name] = $parentParams[$name];
+                continue;
+            } elseif ($param->isDefaultValueAvailable()) {
+                // use the external value from the constructor
+                $unifiedParams[$name] = $param->getDefaultValue();
+                continue;
+            }
+            // no value, use a null placeholder
+            $unifiedParams[$name] = null;
+        }
+
+        return $unifiedParams;
+    }
     /**
      *
      * Returns a \ReflectionClass for a named class.

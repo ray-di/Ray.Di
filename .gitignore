@@ -6,5 +6,10 @@ nbproject
 .idea
 .project
 .settings
+tmp
 vendor
 cache.properties
+build
+composer.phar
+*doctrinecache.data
+Ray*Aop.php
