@@ -113,8 +113,8 @@ class CacheInjector implements InstanceInterface
      * @param $class
      * @param $key
      *
-     * @return array [object $instance, SplObjectStorage $preDestroy]
-     * @throws Exception\CachedInjector
+     * @return array
+     * @throws Exception\NoInjectorReturn
      */
     private function createInstance($class, $key)
     {

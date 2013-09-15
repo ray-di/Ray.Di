@@ -12,8 +12,7 @@ namespace Ray\Di;
 interface InstanceInterface
 {
     /**
-     * Creates and returns a new instance of a class using 'module,
-     * optionally with overriding params.
+     * Get instance from container / injector
      *
      * @param string $class The class to instantiate.
      *
