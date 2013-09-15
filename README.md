@@ -4,9 +4,9 @@ Dependency Injection framework for PHP
 [![Latest Stable Version](https://poser.pugx.org/ray/di/v/stable.png)](https://packagist.org/packages/ray/di)
 [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=master)](http://travis-ci.org/koriym/Ray.Di)
 
-This project was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google. 
+**Ray.Di** was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google.
 
- * Supports some of the JSR-330 object lifecycle annotations (@PostConstruct, @PreDestroy)
+ * Supports some of the [JSR-250](http://en.wikipedia.org/wiki/JSR_250) object lifecycle annotations (@PostConstruct, @PreDestroy)
  * Provides an AOP Alliance-compliant aspect-oriented programming implementation.
  * [Aura.Di](http://auraphp.github.com/Aura.Di ) extended.
  * [Doctrine.Commons](http://www.doctrine-project.org/projects/common) annotation.
@@ -69,7 +69,46 @@ This is  **Linked Bindings**. Linked bindings map a type to its implementation.
 ```php
 $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvider');
 ```
+The provider class implements Ray's Provider interface, which is a simple, general interface for supplying values:
 
+```
+use Ray\Di\ProviderInterface;
+
+interface ProviderInterface
+{
+    public function get();
+}
+```
+Our provider implementation class has dependencies of its own, which it receives via its @Inject-annotated constructor.
+It implements the Provider interface to define what's returned with complete type safety:
+
+```php
+class DatabaseTransactionLogProvider implements Provider
+{
+    private ConnectionInterface connection;
+
+    /**
+     * @Inject
+     */
+    public DatabaseTransactionLogProvider(ConnectionInterface $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    public TransactionLog get()
+    {
+        $transactionLog = new DatabaseTransactionLog;
+        $transactionLog->setConnection($this->connection);
+
+        return $transactionLog;
+    }
+}
+```
+Finally we bind to the provider using the ->toProvider clause:
+
+```php
+$this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvider');
+```
 
 ### Named Binding
 
@@ -110,7 +149,7 @@ protected function configure()
 }
 ```
 
-### Constructor Binfings
+### Constructor Bindings
 
 Occasionally it's necessary to bind a type to an arbitrary constructor. This comes up when the @Inject annotation cannot be applied to the target constructor: either because it is a third party class
 
@@ -142,7 +181,7 @@ protected function configure()
 
 ## Object life cycle
 
-This method called after all dependencies are injected in this class.
+`@PostConstruct` is used on methods that need to get executed after dependency injection is done to perform any initialization.
 
 ```php
 /**
@@ -154,12 +193,12 @@ public function onInit()
 }
 ```
 
-This method registered by  *register_shutdown_function , 
- executed after script execution finishes or exit() is called.
+`PreDestroy` is used on methods that are called after script execution finishes or exit() is called.
+This method registered by **register_shutdown_function**.
 
 ```php
 /**
- * @PreDestoroy
+ * @PreDestroy
  */
 public function onShutdown()
 {
@@ -176,7 +215,7 @@ Ray.Di automatically injects all of the following:
 
 The objects will be injected while the injector itself is being created. If they're needed to satisfy other startup injections, Ray.Di will inject them before they're used. 
 
-## Asepct Oritented Programing
+## Aspect Oriented Programing
 
 To mark select methods as weekdays-only, we define an annotation .
 
@@ -233,7 +272,13 @@ class WeekendModule extends AbstractModule
 {
     public function configure()
     {
-        $this->bind()->annotatedWith('NotOnWeekends')->toInterceptor(new WeekendBlocker);
+    protected function configure()
+    {
+        $this->bindInterceptor(
+            $this->matcher->any(),
+            $this->matcher->annotatedWith('NotOnWeekends'),
+            [new WeekendBlocker]
+        );
     }
 }
 
@@ -263,25 +308,59 @@ Call Stack:
 You can bind interceptors in variouas ways as follows.
 
 ```php
-public function configure()
+class TaxModule extends AbstractModule
 {
-    $this->matcher
-      ->any()                       // In any class,
-      ->startWith('delete')         // bind method start with "delete"
-      ->toInterceptor(new Logger);
+    protected function configure()
+    {
+        $this->bindInterceptor(
+            $this->matcher->annotatedWith('Tax'),
+            $this->matcher->any(),
+            [new TaxCharger]
+        );
+    }
 }
 ```
 
 ```php
-public function configure()
+class AopMatcherModule extends AbstractModule
 {
-    // In any method in CreditCardTransaction class
-    $this->matcher
-      ->subClassOf('CreditCardTransaction')  
-      ->any()                               
-      ->toInterceptor(new Logger);
+    pro
+    protected function configure()
+    {
+        $this->bindInterceptor(
+            $this->matcher->any(),                 // In any class and
+            $this->matcher->startWith('delete'), // ..the method start with "delete"
+            [new Logger]
+        );
+    }
 }
+```
 
+## Install
+
+The module can install other module to configure more bindings.
+
+ * Earlier bindings has priority even if same binding made later.
+ * Given module can use existing binding by passing `$this`. The bindings in that module has priority.
+
+```php
+protected function configure()
+{
+    $this->install(new OtherModule);
+    $this->install(new CustomiseModule($this);
+}
+```
+
+## Injection in the module
+
+You can use built-in injector in the Module which use exiting bindings.
+
+```php
+protected function configure()
+{
+    $this->bind('DbInterface')->to('Db);
+    $dbLogger = $this->requestInjection('DbLogger');
+}
 ```
 
 Best practice
