@@ -2,12 +2,12 @@
     "name": "ray/di",
     "description": "Guice style annotation-driven dependency injection framework",
     "keywords": [
-        "dependency injection",
-        "aspect oriented programming",
+        "dependency",
+        "injection",
         "di",
         "aop",
-        "guice",
         "annotation",
+        "guice",
         "jsr"
     ],
     "homepage": "https://github.com/koriym/Ray.Di",
