@@ -2,7 +2,7 @@
 /**
  * This file is part of the Ray package.
  *
- * @package Ray.Di
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
 
@@ -30,6 +30,8 @@ class Logger implements LoggerInterface
      */
     public function log($class, array $params, array $setter, $object, Bind $bind)
     {
+        uset($object);
+        uset($bind);
         $toStr = function ($params) {
             foreach ($params as &$param) {
                 if (is_object($param)) {

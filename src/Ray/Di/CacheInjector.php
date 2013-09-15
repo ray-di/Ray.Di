@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the BEAR.Package package
  *
@@ -8,9 +7,8 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Cache\FilesystemCache;
-use Ray\Di\Exception\LogicException;
 use Ray\Aop\Compiler;
 use Ray\Di\Exception\NoInjectorReturn;
 use SplObjectStorage;
@@ -44,16 +42,16 @@ class CacheInjector implements InstanceInterface
     private $namespace;
 
     /**
-     * @param callable $injector       = function() {return Injector::create([new Module])};
-     * @param callable $initialization = function($instance, InjectorInterface $injector){};
-     * @param string   $namespace      cache namespace
-     * @param Cache    $cache
+     * @param callable      $injector       = function() {return Injector::create([new Module])};
+     * @param callable      $initialization = function($instance, InjectorInterface $injector){};
+     * @param string        $namespace      cache namespace
+     * @param CacheProvider $cache
      */
     public function __construct(
         callable $injector,
         callable $initialization,
         $namespace,
-        Cache $cache
+        CacheProvider $cache
     ) {
         $this->injector = $injector;
         $this->initialization = $initialization;
@@ -100,9 +98,7 @@ class CacheInjector implements InstanceInterface
     {
         $classDir = $this->cache->fetch($key);
         $this->registerAopFileLoader($classDir);
-        if ($this->cache->contains($key . $class)) {
-            list($instance, $preDestroy) = $this->cache->fetch("{$key}{$class}");
-        }
+        list($instance, $preDestroy) = $this->cache->fetch("{$key}{$class}");
 
         return [$instance, $preDestroy];
     }

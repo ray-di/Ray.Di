@@ -2,7 +2,6 @@
 /**
  * This file is part of the Ray package.
  *
- * @package Ray.Di
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
@@ -10,6 +9,9 @@ namespace Ray\Di;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Ray\Aop\Matcher;
 
+/**
+ * String for module
+ */
 class ModuleStringer
 {
     /**

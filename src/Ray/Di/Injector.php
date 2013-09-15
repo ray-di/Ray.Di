@@ -2,7 +2,7 @@
 /**
  * This file is part of the Ray package.
  *
- * @package Ray.Di
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  */
 namespace Ray\Di;
 
@@ -34,8 +34,6 @@ use Ray\Di\Di\Inject;
 
 /**
  * Dependency Injector.
- *
- * @package Ray.Di
  */
 class Injector implements InjectorInterface
 {
@@ -98,7 +96,7 @@ class Injector implements InjectorInterface
     /**
      * Compiler(Aspect Weaver)
      *
-     * @var \Ray\Aop\CompilerInterface
+     * @var \Ray\Aop\Compiler
      */
     private $compiler;
 
@@ -192,6 +190,11 @@ class Injector implements InjectorInterface
         return $this;
     }
 
+    /**
+     * @param AbstractModule $module
+     *
+     * @return $this|InjectorInterface
+     */
     public function setSelfInjectorModule(AbstractModule $module)
     {
         $this->module = $module;

@@ -247,6 +247,7 @@ class Config implements ConfigInterface
         // reflect on what params to pass, in which order
         $params = $constructorReflection->getParameters();
         foreach ($params as $param) {
+            /* @var $param \ReflectionParameter */
             $name = $param->name;
             $explicit = $this->params->offsetExists($class) && isset($this->params[$class][$name]);
             if ($explicit) {
