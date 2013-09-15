@@ -8,8 +8,8 @@ Dependency Injection framework for PHP
 
  * Supports some of the [JSR-250](http://en.wikipedia.org/wiki/JSR_250) object lifecycle annotations (@PostConstruct, @PreDestroy)
  * Provides an AOP Alliance-compliant aspect-oriented programming implementation.
- * [Aura.Di](http://auraphp.github.com/Aura.Di ) extended.
- * [Doctrine.Commons](http://www.doctrine-project.org/projects/common) annotation.
+ * Extends [Aura.Di](http://auraphp.github.com/Aura.Di).
+ * [Doctrine.Common](http://www.doctrine-project.org/projects/common) annotations.
 
 _Not all features of Guice have been implemented._
 
@@ -17,7 +17,7 @@ _Not all features of Guice have been implemented._
 Getting Stated
 --------------
 
-Here is the basic example of dependency injection by Ray.Di.
+Here is a basic example of dependency injection using Ray.Di.
 
 ```php
 use Ray\Di\Injector;
@@ -59,7 +59,7 @@ echo(($works) ? 'It works!' : 'It DOES NOT work!');
 
 // It works!
 ```
-This is  **Linked Bindings**. Linked bindings map a type to its implementation.
+This is an example of **Linked Bindings**. Linked bindings map a type to its implementation.
 
 
 ### Provider Bindings
@@ -79,7 +79,7 @@ interface ProviderInterface
     public function get();
 }
 ```
-Our provider implementation class has dependencies of its own, which it receives via its @Inject-annotated constructor.
+Our provider implementation class has dependencies of its own, which it receives via a contructor annotated with @Inject.
 It implements the Provider interface to define what's returned with complete type safety:
 
 ```php
@@ -104,7 +104,7 @@ class DatabaseTransactionLogProvider implements Provider
     }
 }
 ```
-Finally we bind to the provider using the ->toProvider clause:
+Finally we bind to the provider using the ->toProvider method:
 
 ```php
 $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvider');
@@ -112,7 +112,7 @@ $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvid
 
 ### Named Binding
 
-Ray comes with a built-in binding annotation @Named that uses a string.
+Ray comes with a built-in binding annotation @Named that takes a string.
 
 ```php
 /**
@@ -124,7 +124,7 @@ public RealBillingService(CreditCardProcessor $processor)
 ...
 ```
 
-To bind a specific name, pass specific string to annotatedWith() method.
+To bind a specific name, pass that string using the annotatedWith() method.
 ```php
 protected function configure()
 {
@@ -140,7 +140,7 @@ protected function configure()
     $this->bind('UserIntetrface')->toInstance(new User);
 }
 ```
-You can bind a type to a specific instance of that type. This is usually only useful only for objects that don't have dependencies of their own, such as value objects:
+You can bind a type to an instance of that type. This is usually only useful for objects that don't have dependencies of their own, such as value objects:
 
 ```php
 protected function configure()
@@ -151,7 +151,7 @@ protected function configure()
 
 ### Constructor Bindings
 
-Occasionally it's necessary to bind a type to an arbitrary constructor. This comes up when the @Inject annotation cannot be applied to the target constructor: either because it is a third party class
+Occasionally it's necessary to bind a type to an arbitrary constructor. This arises when the @Inject annotation cannot be applied to the target constructor. eg. when it is a third party class.
 
 ```php
 class TransactionLog
@@ -181,7 +181,7 @@ protected function configure()
 
 ## Object life cycle
 
-`@PostConstruct` is used on methods that need to get executed after dependency injection is done to perform any initialization.
+`@PostConstruct` is used on methods that need to get executed after dependency injection has finalized to perform any extra initialization.
 
 ```php
 /**
@@ -194,7 +194,7 @@ public function onInit()
 ```
 
 `PreDestroy` is used on methods that are called after script execution finishes or exit() is called.
-This method registered by **register_shutdown_function**.
+This method is registered by using **register_shutdown_function**.
 
 ```php
 /**
@@ -264,7 +264,7 @@ class WeekendBlocker implements MethodInterceptor
 }
 ```
 
-Finally, we configure everything.In this case we match any class, but only the methods with our @NotOnWeekends annotation:
+Finally, we configure everything. In this case we match any class, but only the methods with our @NotOnWeekends annotation:
 
 ```php
 
@@ -336,12 +336,12 @@ class AopMatcherModule extends AbstractModule
 }
 ```
 
-## Install
+## Installation
 
-The module can install other module to configure more bindings.
+A module can install other modules to configure more bindings.
 
- * Earlier bindings has priority even if same binding made later.
- * Given module can use existing binding by passing `$this`. The bindings in that module has priority.
+ * Earlier bindings have priority even if the same binding is made later.
+ * The module can use an existing bindings by passing in `$this`. The bindings in that module have priority.
 
 ```php
 protected function configure()
@@ -353,7 +353,7 @@ protected function configure()
 
 ## Injection in the module
 
-You can use built-in injector in the Module which use exiting bindings.
+You can use a built-in injector in the module which uses existing bindings.
 
 ```php
 protected function configure()
@@ -371,7 +371,7 @@ The class of this object should use injection to obtain references to other obje
 Caching dependency-injected objects 
 -----------------------------------
 
-Storing dependency-injected objects in cache container gets huge performance boosts.
+Storing dependency-injected objects in a cache container has huge performance boosts.
 **CacheInjector** also handles *object life cycle* as well as auto loading of generated aspect weaved objects.
 
 ```php
@@ -386,7 +386,7 @@ $app = $injector->getInsntance('ApplicationInterface');
 $app->run();
 ```
 
-Requirement
+Requirements
 -----------
 
 * PHP 5.4+
@@ -415,7 +415,7 @@ $ php composer.phar require ray/di:*
 Testing Ray.Di
 ==============
 
-Here's how to install Ray.Di from source to run the unit tests and samples.
+Here's how to install Ray.Di from source and run the unit tests and samples.
 
 ```
 $ git clone git://github.com/koriym/Ray.Di.git
@@ -427,4 +427,3 @@ $ php doc/sample/01-db/main.php
 $ cd doc/zf2-di-tests-clone/
 $ php runall.php
 ```
-
