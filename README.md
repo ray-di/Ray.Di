@@ -6,8 +6,8 @@ Dependency Injection framework for PHP
 
 **Ray.Di** was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google.
 
- * Supports some of the [JSR-250](http://en.wikipedia.org/wiki/JSR_250) object lifecycle annotations (@PostConstruct, @PreDestroy)
- * Provides an AOP Alliance-compliant aspect-oriented programming implementation.
+ * Supports some of the [JSR-250](http://en.wikipedia.org/wiki/JSR_250) object lifecycle annotations (`@PostConstruct`, `@PreDestroy`)
+ * Provides an [AOP Alliance](http://aopalliance.sourceforge.net/)-compliant aspect-oriented programming implementation.
  * Extends [Aura.Di](http://auraphp.github.com/Aura.Di).
  * [Doctrine.Common](http://www.doctrine-project.org/projects/common) annotations.
 
@@ -71,7 +71,7 @@ $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvid
 ```
 The provider class implements Ray's Provider interface, which is a simple, general interface for supplying values:
 
-```
+```php
 use Ray\Di\ProviderInterface;
 
 interface ProviderInterface
@@ -79,7 +79,7 @@ interface ProviderInterface
     public function get();
 }
 ```
-Our provider implementation class has dependencies of its own, which it receives via a contructor annotated with @Inject.
+Our provider implementation class has dependencies of its own, which it receives via a contructor annotated with `@Inject`.
 It implements the Provider interface to define what's returned with complete type safety:
 
 ```php
@@ -104,7 +104,7 @@ class DatabaseTransactionLogProvider implements Provider
     }
 }
 ```
-Finally we bind to the provider using the ->toProvider method:
+Finally we bind to the provider using the `toProvider()` method:
 
 ```php
 $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvider');
@@ -112,19 +112,19 @@ $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvid
 
 ### Named Binding
 
-Ray comes with a built-in binding annotation @Named that takes a string.
+Ray comes with a built-in binding annotation `@Named` that takes a string.
 
 ```php
 /**
  *  @Inject
- *  @Named("processor=Checkout") 
+ *  @Named("processor=Checkout")
  */
 public RealBillingService(CreditCardProcessor $processor)
 {
 ...
 ```
 
-To bind a specific name, pass that string using the annotatedWith() method.
+To bind a specific name, pass that string using the `annotatedWith()` method.
 ```php
 protected function configure()
 {
@@ -151,7 +151,7 @@ protected function configure()
 
 ### Constructor Bindings
 
-Occasionally it's necessary to bind a type to an arbitrary constructor. This arises when the @Inject annotation cannot be applied to the target constructor. eg. when it is a third party class.
+Occasionally it's necessary to bind a type to an arbitrary constructor. This arises when the `@Inject` annotation cannot be applied to the target constructor. eg. when it is a third party class.
 
 ```php
 class TransactionLog
@@ -170,7 +170,7 @@ protected function configure()
 
 ## Scopes
 
-By default, Ray returns a new instance each time it supplies a value. This behaviour is configurable via scopes. 
+By default, Ray returns a new instance each time it supplies a value. This behaviour is configurable via scopes.
 
 ```php
 protected function configure()
@@ -193,7 +193,7 @@ public function onInit()
 }
 ```
 
-`PreDestroy` is used on methods that are called after script execution finishes or exit() is called.
+`@PreDestroy` is used on methods that are called after script execution finishes or exit() is called.
 This method is registered by using **register_shutdown_function**.
 
 ```php
@@ -211,16 +211,15 @@ public function onShutdown()
 Ray.Di automatically injects all of the following:
 
  * instances passed to toInstance() in a bind statement
- * provider instances passed to toProvider() in a bind statement 
+ * provider instances passed to toProvider() in a bind statement
 
-The objects will be injected while the injector itself is being created. If they're needed to satisfy other startup injections, Ray.Di will inject them before they're used. 
+The objects will be injected while the injector itself is being created. If they're needed to satisfy other startup injections, Ray.Di will inject them before they're used.
 
 ## Aspect Oriented Programing
 
 To mark select methods as weekdays-only, we define an annotation .
 
 ```php
-<?php
 /**
  * NotOnWeekends
  *
@@ -232,10 +231,9 @@ final class NotOnWeekends
 }
 ```
 
-...and apply it to the methods that need to be intercepted: 
+...and apply it to the methods that need to be intercepted:
 
 ```php
-<?php
 class BillingService
 {
     /**
@@ -245,10 +243,9 @@ class BillingService
     {
 ```
 
-Next, we define the interceptor by implementing the org.aopalliance.intercept.MethodInterceptor interface. When we need to call through to the underlying method, we do so by calling $invocation->proceed():
+Next, we define the interceptor by implementing the org.aopalliance.intercept.MethodInterceptor interface. When we need to call through to the underlying method, we do so by calling `$invocation->proceed()`:
 
 ```php
-<?php
 class WeekendBlocker implements MethodInterceptor
 {
     public function invoke(MethodInvocation $invocation)
@@ -264,10 +261,9 @@ class WeekendBlocker implements MethodInterceptor
 }
 ```
 
-Finally, we configure everything. In this case we match any class, but only the methods with our @NotOnWeekends annotation:
+Finally, we configure everything. In this case we match any class, but only the methods with our `@NotOnWeekends` annotation:
 
 ```php
-
 class WeekendModule extends AbstractModule
 {
     public function configure()
@@ -294,7 +290,6 @@ try {
 Putting it all together, (and waiting until Saturday), we see the method is intercepted and our order is rejected:
 
 ```php
-<?php
 RuntimeException: chargeOrder not allowed on weekends! in /apps/pizza/WeekendBlocker.php on line 14
 
 Call Stack:
@@ -368,7 +363,7 @@ Best practice
 Your code should deal directly with the Injector as little as possible. Instead, you want to bootstrap your application by injecting one root object.
 The class of this object should use injection to obtain references to other objects on which it depends. The classes of those objects should do the same.
 
-Caching dependency-injected objects 
+Caching dependency-injected objects
 -----------------------------------
 
 Storing dependency-injected objects in a cache container has huge performance boosts.
@@ -387,12 +382,12 @@ $app->run();
 ```
 
 Requirements
------------
+------------
 
 * PHP 5.4+
 
 Documentation
-=============
+-------------
 
 Available at Google Code.
 
@@ -400,7 +395,7 @@ Available at Google Code.
 
 
 Installation
-============
+------------
 
 The recommended way to install Ray.Di is through [Composer](https://github.com/composer/composer).
 
@@ -413,7 +408,7 @@ $ php composer.phar require ray/di:*
 ```
 
 Testing Ray.Di
-==============
+--------------
 
 Here's how to install Ray.Di from source and run the unit tests and samples.
 
