@@ -210,8 +210,8 @@ public function onShutdown()
 
 Ray.Di automatically injects all of the following:
 
- * instances passed to toInstance() in a bind statement
- * provider instances passed to toProvider() in a bind statement
+ * instances passed to `toInstance()` in a bind statement
+ * provider instances passed to `toProvider()` in a bind statement
 
 The objects will be injected while the injector itself is being created. If they're needed to satisfy other startup injections, Ray.Di will inject them before they're used.
 
@@ -353,7 +353,7 @@ You can use a built-in injector in the module which uses existing bindings.
 ```php
 protected function configure()
 {
-    $this->bind('DbInterface')->to('Db);
+    $this->bind('DbInterface')->to('Db');
     $dbLogger = $this->requestInjection('DbLogger');
 }
 ```
@@ -412,7 +412,7 @@ Testing Ray.Di
 
 Here's how to install Ray.Di from source and run the unit tests and samples.
 
-```
+```bash
 $ git clone git://github.com/koriym/Ray.Di.git
 $ cd Ray.Di
 $ composer install

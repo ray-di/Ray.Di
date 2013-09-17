@@ -324,9 +324,9 @@ $ php composer.phar require ray/di:*
 Testing Ray.Di
 --------------
 
-インストールしてテストを行うにはこのよいうにします。
+インストールしてテストを行うにはこのようにします。
 
-```
+```bash
 $ git clone git://github.com/koriym/Ray.Di.git
 $ cd Ray.Di
 $ composer install
