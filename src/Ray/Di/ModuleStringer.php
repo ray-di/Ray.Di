@@ -27,16 +27,16 @@ class ModuleStringer
         foreach ((array)$module->bindings as $bind => $bindTo) {
             foreach ($bindTo as $annotate => $to) {
                 $type = $to['to'][0];
-                $output .= ($annotate !== '*') ? "bind('{$bind}')->annotatedWith('{$annotate}')" : "bind('{$bind}')";
+                $output .= ($annotate !== '*') ? "bind:{$bind} annotatedWith:{$annotate}" : "bind:{$bind}";
                 if ($type === 'class') {
-                    $output .= "->to('" . $to['to'][1] . "')";
+                    $output .= " to:" . $to['to'][1];
                 }
                 if ($type === 'instance') {
                     $output .= $this->getInstanceString($to);
                 }
                 if ($type === 'provider') {
                     $provider = $to['to'][1];
-                    $output .= "->toProvider('" . $provider . "')";
+                    $output .= " toProvider:" . $provider;
                 }
                 $output .= PHP_EOL;
             }
@@ -59,7 +59,7 @@ class ModuleStringer
                 $instance = '(object) ' . get_class($instance);
                 break;
             case "array":
-                $instance = '(array) ' . json_encode($instance);
+                $instance = json_encode($instance);
                 break;
             case "string":
                 $instance = "'{$instance}'";
@@ -70,6 +70,6 @@ class ModuleStringer
             default:
                 $instance = "($type) $instance";
         }
-        return "->toInstance(" . $instance . ")";
+        return " toInstance:" . $instance;
     }
 }

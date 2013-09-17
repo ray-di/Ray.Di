@@ -2,18 +2,18 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Cache\PhpFileCache;
-use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\PhpFileCache;
+use PHPParser_BuilderFactory;
+use PHPParser_Lexer;
+use PHPParser_Parser;
+use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
 use Ray\Di\Modules\InstanceInstallModule;
 use Ray\Di\Modules\InstanceModule;
 use Ray\Di\Modules\NoAnnotationBindingModule;
-use PHPParser_PrettyPrinter_Default;
-use PHPParser_Parser;
-use PHPParser_Lexer;
-use PHPParser_BuilderFactory;
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,29 +31,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
      * @var Container
      */
     protected $container;
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));
-        $this->injector = new Injector(
-            $this->container,
-            new EmptyModule,
-            new Bind,
-            new Compiler(
-                $_ENV['RAY_TMP'],
-                new PHPParser_PrettyPrinter_Default,
-                new PHPParser_Parser(new PHPParser_Lexer),
-                new PHPParser_BuilderFactory
-            ),
-            new Logger
-        );
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-    }
 
     public function testNewInstanceWithPostConstruct()
     {
@@ -191,9 +168,9 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->setModule(new Modules\AopModule);
         $instance = $this->injector->getInstance('Ray\Di\Aop\RealBillingService');
         /* @var $instance \Ray\Di\Aop\RealBillingService */
-        list($amount, ) = $instance->chargeOrder();
+        list($amount,) = $instance->chargeOrder();
         $expected = 105;
-        $this->assertSame($expected, (int) $amount);
+        $this->assertSame($expected, (int)$amount);
     }
 
     public function testBindInterceptors()
@@ -201,9 +178,9 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->setModule(new Modules\AopMatcherModule);
         $instance = $this->injector->getInstance('Ray\Di\Aop\RealBillingService');
         /* @var $instance \Ray\Di\Aop\RealBillingService */
-        list($amount, ) = $instance->chargeOrder();
+        list($amount,) = $instance->chargeOrder();
         $expected = 105;
-        $this->assertSame($expected, (int) $amount);
+        $this->assertSame($expected, (int)$amount);
     }
 
     public function testBindDoubleInterceptors()
@@ -212,9 +189,9 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->setModule(new Modules\AopAnnotateMatcherModule);
         $instance = $this->injector->getInstance('Ray\Di\Aop\AnnotateTaxBilling');
         /* @var $instance \Ray\Di\Aop\AnnotateTaxBilling */
-        list($amount, ) = $instance->chargeOrder();
+        list($amount,) = $instance->chargeOrder();
         $expected = 110;
-        $this->assertSame($expected, (int) $amount);
+        $this->assertSame($expected, (int)$amount);
     }
 
     public function testBindInterceptorsToChildClass()
@@ -222,20 +199,20 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->setModule(new Modules\AopAnnotateMatcherModule);
         $instance = $this->injector->getInstance('Ray\Di\Aop\ChildRealBillingService');
         /* @var $instance \Ray\Di\Aop\ChildRealBillingService */
-        list($amount, ) = $instance->chargeOrder();
+        list($amount,) = $instance->chargeOrder();
         $expected = 110;
-        $this->assertSame($expected, (int) $amount);
+        $this->assertSame($expected, (int)$amount);
     }
 
     public function testToString()
     {
         $this->injector->setModule(new Modules\AnnotateModule);
-        $this->assertTrue(is_string((string) $this->injector));
+        $this->assertTrue(is_string((string)$this->injector));
     }
 
     public function testClassHint()
     {
-        $this->assertTrue(is_string((string) $this->injector));
+        $this->assertTrue(is_string((string)$this->injector));
         $instance = $this->injector->getInstance('Ray\Di\Definition\ClassHint');
         $this->assertInstanceOf('\Ray\Di\Mock\Db', $instance->db);
     }
@@ -279,18 +256,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testProviderIsNotExists()
     {
-        $this->injector = new Injector(
-            $this->container,
-            new Modules\ProvideNotExistsModule,
-            new Bind,
-            new Compiler(
-                $_ENV['RAY_TMP'],
-                new PHPParser_PrettyPrinter_Default,
-                new PHPParser_Parser(new PHPParser_Lexer),
-                new PHPParser_BuilderFactory
-            ),
-            new Logger
-        );
+        $this->injector = new Injector($this->container, new Modules\ProvideNotExistsModule, new Bind, new Compiler($_ENV['RAY_TMP'], new PHPParser_PrettyPrinter_Default, new PHPParser_Parser(new PHPParser_Lexer), new PHPParser_BuilderFactory), new Logger);
 
     }
 
@@ -423,7 +389,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testSingletonWithModuleRequestInjection()
     {
-        $module =  new Modules\RequestInjectionSingletonModule;
+        $module = new Modules\RequestInjectionSingletonModule;
         $this->injector->setModule($module);
         $object = $this->injector->getInstance('Ray\Di\Mock\DbInterface');
         $this->assertSame(spl_object_hash($module->object), spl_object_hash($object));
@@ -453,11 +419,13 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->getInstance('Ray\Di\Mock\AbstractDb');
     }
 
-    public function testCachedObjectOverRequest()
+    public function estCachedObjectOverRequest()
     {
         $cmd = 'php ' . dirname(dirname(__DIR__)) . '/scripts/time.php';
         exec($cmd, $var1);
-        $this->injector->setModule(new Modules\TimeModule)->setCache(new FilesystemCache(dirname(dirname(__DIR__)) . '/scripts/tmp'));
+        $this->injector->setModule(new Modules\TimeModule)->setCache(
+            new FilesystemCache(dirname(dirname(__DIR__)) . '/scripts/tmp')
+        );
         $time = $this->injector->getInstance('Ray\Di\Mock\Time2');
         $this->assertSame((int)$var1[0], (int)$time->time);
     }
@@ -490,6 +458,50 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $preDestroyObjects = $this->injector->getPreDestroyObjects();
         $this->assertInstanceOf('SplObjectStorage', $preDestroyObjects);
+    }
+
+    public function testGetLoggerForIterator()
+    {
+        $this->injector->setModule(new Modules\BasicModule);
+        $this->injector->getInstance('Ray\Di\Definition\Basic');
+        $logger = $this->injector->getLogger();
+        $classes = [];
+        foreach ($logger as $log) {
+            list($class, , , ,) = $log;
+            $classes[] = $class;
+        }
+        $this->assertSame($classes, ['Ray\Di\Mock\UserDb', 'Ray\Di\Definition\Basic']);
+    }
+
+    public function testGetLoggerForString()
+    {
+        $this->injector->setModule(new Modules\BasicModule);
+        $this->injector->getInstance('Ray\Di\Definition\Basic');
+        $logger = $this->injector->getLogger();
+        $this->assertInternalType('string', (string)$logger);
+    }
+
+    public function estGetLoggerForStringSingleton()
+    {
+        $this->injector->setModule(new Modules\UseBasicModule);
+        $this->injector->getInstance('Ray\Di\Definition\UseBasic');
+        $logger = $this->injector->getLogger();
+        $expected = 'class:Ray\Di\Mock\UserDb' . PHP_EOL;
+        $expected .= 'class:Ray\Di\Definition\Basic setDb:Ray\Di\Mock\UserDb#prototype' . PHP_EOL;
+        $expected .= 'class:Ray\Di\Definition\UseBasic __construct:Ray\Di\Definition\Basic#singleton setBasic1:Ray\Di\Definition\Basic#singleton setBasic2:Ray\Di\Definition\Basic#singleton, Ray\Di\Definition\Basic#singleton' . PHP_EOL;
+        $this->assertSame($expected, (string)$logger);
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));
+        $this->injector = new Injector($this->container, new EmptyModule, new Bind, new Compiler($_ENV['RAY_TMP'], new PHPParser_PrettyPrinter_Default, new PHPParser_Parser(new PHPParser_Lexer), new PHPParser_BuilderFactory), new Logger);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
     }
 
 }

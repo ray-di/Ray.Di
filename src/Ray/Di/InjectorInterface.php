@@ -60,4 +60,11 @@ interface InjectorInterface extends InstanceInterface
      * @return \SplObjectStorage
      */
     public function getPreDestroyObjects();
+
+    /**
+     * Return injection logger
+     *
+     * @return LoggerInterface
+     */
+    public function getLogger();
 }

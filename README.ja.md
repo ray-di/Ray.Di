@@ -4,18 +4,24 @@ Dependency Injection framework for PHP
 [![Latest Stable Version](https://poser.pugx.org/ray/di/v/stable.png)](https://packagist.org/packages/ray/di)
 [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=master)](http://travis-ci.org/koriym/Ray.Di)
 
-**Ray.Di**はGoogleのJava用DI framework [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6)のPHPバージョンです。
-Guiceの主要な機能をサポートしていてアノテーションベースのDIが可能です。以下のような特徴があります。
+**Ray.Di**はGoogleのJava用DI framework [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6)の主要な機能を持つアノテーションベースのDIフレームワークです。
+DIを効率よく使用すると以下のようなメリットがあります。
 
- * [JSR-250](http://en.wikipedia.org/wiki/JSR_250)のオブジェクトライフサイクル(@PostConstruct, @PreDestroy)のアノテーションをサポートしています。
- * AOP Allianceに準拠したアスペクト指向プログラミングをサポートしています。
+* ロジックとコンフィギュレーションの分離を促進し、ソースコードを読みやすくします。
+* コンポーネントの独立性と再利用性を強化します。コンポーネントは依存関係のあるインタフェースを宣言するだけになるため、他のコンポーネントとの関係を疎結合にし再利用性を高めます。
+* コーディング量を減少させます。インジェクションの処理そのものはインジェクターが提供するためその分だけ実装するコードの量が減ります。多くの場合、依存を受け取る為のtraitの`use`文を記述するだけです。
+
+Ray.Diは以下の特徴があります。
+
+ * [JSR-250](http://en.wikipedia.org/wiki/JSR_250)のオブジェクトライフサイクル(`@PostConstruct`, `@PreDestroy`)のアノテーションをサポートしています。
+ * [AOP Alliance](http://aopalliance.sourceforge.net/)に準拠したアスペクト指向プログラミングをサポートしています。
  * [Aura.Di](http://auraphp.github.com/Aura.Di )を拡張しています。
  * [Doctrine.Commons](http://www.doctrine-project.org/projects/common)アノテーションを使用しています。
 
 Getting Stated
 --------------
 
-Ray.Diを使ったディペンデンシーインジェクション（依存性の注入）の一般的な例です。
+Ray.Diを使ったディペンデンシーインジェクション（[依存性の注入](http://ja.wikipedia.org/wiki/%E4%BE%9D%E5%AD%98%E6%80%A7%E3%81%AE%E6%B3%A8%E5%85%A5)）の一般的な例です。
 ```php
 use Ray\Di\Injector;
 use Ray\Di\AbstractModule;
@@ -63,7 +69,7 @@ echo(($works) ? 'It works!' : 'It DOES NOT work!');
 [Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) はインターフェイスと実装クラスの`プロバイダー`を束縛します。
 
 シンプルでインスタンス（値）を返すだけの、Providerインターフェイスを実装したプロバイダークラスを作成します。
-```
+```php
 use Ray\Di\ProviderInterface;
 
 interface ProviderInterface
@@ -197,7 +203,7 @@ public function onInit()
 }
 ```
 
-このメソッドはPHPの *register_shutdown_function* 関数に要録されスクリプト処理が完了したとき、あるいは exit() がコールされたときに呼ばれます。
+このメソッドはPHPの **register_shutdown_function** 関数に要録されスクリプト処理が完了したとき、あるいは *exit()* がコールされたときに呼ばれます。
 
 ```php
 /**
@@ -297,7 +303,7 @@ Requirement
 Documentation
 -------------
 
-更に詳しいGuiceのドキュメントを翻訳したものがGoogle Codeにあります。
+Google Codeには更に詳しいGuiceのドキュメントを翻訳したものがあります。
 
  [http://code.google.com/p/rayphp/wiki/Motivation?tm=6](http://code.google.com/p/rayphp/wiki/Motivation?tm=6)
 
@@ -318,9 +324,9 @@ $ php composer.phar require ray/di:*
 Testing Ray.Di
 --------------
 
-Here's how to install Ray.Di from source to run the unit tests and samples.
+インストールしてテストを行うにはこのようにします。
 
-```
+```bash
 $ git clone git://github.com/koriym/Ray.Di.git
 $ cd Ray.Di
 $ composer install

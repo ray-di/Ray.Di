@@ -14,7 +14,7 @@ use Ray\Aop\Bind;
 interface LoggerInterface
 {
     /**
-     * Injection logger
+     * log prototype instance
      *
      * @param string $class
      * @param array  $params
