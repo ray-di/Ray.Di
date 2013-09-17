@@ -130,7 +130,7 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * {@inheritdoc
+     * {@inheritdoc}
      */
     public static function create(array $modules = [], Cache $cache = null)
     {
@@ -144,7 +144,8 @@ class Injector implements InjectorInterface
                 new PHPParser_PrettyPrinter_Default,
                 new PHPParser_Parser(new PHPParser_Lexer),
                 new PHPParser_BuilderFactory
-            )
+            ),
+            new Logger
         );
 
         if (count($modules) > 0) {
@@ -162,7 +163,7 @@ class Injector implements InjectorInterface
     /**
      * {@inheritdoc}
      *
-     * @deprecated
+     * @deprecated Use CacheInjector instead.
      */
     public function setCache(Cache $cache)
     {
@@ -262,12 +263,6 @@ class Injector implements InjectorInterface
             return $bound;
         }
 
-        // return cached object
-        list($cacheKey, $cachedObject) = $this->getCachedObject(debug_backtrace(), $class);
-        if ($cachedObject) {
-            return $cachedObject;
-        }
-
         // get bound config
         list($class, $isSingleton, $interfaceClass, $params, $setter, $definition) = $bound;
 
@@ -299,7 +294,7 @@ class Injector implements InjectorInterface
         }
 
         // Object life cycle, Singleton, and Save cache
-        $this->postInject($object, $definition, $isSingleton, $cacheKey, $interfaceClass);
+        $this->postInject($object, $definition, $isSingleton, $interfaceClass);
 
 
         return $object;
@@ -334,7 +329,7 @@ class Injector implements InjectorInterface
      * @param string     $cacheKey
      * @param string     $interfaceClass
      */
-    private function postInject($object, Definition $definition, $isSingleton, $cacheKey, $interfaceClass)
+    private function postInject($object, Definition $definition, $isSingleton, $interfaceClass)
     {
         // set life cycle
         if ($definition) {
@@ -344,11 +339,6 @@ class Injector implements InjectorInterface
         // set singleton object
         if ($isSingleton) {
             $this->container->set($interfaceClass, $object);
-        }
-
-        // save cache
-        if ($cacheKey) {
-            $this->cache->save($cacheKey, $object);
         }
     }
 
@@ -592,33 +582,6 @@ class Injector implements InjectorInterface
         array_walk($settings, [$this, 'bindOneParameter']);
 
         return [$method, $settings];
-    }
-
-    /**
-     * @param array $trace
-     * @param       $class
-     *
-     * @return array|mixed
-     */
-    private function getCachedObject(array $trace, $class)
-    {
-        static $loaded = [];
-
-        $isNotRecursive = ($trace[0]['file'] !== __FILE__);
-        $isFirstLoadInThisSession = (!in_array($class, $loaded));
-        $useCache = ($this->cache instanceof Cache && $isNotRecursive && $isFirstLoadInThisSession);
-        $loaded[] = $class;
-        // cache read ?
-        if ($useCache) {
-            $cacheKey = PHP_SAPI . get_class($this->module) . $class;
-            $object = $this->cache->fetch($cacheKey);
-            if ($object) {
-                return [$cacheKey, $object];
-            }
-            return [$cacheKey, null];
-        }
-
-        return [null, null];
     }
 
     /**
@@ -870,5 +833,13 @@ class Injector implements InjectorInterface
     public function getAopClassDir()
     {
         return $this->compiler->classDir;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }
