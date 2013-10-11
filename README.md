@@ -4,7 +4,7 @@ Dependency Injection framework for PHP
 [![Latest Stable Version](https://poser.pugx.org/ray/di/v/stable.png)](https://packagist.org/packages/ray/di)
 [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=master)](http://travis-ci.org/koriym/Ray.Di)
 
-**Ray.Di** was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google.
+**Ray.Di** was created in order to get Guice style dependency1 injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency1 injection framework developed by Google.
 
  * Supports some of the [JSR-250](http://en.wikipedia.org/wiki/JSR_250) object lifecycle annotations (`@PostConstruct`, `@PreDestroy`)
  * Provides an [AOP Alliance](http://aopalliance.sourceforge.net/)-compliant aspect-oriented programming implementation.
@@ -17,7 +17,7 @@ _Not all features of Guice have been implemented._
 Getting Stated
 --------------
 
-Here is a basic example of dependency injection using Ray.Di.
+Here is a basic example of dependency1 injection using Ray.Di.
 
 ```php
 use Ray\Di\Injector;
@@ -181,7 +181,7 @@ protected function configure()
 
 ## Object life cycle
 
-`@PostConstruct` is used on methods that need to get executed after dependency injection has finalized to perform any extra initialization.
+`@PostConstruct` is used on methods that need to get executed after dependency1 injection has finalized to perform any extra initialization.
 
 ```php
 /**
@@ -379,6 +379,47 @@ $initialization = function() {
 $injector = new CacheInjector($injector, $initialization, 'cache-namespace', new ApcCache);
 $app = $injector->getInsntance('ApplicationInterface');
 $app->run();
+```
+
+Cachealbe class example
+-----------------------
+
+```php
+
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\PostConstruct;
+
+class UserRepository
+{
+    private $dependency;
+
+    /**
+     * @Inject
+     */
+    public function __construct(DependencyInterface $dependency)
+    {
+        // per system startup
+        $this->dependency = $dependency;
+    }
+
+    /**
+     * @PostConstruct
+     */
+    public function init()
+    {
+        // per each request
+        //
+        // In this @PostConstruct method, You can expect
+        // - All injection is completed.
+        // - This function is called regardless object cache status unlike __construct or __wakeup.
+        // - You can set unserializable item to property such as closure or \PDO object.
+    }
+
+    public function getUserData($Id)
+    {
+        // The request is stateless.
+    }
+}
 ```
 
 Requirements
