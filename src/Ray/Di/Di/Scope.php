@@ -19,14 +19,14 @@ final class Scope implements Annotation
      *
      * @var string
      */
-    const SINGLETON = 'singleton';
+    const SINGLETON = 'Singleton';
 
     /**
      * Prototype
      *
      * @var string
      */
-    const PROTOTYPE = 'prototype';
+    const PROTOTYPE = 'Prototype';
 
     /**
      * Object lifecycle
