@@ -123,7 +123,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $expect = 'onInit';
         $this->assertSame($expect, $definition['PostConstruct']);
         // same
-        $expect = 'prototype';
+        $expect = \Ray\Di\Scope::PROTOTYPE;
         $this->assertSame($expect, $definition['Scope']);
     }
 
@@ -133,7 +133,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $expect = 'onInit';
         $this->assertSame($expect, $definition['PostConstruct']);
         // changed
-        $expect = 'singleton';
+        $expect = \Ray\Di\Scope::SINGLETON;
         $this->assertSame($expect, $definition['Scope']);
     }
 

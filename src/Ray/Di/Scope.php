@@ -16,12 +16,12 @@ class Scope
      *
      * @var string
      */
-    const SINGLETON = 'singleton';
+    const SINGLETON = 'Singleton';
 
     /**
      * Prototype scope
      *
      * @var string
      */
-    const PROTOTYPE = 'prototype';
+    const PROTOTYPE = 'Prototype';
 }
