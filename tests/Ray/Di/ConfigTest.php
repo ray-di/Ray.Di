@@ -2,6 +2,7 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Ray\Di\Scope;
 
 /**
  * Test class for Config.
@@ -123,7 +124,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $expect = 'onInit';
         $this->assertSame($expect, $definition['PostConstruct']);
         // same
-        $expect = \Ray\Di\Scope::PROTOTYPE;
+        $expect = Scope::PROTOTYPE;
         $this->assertSame($expect, $definition['Scope']);
     }
 
@@ -133,7 +134,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $expect = 'onInit';
         $this->assertSame($expect, $definition['PostConstruct']);
         // changed
-        $expect = \Ray\Di\Scope::SINGLETON;
+        $expect = Scope::SINGLETON;
         $this->assertSame($expect, $definition['Scope']);
     }
 

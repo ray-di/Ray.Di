@@ -1,11 +1,8 @@
 <?php
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\ArrayCache;
-use Ray\Di\Modules\InstanceModule;
 
 class CacheInjectorTest extends \PHPUnit_Framework_TestCase
 {
