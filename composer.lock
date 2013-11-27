@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "afbf2168bb2ada985f5b9e31adf97188",
+    "hash": "1cdae26e6864c807a7104503565f7ecd",
     "packages": [
         {
             "name": "aura/di",
@@ -182,16 +182,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.1",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "2c9761ff1d13e188d5f7378066c1ce2882d7a336"
+                "reference": "e16d7adf45664a50fa86f515b6d5e7f670130449"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/2c9761ff1d13e188d5f7378066c1ce2882d7a336",
-                "reference": "2c9761ff1d13e188d5f7378066c1ce2882d7a336",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/e16d7adf45664a50fa86f515b6d5e7f670130449",
+                "reference": "e16d7adf45664a50fa86f515b6d5e7f670130449",
                 "shasum": ""
             },
             "require": {
@@ -199,6 +199,10 @@
             },
             "conflict": {
                 "doctrine/common": ">2.2,<2.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=3.7",
+                "satooshi/php-coveralls": "~0.6"
             },
             "type": "library",
             "extra": {
@@ -217,9 +221,10 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -247,7 +252,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2013-08-07 16:04:25"
+            "time": "2013-10-25 19:04:14"
         },
         {
             "name": "doctrine/lexer",
@@ -347,16 +352,16 @@
         },
         {
             "name": "ray/aop",
-            "version": "1.1.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "7e60468fef778ac9f77024285b04ef289632ad48"
+                "reference": "7491b3524fe9b5c956c2568185232f72354466ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/7e60468fef778ac9f77024285b04ef289632ad48",
-                "reference": "7e60468fef778ac9f77024285b04ef289632ad48",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/7491b3524fe9b5c956c2568185232f72354466ac",
+                "reference": "7491b3524fe9b5c956c2568185232f72354466ac",
                 "shasum": ""
             },
             "require": {
@@ -390,7 +395,7 @@
                 "aop",
                 "aspect"
             ],
-            "time": "2013-09-15 14:23:51"
+            "time": "2013-11-25 16:13:17"
         }
     ],
     "packages-dev": [
@@ -400,9 +405,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "ray/aop": 20
+    },
     "platform": {
         "php": ">=5.4.0"
     },
