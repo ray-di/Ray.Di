@@ -326,7 +326,6 @@ class Injector implements InjectorInterface
      * @param object     $object
      * @param Definition $definition
      * @param bool       $isSingleton
-     * @param string     $cacheKey
      * @param string     $interfaceClass
      */
     private function postInject($object, Definition $definition, $isSingleton, $interfaceClass)
