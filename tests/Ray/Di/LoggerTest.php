@@ -61,7 +61,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
     public function testLogCallableParam()
     {
         $params = [1.0, __NAMESPACE__ . '\someFunction'];
-        $setter = ['setA' => null, 'setB' => null];
+        $setter = ['setA' => null, 'setB' => null, 'setCallable' => __NAMESPACE__ . '\someFunction' ];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $this->diLogger->log('Class', $params, $setter, $object, new Bind);
         $this->assertInternalType('string', (string)$this->diLogger);
