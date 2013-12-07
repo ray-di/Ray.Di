@@ -5,7 +5,6 @@ namespace Ray\Di\Modules;
 
 use Ray\Di\AbstractModule;
 use Ray\Di\Aop\ChildTaxCharger;
-use Ray\Di\Modules\AopModule;
 
 class InstallPointcutsModule extends AbstractModule
 {

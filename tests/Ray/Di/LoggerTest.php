@@ -90,14 +90,16 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testSerialize()
     {
-        $this->diLogger->log('classA', [], [], function(){}, new Bind);
+        $unserializableObject = new TestObject(function(){}, new \PDO('sqlite::memory:'));
+        $this->diLogger->log('classA', [], [], $unserializableObject, new Bind);
         $serialized = serialize($this->diLogger);
         $this->assertInternalType('string', $serialized);
     }
 
-    public function testUnserialized()
+    public function testUnserialize()
     {
-        $this->diLogger->log('classA', [], [], function(){}, new Bind);
+        $unserializableObject = new TestObject(function(){}, new \PDO('sqlite::memory:'));
+        $this->diLogger->log('classA', [], [], $unserializableObject, new Bind);
         $unSerialized = unserialize(serialize($this->diLogger));
         /** @var Logger $unSerialized */
 

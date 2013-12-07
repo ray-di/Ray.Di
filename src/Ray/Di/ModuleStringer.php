@@ -6,9 +6,6 @@
  */
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\AnnotationReader as Reader;
-use Ray\Aop\Matcher;
-
 /**
  * String for module
  */

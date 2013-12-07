@@ -75,6 +75,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     {
         $actual = $this->config->getReflect('Ray\Di\MockOtherClass');
         $this->assertInstanceOf('ReflectionClass', $actual);
+        /** @var \ReflectionClass $actual */
         $this->assertSame('Ray\Di\MockOtherClass', $actual->getName());
         $this->config->getReflect('Ray\Di\MockOtherClass');
     }

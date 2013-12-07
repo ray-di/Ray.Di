@@ -18,7 +18,6 @@ use Ray\Aop\BindInterface;
 use Ray\Aop\Compiler;
 use Ray\Aop\CompilerInterface;
 use Ray\Di\Exception;
-use Ray\Di\Exception\Binding;
 use Ray\Di\Exception\NotBound;
 use Ray\Di\Exception\OptionalInjectionNotBound;
 use ReflectionClass;

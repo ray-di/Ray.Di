@@ -6,8 +6,6 @@
  */
 namespace Ray\Di;
 
-use Ray\Di\AbstractModule;
-
 /**
  * Empty Module.
  */
