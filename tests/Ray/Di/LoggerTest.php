@@ -87,4 +87,20 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
         $diLogger->log('Class', $params, $setter, $object, new Bind);
         $this->assertSame((string)$diLogger, (string)$this->diLogger);
     }
+
+    public function testSerialize()
+    {
+        $this->diLogger->log('classA', [], [], function(){}, new Bind);
+        $serialized = serialize($this->diLogger);
+        $this->assertInternalType('string', $serialized);
+    }
+
+    public function testUnserialized()
+    {
+        $this->diLogger->log('classA', [], [], function(){}, new Bind);
+        $unSerialized = unserialize(serialize($this->diLogger));
+        /** @var Logger $unSerialized */
+
+        $this->assertInstanceOf('Ray\Di\Logger', $unSerialized);
+    }
 }
