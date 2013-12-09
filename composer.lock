@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "57dba0c8843a2cd3c7ac4b069980daf1",
+    "hash": "1cdae26e6864c807a7104503565f7ecd",
     "packages": [
         {
             "name": "aura/di",
@@ -165,7 +165,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -292,7 +292,7 @@
                     "email": "roman@code-factory.org"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -352,16 +352,16 @@
         },
         {
             "name": "ray/aop",
-            "version": "1.2.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "76a3cc048f5e6ac20f51484e452d07c924a5f801"
+                "reference": "0b55699a42994934c1021c6f7d2d0e95a93d21d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/76a3cc048f5e6ac20f51484e452d07c924a5f801",
-                "reference": "76a3cc048f5e6ac20f51484e452d07c924a5f801",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/0b55699a42994934c1021c6f7d2d0e95a93d21d6",
+                "reference": "0b55699a42994934c1021c6f7d2d0e95a93d21d6",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +395,7 @@
                 "aop",
                 "aspect"
             ],
-            "time": "2013-12-07 06:14:43"
+            "time": "2013-12-08 01:12:28"
         }
     ],
     "packages-dev": [
@@ -405,9 +405,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "ray/aop": 20
+    },
     "platform": {
         "php": ">=5.4.0"
     },
