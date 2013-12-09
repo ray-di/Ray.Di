@@ -2,6 +2,7 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Ray\Di\Scope;
 
 /**
  * Test class for Config.
@@ -74,6 +75,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     {
         $actual = $this->config->getReflect('Ray\Di\MockOtherClass');
         $this->assertInstanceOf('ReflectionClass', $actual);
+        /** @var \ReflectionClass $actual */
         $this->assertSame('Ray\Di\MockOtherClass', $actual->getName());
         $this->config->getReflect('Ray\Di\MockOtherClass');
     }
@@ -123,7 +125,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $expect = 'onInit';
         $this->assertSame($expect, $definition['PostConstruct']);
         // same
-        $expect = 'prototype';
+        $expect = Scope::PROTOTYPE;
         $this->assertSame($expect, $definition['Scope']);
     }
 
@@ -133,7 +135,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $expect = 'onInit';
         $this->assertSame($expect, $definition['PostConstruct']);
         // changed
-        $expect = 'singleton';
+        $expect = Scope::SINGLETON;
         $this->assertSame($expect, $definition['Scope']);
     }
 

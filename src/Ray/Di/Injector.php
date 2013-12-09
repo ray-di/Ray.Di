@@ -18,7 +18,6 @@ use Ray\Aop\BindInterface;
 use Ray\Aop\Compiler;
 use Ray\Aop\CompilerInterface;
 use Ray\Di\Exception;
-use Ray\Di\Exception\Binding;
 use Ray\Di\Exception\NotBound;
 use Ray\Di\Exception\OptionalInjectionNotBound;
 use ReflectionClass;
@@ -326,7 +325,6 @@ class Injector implements InjectorInterface
      * @param object     $object
      * @param Definition $definition
      * @param bool       $isSingleton
-     * @param string     $cacheKey
      * @param string     $interfaceClass
      */
     private function postInject($object, Definition $definition, $isSingleton, $interfaceClass)

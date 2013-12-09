@@ -100,7 +100,7 @@ class Definition extends ArrayObject
     /**
      * Param typehint default concrete class / provider class
      *
-     * @var array [$typehintMethod, $className>]
+     * @var string
      */
     const PARAM_TYPEHINT_BY = 'typehint_by';
 

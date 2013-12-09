@@ -6,9 +6,7 @@
  */
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Aop\Compiler;
 use Ray\Di\Exception\NoInjectorReturn;
 use SplObjectStorage;
@@ -42,8 +40,8 @@ class CacheInjector implements InstanceInterface
     private $namespace;
 
     /**
-     * @param callable      $injector       = function() {return Injector::create([new Module])};
-     * @param callable      $initialization = function($instance, InjectorInterface $injector){};
+     * @param callable      $injector       = function () {return Injector::create([new Module])};
+     * @param callable      $initialization = function ($instance, InjectorInterface $injector) {};
      * @param string        $namespace      cache namespace
      * @param CacheProvider $cache
      */
@@ -75,7 +73,7 @@ class CacheInjector implements InstanceInterface
             $this->cachedInstance($class, $key) :
             $this->createInstance($class, $key);
 
-        register_shutdown_function(
+        register_shutdown_function (
             function () use ($preDestroy) {
                 // @codeCoverageIgnoreStart
                 $this->notifyPreShutdown($preDestroy);
