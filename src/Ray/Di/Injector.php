@@ -100,6 +100,13 @@ class Injector implements InjectorInterface
     private $compiler;
 
     /**
+     * Target classes
+     *
+     * @var array
+     */
+    private $classes = [];
+
+    /**
      * @param ContainerInterface $container
      * @param AbstractModule     $module
      * @param BindInterface      $bind
@@ -255,6 +262,9 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class)
     {
+        // log
+        $this->classes[] = $class;
+
         $bound = $this->getBound($class);
 
         // return singleton bound object if exists
@@ -812,7 +822,8 @@ class Injector implements InjectorInterface
                 throw new OptionalInjectionNotBound($key);
             }
             $name = $param[Definition::PARAM_NAME];
-            $msg = "typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$this->class}'";
+            $class = array_pop($this->classes);
+            $msg = "typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$class}'";
             $e = (new Exception\NotBound($msg))->setModule($this->module);
             throw $e;
         }
