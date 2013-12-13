@@ -281,8 +281,13 @@ class Injector implements InjectorInterface
         // be all parameters ready
         $this->constructorInject($class, $params, $this->module);
 
-        // is instantiable ?
-        if (!(new \ReflectionClass($class))->isInstantiable()) {
+        $refClass = new \ReflectionClass($class);
+
+        if ($refClass->isInterface()) {
+            return $this->getInstance($class);
+        }
+
+        if (!($refClass->isInstantiable())) {
             throw new Exception\NotInstantiable($class);
         }
 
