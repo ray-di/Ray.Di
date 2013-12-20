@@ -299,6 +299,8 @@ class Injector implements InjectorInterface
         $object = $bind->hasBinding() ?
             $this->compiler->newInstance($class, $params, $bind) : $this->newInstance($class, $params) ;
 
+        unset( $setter['__construct'] ); //Do not call constructor twice. Ever.
+
         // call setter methods
         $this->setterMethod($setter, $object);
 
