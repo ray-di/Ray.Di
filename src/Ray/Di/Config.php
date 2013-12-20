@@ -273,7 +273,7 @@ class Config implements ConfigInterface
      *
      * Returns a \ReflectionClass for a named class.
      *
-     * @param string $class  The class to reflect on
+     * @param mixed  $class  The class to reflect on
      * @param string $method The method to reflect on
      *
      * @return \ReflectionMethod

@@ -12,6 +12,8 @@ class TaxCharger implements MethodInterceptor
     public function invoke(MethodInvocation $invocation)
     {
         list($amount, $unit) =  $invocation->proceed();
+        // deprecated method
+        /** @noinspection PhpUndefinedMethodInspection */
         $annotation = $invocation->getAnnotation();
         $tax = $annotation ? $annotation->value : self::defaultTaxRate;
         $amount *= (1 + $tax);

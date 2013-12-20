@@ -7,10 +7,9 @@
 namespace Ray\Di;
 
 use Ray\Aop\Bind;
-use Ray\Di\LoggerInterface;
 
 /**
- * Dependency injection logger.
+ * Dependency injection loggers
  */
 class Logger implements LoggerInterface, \IteratorAggregate, \Serializable
 {
@@ -41,8 +40,6 @@ class Logger implements LoggerInterface, \IteratorAggregate, \Serializable
     public function log($class, array $params, array $setter, $object, Bind $bind)
     {
         $this->logs[] = [$class, $params, $setter, $object, $bind];
-        $constructor = $this->getParamString($params);
-        $constructor = $constructor ? $constructor : '';
         $setterLog = [];
         foreach ($setter as $method => $methodParams) {
             $setterLog[] = $method . ':'. $this->getParamString((array)$methodParams);

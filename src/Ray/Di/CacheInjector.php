@@ -6,9 +6,7 @@
  */
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Aop\Compiler;
 use Ray\Di\Exception\NoInjectorReturn;
 use SplObjectStorage;

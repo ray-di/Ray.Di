@@ -3,7 +3,6 @@
 namespace Ray\Di\Modules;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Modules\BasicModule;
 use Ray\Di\Scope;
 
 class UseBasicModule extends AbstractModule

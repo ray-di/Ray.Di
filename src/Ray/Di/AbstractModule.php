@@ -9,6 +9,7 @@ namespace Ray\Di;
 use ArrayAccess;
 use ArrayObject;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
+use Ray\Aop\AbstractMatcher;
 use Ray\Aop\Bind;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
@@ -343,7 +344,7 @@ abstract class AbstractModule implements ArrayAccess
      *
      * @return void
      */
-    protected function bindInterceptor(Matcher $classMatcher, Matcher $methodMatcher, array $interceptors)
+    protected function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
     {
         $id = uniqid();
         $this->pointcuts[$id] = new Pointcut($classMatcher, $methodMatcher, $interceptors);
