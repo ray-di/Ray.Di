@@ -9,6 +9,9 @@ use Ray\Di\Di\Named;
 
 class Instance
 {
+    /**
+     * @var int
+     */
     public $userId;
 
     /**
@@ -42,10 +45,10 @@ class Instance
     public $userFavorites;
 
     /**
+     * @param $id
+     *
      * @Inject
      * @Named("id")
-     *
-     * @param $id
      */
     public function setId($id)
     {
@@ -53,12 +56,12 @@ class Instance
     }
 
     /**
-     * @Inject
-     * @Named("name=user_name,age=user_age,gender=user_gender")
-     *
      * @param        $name
      * @param        $age
      * @param string $gender
+     *
+     * @Inject
+     * @Named("name=user_name,age=user_age,gender=user_gender")
      */
     public function setUser($name, $age, $gender="male")
     {
@@ -68,11 +71,11 @@ class Instance
     }
 
     /**
-     * @Inject
-     * @Named("userId=id")
-     *
      * @param                            $userId
      * @param \Ray\Di\Mock\UserInterface $user
+     *
+     * @Inject
+     * @Named("userId=id")
      */
     public function setIdUser($userId, UserInterface $user)
     {
@@ -81,10 +84,10 @@ class Instance
     }
 
     /**
+     * @param array $userFavorites
+     *
      * @Inject
      * @Named("userFavorites=user_favorites")
-     *
-     * @param array $userFavorites
      */
     public function setUserFavorites(array $userFavorites)
     {

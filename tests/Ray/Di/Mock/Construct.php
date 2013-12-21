@@ -4,10 +4,6 @@ namespace Ray\Di\Mock;
 
 use Ray\Di\Mock\DbInterface;
 
-/**
- * Constructor Injection
- *
- */
 class Construct
 {
     /**

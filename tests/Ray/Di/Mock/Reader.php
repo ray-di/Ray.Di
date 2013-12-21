@@ -2,4 +2,6 @@
 
 namespace Ray\Di\Mock;
 
-class Reader implements ReaderInterface{}
+class Reader implements ReaderInterface
+{
+}

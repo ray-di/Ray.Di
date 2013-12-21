@@ -100,6 +100,13 @@ class Injector implements InjectorInterface
     private $compiler;
 
     /**
+     * Target classes
+     *
+     * @var array
+     */
+    private $classes = [];
+
+    /**
      * @param ContainerInterface $container
      * @param AbstractModule     $module
      * @param BindInterface      $bind
@@ -255,6 +262,9 @@ class Injector implements InjectorInterface
      */
     public function getInstance($class)
     {
+        // log
+        $this->classes[] = $class;
+
         $bound = $this->getBound($class);
 
         // return singleton bound object if exists
@@ -271,8 +281,13 @@ class Injector implements InjectorInterface
         // be all parameters ready
         $this->constructorInject($class, $params, $this->module);
 
-        // is instantiable ?
-        if (!(new \ReflectionClass($class))->isInstantiable()) {
+        $refClass = new \ReflectionClass($class);
+
+        if ($refClass->isInterface()) {
+            return $this->getInstance($class);
+        }
+
+        if (!($refClass->isInstantiable())) {
             throw new Exception\NotInstantiable($class);
         }
 
@@ -283,6 +298,8 @@ class Injector implements InjectorInterface
 
         $object = $bind->hasBinding() ?
             $this->compiler->newInstance($class, $params, $bind) : $this->newInstance($class, $params) ;
+
+        unset( $setter['__construct'] ); //Do not call constructor twice. Ever.
 
         // call setter methods
         $this->setterMethod($setter, $object);
@@ -812,7 +829,8 @@ class Injector implements InjectorInterface
                 throw new OptionalInjectionNotBound($key);
             }
             $name = $param[Definition::PARAM_NAME];
-            $msg = "typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$this->class}'";
+            $class = array_pop($this->classes);
+            $msg = "typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$class}'";
             $e = (new Exception\NotBound($msg))->setModule($this->module);
             throw $e;
         }

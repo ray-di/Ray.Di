@@ -6,6 +6,9 @@ use Ray\Di\Di\Inject;
 
 class Number implements NumberInterface
 {
+    /**
+     * @var DbInterface
+     */
     public $db;
 
     /**

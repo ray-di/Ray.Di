@@ -14,9 +14,9 @@ class Provided
     public $reader;
 
     /**
-     * @Inject
-     *
      * @param ReaderInterface $reader
+     *
+     * @Inject
      */
     public function setReader(ReaderInterface $reader)
     {

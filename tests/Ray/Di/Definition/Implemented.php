@@ -12,9 +12,9 @@ class Implemented
     public $log;
 
     /**
-     * @Inject
-     *
      * @param LogInterface $log
+     *
+     * @Inject
      */
     public function setLog(LogInterface $log)
     {

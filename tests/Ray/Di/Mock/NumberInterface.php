@@ -2,4 +2,6 @@
 
 namespace Ray\Di\Mock;
 
-interface NumberInterface {}
+interface NumberInterface
+{
+}

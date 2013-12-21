@@ -5,10 +5,6 @@ namespace Ray\Di\Definition;
 use Ray\Di\Mock\Db;
 use Ray\Di\Di\Inject;
 
-/**
- * Class Injection
- *
- */
 class ClassHint
 {
     /**
@@ -17,9 +13,11 @@ class ClassHint
     public $db;
 
     /**
-     * @Inject
+     * Concrete class type hinting
      *
      * @param Db $db
+     *
+     * @Inject
      */
     public function setDb(Db $db)
     {

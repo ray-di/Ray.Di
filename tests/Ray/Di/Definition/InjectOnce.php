@@ -3,14 +3,12 @@
 namespace Ray\Di\Definition;
 
 use Ray\Di\Mock\DbInterface;
+use Ray\Di\Mock\UserDb;
 use Ray\Di\Di\Inject;
 
-class Construct
+class InjectOnce implements BasicInterface
 {
-    /**
-     * @var DbInterface
-     */
-    public $db;
+    public $count = 0;
 
     /**
      * @param DbInterface $db
@@ -19,6 +17,6 @@ class Construct
      */
     public function __construct(DbInterface $db)
     {
-        $this->db = $db;
+            $this->count++;
     }
 }

@@ -6,6 +6,7 @@ use Ray\Di\Di\ProvidedBy;
 
 /**
  * @ProvidedBy("Ray\Di\Modules\ReaderProvider")
- *
  */
-interface ReaderInterface{}
+interface ReaderInterface
+{
+}

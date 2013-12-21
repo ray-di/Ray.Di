@@ -31,6 +31,19 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
      */
     protected $container;
 
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));
+        $this->injector = new Injector($this->container, new EmptyModule, new Bind, new Compiler($_ENV['RAY_TMP'], new PHPParser_PrettyPrinter_Default, new PHPParser_Parser(new PHPParser_Lexer), new PHPParser_BuilderFactory), new Logger);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+    }
+
     public function testNewInstanceWithPostConstruct()
     {
         $mock = $this->injector->getInstance('Ray\Di\Definition\LifeCycle');
@@ -490,17 +503,18 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $expected .= 'class:Ray\Di\Definition\UseBasic __construct:Ray\Di\Definition\Basic#singleton setBasic1:Ray\Di\Definition\Basic#singleton setBasic2:Ray\Di\Definition\Basic#singleton, Ray\Di\Definition\Basic#singleton' . PHP_EOL;
         $this->assertSame($expected, (string)$logger);
     }
-
-    protected function setUp()
+    public function testCircularBindings()
     {
-        parent::setUp();
-        $this->container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));
-        $this->injector = new Injector($this->container, new EmptyModule, new Bind, new Compiler($_ENV['RAY_TMP'], new PHPParser_PrettyPrinter_Default, new PHPParser_Parser(new PHPParser_Lexer), new PHPParser_BuilderFactory), new Logger);
+        $this->injector->setModule(new Modules\InterfaceBindModule);
+        $instance = $this->injector->getInstance('Ray\Di\Mock\ChildDbInterface');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance);
     }
 
-    protected function tearDown()
+    public function testInjectOnce()
     {
-        parent::tearDown();
+        $this->injector->setModule(new Modules\BasicModule);
+        $instance = $this->injector->getInstance('Ray\Di\Definition\InjectOnce');
+        /** @var $instance \Ray\Di\Definition\InjectOnce */
+        $this->assertSame(1, $instance->count);
     }
-
 }

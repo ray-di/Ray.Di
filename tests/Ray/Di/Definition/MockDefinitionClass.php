@@ -73,11 +73,10 @@ class MockDefinitionClass
     }
 
     /**
-     * @Inject
-     * @Named("user_db")
-     *
      * @param DbInterface $db
      *
+     * @Inject
+     * @Named("user_db")
      */
     public function setUserDb(DbInterface $db)
     {
@@ -85,22 +84,21 @@ class MockDefinitionClass
     }
 
     /**
-     * @Inject
-     * @Named("db=stage_db")
-     *
      * @param DbInterface $db
      *
+     * @Inject
+     * @Named("db=stage_db")
      */
     public function setAdminDb(DbInterface $db)
     {
     }
 
     /**
-     * @Inject
-     * @Named("user=admin_user,db=production_db")
-     *
      * @param \Ray\Di\Mock\UserInterface $user
      * @param \Ray\Di\Mock\DbInterface   $db
+     *
+     * @Inject
+     * @Named("user=admin_user,db=production_db")
      */
     public function setDouble(UserInterface $user, DbInterface $db)
     {
@@ -112,5 +110,4 @@ class MockDefinitionClass
     public function provideDb()
     {
     }
-
 }

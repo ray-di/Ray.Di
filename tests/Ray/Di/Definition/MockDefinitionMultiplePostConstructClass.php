@@ -13,8 +13,6 @@ class MockDefinitionMultiplePostConstructClass
     public $inited;
 
     /**
-     * Init
-     *
      * @PostConstruct
      */
     public function onInit()
@@ -23,8 +21,6 @@ class MockDefinitionMultiplePostConstructClass
     }
 
     /**
-     * Init
-     *
      * @PostConstruct
      */
     public function onInit2()

@@ -11,6 +11,5 @@ class DoubleBindModule extends AbstractModule
     {
         $this->bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb1');
         $this->bind('Ray\Di\Mock\DbInterface')->to('Ray\Di\Mock\UserDb2');
-//        $this->install(new Modules\BasicModule);
     }
 }

@@ -2,4 +2,6 @@
 
 namespace Ray\Di\Mock;
 
-class UserDb implements DbInterface{}
+class UserDb implements DbInterface
+{
+}

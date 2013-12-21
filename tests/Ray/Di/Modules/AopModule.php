@@ -13,9 +13,8 @@ class AopModule extends AbstractModule
     {
         $this->bindInterceptor(
             $this->matcher->any(),
-            $this->matcher->any(), [
-                new TaxCharger
-            ]
+            $this->matcher->any(),
+            [new TaxCharger]
         );
     }
 }
