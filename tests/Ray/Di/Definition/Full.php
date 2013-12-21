@@ -17,10 +17,10 @@ class Full
     public $id;
 
     /**
+     * @param $id
+     *
      * @Inject
      * @Named("id")
-     *
-     * @param $id
      */
     public function setId($id)
     {
@@ -28,12 +28,12 @@ class Full
     }
 
     /**
-     * @Inject
-     * @Named("name=user_name,age=user_age,gender=user_gender")
-     *
      * @param        $name
      * @param        $age
      * @param string $gender
+     *
+     * @Inject
+     * @Named("name=user_name,age=user_age,gender=user_gender")
      */
     public function setUser($name, $age, $gender="male")
     {

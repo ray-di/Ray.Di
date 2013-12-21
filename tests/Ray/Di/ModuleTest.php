@@ -3,9 +3,6 @@ namespace Ray\Di;
 
 use Ray\Aop\Bind;
 
-/**
- * Test class for Module.
- */
 class ModuleTest extends \PHPUnit_Framework_TestCase
 {
     /**

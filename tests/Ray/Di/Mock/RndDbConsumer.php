@@ -6,7 +6,14 @@ use Ray\Di\Di\Inject;
 
 class RndDbConsumer
 {
+    /**
+     * @var RndDb
+     */
     public $db1;
+
+    /**
+     * @var RndDb
+     */
     public $db2;
 
     /**

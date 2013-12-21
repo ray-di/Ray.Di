@@ -29,9 +29,9 @@ class Multi
      */
     public $adminDb;
     /**
-     * @Inject
-     *
      * @param DbInterface $db
+     *
+     * @Inject
      */
     public function setDb(DbInterface $db)
     {
@@ -39,10 +39,10 @@ class Multi
     }
 
     /**
+     * @param \Ray\Di\Mock\DbInterface $userDb
+     *
      * @Inject
      * @Named("user_db")
-     *
-     * @param \Ray\Di\Mock\DbInterface $userDb
      */
     public function setUserDb(DbInterface $userDb)
     {
@@ -50,10 +50,10 @@ class Multi
     }
 
     /**
+     * @param \Ray\Di\Mock\DbInterface $adminDb
+     *
      * @Inject
      * @Named("adminDb=admin_db")
-     *
-     * @param \Ray\Di\Mock\DbInterface $adminDb
      */
     public function setAdminDb(DbInterface $adminDb)
     {
@@ -61,11 +61,11 @@ class Multi
     }
 
     /**
-     * @Inject
-     * @Named("user=admin_user,db=production_db")
-     *
      * @param \Ray\Di\Mock\UserInterface $user
      * @param \Ray\Di\Mock\DbInterface   $db
+     *
+     * @Inject
+     * @Named("user=admin_user,db=production_db")
      */
     public function setDouble(UserInterface $user, DbInterface $db)
     {

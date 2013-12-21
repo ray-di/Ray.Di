@@ -12,11 +12,10 @@ class Named
     public $userDb;
 
     /**
-     * @Inject
-     * @Named("user_db")
-     *
      * @param DbInterface $db
      *
+     * @Inject
+     * @Named("user_db")
      */
     public function setUserDb(DbInterface $db)
     {

@@ -37,5 +37,4 @@ class MockChildClass extends MockParentClass
     {
         return array($this->fake1, $this->fake2);
     }
-
 }

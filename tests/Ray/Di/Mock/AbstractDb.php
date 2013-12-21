@@ -2,4 +2,6 @@
 
 namespace Ray\Di\Mock;
 
-abstract class AbstractDb{}
+abstract class AbstractDb
+{
+}

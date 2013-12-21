@@ -6,10 +6,6 @@ use Ray\Di\Mock\DbInterface;
 
 class DefaultDB{}
 
-/**
- * Constructor Injection
- *
- */
 class ConstructWithDefault
 {
     /**

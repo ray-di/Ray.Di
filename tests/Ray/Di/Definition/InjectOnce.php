@@ -11,9 +11,9 @@ class InjectOnce implements BasicInterface
     public $count = 0;
 
     /**
-     * @Inject
-     *
      * @param DbInterface $db
+     *
+     * @Inject
      */
     public function __construct(DbInterface $db)
     {

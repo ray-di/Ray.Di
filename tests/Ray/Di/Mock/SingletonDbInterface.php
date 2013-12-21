@@ -7,4 +7,6 @@ use Ray\Di\Di\Scope;
 /**
  * @Scope("Singleton")
  */
-interface SingletonDbInterface extends DbInterface {}
+interface SingletonDbInterface extends DbInterface
+{
+}

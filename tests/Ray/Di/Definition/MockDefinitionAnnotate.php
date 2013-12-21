@@ -13,6 +13,9 @@ class MockInjectNamed
      */
     public $db;
 
+    /**
+     * @var DbInterface
+     */
     public $userDb;
 
     /**
@@ -26,10 +29,10 @@ class MockInjectNamed
     }
 
     /**
+     * @param DbInterface $db
+     *
      * @Inject
      * @named("user_db")
-     *
-     * @param DbInterface $db
      */
     public function setUserDb(DbInterface $db)
     {

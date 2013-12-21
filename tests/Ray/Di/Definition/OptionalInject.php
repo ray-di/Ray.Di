@@ -15,15 +15,13 @@ class OptionalInject
     public $userDb = 'NOT_INJECTED';
 
     /**
-     * @Inject(optional = true)
-     * @Named("user_db")
-     *
      * @param DbInterface $db
      *
+     * @Inject(optional = true)
+     * @Named("user_db")
      */
     public function setUserDb(DbInterface $db)
     {
         $this->userDb = $db;
     }
-
 }

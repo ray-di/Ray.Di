@@ -2,4 +2,6 @@
 
 namespace Ray\Di\Mock;
 
-class AdminDb implements DbInterface{}
+class AdminDb implements DbInterface
+{
+}

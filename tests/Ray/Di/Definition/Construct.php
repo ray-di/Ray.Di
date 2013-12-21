@@ -5,10 +5,6 @@ namespace Ray\Di\Definition;
 use Ray\Di\Mock\DbInterface;
 use Ray\Di\Di\Inject;
 
-/**
- * Constructor Injection
- *
- */
 class Construct
 {
     /**
@@ -17,9 +13,9 @@ class Construct
     public $db;
 
     /**
-     * @Inject
-     *
      * @param DbInterface $db
+     *
+     * @Inject
      */
     public function __construct(DbInterface $db)
     {

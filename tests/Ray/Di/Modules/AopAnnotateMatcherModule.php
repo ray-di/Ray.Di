@@ -10,6 +10,10 @@ class AopAnnotateMatcherModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bindInterceptor($this->matcher->any(), $this->matcher->annotatedWith('Ray\Di\Aop\SalesTax'), [new TaxCharger]);
+        $this->bindInterceptor(
+            $this->matcher->any(),
+            $this->matcher->annotatedWith('Ray\Di\Aop\SalesTax'),
+            [new TaxCharger]
+        );
     }
 }

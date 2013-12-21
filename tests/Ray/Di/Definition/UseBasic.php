@@ -11,8 +11,19 @@ use Ray\Di\Di\Inject;
  */
 class UseBasic implements BasicInterface
 {
+    /**
+     * @var BasicInterface
+     */
     public $b0;
+
+    /**
+     * @var BasicInterface
+     */
     public $b1;
+
+    /**
+     * @var BasicInterface
+     */
     public $b2;
 
     /**

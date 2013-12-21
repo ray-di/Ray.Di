@@ -4,10 +4,6 @@ namespace Ray\Di\Definition;
 
 use Ray\Di\Di\Inject;
 
-/**
- * Setter Injection
- *
- */
 class ArrayType
 {
     /**
@@ -18,7 +14,7 @@ class ArrayType
     /**
      * @param array $data
      *
-     * Inject
+     * @Inject
      */
     public function __construct(array $data)
     {

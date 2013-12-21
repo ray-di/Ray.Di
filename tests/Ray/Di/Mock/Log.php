@@ -7,4 +7,6 @@ use Ray\Di\Di\Scope;
 /**
  * @Scope("singleton")
  */
-class Log implements LogInterface{}
+class Log implements LogInterface
+{
+}

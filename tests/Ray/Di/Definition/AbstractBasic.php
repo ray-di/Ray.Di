@@ -5,10 +5,7 @@ namespace Ray\Di\Definition;
 use Ray\Di\Mock\DbInterface;
 use Ray\Di\Mock\AbstractDb;
 use Ray\Di\Di\Inject;
-/**
- * Setter Injection
- *
- */
+
 class AbstractBasic
 {
     /**
@@ -17,9 +14,9 @@ class AbstractBasic
     public $db;
 
     /**
-     * @Inject
-     *
      * @param AbstractDb $db
+     *
+     * @Inject
      */
     public function setDb(AbstractDb $db)
     {
