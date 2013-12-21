@@ -509,4 +509,12 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $instance = $this->injector->getInstance('Ray\Di\Mock\ChildDbInterface');
         $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance);
     }
+
+    public function testInjectOnce()
+    {
+        $this->injector->setModule(new Modules\BasicModule);
+        $instance = $this->injector->getInstance('Ray\Di\Definition\InjectOnce');
+        /** @var $instance \Ray\Di\Definition\InjectOnce */
+        $this->assertSame(1, $instance->count);
+    }
 }
