@@ -181,7 +181,7 @@ protected function configure()
 
 ## Object life cycle
 
-`@PostConstruct` is used on methods that need to get executed after dependency1 injection has finalized to perform any extra initialization.
+`@PostConstruct` is used on methods that need to get executed after dependency injection has finalized to perform any extra initialization.
 
 ```php
 /**
