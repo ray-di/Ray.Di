@@ -246,6 +246,10 @@ class BillingService
 Next, we define the interceptor by implementing the org.aopalliance.intercept.MethodInterceptor interface. When we need to call through to the underlying method, we do so by calling `$invocation->proceed()`:
 
 ```php
+
+use Ray\Aop\MethodInterceptor;
+use Ray\Aop\MethodInvocation;
+
 class WeekendBlocker implements MethodInterceptor
 {
     public function invoke(MethodInvocation $invocation)
@@ -264,10 +268,12 @@ class WeekendBlocker implements MethodInterceptor
 Finally, we configure everything. In this case we match any class, but only the methods with our `@NotOnWeekends` annotation:
 
 ```php
+
+use Ray\Di\AbstractModule;
+
 class WeekendModule extends AbstractModule
 {
-    public function configure()
-    {
+
     protected function configure()
     {
         $this->bindInterceptor(
@@ -303,6 +309,9 @@ Call Stack:
 You can bind interceptors in variouas ways as follows.
 
 ```php
+
+use Ray\Di\AbstractModule;
+
 class TaxModule extends AbstractModule
 {
     protected function configure()
@@ -317,6 +326,9 @@ class TaxModule extends AbstractModule
 ```
 
 ```php
+
+use Ray\Di\AbstractModule;
+
 class AopMatcherModule extends AbstractModule
 {
     pro
