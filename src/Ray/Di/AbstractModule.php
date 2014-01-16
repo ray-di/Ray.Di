@@ -406,11 +406,12 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function requestInjection($class)
     {
-        $module = $this->dependencyInjector->getModule();
-        $this->dependencyInjector->setSelfInjectorModule($this);
-        $instance = $this->dependencyInjector->getInstance($class);
+        $di = $this->dependencyInjector;
+        $module = $di->getModule();
+        $di($this);
+        $instance = $di->getInstance($class);
         if ($module instanceof AbstractModule) {
-            $this->dependencyInjector->setSelfInjectorModule($module);
+            $di($module);
         }
 
         return $instance;
