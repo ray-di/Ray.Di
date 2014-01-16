@@ -338,11 +338,9 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * Bind interceptor
      *
-     * @param Matcher $classMatcher
-     * @param Matcher $methodMatcher
-     * @param array   $interceptors
-     *
-     * @return void
+     * @param AbstractMatcher $classMatcher
+     * @param AbstractMatcher $methodMatcher
+     * @param array           $interceptors
      */
     protected function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
     {
