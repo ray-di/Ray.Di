@@ -18,8 +18,6 @@ use Ray\Aop\BindInterface;
 use Ray\Aop\Compiler;
 use Ray\Aop\CompilerInterface;
 use Ray\Di\Exception;
-use Ray\Di\Exception\NotBound;
-use Ray\Di\Exception\OptionalInjectionNotBound;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -29,6 +27,7 @@ use PHPParser_PrettyPrinter_Default;
 use PHPParser_Parser;
 use PHPParser_Lexer;
 use PHPParser_BuilderFactory;
+use Serializable;
 use Ray\Di\Di\Inject;
 
 /**
@@ -36,13 +35,6 @@ use Ray\Di\Di\Inject;
  */
 class Injector implements InjectorInterface, \Serializable
 {
-    /**
-     * Inject annotation with optional=false
-     *
-     * @var bool
-     */
-    const OPTIONAL_BINDING_NOT_BOUND = false;
-
     /**
      * Config
      *
@@ -77,13 +69,6 @@ class Injector implements InjectorInterface, \Serializable
      * @var LoggerInterface
      */
     private $logger;
-
-    /**
-     * Current working class for exception message
-     *
-     * @var string
-     */
-    private $class;
 
     /**
      * Cache adapter
@@ -201,9 +186,7 @@ class Injector implements InjectorInterface, \Serializable
     }
 
     /**
-     * @param AbstractModule $module
-     *
-     * @return $this|InjectorInterface
+     * {@inheritdoc}
      */
     public function setSelfInjectorModule(AbstractModule $module)
     {
@@ -221,24 +204,23 @@ class Injector implements InjectorInterface, \Serializable
     }
 
     /**
-     * Notify pre-destroy
-     *
-     * @return void
+     * {@inheritdoc}
      */
-    private function notifyPreShutdown()
+    public function getLogger()
     {
-        $this->preDestroyObjects->rewind();
-        while ($this->preDestroyObjects->valid()) {
-            $object = $this->preDestroyObjects->current();
-            $method = $this->preDestroyObjects->getInfo();
-            $object->$method();
-            $this->preDestroyObjects->next();
-        }
+        return $this->logger;
     }
 
     /**
-     * Clone
+     * Return aop generated file path
+     *
+     * @return string
      */
+    public function getAopClassDir()
+    {
+        return $this->compiler->classDir;
+    }
+
     public function __clone()
     {
         $this->container = clone $this->container;
@@ -299,8 +281,23 @@ class Injector implements InjectorInterface, \Serializable
         // Object life cycle, Singleton, and Save cache
         $this->postInject($object, $definition, $isSingleton, $interfaceClass);
 
-
         return $object;
+    }
+
+    /**
+     * Notify pre-destroy
+     *
+     * @return void
+     */
+    private function notifyPreShutdown()
+    {
+        $this->preDestroyObjects->rewind();
+        while ($this->preDestroyObjects->valid()) {
+            $object = $this->preDestroyObjects->current();
+            $method = $this->preDestroyObjects->getInfo();
+            $object->$method();
+            $this->preDestroyObjects->next();
+        }
     }
 
     /**
@@ -396,7 +393,7 @@ class Injector implements InjectorInterface, \Serializable
                 if (is_object($bound)) {
                     return $bound;
                 }
-            } catch (NotBound $e) {
+            } catch (Exception\NotBound $e) {
 
             }
         }
@@ -558,7 +555,7 @@ class Injector implements InjectorInterface, \Serializable
         foreach ($setterDefinitions as $setterDefinition) {
             try {
                 $injected[] = $this->bindMethod($setterDefinition);
-            } catch (OptionalInjectionNotBound $e) {
+            } catch (Exception\OptionalInjectionNotBound $e) {
             }
         }
         $setter = [];
@@ -813,7 +810,7 @@ class Injector implements InjectorInterface, \Serializable
         $typeHintBy = $param[Definition::PARAM_TYPEHINT_BY];
         if ($typeHintBy == []) {
             if ($param[Definition::OPTIONAL] === true) {
-                throw new OptionalInjectionNotBound($key);
+                throw new Exception\OptionalInjectionNotBound($key);
             }
             $name = $param[Definition::PARAM_NAME];
             $class = array_pop($this->classes);
@@ -826,24 +823,6 @@ class Injector implements InjectorInterface, \Serializable
         }
 
         return [AbstractModule::TO => [AbstractModule::TO_PROVIDER, $typeHintBy[1]]];
-    }
-
-    /**
-     * Return aop generated file path
-     *
-     * @return string
-     */
-    public function getAopClassDir()
-    {
-        return $this->compiler->classDir;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLogger()
-    {
-        return $this->logger;
     }
 
     public function serialize()
