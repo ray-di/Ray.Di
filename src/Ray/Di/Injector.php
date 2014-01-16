@@ -156,18 +156,6 @@ class Injector implements InjectorInterface, \Serializable
 
     /**
      * {@inheritdoc}
-     *
-     * @deprecated Use CacheInjector instead.
-     */
-    public function setCache(Cache $cache)
-    {
-        $this->cache = $cache;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
      */
     public function getModule()
     {
