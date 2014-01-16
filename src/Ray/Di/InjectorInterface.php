@@ -55,13 +55,6 @@ interface InjectorInterface extends InstanceInterface
     public function setCache(Cache $cache);
 
     /**
-     * Return PreDestroyObject container
-     *
-     * @return \SplObjectStorage
-     */
-    public function getPreDestroyObjects();
-
-    /**
      * Return injection logger
      *
      * @return LoggerInterface

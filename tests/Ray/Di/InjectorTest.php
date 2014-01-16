@@ -466,12 +466,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Ray\Di\Mock\MovieApp\Lister', $lister);
     }
 
-    public function testGetPreDestroyObjects()
-    {
-        $preDestroyObjects = $this->injector->getPreDestroyObjects();
-        $this->assertInstanceOf('SplObjectStorage', $preDestroyObjects);
-    }
-
     public function testGetLoggerForIterator()
     {
         $this->injector->setModule(new Modules\BasicModule);
@@ -517,4 +511,14 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         /** @var $instance \Ray\Di\Definition\InjectOnce */
         $this->assertSame(1, $instance->count);
     }
+
+    public function testSerialize()
+    {
+        $this->injector->setModule(new Modules\BasicModule);
+        $injector = unserialize(serialize($this->injector));
+        $instance = $injector->getInstance('Ray\Di\Definition\Basic');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
+    }
+
+
 }
