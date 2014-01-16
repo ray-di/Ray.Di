@@ -4,4 +4,3 @@ $loader = require dirname(dirname(dirname(__DIR__))) . '/vendor/autoload.php';
 /** @var $loader \Composer\Autoload\ClassLoader */
 $loader->add('', __DIR__);
 $loader->register();
-\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$loader, 'loadClass']);

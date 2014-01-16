@@ -132,7 +132,7 @@ class Injector implements InjectorInterface
         $this->config = $container->getForge()->getConfig();
         $this->module->activate($this);
 
-        AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di', __DIR__ . '/Di');
+        AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di', dirname(dirname(__DIR__)));
     }
 
     /**
