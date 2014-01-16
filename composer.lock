@@ -356,12 +356,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "0b55699a42994934c1021c6f7d2d0e95a93d21d6"
+                "reference": "859d9a6df146c580ff1e45a1871cba486000a79a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/0b55699a42994934c1021c6f7d2d0e95a93d21d6",
-                "reference": "0b55699a42994934c1021c6f7d2d0e95a93d21d6",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/859d9a6df146c580ff1e45a1871cba486000a79a",
+                "reference": "859d9a6df146c580ff1e45a1871cba486000a79a",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +395,7 @@
                 "aop",
                 "aspect"
             ],
-            "time": "2013-12-08 01:12:28"
+            "time": "2014-01-15 16:14:27"
         }
     ],
     "packages-dev": [
