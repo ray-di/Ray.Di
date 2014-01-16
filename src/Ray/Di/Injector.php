@@ -34,7 +34,7 @@ use Ray\Di\Di\Inject;
 /**
  * Dependency Injector.
  */
-class Injector implements InjectorInterface
+class Injector implements InjectorInterface, \Serializable
 {
     /**
      * Inject annotation with optional=false
@@ -135,6 +135,11 @@ class Injector implements InjectorInterface
         AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di', dirname(dirname(__DIR__)));
     }
 
+    public function __destruct()
+    {
+        $this->notifyPreShutdown();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -215,22 +220,6 @@ class Injector implements InjectorInterface
     public function getContainer()
     {
         return $this->container;
-    }
-
-    /**
-     * @return SplObjectStorage
-     */
-    public function getPreDestroyObjects()
-    {
-        return $this->preDestroyObjects;
-    }
-
-    /**
-     * Destructor
-     */
-    public function __destruct()
-    {
-        $this->notifyPreShutdown();
     }
 
     /**
@@ -857,5 +846,40 @@ class Injector implements InjectorInterface
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    public function serialize()
+    {
+        $data = serialize(
+            [
+                $this->container,
+                $this->module,
+                $this->bind,
+                $this->compiler,
+                $this->logger,
+                $this->preDestroyObjects,
+                $this->config
+            ]
+        );
+
+        return $data;
+    }
+
+    public function unserialize($data)
+    {
+        list(
+            $this->container,
+            $this->module,
+            $this->bind,
+            $this->compiler,
+            $this->logger,
+            $this->preDestroyObjects,
+            $this->config
+        ) = unserialize($data);
+
+        AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di', dirname(dirname(__DIR__)));
+        register_shutdown_function(function () {
+            $this->notifyPreShutdown();
+        });
     }
 }

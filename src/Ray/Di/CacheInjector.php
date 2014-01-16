@@ -69,17 +69,9 @@ class CacheInjector implements InstanceInterface
     public function getInstance($class)
     {
         $key = $this->namespace . $class;
-        list($instance, $preDestroy)= $this->cache->contains($key) ?
+        $instance= $this->cache->contains($key) ?
             $this->cachedInstance($class, $key) :
             $this->createInstance($class, $key);
-
-        register_shutdown_function (
-            function () use ($preDestroy) {
-                // @codeCoverageIgnoreStart
-                $this->notifyPreShutdown($preDestroy);
-            }
-            // @codeCoverageIgnoreEnd
-        );
 
         return $instance;
     }
@@ -96,9 +88,9 @@ class CacheInjector implements InstanceInterface
     {
         $classDir = $this->cache->fetch($key);
         $this->registerAopFileLoader($classDir);
-        list($instance, $preDestroy) = $this->cache->fetch("{$key}{$class}");
+        $instance = $this->cache->fetch("{$key}{$class}");
 
-        return [$instance, $preDestroy];
+        return $instance;
     }
 
     /**
@@ -121,13 +113,13 @@ class CacheInjector implements InstanceInterface
         /** @var $injector Injector */
         $this->removeAopFiles($aopFileDir);
         $instance = $injector->getInstance($class);
-        $preDestroy = $injector->getPreDestroyObjects();
         $this->cache->save($key, $aopFileDir);
-        $this->cache->save("{$key}{$class}", [$instance, $preDestroy]);
+        $this->cache->save("{$key}{$class}", $instance);
 
         // post injection
         call_user_func_array($this->initialization, [$instance, $injector]);
-        return [$instance, $preDestroy];
+
+        return $instance;
     }
 
     /**
@@ -158,24 +150,4 @@ class CacheInjector implements InstanceInterface
             unlink($file);
         }
     }
-
-    /**
-     * Notify pre-destroy
-     *
-     * @param SplObjectStorage $preDestroyObjects
-     *
-     * @return void
-     */
-    private function notifyPreShutdown(SplObjectStorage $preDestroyObjects)
-    {
-        // @codeCoverageIgnoreStart
-        $preDestroyObjects->rewind();
-        while ($preDestroyObjects->valid()) {
-            $object = $preDestroyObjects->current();
-            $method = $preDestroyObjects->getInfo();
-            $object->$method();
-            $preDestroyObjects->next();
-        }
-    }
-    // @codeCoverageIgnoreEnd
 }
