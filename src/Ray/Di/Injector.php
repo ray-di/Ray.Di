@@ -214,6 +214,13 @@ class Injector implements InjectorInterface, \Serializable
         $this->container = clone $this->container;
     }
 
+    public function __invoke(AbstractModule $module)
+    {
+        $this->module = $module;
+
+        return $this;
+    }
+
     /**
      * {@inheritdoc}
      */

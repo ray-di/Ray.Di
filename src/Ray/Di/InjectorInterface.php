@@ -16,7 +16,7 @@ interface InjectorInterface extends InstanceInterface
     /**
      * Return container
      *
-     * @return Container;
+     * @return Container
      */
     public function getContainer();
 
@@ -26,15 +26,6 @@ interface InjectorInterface extends InstanceInterface
      * @return AbstractModule
      */
     public function getModule();
-
-    /**
-     * Set module for module builtin injector
-     *
-     * @param AbstractModule $module
-     *
-     * @return self
-     */
-    public function setSelfInjectorModule(AbstractModule $module);
 
     /**
      * Set module
