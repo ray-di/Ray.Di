@@ -46,15 +46,6 @@ interface InjectorInterface extends InstanceInterface
     public function setModule(AbstractModule $module);
 
     /**
-     * Set cache adapter
-     *
-     * @param Cache $cache
-     *
-     * @return self
-     */
-    public function setCache(Cache $cache);
-
-    /**
      * Return injection logger
      *
      * @return LoggerInterface
