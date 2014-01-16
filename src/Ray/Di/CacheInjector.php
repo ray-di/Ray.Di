@@ -9,7 +9,6 @@ namespace Ray\Di;
 use Doctrine\Common\Cache\CacheProvider;
 use Ray\Aop\Compiler;
 use Ray\Di\Exception\NoInjectorReturn;
-use SplObjectStorage;
 
 /**
  * Injector with cache container.
