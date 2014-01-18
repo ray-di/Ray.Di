@@ -176,16 +176,6 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * {@inheritdoc}
      */
-    public function setSelfInjectorModule(AbstractModule $module)
-    {
-        $this->module = $module;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getContainer()
     {
         return $this->container;
@@ -851,7 +841,9 @@ class Injector implements InjectorInterface, \Serializable
 
         AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di', dirname(dirname(__DIR__)));
         register_shutdown_function(function () {
+            // @codeCoverageIgnoreStart
             $this->notifyPreShutdown();
+            // @codeCoverageIgnoreEnd
         });
     }
 }
