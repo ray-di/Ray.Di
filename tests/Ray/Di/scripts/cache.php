@@ -21,9 +21,7 @@ $injector = function () {
         new Bind,
         new Compiler(
             __DIR__ . '/aop_files',
-            new PHPParser_PrettyPrinter_Default,
-            new PHPParser_Parser(new PHPParser_Lexer),
-            new PHPParser_BuilderFactory
+            new PHPParser_PrettyPrinter_Default
         )
     );
 };
