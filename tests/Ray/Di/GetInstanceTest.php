@@ -90,6 +90,26 @@ class GetInstanceTest extends \PHPUnit_Framework_TestCase
         return $consumer->db1;
     }
 
+    public function testSerializedObjectSingleton()
+    {
+        $injector = Injector::create([new Modules\SingletonProviderForClassModule()]);
+        $instance = $injector->getInstance('Ray\Di\Mock\RndDbConsumer');
+        $consumer = unserialize(serialize($instance));
+        $a = spl_object_hash($consumer->db1);
+        $b = spl_object_hash($consumer->db2);
+        $this->assertSame($a, $b);
+    }
+
+    public function testSerializedInjectorSingleton()
+    {
+        $injector = unserialize(serialize(Injector::create([new Modules\SingletonProviderForClassModule()])));
+        $instance = $injector->getInstance('Ray\Di\Mock\RndDbConsumer');
+        $consumer = unserialize(serialize($instance));
+        $a = spl_object_hash($consumer->db1);
+        $b = spl_object_hash($consumer->db2);
+        $this->assertSame($a, $b);
+    }
+
     /**
      * @depends testConsumerAskSingletonByClass
      *
