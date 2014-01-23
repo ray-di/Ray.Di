@@ -20,7 +20,7 @@ $injector = function () {
         new Modules\AopModule,
         new Bind,
         new Compiler(
-            __DIR__ . '/aop_files',
+            $GLOBALS['TMP_DIR'],
             new PHPParser_PrettyPrinter_Default
         )
     );
