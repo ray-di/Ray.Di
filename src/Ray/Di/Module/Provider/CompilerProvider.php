@@ -8,16 +8,28 @@ namespace Ray\Di\Module\Provider;
 
 use Ray\Aop\Compiler;
 use PHPParser_PrettyPrinter_Default;
-use PHPParser_Parser;
-use PHPParser_Lexer;
-use PHPParser_BuilderFactory;
 use Ray\Di\ProviderInterface;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
 
 /**
- * Compiler provider for InjectorModule.
+ * Compiler provider for InjectorModule
  */
 class CompilerProvider implements ProviderInterface
 {
+    /**
+     * @var string
+     *
+     * @Inject
+     * @Named("aop_dir")
+     */
+    private $aopDir;
+
+    public function __construct($aopDir = null)
+    {
+        $this->aopDir ? $aopDir : sys_get_temp_dir();
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -26,7 +38,7 @@ class CompilerProvider implements ProviderInterface
     public function get()
     {
         return new Compiler(
-            sys_get_temp_dir(),
+            $this->aopDir,
             new PHPParser_PrettyPrinter_Default
         );
     }
