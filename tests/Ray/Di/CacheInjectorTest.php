@@ -21,7 +21,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
         $injector = function () {return Injector::create([new Modules\BasicModule]);};
         $initialization = function() { $this->flag = true; };
-        $this->injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['RAY_TMP']));
+        $this->injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($GLOBALS['TMP_DIR']));
     }
 
     public function testNew()
@@ -51,7 +51,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = function () {return Injector::create([new Modules\InstanceModule]);};
         $initialization = function() {};
-        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['RAY_TMP']));
+        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($GLOBALS['TMP_DIR']));
 
         $instance = $injector->getInstance('Ray\Di\Definition\Instance');
         $this->assertSame('PC6001', $instance->userId);
@@ -61,7 +61,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = function () {return Injector::create([new Modules\AopModule]);};
         $initialization = function() {};
-        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['RAY_TMP']));
+        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($GLOBALS['TMP_DIR']));
         $instance = $injector->getInstance('Ray\Di\Aop\RealBillingService');
         /* @var $instance \Ray\Di\Aop\RealBillingService */
         list($amount, ) = $instance->chargeOrder();

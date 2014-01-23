@@ -36,7 +36,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));
-        $this->injector = new Injector($this->container, new EmptyModule, new Bind, new Compiler($_ENV['RAY_TMP'], new PHPParser_PrettyPrinter_Default), new Logger);
+        $this->injector = new Injector($this->container, new EmptyModule, new Bind, new Compiler($GLOBALS['TMP_DIR'], new PHPParser_PrettyPrinter_Default), new Logger);
     }
 
     protected function tearDown()
@@ -268,7 +268,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testProviderIsNotExists()
     {
-        $this->injector = new Injector($this->container, new Modules\ProvideNotExistsModule, new Bind, new Compiler($_ENV['RAY_TMP'], new PHPParser_PrettyPrinter_Default), new Logger);
+        $this->injector = new Injector($this->container, new Modules\ProvideNotExistsModule, new Bind, new Compiler($GLOBALS['TMP_DIR'], new PHPParser_PrettyPrinter_Default), new Logger);
 
     }
 
