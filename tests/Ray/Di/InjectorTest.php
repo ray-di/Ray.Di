@@ -116,13 +116,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->userDb);
     }
 
-    public function testAnnotatedWithAndUnannotated()
-    {
-        $this->injector->setModule(new Modules\AnnotateModule);
-        $instance = $this->injector->getInstance('Ray\Di\Definition\MockNamed');
-        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->userDb);
-    }
-
     public function testMultiInject()
     {
         $this->injector->setModule(new Modules\MultiModule);
