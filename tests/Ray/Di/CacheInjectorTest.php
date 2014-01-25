@@ -1,13 +1,17 @@
 <?php
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Ray\Aop\Bind;
+use Ray\Aop\Compiler;
+use PHPParser_PrettyPrinter_Default;
 
 class CacheInjectorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Injector
+     * @var CacheInjector
      */
     protected $injector;
 
@@ -19,9 +23,9 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $injector = function () {return Injector::create([new Modules\BasicModule]);};
+        $this->injector = function () {return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), new Modules\BasicModule, new Bind, new Compiler($GLOBALS['TMP_DIR'], new PHPParser_PrettyPrinter_Default));};
         $initialization = function() { $this->flag = true; };
-        $this->injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['RAY_TMP']));
+        $this->injector = new CacheInjector($this->injector, $initialization, 'test', new FilesystemCache($GLOBALS['TMP_DIR']));
     }
 
     public function testNew()
@@ -51,7 +55,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = function () {return Injector::create([new Modules\InstanceModule]);};
         $initialization = function() {};
-        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['RAY_TMP']));
+        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($GLOBALS['TMP_DIR']));
 
         $instance = $injector->getInstance('Ray\Di\Definition\Instance');
         $this->assertSame('PC6001', $instance->userId);
@@ -61,7 +65,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = function () {return Injector::create([new Modules\AopModule]);};
         $initialization = function() {};
-        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['RAY_TMP']));
+        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($GLOBALS['TMP_DIR']));
         $instance = $injector->getInstance('Ray\Di\Aop\RealBillingService');
         /* @var $instance \Ray\Di\Aop\RealBillingService */
         list($amount, ) = $instance->chargeOrder();
@@ -102,6 +106,18 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
         $instance = unserialize($serialized);
 
         $this->assertInstanceOf('Ray\Aop\WeavedInterface', $instance);
+        return $instance;
+    }
+
+    public function testCachedAopInjectClassAopFilesAreDeleted()
+    {
+        $serialized = require __DIR__ . '/scripts/cache.php';
+        foreach (glob(__DIR__ . '/scripts/aop_files/*.php') as $file) {
+            unlink($file);
+        }
+        $instance = unserialize($serialized);
+        $this->assertInstanceOf('Ray\Aop\WeavedInterface', $instance);
+        $this->assertInstanceOf('Ray\Aop\WeavedInterface', unserialize(require __DIR__ . '/scripts/cache.php'));
         return $instance;
     }
 
