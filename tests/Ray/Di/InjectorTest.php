@@ -91,6 +91,13 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
     }
 
+    public function testToStringProvider()
+    {
+        $this->injector->setModule(new Modules\StringProviderModule);
+        $instance = $this->injector->getInstance('Ray\Di\Definition\MockScalar');
+        $this->assertSame('provided string', $instance->injected);
+    }
+
     public function testToClosure()
     {
         $this->injector->setModule(new Modules\ClosureModule);
