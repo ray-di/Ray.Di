@@ -504,5 +504,14 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
     }
 
+    public function testInjectConstructorUsingProvider()
+    {
+        $this->injector->setModule(new Modules\ConstructorModule);
+        $instance = $this->injector->getInstance('Ray\Di\Mock\ConcreteClass3RequiresConcreteClass2');
+
+        $this->assertInstanceOf('\Ray\Di\Mock\ConcreteClassWithoutConstructor', $instance->object->object);
+
+
+    }
 
 }
