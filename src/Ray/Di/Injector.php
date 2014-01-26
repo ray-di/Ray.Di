@@ -702,9 +702,16 @@ class Injector implements InjectorInterface, \Serializable
         list($bindingToType, $target) = $binding[AbstractModule::TO];
 
         $bound = $this->instanceBound($param, $bindingToType, $target, $binding);
-        if (! $bound) {
-            $this->typeBound($param, $typeHint, $bindingToType, $target);
+        if ($bound) {
+            return;
         }
+
+        if ($typeHint === '') {
+            $param = $this->getInstanceWithContainer(Scope::PROTOTYPE, $bindingToType, $target);
+            return;
+        }
+
+        $this->typeBound($param, $typeHint, $bindingToType, $target);
     }
 
     /**
