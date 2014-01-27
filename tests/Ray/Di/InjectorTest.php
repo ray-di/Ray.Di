@@ -408,7 +408,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Ray\Di\Exception\NotInstantiable
+     * @expectedException \Ray\Di\Exception\NotBound
      */
     public function testNotInstantiableException()
     {
@@ -515,3 +515,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     }
 
 }
+
+// AbstractClassWithConstructor
+
+
+// string(48) "Ray\Di\Mock\ConcreteClass3RequiresConcreteClass2"
+// string(39) "Ray\Di\Mock\ConcreteClass2NoConstructor"
+// string(40) "Ray\Di\Mock\AbstractClassWithConstructor"
+// ->ConcreteClassWithoutConstructorProvider

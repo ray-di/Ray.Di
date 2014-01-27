@@ -241,10 +241,6 @@ class Injector implements InjectorInterface, \Serializable
             return $this->getInstance($class);
         }
 
-        if (!($refClass->isInstantiable())) {
-            throw new Exception\NotInstantiable($class);
-        }
-
         // weave aspect
         $module = $this->module;
         $bind = $module($class, new $this->bind);
@@ -365,7 +361,7 @@ class Injector implements InjectorInterface, \Serializable
 
         list($config, $setter, $definition) = $this->config->fetch($class);
         $interfaceClass = $isSingleton = false;
-        if ($isInterface) {
+        if ($isInterface || $refClass->isAbstract()) {
             $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
             if (is_object($bound)) {
                 return $bound;
