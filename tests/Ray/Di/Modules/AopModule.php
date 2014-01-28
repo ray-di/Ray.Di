@@ -3,9 +3,7 @@
 namespace Ray\Di\Modules;
 
 use Ray\Di\Aop\TaxCharger;
-
 use Ray\Di\AbstractModule;
-use Ray\Aop\Matcher;
 
 class AopModule extends AbstractModule
 {

@@ -7,7 +7,7 @@ use Ray\Di\ProviderInterface;
 class StringProvider implements ProviderInterface
 {
     /**
-     * @return string 
+     * @return string
      */
     public function get()
     {

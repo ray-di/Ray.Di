@@ -1,7 +1,7 @@
 <?php
+
 namespace Ray\Di;
 
-use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\Mock\RndDb;
 
 /**

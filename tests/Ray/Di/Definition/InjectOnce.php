@@ -3,7 +3,6 @@
 namespace Ray\Di\Definition;
 
 use Ray\Di\Mock\DbInterface;
-use Ray\Di\Mock\UserDb;
 use Ray\Di\Di\Inject;
 
 class InjectOnce implements BasicInterface

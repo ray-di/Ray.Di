@@ -1,4 +1,5 @@
 <?php
+
 namespace Ray\Di;
 
 class MockChildClass extends MockParentClass

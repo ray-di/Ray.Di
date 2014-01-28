@@ -1,12 +1,10 @@
 <?php
+
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ray\Di\Scope;
 
-/**
- * Test class for Config.
- */
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -159,18 +157,18 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMethodReflect()
     {
-        $methodReflcet = $this->config->getMethodReflect('Ray\Di\Definition\MockDefinitionClass', 'setDouble');
-        $this->assertInstanceOf('\ReflectionMethod', $methodReflcet);
-        $this->assertSame('setDouble', $methodReflcet->name);
-        $this->assertSame('Ray\Di\Definition\MockDefinitionClass', $methodReflcet->class);
+        $methodReflect = $this->config->getMethodReflect('Ray\Di\Definition\MockDefinitionClass', 'setDouble');
+        $this->assertInstanceOf('\ReflectionMethod', $methodReflect);
+        $this->assertSame('setDouble', $methodReflect->name);
+        $this->assertSame('Ray\Di\Definition\MockDefinitionClass', $methodReflect->class);
     }
 
     public function testGetMethodReflectObject()
     {
-        $methodReflcet = $this->config->getMethodReflect(new Definition\MockDefinitionClass(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))), 2), 'setDouble');
-        $this->assertInstanceOf('\ReflectionMethod', $methodReflcet);
-        $this->assertSame('setDouble', $methodReflcet->name);
-        $this->assertSame('Ray\Di\Definition\MockDefinitionClass', $methodReflcet->class);
+        $methodReflect = $this->config->getMethodReflect(new Definition\MockDefinitionClass(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))), 2), 'setDouble');
+        $this->assertInstanceOf('\ReflectionMethod', $methodReflect);
+        $this->assertSame('setDouble', $methodReflect->name);
+        $this->assertSame('Ray\Di\Definition\MockDefinitionClass', $methodReflect->class);
     }
 
     public function testEnableSerialize()

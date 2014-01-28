@@ -1,6 +1,7 @@
 <?php
+
 namespace Ray\Di\Mock;
 
-class ConcreteClassWithoutConstructor extends AbstractClassWithConstructor {
-
-} 
+class ConcreteClassWithoutConstructor extends AbstractClassWithConstructor
+{
+}

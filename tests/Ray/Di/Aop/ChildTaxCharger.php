@@ -4,5 +4,5 @@ namespace Ray\Di\Aop;
 
 class ChildTaxCharger extends TaxCharger
 {
-    const defaultTaxRate = 0.08;
+    const DEFAULT_TAX_RATE = 0.08;
 }

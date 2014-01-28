@@ -2,9 +2,6 @@
 
 namespace Ray\Di;
 
-/**
- * Test class for Annotation.
- */
 class DocSampleZf2Test extends \PHPUnit_Framework_TestCase
 {
     private $systemRoot;

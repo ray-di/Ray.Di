@@ -13,9 +13,9 @@ class Basic implements BasicInterface
     public $db;
 
     /**
-     * @Inject
-     *
      * @param DbInterface $db
+     *
+     * @Inject
      */
     public function setDb(DbInterface $db)
     {

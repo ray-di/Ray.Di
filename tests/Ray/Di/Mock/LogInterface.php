@@ -6,7 +6,6 @@ use Ray\Di\Di\ImplementedBy;
 
 /**
  * @ImplementedBy("Ray\Di\Mock\Log")
- *
  */
 interface LogInterface
 {

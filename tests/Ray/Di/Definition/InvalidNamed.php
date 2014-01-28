@@ -3,7 +3,6 @@
 namespace Ray\Di\Definition;
 
 use Ray\Di\Mock\DbInterface;
-
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 

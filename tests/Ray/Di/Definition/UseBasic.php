@@ -7,7 +7,6 @@ use Ray\Di\Di\Inject;
 
 /**
  * Setter Injection
- *
  */
 class UseBasic implements BasicInterface
 {

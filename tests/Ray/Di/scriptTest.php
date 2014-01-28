@@ -1,4 +1,5 @@
 <?php
+
 namespace Ray\Di;
 
 class scriptTest extends \PHPUnit_Framework_TestCase

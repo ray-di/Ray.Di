@@ -1,11 +1,9 @@
 <?php
+
 namespace Ray\Di;
 
 use Ray\Aop\Bind;
 
-/**
- * Test class for LeadingBackSlashModule.
- */
 class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -17,10 +15,6 @@ class LeadingBackSlashModuleTest extends \PHPUnit_Framework_TestCase
 
     const NAME = 'user_db';
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
     protected function setUp()
     {
         parent::setUp();

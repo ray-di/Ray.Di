@@ -1,4 +1,5 @@
 <?php
+
 namespace Ray\Di\Mock\MovieApp;
 
 class Lister

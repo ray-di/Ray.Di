@@ -4,9 +4,6 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 
-/**
- * Test class for Annotation.
- */
 class AnnotationTest extends \PHPUnit_Framework_TestCase
 {
     /**

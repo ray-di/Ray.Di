@@ -7,7 +7,6 @@ use Ray\Di\Di\Inject;
 
 /**
  * Constructor Injection
- *
  */
 class ConstructWoAnnotation
 {

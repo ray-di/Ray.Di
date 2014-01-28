@@ -1,11 +1,12 @@
 <?php
+
 namespace Ray\Di\Mock;
 
-abstract class AbstractClassWithConstructor {
-
+abstract class AbstractClassWithConstructor
+{
     private $config;
 
-    public function __construct( $config )
+    public function __construct($config)
     {
         $this->config = $config;
     }
@@ -14,4 +15,4 @@ abstract class AbstractClassWithConstructor {
     {
         return $this->config;
     }
-} 
+}

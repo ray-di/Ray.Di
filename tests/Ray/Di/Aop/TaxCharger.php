@@ -7,7 +7,7 @@ use Ray\Aop\MethodInvocation;
 
 class TaxCharger implements MethodInterceptor
 {
-    const defaultTaxRate = 0.05;
+    const DEFAULT_TAX_RATE = 0.05;
 
     public function invoke(MethodInvocation $invocation)
     {
@@ -15,7 +15,7 @@ class TaxCharger implements MethodInterceptor
         // deprecated method
         /** @noinspection PhpUndefinedMethodInspection */
         $annotation = $invocation->getAnnotation();
-        $tax = $annotation ? $annotation->value : self::defaultTaxRate;
+        $tax = $annotation ? $annotation->value : self::DEFAULT_TAX_RATE;
         $amount *= (1 + $tax);
 
         return [$amount, $unit];
