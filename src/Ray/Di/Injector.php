@@ -24,14 +24,11 @@ use ReflectionMethod;
 use SplObjectStorage;
 use ArrayObject;
 use PHPParser_PrettyPrinter_Default;
-use PHPParser_Parser;
-use PHPParser_Lexer;
-use PHPParser_BuilderFactory;
 use Serializable;
 use Ray\Di\Di\Inject;
 
 /**
- * Dependency Injector.
+ * Dependency Injector
  */
 class Injector implements InjectorInterface, \Serializable
 {
@@ -71,16 +68,9 @@ class Injector implements InjectorInterface, \Serializable
     private $logger;
 
     /**
-     * Cache adapter
-     *
-     * @var Cache
-     */
-    private $cache;
-
-    /**
      * Compiler(Aspect Weaver)
      *
-     * @var \Ray\Aop\Compiler
+     * @var Compiler
      */
     private $compiler;
 
@@ -249,7 +239,8 @@ class Injector implements InjectorInterface, \Serializable
         $object = $bind->hasBinding() ?
             $this->compiler->newInstance($class, $params, $bind) : $this->newInstance($class, $params) ;
 
-        unset( $setter['__construct'] ); //Do not call constructor twice. Ever.
+        // do not call constructor twice. ever.
+        unset($setter['__construct']);
 
         // call setter methods
         $this->setterMethod($setter, $object);
@@ -349,26 +340,17 @@ class Injector implements InjectorInterface, \Serializable
     private function getBound($class)
     {
         $class = $this->removeLeadingBackSlash($class);
-
-        // is interface ?
-        try {
-            $refClass = new ReflectionClass($class);
-            $isInterface = $refClass->isInterface();
-            $isInstantiable = $refClass->isInstantiable();
-        } catch (ReflectionException $e) {
-            throw new Exception\NotReadable($class);
-        }
-
+        $isAbstract = $this->isAbstract($class);
         list($config, $setter, $definition) = $this->config->fetch($class);
         $interfaceClass = $isSingleton = false;
-        if ($isInterface || $refClass->isAbstract()) {
+        if ($isAbstract) {
             $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
             if (is_object($bound)) {
                 return $bound;
             }
             list($class, $isSingleton, $interfaceClass) = $bound;
             list($config, $setter, $definition) = $this->config->fetch($class);
-        } elseif ($isInstantiable) {
+        } elseif (! $isAbstract) {
             try {
                 $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
                 if (is_object($bound)) {
@@ -387,6 +369,26 @@ class Injector implements InjectorInterface, \Serializable
         return [$class, $isSingleton, $interfaceClass, $config, $setter, $definition];
     }
 
+    /**
+     * return isAbstract ?
+     *
+     * @param $class
+     *
+     * @return bool
+     * @throws Exception\NotReadable
+     */
+    private function isAbstract($class)
+    {
+        try {
+            $refClass = new ReflectionClass($class);
+            $isAbstract = $refClass->isInterface() || $refClass->isAbstract();
+        } catch (ReflectionException $e) {
+            throw new Exception\NotReadable($class);
+        }
+
+        return $isAbstract;
+
+    }
     /**
      * Remove leading back slash
      *
@@ -558,7 +560,6 @@ class Injector implements InjectorInterface, \Serializable
     private function bindMethod(array $setterDefinition)
     {
         list($method, $settings) = each($setterDefinition);
-
         array_walk($settings, [$this, 'bindOneParameter']);
 
         return [$method, $settings];
@@ -797,20 +798,34 @@ class Injector implements InjectorInterface, \Serializable
     {
         $typeHintBy = $param[Definition::PARAM_TYPEHINT_BY];
         if ($typeHintBy == []) {
-            if ($param[Definition::OPTIONAL] === true) {
-                throw new Exception\OptionalInjectionNotBound($key);
-            }
-            $name = $param[Definition::PARAM_NAME];
-            $class = array_pop($this->classes);
-            $msg = "typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$class}'";
-            $e = (new Exception\NotBound($msg))->setModule($this->module);
-            throw $e;
+            $this->raiseNotBoundException($param, $key, $typeHint, $annotate);
         }
         if ($typeHintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
             return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typeHintBy[1]]];
         }
 
         return [AbstractModule::TO => [AbstractModule::TO_PROVIDER, $typeHintBy[1]]];
+    }
+
+    /**
+     * @param $param
+     * @param $key
+     * @param $typeHint
+     * @param $annotate
+     *
+     * @throws Exception\OptionalInjectionNotBound
+     * @throws Exception\NotBound
+     */
+    private function raiseNotBoundException($param, $key, $typeHint, $annotate)
+    {
+        if ($param[Definition::OPTIONAL] === true) {
+            throw new Exception\OptionalInjectionNotBound($key);
+        }
+        $name = $param[Definition::PARAM_NAME];
+        $class = array_pop($this->classes);
+        $msg = "typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$class}'";
+        $e = (new Exception\NotBound($msg))->setModule($this->module);
+        throw $e;
     }
 
     public function serialize()
