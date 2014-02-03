@@ -85,7 +85,7 @@ It implements the Provider interface to define what's returned with complete typ
 
 ```php
 
-use Ray\Di\Inject;
+use Ray\Di\Di\Inject;
 
 class DatabaseTransactionLogProvider implements Provider
 {
@@ -119,8 +119,8 @@ $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvid
 Ray comes with a built-in binding annotation `@Named` that takes a string.
 
 ```php
-use Ray\Di\Inject;
-use Ray\Di\Named;
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
 
 /**
  *  @Inject
@@ -191,7 +191,8 @@ protected function configure()
 `@PostConstruct` is used on methods that need to get executed after dependency injection has finalized to perform any extra initialization.
 
 ```php
-use Ray\Di\PostConstruct;
+
+use Ray\Di\Di\PostConstruct;
 
 /**
  * @PostConstruct
@@ -206,7 +207,8 @@ public function onInit()
 This method is registered by using **register_shutdown_function**.
 
 ```php
-use Ray\Di\PreDestroy;
+
+use Ray\Di\Di\PreDestroy;
 
 /**
  * @PreDestroy
