@@ -20,8 +20,9 @@ Getting Stated
 Here is a basic example of dependency injection using Ray.Di.
 
 ```php
-use Ray\Di\Injector;
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Inject;
+use Ray\Di\Injector;
 
 interface FinderInterface
 {
@@ -83,6 +84,9 @@ Our provider implementation class has dependencies of its own, which it receives
 It implements the Provider interface to define what's returned with complete type safety:
 
 ```php
+
+use Ray\Di\Inject;
+
 class DatabaseTransactionLogProvider implements Provider
 {
     private ConnectionInterface connection;
@@ -115,6 +119,9 @@ $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvid
 Ray comes with a built-in binding annotation `@Named` that takes a string.
 
 ```php
+use Ray\Di\Inject;
+use Ray\Di\Named;
+
 /**
  *  @Inject
  *  @Named("processor=Checkout")
@@ -184,6 +191,8 @@ protected function configure()
 `@PostConstruct` is used on methods that need to get executed after dependency injection has finalized to perform any extra initialization.
 
 ```php
+use Ray\Di\PostConstruct;
+
 /**
  * @PostConstruct
  */
@@ -197,6 +206,8 @@ public function onInit()
 This method is registered by using **register_shutdown_function**.
 
 ```php
+use Ray\Di\PreDestroy;
+
 /**
  * @PreDestroy
  */
