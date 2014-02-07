@@ -178,6 +178,7 @@ protected function configure()
 ## Scopes
 
 By default, Ray returns a new instance each time it supplies a value. This behaviour is configurable via scopes.
+You can also configure scopes with the `@Scope` annotation.
 
 ```php
 protected function configure()
@@ -451,8 +452,8 @@ Annotation Caching
 ------------------
 
 If working with large legacy codebases it might not be feasible to cache entire class instances as the CacheInjector
-does. You can still achieve speed improvements by caching the annotations of each class by passing an object implementing
-`Doctrine\Common\Cache` as the second argument to `Injector::create`
+does. You can still achieve speed improvements by caching the annotations of each class if you pass an object
+implementing `Doctrine\Common\Cache` as the second argument to `Injector::create`
 
 Requirements
 ------------
