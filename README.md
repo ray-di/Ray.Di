@@ -89,17 +89,17 @@ use Ray\Di\Di\Inject;
 
 class DatabaseTransactionLogProvider implements Provider
 {
-    private ConnectionInterface connection;
+    private $connection;
 
     /**
      * @Inject
      */
-    public DatabaseTransactionLogProvider(ConnectionInterface $connection)
+    public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection;
     }
 
-    public TransactionLog get()
+    public function get()
     {
         $transactionLog = new DatabaseTransactionLog;
         $transactionLog->setConnection($this->connection);
@@ -406,7 +406,7 @@ $app = $injector->getInsntance('ApplicationInterface');
 $app->run();
 ```
 
-Cachealbe class example
+Cacheable class example
 -----------------------
 
 ```php
@@ -446,6 +446,13 @@ class UserRepository
     }
 }
 ```
+
+Annotation Caching
+------------------
+
+If working with large legacy codebases it might not be feasible to cache entire class instances as the CacheInjector
+does. You can still achieve speed improvements by caching the annotations of each class by passing an object implementing
+`Doctrine\Common\Cache` as the second argument to `Injector::create`
 
 Requirements
 ------------
