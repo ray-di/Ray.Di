@@ -560,10 +560,42 @@ class Injector implements InjectorInterface, \Serializable
     private function bindMethod(array $setterDefinition)
     {
         list($method, $settings) = each($setterDefinition);
-        array_walk($settings, [$this, 'bindOneParameter']);
+        // Set one parameter with definition, or JIT binding.
+        array_walk(
+            $settings,
+            function (array &$param, $key)
+            {
+                $annotate = $param[Definition::PARAM_ANNOTATE];
+                $typeHint = $param[Definition::PARAM_TYPEHINT];
+                $hasTypeHint = isset($this->module[$typeHint]) && isset($this->module[$typeHint][$annotate]) && ($this->module[$typeHint][$annotate] !== []);
+                $binding = $hasTypeHint ? $this->module[$typeHint][$annotate] : false;
+                $isNotBinding = $binding === false || isset($binding[AbstractModule::TO]) === false;
+                if ($isNotBinding && array_key_exists(Definition::DEFAULT_VAL, $param)) {
+                    // default value
+                    $param = $param[Definition::DEFAULT_VAL];
+                    return;
+                }
+                if ($isNotBinding) {
+                    // default binding by @ImplementedBy or @ProviderBy
+                    $binding = $this->jitBinding($param, $typeHint, $annotate, $key);
+                }
+                list($bindingToType, $target) = $binding[AbstractModule::TO];
 
+                list($param, $bound) = $this->instanceBound($param, $bindingToType, $target, $binding);
+                if ($bound) {
+                    return;
+                }
+
+                if ($typeHint === '') {
+                    $param = $this->getInstanceWithContainer(Scope::PROTOTYPE, $bindingToType, $target);
+                    return;
+                }
+
+                $param = $this->typeBound($param, $typeHint, $bindingToType, $target);
+            }
+        );
         return [$method, $settings];
-    }
+        }
 
     /**
      * Return parameter using TO_CONSTRUCTOR
@@ -670,47 +702,6 @@ class Injector implements InjectorInterface, \Serializable
     public function __toString()
     {
         return (string)($this->module);
-    }
-
-    /**
-     * Set one parameter with definition, or JIT binding.
-     *
-     * @param array  &$param
-     * @param string $key
-     *
-     * @return void
-     * @throws Exception\OptionalInjectionNotBound
-     * @SuppressWarnings(PHPMD)
-     */
-    private function bindOneParameter(array &$param, $key)
-    {
-        $annotate = $param[Definition::PARAM_ANNOTATE];
-        $typeHint = $param[Definition::PARAM_TYPEHINT];
-        $hasTypeHint = isset($this->module[$typeHint]) && isset($this->module[$typeHint][$annotate]) && ($this->module[$typeHint][$annotate] !== []);
-        $binding = $hasTypeHint ? $this->module[$typeHint][$annotate] : false;
-        $isNotBinding = $binding === false || isset($binding[AbstractModule::TO]) === false;
-        if ($isNotBinding && array_key_exists(Definition::DEFAULT_VAL, $param)) {
-            // default value
-            $param = $param[Definition::DEFAULT_VAL];
-            return;
-        }
-        if ($isNotBinding) {
-            // default binding by @ImplementedBy or @ProviderBy
-            $binding = $this->jitBinding($param, $typeHint, $annotate, $key);
-        }
-        list($bindingToType, $target) = $binding[AbstractModule::TO];
-
-        list($param, $bound) = $this->instanceBound($param, $bindingToType, $target, $binding);
-        if ($bound) {
-            return;
-        }
-
-        if ($typeHint === '') {
-            $param = $this->getInstanceWithContainer(Scope::PROTOTYPE, $bindingToType, $target);
-            return;
-        }
-
-        $param = $this->typeBound($param, $typeHint, $bindingToType, $target);
     }
 
     /**
