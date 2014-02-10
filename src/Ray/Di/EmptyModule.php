@@ -6,18 +6,8 @@
  */
 namespace Ray\Di;
 
-/**
- * Empty Module.
- */
 class EmptyModule extends AbstractModule
 {
-    public function __construct()
-    {
-        $this->bindings = new \ArrayObject;
-        $this->container = new \ArrayObject;
-        $this->configure();
-    }
-
     /**
      * {@inheritdoc}
      */
