@@ -215,7 +215,7 @@ class Annotation implements AnnotationInterface
         }
         $named = ($nameParameter !== false) ? $this->getNamed($nameParameter) : [];
         $parameters = $method->getParameters();
-        $paramInfo[$method->name] = $this->getParamInfo($methodAnnotation, $parameters, $named);
+        $paramInfo = [$method->name => $this->getParamInfo($methodAnnotation, $parameters, $named)];
         $this->definition[Definition::INJECT][Definition::INJECT_SETTER][] = $paramInfo;
     }
 
