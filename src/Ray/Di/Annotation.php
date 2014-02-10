@@ -106,7 +106,7 @@ class Annotation implements AnnotationInterface
         $result = [];
         foreach ($annotations as $annotation) {
             $annotationName = $this->getAnnotationName($annotation);
-            $value = isset($annotation->value) ? $annotation->value : null;
+            $value = property_exists($annotation, 'value') ? $annotation->value : null;
             $result[$annotationName] = $value;
         }
 
