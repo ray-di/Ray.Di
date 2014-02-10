@@ -450,7 +450,7 @@ class Injector implements InjectorInterface, \Serializable
      *
      * @param string $class
      * @param array  $definition
-     * @param mixed  $bindings
+     * @param ArrayObject  $bindings
      *
      * @return array [$isSingleton, $interfaceClass]
      */
@@ -467,7 +467,7 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Throw exception if not bound
      *
-     * @param mixed  $bindings
+     * @param ArrayObject  $bindings
      * @param string $class
      *
      * @throws Exception\NotBound
@@ -831,7 +831,7 @@ class Injector implements InjectorInterface, \Serializable
 
     /**
      * @param $param
-     * @param $key
+     * @param string $key
      * @param string $typeHint
      * @param string $annotate
      *

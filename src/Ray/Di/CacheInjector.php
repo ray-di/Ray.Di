@@ -97,8 +97,8 @@ class CacheInjector implements InstanceInterface
     /**
      * Return injected instance and $preDestroy
      *
-     * @param $class
-     * @param $key
+     * @param string $class
+     * @param string $key
      *
      * @return array
      * @throws Exception\NoInjectorReturn
