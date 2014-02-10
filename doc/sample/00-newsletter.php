@@ -1,5 +1,4 @@
 <?php
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\AbstractModule;

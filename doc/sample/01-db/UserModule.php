@@ -1,7 +1,6 @@
 <?php
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Scope;
 
 class UserModule extends AbstractModule
 {

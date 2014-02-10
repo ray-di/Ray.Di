@@ -7,7 +7,6 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Ray\Aop\Compiler;
 use Ray\Di\Exception\NoInjectorReturn;
 
 /**
@@ -78,8 +77,8 @@ class CacheInjector implements InstanceInterface
     /**
      * Return cached injected instance
      *
-     * @param $class
-     * @param $key
+     * @param string $class
+     * @param string $key
      *
      * @return array
      */
@@ -144,7 +143,7 @@ class CacheInjector implements InstanceInterface
     /**
      * Clear generated aop files
      *
-     * @param $dir
+     * @param string $dir
      */
     private function removeAopFiles($dir)
     {

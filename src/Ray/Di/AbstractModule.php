@@ -498,7 +498,7 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * Keep only bindings and pointcuts.
      *
-     * @return array
+     * @return string[]
      */
     public function __sleep()
     {
