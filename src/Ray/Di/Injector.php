@@ -57,7 +57,7 @@ class Injector implements InjectorInterface, \Serializable
      * @var BindInterface
      */
     protected $bind;
-    
+
     /**
      * Pre-destroy objects
      *
@@ -191,7 +191,11 @@ class Injector implements InjectorInterface, \Serializable
      */
     public function getAopClassDir()
     {
-        return $this->compiler->classDir;
+        if (property_exists($this->compiler, 'classDir')) {
+            return $this->compiler->classDir;
+        }
+
+        return null;
     }
 
     public function __clone()

@@ -7,9 +7,21 @@ use Doctrine\Common\Cache\ArrayCache;
 use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
+use Ray\Aop\CompilerInterface;
 use Ray\Di\Modules\InstanceInstallModule;
 use Ray\Di\Modules\InstanceModule;
 use Ray\Di\Modules\NoAnnotationBindingModule;
+
+class MockCompiler implements CompilerInterface
+{
+    public function compile($class, Bind $bind)
+    {
+    }
+
+    public function newInstance($class, array $args, Bind $bind)
+    {
+    }
+}
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -495,5 +507,13 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $instance = $this->injector->getInstance('Ray\Di\Mock\ConcreteClass3RequiresConcreteClass2');
 
         $this->assertInstanceOf('\Ray\Di\Mock\ConcreteClassWithoutConstructor', $instance->object->object);
+    }
+
+    public function testGetAopClassDir()
+    {
+        $container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));
+        $injector = new Injector($container, new EmptyModule, new Bind, new MockCompiler($GLOBALS['TMP_DIR'], new PHPParser_PrettyPrinter_Default), new Logger);
+        $aopDir = $injector->getAopClassDir();
+        $this->assertNull($aopDir);
     }
 }
