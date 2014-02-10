@@ -344,7 +344,7 @@ class Injector implements InjectorInterface, \Serializable
      * @param string $class
      *
      * @return array|object
-     * @throws Exception\NotReadable
+     * @throws Exception\NotBound
      */
     private function getBound($class)
     {
@@ -620,26 +620,25 @@ class Injector implements InjectorInterface, \Serializable
             return $param;
         }
 
-        return $this->extractNotBoundParam($param, $typeHint, $bindingToType, $target);
+        return $this->extractNotBoundParam($typeHint, $bindingToType, $target);
     }
 
     /**
      * Return param when not bound
      *
-     * @param array  $param
      * @param string $typeHint
      * @param string $bindingToType
      * @param string $target
      *
      * @return array
      */
-    private function extractNotBoundParam(array $param, $typeHint, $bindingToType, $target)
+    private function extractNotBoundParam($typeHint, $bindingToType, $target)
     {
         if ($typeHint === '') {
             $param = $this->getInstanceWithContainer(Scope::PROTOTYPE, $bindingToType, $target);
             return $param;
         }
-        $param = $this->typeBound($param, $typeHint, $bindingToType, $target);
+        $param = $this->typeBound($typeHint, $bindingToType, $target);
 
         return $param;
 
@@ -755,16 +754,15 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Set param by type bound
      *
-     * @param mixed  $param
      * @param string $typeHint
      * @param string $bindingToType
      * @param string  $target
      *
      * @return mixed
      */
-    private function typeBound($param, $typeHint, $bindingToType, $target)
+    private function typeBound($typeHint, $bindingToType, $target)
     {
-        list($param, , $definition) = $this->config->fetch($typeHint);
+        list(, , $definition) = $this->config->fetch($typeHint);
         $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
         $param = $this->getInstanceWithContainer($in, $bindingToType, $target);
 
