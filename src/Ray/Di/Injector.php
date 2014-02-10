@@ -344,7 +344,6 @@ class Injector implements InjectorInterface, \Serializable
      * @param string $class
      *
      * @return array|object
-     * @throws Exception\NotBound
      */
     private function getBound($class)
     {
@@ -353,25 +352,36 @@ class Injector implements InjectorInterface, \Serializable
         list(, , $definition) = $this->config->fetch($class);
         $interfaceClass = $isSingleton = false;
         if ($isAbstract) {
-            $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
-            if ($bound === false) {
-                throw new Exception\NotBound($class);
-            }
-            if (is_object($bound)) {
-                return $bound;
-            }
-            list($class, $isSingleton, $interfaceClass) = $bound;
-            goto RETURN_DEFINITION;
+            return $this->getBoundAbstract($class, $definition);
         }
         $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
         if (is_object($bound)) {
             return $bound;
         }
 
-        RETURN_DEFINITION:
         return $this->getBoundDefinition($class, $isSingleton, $interfaceClass);
     }
 
+    /**
+     * @param string      $class
+     * @param ArrayObject $definition
+     *
+     * @return array|object
+     * @throws Exception\NotBound
+     */
+    private function getBoundAbstract($class, $definition)
+    {
+        $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
+        if ($bound === false) {
+            throw new Exception\NotBound($class);
+        }
+        if (is_object($bound)) {
+            return $bound;
+        }
+        list($class, $isSingleton, $interfaceClass) = $bound;
+
+        return $this->getBoundDefinition($class, $isSingleton, $interfaceClass);
+    }
     /**
      * @param $class
      * @param $isSingleton
@@ -495,7 +505,7 @@ class Injector implements InjectorInterface, \Serializable
      * @param ArrayObject  $bindings
      * @param string $class
      *
-     * @throws Exception\NotBound
+     * @return bool
      */
     private function isBound($bindings, $class)
     {
@@ -655,7 +665,7 @@ class Injector implements InjectorInterface, \Serializable
      * @param array          $params
      * @param AbstractModule $module
      *
-     * @return void
+     * @return array
      * @throws Exception\NotBound
      */
     private function constructorInject($class, array $params, AbstractModule $module)
@@ -680,10 +690,10 @@ class Injector implements InjectorInterface, \Serializable
      * @param AbstractModule       $module
      * @param string               $class
      *
-     * @return void
+     * @return array
      * @throws Exception\NotBound
      */
-    private function constructParams($params, $index, \ReflectionParameter $parameter, AbstractModule $module, $class)
+    private function constructParams(array $params, $index, \ReflectionParameter $parameter, AbstractModule $module, $class)
     {
         // has binding ?
         $params = array_values($params);
