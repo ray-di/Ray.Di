@@ -176,7 +176,7 @@ abstract class AbstractModule implements ArrayAccess
 
     /**
      * @param AbstractModule          $module
-     * @param Matcher                 $matcher
+     * @param AbstractMatcher         $matcher
      * @param ModuleStringerInterface $stringer
      */
     public function __construct(
