@@ -350,25 +350,38 @@ class Injector implements InjectorInterface, \Serializable
     {
         $class = $this->removeLeadingBackSlash($class);
         $isAbstract = $this->isAbstract($class);
-        list($config, $setter, $definition) = $this->config->fetch($class);
+        list(, , $definition) = $this->config->fetch($class);
         $interfaceClass = $isSingleton = false;
         if ($isAbstract) {
             $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
+            if ($bound === false) {
+                throw new Exception\NotBound($class);
+            }
             if (is_object($bound)) {
                 return $bound;
             }
             list($class, $isSingleton, $interfaceClass) = $bound;
-            list($config, $setter, $definition) = $this->config->fetch($class);
-        } elseif (! $isAbstract) {
-            try {
-                $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
-                if (is_object($bound)) {
-                    return $bound;
-                }
-            } catch (Exception\NotBound $e) {
-
-            }
+            goto RETURN_DEFINITION;
         }
+        $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
+        if (is_object($bound)) {
+            return $bound;
+        }
+
+        RETURN_DEFINITION:
+        return $this->getBoundDefinition($class, $isSingleton, $interfaceClass);
+    }
+
+    /**
+     * @param $class
+     * @param $isSingleton
+     * @param $interfaceClass
+     *
+     * @return array
+     */
+    private function getBoundDefinition($class, $isSingleton, $interfaceClass)
+    {
+        list($config, $setter, $definition) = $this->config->fetch($class);
         $hasDirectBinding = isset($this->module->bindings[$class]);
         /** @var $definition Definition */
         if ($definition->hasDefinition() || $hasDirectBinding) {
@@ -376,6 +389,7 @@ class Injector implements InjectorInterface, \Serializable
         }
 
         return [$class, $isSingleton, $interfaceClass, $config, $setter, $definition];
+
     }
 
     /**
@@ -427,7 +441,9 @@ class Injector implements InjectorInterface, \Serializable
      */
     private function getBoundClass($bindings, $definition, $class)
     {
-        $this->checkNotBound($bindings, $class);
+        if ($this->isBound($bindings, $class)) {
+            return false;
+        }
 
         $toType = $bindings[$class]['*']['to'][0];
 
@@ -481,12 +497,9 @@ class Injector implements InjectorInterface, \Serializable
      *
      * @throws Exception\NotBound
      */
-    private function checkNotBound($bindings, $class)
+    private function isBound($bindings, $class)
     {
-        if (!isset($bindings[$class]) || !isset($bindings[$class]['*']['to'][0])) {
-            $msg = "Interface \"$class\" is not bound.";
-            throw new Exception\NotBound($msg);
-        }
+        return (!isset($bindings[$class]) || !isset($bindings[$class]['*']['to'][0]));
     }
 
     /**
