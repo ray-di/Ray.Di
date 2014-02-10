@@ -54,6 +54,11 @@ class Injector implements InjectorInterface, \Serializable
     protected $module;
 
     /**
+     * @var BindInterface
+     */
+    protected $bind;
+    
+    /**
      * Pre-destroy objects
      *
      * @var SplObjectStorage
