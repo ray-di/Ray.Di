@@ -164,11 +164,6 @@ class Annotation implements AnnotationInterface
             foreach ($keys as $key) {
                 $this->setAnnotationName($key, $method, $methodAnnotation);
             }
-            // user land annotation by method
-            foreach ($annotations as $annotation) {
-                $annotationName = $this->getAnnotationName($annotation);
-                $this->definition->setUserAnnotationByMethod($annotationName, $method->name, $annotation);
-            }
         }
     }
 
@@ -201,8 +196,6 @@ class Annotation implements AnnotationInterface
         if ($name === Definition::NAMED) {
             return;
         }
-        // user land annotation by name
-        $this->definition->setUserAnnotationMethodName($name, $method->name);
     }
 
     /**
