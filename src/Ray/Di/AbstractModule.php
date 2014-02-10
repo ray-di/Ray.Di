@@ -164,6 +164,10 @@ abstract class AbstractModule implements ArrayAccess
      */
     public $modules = [];
 
+    /**
+     * @var AbstractMatcher
+     */
+    protected $matcher;
 
     /**
      * @var ModuleStringerInterface
@@ -177,7 +181,7 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function __construct(
         AbstractModule $module = null,
-        Matcher $matcher = null,
+        AbstractMatcher $matcher = null,
         ModuleStringerInterface $stringer = null
     ) {
         $this->modules[] = get_class($this);
