@@ -332,7 +332,7 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Return bound object or inject info
      *
-     * @param $class
+     * @param string $class
      *
      * @return array|object
      * @throws Exception\NotReadable
@@ -372,7 +372,7 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * return isAbstract ?
      *
-     * @param $class
+     * @param string $class
      *
      * @return bool
      * @throws Exception\NotReadable
@@ -409,7 +409,7 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Get bound class or object
      *
-     * @param mixed  $bindings   array | \ArrayAccess
+     * @param ArrayObject  $bindings   array | \ArrayAccess
      * @param mixed  $definition
      * @param string $class
      *
@@ -482,7 +482,7 @@ class Injector implements InjectorInterface, \Serializable
 
     /**
      * @param ArrayObject $bindings
-     * @param $class
+     * @param string $class
      *
      * @return object
      */
@@ -736,7 +736,7 @@ class Injector implements InjectorInterface, \Serializable
      * @param mixed  $param
      * @param string $typeHint
      * @param string $bindingToType
-     * @param mixed  $target
+     * @param string  $target
      *
      * @return mixed
      */
@@ -810,7 +810,7 @@ class Injector implements InjectorInterface, \Serializable
      * @param array  $param
      * @param string $typeHint
      * @param string $annotate
-     * @param $key
+     * @param string $key
      *
      * @return array
      * @throws Exception\OptionalInjectionNotBound
@@ -832,8 +832,8 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * @param $param
      * @param $key
-     * @param $typeHint
-     * @param $annotate
+     * @param string $typeHint
+     * @param string $annotate
      *
      * @throws Exception\OptionalInjectionNotBound
      * @throws Exception\NotBound

@@ -7,7 +7,6 @@
 namespace Ray\Di\Module;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Exception;
 use Ray\Di\Scope;
 use Ray\Aop\Bind;
 

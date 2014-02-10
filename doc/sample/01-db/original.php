@@ -1,7 +1,5 @@
 <?php
 
-use Ray\Di\Injector;
-
 require __DIR__ . '/src.php';
 
 $pdo = new \PDO('sqlite::memory:', null, null);

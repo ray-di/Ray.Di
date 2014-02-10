@@ -295,7 +295,7 @@ class Config implements ConfigInterface
     /**
      * Remove reflection property
      *
-     * @return array
+     * @return string[]
      */
     public function __sleep()
     {

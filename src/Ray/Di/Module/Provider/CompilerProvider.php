@@ -8,9 +8,6 @@ namespace Ray\Di\Module\Provider;
 
 use Ray\Aop\Compiler;
 use PHPParser_PrettyPrinter_Default;
-use PHPParser_Parser;
-use PHPParser_Lexer;
-use PHPParser_BuilderFactory;
 use Ray\Di\ProviderInterface;
 
 /**
@@ -21,7 +18,7 @@ class CompilerProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @return object|Compiler
+     * @return Compiler
      */
     public function get()
     {

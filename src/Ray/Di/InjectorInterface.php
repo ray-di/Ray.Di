@@ -6,8 +6,6 @@
  */
 namespace Ray\Di;
 
-use Doctrine\Common\Cache\Cache;
-
 /**
  * Defines the interface for dependency injector.
  */

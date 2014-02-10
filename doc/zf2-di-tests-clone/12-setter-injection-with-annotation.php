@@ -7,7 +7,6 @@ namespace Foo\Bar {
 namespace Foo\Bar {
 
     use Ray\Di\Di\Inject;
-    use Ray\Di\Di\Named;
 
     class Baz
     {

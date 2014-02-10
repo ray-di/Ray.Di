@@ -113,7 +113,14 @@ interface CreditCardProcessor
  */
 interface TransactionLog
 {
+    /**
+     * @return void
+     */
     public function logConnectException(UnreachableException $e);
+
+    /**
+     * @return void
+     */
     public function logChargeResult(ChargeResult $result);
 }
 

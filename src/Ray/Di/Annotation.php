@@ -234,7 +234,7 @@ class Annotation implements AnnotationInterface
 
     /**
      * @param array $methodAnnotation
-     * @param array $parameters
+     * @param ReflectionParameter[] $parameters
      * @param $named
      *
      * @return array
