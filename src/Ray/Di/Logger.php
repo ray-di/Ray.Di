@@ -14,7 +14,7 @@ use Ray\Aop\Bind;
 class Logger implements LoggerInterface, \IteratorAggregate, \Serializable
 {
     /**
-     * @var string
+     * @var array
      */
     private $logMessages = [];
 
