@@ -135,7 +135,7 @@ class Annotation implements AnnotationInterface
     /**
      * Return annotation name from annotation class name
      *
-     * @param $annotation
+     * @param Annotation $annotation
      *
      * @return mixed
      */
