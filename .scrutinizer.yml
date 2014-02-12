@@ -5,11 +5,11 @@ filter:
     paths: [src/*]
 
 before_commands:
-    - 'sudo composer self-update'
     - 'composer install --dev --prefer-source'
 
 tools:
     php_mess_detector:
+        enabled: false
         config:
             ruleset: ./phpmd.xml
     php_code_sniffer:
