@@ -1,0 +1,25 @@
+inherit: true
+
+filter:
+    excluded_paths: [docs/*, vendor/*, tests/tmp/*]
+    paths: [src/*]
+
+before_commands:
+    - 'sudo composer self-update'
+    - 'composer install --dev --prefer-source'
+
+tools:
+    php_mess_detector:
+        config:
+            ruleset: ./phpmd.xml
+    php_code_sniffer:
+        config:
+            ruleset: ./phpcs.xml
+    php_cpd:
+        enabled: false
+        excluded_dirs: [docs/*, vendor/*, tests/*]
+    php_loc: true
+    php_pdepend: true
+    php_analyzer: true
+    sensiolabs_security_checker: true
+    external_code_coverage: true
