@@ -567,6 +567,7 @@ class Injector implements InjectorInterface, \Serializable
             try {
                 $injected[] = $this->bindMethod($setterDefinition);
             } catch (Exception\OptionalInjectionNotBound $e) {
+                // no optional dependency
             }
         }
         $setter = [];
