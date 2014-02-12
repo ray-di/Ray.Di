@@ -191,11 +191,7 @@ class Injector implements InjectorInterface, \Serializable
      */
     public function getAopClassDir()
     {
-        if (property_exists($this->compiler, 'classDir')) {
-            return $this->compiler->classDir;
-        }
-
-        return null;
+        return $this->compiler->getAopClassDir();
     }
 
     public function __clone()
