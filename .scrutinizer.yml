@@ -1,8 +1,6 @@
-inherit: true
-
 filter:
-    excluded_paths: [docs/*, vendor/*, tests/tmp/*]
     paths: [src/*]
+    excluded_paths: [docs/*,  tests/*, vendor/*]
 
 before_commands:
     - 'composer install --dev --prefer-source'
@@ -13,13 +11,17 @@ tools:
         config:
             ruleset: ./phpmd.xml
     php_code_sniffer:
+        enabled: true
         config:
             ruleset: ./phpcs.xml
+    php_analyzer:
+        enabled: true
     php_cpd:
-        enabled: false
-        excluded_dirs: [docs/*, vendor/*, tests/*]
-    php_loc: true
-    php_pdepend: true
-    php_analyzer: true
-    sensiolabs_security_checker: true
+        enabled: true
+    php_loc:
+        enabled: true
+        excluded_dirs:
+            - build
+            - tests
+            - vendor
     external_code_coverage: true
