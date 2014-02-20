@@ -112,7 +112,7 @@ class Injector implements InjectorInterface, \Serializable
         $this->config = $container->getForge()->getConfig();
         $this->module->activate($this);
 
-        AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di', dirname(dirname(__DIR__)));
+        AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
     }
 
     public function __destruct()
@@ -905,7 +905,7 @@ class Injector implements InjectorInterface, \Serializable
             $this->config
         ) = unserialize($data);
 
-        AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di', dirname(dirname(__DIR__)));
+        AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
         register_shutdown_function(function () {
             // @codeCoverageIgnoreStart
             $this->notifyPreShutdown();
