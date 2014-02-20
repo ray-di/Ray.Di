@@ -238,7 +238,7 @@ class Annotation implements AnnotationInterface
         foreach ($parameters as $parameter) {
             /** @var $parameter \ReflectionParameter */
             $class = $parameter->getClass();
-            $typehint = $class ? $class->getName() : '';
+            $typehint = $class ? $class->name : '';
             $typehintBy = $typehint ? $this->getTypeHintDefaultInjection($typehint) : [];
             $pos = $parameter->getPosition();
             $name = $this->getName($named, $parameter);
@@ -295,6 +295,7 @@ class Annotation implements AnnotationInterface
         }
         // multi annotation @Named($varName1=$annotate1,$varName2=$annotate2)
         // http://stackoverflow.com/questions/168171/regular-expression-for-parsing-name-value-pairs
+        $matches = [];
         preg_match_all('/([^=,]*)=("[^"]*"|[^,"]*)/', $nameParameter, $matches);
         if ($matches[0] === []) {
             throw new Exception\Named;

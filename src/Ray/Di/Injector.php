@@ -709,7 +709,7 @@ class Injector implements InjectorInterface, \Serializable
         // is typehint class ?
         $classRef = $parameter->getClass();
         if ($classRef && !$classRef->isInterface()) {
-            $params[$index] = $this->getInstance($classRef->getName());
+            $params[$index] = $this->getInstance($classRef->name);
             return $params;
         }
         $msg = is_null($classRef) ? "Valid interface is not found. (array ?)" : "Interface [{$classRef->name}] is not bound.";
