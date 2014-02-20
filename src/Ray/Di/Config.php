@@ -201,7 +201,8 @@ class Config implements ConfigInterface
 
         // class have a constructor?
         $constructorReflection = $this->getReflect($class)->getConstructor();
-        $unifiedParams = $constructorReflection ? $this->getUnifiedParams($constructorReflection, $parentParams, $class) : [];
+        /** @var $constructorReflection \ReflectionClass */
+        $unifiedParams = is_null($constructorReflection) ? [] : $this->getUnifiedParams($constructorReflection, $parentParams, $class);
 
         $this->unified[$class] = $this->mergeConfig($class, $unifiedParams, $parentSetter, $parentDefinition);
 
