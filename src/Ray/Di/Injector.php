@@ -847,7 +847,7 @@ class Injector implements InjectorInterface, \Serializable
     {
         $typeHintBy = $param[Definition::PARAM_TYPEHINT_BY];
         if ($typeHintBy == []) {
-            $this->raiseNotBoundException($param, $key, $typeHint, $annotate);
+            throw $this->raiseNotBoundException($param, $key, $typeHint, $annotate);
         }
         if ($typeHintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
             return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typeHintBy[1]]];
@@ -862,8 +862,7 @@ class Injector implements InjectorInterface, \Serializable
      * @param string $typeHint
      * @param string $annotate
      *
-     * @throws Exception\OptionalInjectionNotBound
-     * @throws Exception\NotBound
+     * @return Exception\NotBound
      */
     private function raiseNotBoundException($param, $key, $typeHint, $annotate)
     {
@@ -874,7 +873,7 @@ class Injector implements InjectorInterface, \Serializable
         $class = array_pop($this->classes);
         $msg = "typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$class}'";
         $e = (new Exception\NotBound($msg))->setModule($this->module);
-        throw $e;
+        return $e;
     }
 
     public function serialize()
