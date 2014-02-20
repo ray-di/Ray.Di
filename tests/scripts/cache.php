@@ -8,7 +8,7 @@ use Ray\Aop\Compiler;
 use Doctrine\Common\Annotations\AnnotationReader;
 use PHPParser_PrettyPrinter_Default;
 
-require_once dirname(dirname(dirname(__DIR__))) . '/bootstrap.php';
+require_once dirname(__DIR__) . '/bootstrap.php';
 
 $injector = function () {
     $container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));

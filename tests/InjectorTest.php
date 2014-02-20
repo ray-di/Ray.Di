@@ -33,7 +33,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));
-        $this->injector = new Injector($this->container, new EmptyModule, new Bind, new Compiler($GLOBALS['TMP_DIR'], new PHPParser_PrettyPrinter_Default), new Logger);
+        $this->injector = new Injector($this->container, new EmptyModule, new Bind, new Compiler($_ENV['TMP_DIR'], new PHPParser_PrettyPrinter_Default), new Logger);
     }
 
     protected function tearDown()
@@ -228,7 +228,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testEmptyModule()
     {
-        $injector = require dirname(dirname(dirname(__DIR__))) . '/scripts/instance.php';
+        $injector = require $_ENV['PACKAGE_DIR'] . '/scripts/instance.php';
         $ref = new \ReflectionProperty($injector, 'module');
         $ref->setAccessible(true);
         $module = $ref->getValue($injector);
@@ -265,7 +265,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
      */
     public function testProviderIsNotExists()
     {
-        $this->injector = new Injector($this->container, new Modules\ProvideNotExistsModule, new Bind, new Compiler($GLOBALS['TMP_DIR'], new PHPParser_PrettyPrinter_Default), new Logger);
+        $this->injector = new Injector($this->container, new Modules\ProvideNotExistsModule, new Bind, new Compiler($_ENV['TMP_DIR'], new PHPParser_PrettyPrinter_Default), new Logger);
 
     }
 
