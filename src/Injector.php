@@ -112,7 +112,7 @@ class Injector implements InjectorInterface, \Serializable
         $this->config = $container->getForge()->getConfig();
         $this->module->activate($this);
 
-        AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di', dirname(dirname(__DIR__)));
+        AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
     }
 
     public function __destruct()
@@ -709,7 +709,7 @@ class Injector implements InjectorInterface, \Serializable
         // is typehint class ?
         $classRef = $parameter->getClass();
         if ($classRef && !$classRef->isInterface()) {
-            $params[$index] = $this->getInstance($classRef->getName());
+            $params[$index] = $this->getInstance($classRef->name);
             return $params;
         }
         $msg = is_null($classRef) ? "Valid interface is not found. (array ?)" : "Interface [{$classRef->name}] is not bound.";
@@ -847,7 +847,7 @@ class Injector implements InjectorInterface, \Serializable
     {
         $typeHintBy = $param[Definition::PARAM_TYPEHINT_BY];
         if ($typeHintBy == []) {
-            $this->raiseNotBoundException($param, $key, $typeHint, $annotate);
+            throw $this->raiseNotBoundException($param, $key, $typeHint, $annotate);
         }
         if ($typeHintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
             return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typeHintBy[1]]];
@@ -862,8 +862,7 @@ class Injector implements InjectorInterface, \Serializable
      * @param string $typeHint
      * @param string $annotate
      *
-     * @throws Exception\OptionalInjectionNotBound
-     * @throws Exception\NotBound
+     * @return Exception\NotBound
      */
     private function raiseNotBoundException($param, $key, $typeHint, $annotate)
     {
@@ -874,7 +873,7 @@ class Injector implements InjectorInterface, \Serializable
         $class = array_pop($this->classes);
         $msg = "typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$class}'";
         $e = (new Exception\NotBound($msg))->setModule($this->module);
-        throw $e;
+        return $e;
     }
 
     public function serialize()
@@ -906,7 +905,7 @@ class Injector implements InjectorInterface, \Serializable
             $this->config
         ) = unserialize($data);
 
-        AnnotationRegistry::registerAutoloadNamespace('Ray\Di\Di', dirname(dirname(__DIR__)));
+        AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
         register_shutdown_function(function () {
             // @codeCoverageIgnoreStart
             $this->notifyPreShutdown();

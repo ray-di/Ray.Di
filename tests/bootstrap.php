@@ -13,7 +13,7 @@ if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
 // vendor
 $loader = require dirname(__DIR__) . '/vendor/autoload.php';
 /** @var $loader \Composer\Autoload\ClassLoader */
-$loader->add('Ray\Di', __DIR__);
+$loader->addPsr4('Ray\Di\\', __DIR__);
 /** @var $loader \Composer\Autoload\ClassLoader */
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
@@ -26,5 +26,6 @@ $rm = function ($dir) use (&$rm) {
 // clear cache folder
 $rm(__DIR__ . 'Ray/Di/scripts/aop_files');
 $rm(__DIR__ . 'Ray/Di/scripts/object_files');
-$GLOBALS['TMP_DIR'] = __DIR__ . '/tmp';
-$rm($GLOBALS['TMP_DIR']);
+$_ENV['TMP_DIR'] = __DIR__ . '/tmp';
+$_ENV['PACKAGE_DIR'] = dirname(__DIR__);
+$rm($_ENV['TMP_DIR']);

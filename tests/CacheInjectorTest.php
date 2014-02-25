@@ -24,9 +24,9 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->injector = function () {return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), new Modules\BasicModule, new Bind, new Compiler($GLOBALS['TMP_DIR'], new PHPParser_PrettyPrinter_Default));};
+        $this->injector = function () {return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), new Modules\BasicModule, new Bind, new Compiler($_ENV['TMP_DIR'], new PHPParser_PrettyPrinter_Default));};
         $initialization = function() { $this->flag = true; };
-        $this->injector = new CacheInjector($this->injector, $initialization, 'test', new FilesystemCache($GLOBALS['TMP_DIR']));
+        $this->injector = new CacheInjector($this->injector, $initialization, 'test', new FilesystemCache($_ENV['TMP_DIR']));
     }
 
     public function testNew()
@@ -56,7 +56,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = function () {return Injector::create([new Modules\InstanceModule]);};
         $initialization = function() {};
-        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($GLOBALS['TMP_DIR']));
+        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['TMP_DIR']));
 
         $instance = $injector->getInstance('Ray\Di\Definition\Instance');
         $this->assertSame('PC6001', $instance->userId);
@@ -66,7 +66,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = function () {return Injector::create([new Modules\AopModule]);};
         $initialization = function() {};
-        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($GLOBALS['TMP_DIR']));
+        $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['TMP_DIR']));
         $instance = $injector->getInstance('Ray\Di\Aop\RealBillingService');
         /* @var $instance \Ray\Di\Aop\RealBillingService */
         list($amount, ) = $instance->chargeOrder();

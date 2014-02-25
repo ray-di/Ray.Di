@@ -134,7 +134,9 @@ class CacheInjector implements InstanceInterface
             function ($class) use ($classDir) {
                 $file = $classDir . DIRECTORY_SEPARATOR . $class . '.php';
                 if (file_exists($file)) {
+                    // @codeCoverageIgnoreStart
                     include $file;
+                    // @@codeCoverageIgnoreEnd
                 }
             }
         );
