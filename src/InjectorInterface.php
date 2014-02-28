@@ -40,4 +40,11 @@ interface InjectorInterface extends InstanceInterface
      * @return LoggerInterface
      */
     public function getLogger();
+
+    /**
+     * Set logger
+     *
+     * @return self
+     */
+    public function setLogger(LoggerInterface $logger);
 }

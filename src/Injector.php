@@ -185,6 +185,14 @@ class Injector implements InjectorInterface, \Serializable
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
      * Return aop generated file path
      *
      * @return string
@@ -454,7 +462,8 @@ class Injector implements InjectorInterface, \Serializable
         $toType = $bindings[$class]['*']['to'][0];
 
         if ($toType === AbstractModule::TO_PROVIDER) {
-            return $this->getToProviderBound($bindings, $class);
+            $instance = $this->getToProviderBound($bindings, $class);
+            return $instance;
         }
 
         list($isSingleton, $interfaceClass) = $this->getBindingInfo($class, $definition, $bindings);
@@ -519,15 +528,17 @@ class Injector implements InjectorInterface, \Serializable
         $provider = $bindings[$class]['*']['to'][1];
         $in = isset($bindings[$class]['*']['in']) ? $bindings[$class]['*']['in'] : null;
         if ($in !== Scope::SINGLETON) {
-            return $this->getInstance($provider)->get();
-        }
-        if (!$this->container->has($class)) {
-            $object = $this->getInstance($provider)->get();
-            $this->container->set($class, $object);
+            $instance = $this->getInstance($provider)->get();
 
+            return $instance;
         }
+        if ($this->container->has($class)) {
+            return $this->container->get($class);
+        }
+        $instance = $this->getInstance($provider)->get();
+        $this->container->set($class, $instance);
 
-        return $this->container->get($class);
+        return $instance;
 
     }
     /**
@@ -822,10 +833,25 @@ class Injector implements InjectorInterface, \Serializable
             return $instance;
         }
         $isToClassBinding = ($bindingToType === AbstractModule::TO_CLASS);
-        $instance = $isToClassBinding ? $this->getInstance($target) : $this->getInstance($target)->get();
+        $instance = $isToClassBinding ? $this->getInstance($target) : $this->getProvidedInstance($target);
 
         if ($in === Scope::SINGLETON) {
             $this->container->set($target, $instance);
+        }
+
+        return $instance;
+    }
+
+    /**
+     * @param $target
+     *
+     * @return mixed
+     */
+    private function getProvidedInstance($target)
+    {
+        $instance =  $this->getInstance($target)->get();
+        if ($this->logger) {
+            $this->logger->log($target, [], [], $instance, new Bind);
         }
 
         return $instance;
