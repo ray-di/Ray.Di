@@ -28,13 +28,13 @@ function someFunction()
     return 1;
 }
 
-class DiLoggerTest extends \PHPUnit_Framework_TestCase
+class LoggerTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * @var LoggerInterface
      */
-    private $diLogger;
+    protected $diLogger;
 
     protected function setUp()
     {
@@ -53,7 +53,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
     public function testLog()
     {
         $params = ["a", 1];
-        $setter = ['setA' => null, 'setB' => null];
+        $setter = ['setA' => [null], 'setB' => [null]];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $this->diLogger->log('Class', $params, $setter, $object, new Bind);
         $this->assertInternalType('string', (string)$this->diLogger);
@@ -62,7 +62,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
     public function testLogCallableParam()
     {
         $params = [1.0, __NAMESPACE__ . '\someFunction'];
-        $setter = ['setA' => null, 'setB' => null, 'setCallable' => __NAMESPACE__ . '\someFunction' ];
+        $setter = ['setA' => [null], 'setB' => [null], 'setCallable' => [__NAMESPACE__ . '\someFunction'] ];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $this->diLogger->log('Class', $params, $setter, $object, new Bind);
         $this->assertInternalType('string', (string)$this->diLogger);
@@ -71,7 +71,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
     public function testLogArrayParam()
     {
         $params = [1, ['a1', 'a2']];
-        $setter = ['setA' => null, 'setB' => null];
+        $setter = ['setA' => [null], 'setB' => [null]];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $this->diLogger->log('Class', $params, $setter, $object, new Bind);
         $this->assertInternalType('string', (string)$this->diLogger);
@@ -81,7 +81,7 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
     {
         $stdObj = new \stdClass;
         $params = [1, $stdObj];
-        $setter = ['setA' => null, 'setB' => null];
+        $setter = ['setA' => [null], 'setB' => [null]];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $diLogger = $this->diLogger;
         $this->diLogger->log('Class', $params, $setter, $object, new Bind);
@@ -104,6 +104,6 @@ class DiLoggerTest extends \PHPUnit_Framework_TestCase
         $unSerialized = unserialize(serialize($this->diLogger));
         /** @var Logger $unSerialized */
 
-        $this->assertInstanceOf('Ray\Di\Logger', $unSerialized);
+        $this->assertInstanceOf(get_class($this->diLogger), $unSerialized);
     }
 }
