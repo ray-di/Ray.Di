@@ -84,7 +84,6 @@ class DiaryModule extends AbstractModule
         $this->bind('Ray\Di\DbInterface')->to('Ray\Di\Db');
         $this->bind('Ray\Di\WriterInterface')->toProvider('Ray\Di\WriterProvider');
         $this->bind('Ray\Di\DiaryInterface')->to('Ray\Di\Diary');
-
     }
 }
 
@@ -198,4 +197,12 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($dbHash1, $dbHash2);
     }
 
+    /**
+     * @depends testSingleton
+     */
+    public function testCompileProvide(DiCompiler $compiler)
+    {
+        $instance = $compiler->getInstance('Ray\Di\WriterInterface');
+        $this->assertInstanceOf('Ray\Di\Writer', $instance);
+    }
 }

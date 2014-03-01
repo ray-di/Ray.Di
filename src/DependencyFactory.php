@@ -92,11 +92,11 @@ class DependencyFactory
             }
             call_user_func_array([$instance, $method], $args);
         }
-//
-//        // provider ?
-//        if ($instance instanceof ProviderInterface) {
-//            $instance = $instance->get();
-//        }
+
+        // provider ?
+        if ($instance instanceof ProviderInterface) {
+            $instance = $instance->get();
+        }
         $this->instance = $instance;
 
         return $instance;
