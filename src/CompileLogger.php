@@ -86,7 +86,32 @@ class CompileLogger implements LoggerInterface
         foreach ($setters as &$methodPrams) {
             $methodPrams = $this->makeParamRef($methodPrams);
         }
-        $this->add(new DependencyFactory($instance, $params, $setters, $this));
+        if (! isset($instance->rayAopBind)) {
+            $this->add(new DependencyFactory($instance, $params, $setters, $this));
+            return;
+        }
+        // aop
+        $interceptors = $this->buildInterceptor($instance);
+        $this->add(new DependencyFactory($instance, $params, $setters, $this, null, $interceptors));
+    }
+
+    /**
+     * @param $instance
+     *
+     * @return array
+     */
+    private function buildInterceptor($instance)
+    {
+        $boundInterceptors = (array)$instance->rayAopBind;
+        foreach ($boundInterceptors as $methodInterceptors) {       // 'doSomething => methodInterceptors
+            foreach ($methodInterceptors as $methodInterceptor) {   // methodInterceptors to methodInterceptor
+                foreach ($methodInterceptor as &$interceptor) {
+                    $interceptor = $this->getRef($interceptor);
+                }
+            }
+        }
+
+        return $boundInterceptors;
     }
 
     /**

@@ -45,6 +45,11 @@ class DependencyFactory
 
 
     /**
+     * @var DependencyFactory[]
+     */
+    private $interceptors;
+
+    /**
      * @param object            $object
      * @param array             $args
      * @param array             $setter
@@ -56,14 +61,16 @@ class DependencyFactory
         array $args,
         array $setter,
         CompileLogger $logger,
-        ProviderInterface $provider = null)
-    {
+        ProviderInterface $provider = null,
+        array $interceptors = null
+    ) {
         $this->class = get_class($object);
         $this->hash = spl_object_hash($object);
         $this->args = $args;
         $this->setters = $setter;
         $this->logger = $logger;
         $this->providerRef = is_object($provider) ? spl_object_hash($provider) : null;
+        $this->interceptors = $interceptors;
     }
 
     public function newInstance()
@@ -72,9 +79,7 @@ class DependencyFactory
         if ($this->instance) {
             return $this->instance;
         }
-//        if ($this->providerRef) {
-//            return  $this->logger->newInstance($this->providerRef);
-//        }
+
         // constructor injection
         foreach ($this->args as &$arg) {
             if ($arg instanceof InstanceRef) {
@@ -99,6 +104,10 @@ class DependencyFactory
         }
         $this->instance = $instance;
 
+        // interceptor ?
+        if ($this->interceptors) {
+            $this->instance->rayAopBind = $this->interceptors;
+        }
         return $instance;
     }
 }

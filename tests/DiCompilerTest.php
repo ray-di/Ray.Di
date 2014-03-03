@@ -7,6 +7,8 @@
  */
 namespace Ray\Di;
 
+use Ray\Aop\MethodInterceptor;
+use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\Scope;
@@ -73,6 +75,11 @@ class Diary implements DiaryInterface
         $this->writer = $writer;
         $this->db = $db;
     }
+
+    public function returnSame($a)
+    {
+        return $a;
+    }
 }
 
 class DiaryModule extends AbstractModule
@@ -93,6 +100,38 @@ class DiarySingletonModule extends AbstractModule
     {
         $this->bind('Ray\Di\LogInterface')->to('Ray\Di\Log')->in(Scope::SINGLETON);
         $this->install(new DiaryModule);
+    }
+}
+
+class DiaryInterceptor implements MethodInterceptor
+{
+    public $log;
+
+    /**
+     * @Inject
+     */
+    public function __construct(LogInterface $log)
+    {
+        $this->log = $log;
+    }
+
+    public function invoke(MethodInvocation $invocation)
+    {
+        return 'aop-' . $invocation->proceed();
+    }
+}
+
+class DiaryAopModule extends AbstractModule
+{
+    protected function configure()
+    {
+        $this->install(new DiaryModule);
+        $diaryInterceptor = $this->requestInjection('Ray\Di\DiaryInterceptor');
+        $this->bindInterceptor(
+            $this->matcher->subclassesOf('Ray\Di\Diary'),
+            $this->matcher->any(),
+            [$diaryInterceptor]
+        );
     }
 }
 
@@ -200,9 +239,20 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testSingleton
      */
-    public function testCompileProvide(DiCompiler $compiler)
+    public function testProvider(DiCompiler $compileInjector)
     {
-        $instance = $compiler->getInstance('Ray\Di\WriterInterface');
+        $compileInjector->compile('Ray\Di\WriterInterface');
+        $instance = $compileInjector->getInstance('Ray\Di\WriterInterface');
         $this->assertInstanceOf('Ray\Di\Writer', $instance);
+    }
+    
+    public function testAop()
+    {
+        $injector = Injector::create([new DiaryAopModule]);
+        $DiCompiler = new DiCompiler($injector, new CompileLogger(new Logger()));
+        $compileInjector = $DiCompiler->compile('Ray\Di\DiaryInterface');
+        $diary = $compileInjector->getInstance('Ray\Di\DiaryInterface');
+        $result = $diary->returnSame('b');
+        $this->assertSame('aop-b', $result);
     }
 }
