@@ -12,6 +12,7 @@ use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\Scope;
+use Ray\Di\Di\PostConstruct;
 
 interface DbInterface{}
 interface DiaryInterface{}
@@ -63,7 +64,7 @@ class Diary implements DiaryInterface
     public $db;
     public $log;
     public $writer;
-
+    public $init = false;
     /**
      * @param DbInterface $db
      *
@@ -74,6 +75,14 @@ class Diary implements DiaryInterface
         $this->log = $log;
         $this->writer = $writer;
         $this->db = $db;
+    }
+
+    /**
+     * @PostConstruct
+     */
+    public function init()
+    {
+        $this->init = true;
     }
 
     public function returnSame($a)
@@ -268,5 +277,15 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $diary = $compileInjector->getInstance('Ray\Di\DiaryInterface');
         $result = $diary->returnSame('b');
         $this->assertSame('aop-b', $result);
+
+        return $diary;
+    }
+
+    /**
+     * @depends testAop
+     */
+    public function testPostConstruct($diary)
+    {
+        $this->assertTrue($diary->init);
     }
 }

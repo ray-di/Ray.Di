@@ -37,6 +37,7 @@ class DiCompiler implements InstanceInterface, \Serializable
     public function __construct(InjectorInterface $injector, CompileLogger $logger)
     {
         $this->injector = $injector;
+        $logger->setConfig($injector->getContainer()->getForge()->getConfig());
         $this->logger = $logger;
     }
 

@@ -7,6 +7,7 @@
 namespace Ray\Di;
 
 use Ray\Aop\Bind;
+use Aura\Di\ConfigInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
@@ -26,6 +27,10 @@ class CompileLogger implements LoggerInterface
     protected $instanceContainer = [];
 
     /**
+     * @var ConfigInterface
+     */
+    protected $config;
+    /**
      * @param LoggerInterface $logger
      *
      * @Inject
@@ -36,6 +41,15 @@ class CompileLogger implements LoggerInterface
         $this->logger = $logger;
     }
 
+    /**
+     * @param ConfigInterface $config
+     */
+    public function setConfig(ConfigInterface $config)
+    {
+        $this->config = $config;
+
+        return $this;
+    }
     /**
      * Log injection
      *
@@ -48,7 +62,7 @@ class CompileLogger implements LoggerInterface
     public function log($class, array $params, array $setters = [], $instance, Bind $bind)
     {
         $this->logger->log($class, $params, $setters, $instance, $bind);
-        $this->build($instance, $params, $setters);
+        $this->build($class, $instance, $params, $setters);
     }
 
     /**
@@ -80,19 +94,23 @@ class CompileLogger implements LoggerInterface
      * @param array  $params
      * @param array  $setters
      */
-    private function build($instance, array $params, array $setters)
+    private function build($class, $instance, array $params, array $setters)
     {
         $params = $this->makeParamRef($params);
         foreach ($setters as &$methodPrams) {
             $methodPrams = $this->makeParamRef($methodPrams);
         }
-        if (! isset($instance->rayAopBind)) {
-            $this->add(new DependencyFactory($instance, $params, $setters, $this));
-            return;
+        $dependencyFactory = new DependencyFactory($instance, $params, $setters, $this);
+        list(,,$definition) = $this->config->fetch($class);
+        // @PostConstruct
+        $postConstructMethod = $definition['PostConstruct'];
+        $dependencyFactory->setPostConstruct($postConstructMethod);
+        // aop ?
+        if (isset($instance->rayAopBind)) {
+            $interceptors = $this->buildInterceptor($instance);
+            $dependencyFactory->setInterceptors($interceptors);
         }
-        // aop
-        $interceptors = $this->buildInterceptor($instance);
-        $this->add(new DependencyFactory($instance, $params, $setters, $this, null, $interceptors));
+        $this->add($dependencyFactory);
     }
 
     /**

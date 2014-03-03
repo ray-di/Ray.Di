@@ -50,27 +50,43 @@ class DependencyFactory
     private $interceptors;
 
     /**
+     * @var string
+     */
+    private $postConstruct;
+
+    /**
      * @param object            $object
      * @param array             $args
      * @param array             $setter
      * @param CompileLogger     $logger
-     * @param ProviderInterface $provider
      */
     public function __construct(
         $object,
         array $args,
         array $setter,
-        CompileLogger $logger,
-        ProviderInterface $provider = null,
-        array $interceptors = null
+        CompileLogger $logger
     ) {
         $this->class = get_class($object);
         $this->hash = spl_object_hash($object);
         $this->args = $args;
         $this->setters = $setter;
         $this->logger = $logger;
-        $this->providerRef = is_object($provider) ? spl_object_hash($provider) : null;
+    }
+
+    /**
+     * @param array $interceptors
+     */
+    public function setInterceptors(array $interceptors)
+    {
         $this->interceptors = $interceptors;
+    }
+
+    /**
+     * @param string $postConstruct
+     */
+    public function setPostConstruct($postConstruct)
+    {
+        $this->postConstruct = $postConstruct;
     }
 
     public function newInstance()
@@ -104,6 +120,10 @@ class DependencyFactory
         }
         $this->instance = $instance;
 
+        // @PostConstruct
+        if ($this->postConstruct) {
+            $instance->{$this->postConstruct}();
+        }
         // interceptor ?
         if ($this->interceptors) {
             $this->instance->rayAopBind = $this->interceptors;
