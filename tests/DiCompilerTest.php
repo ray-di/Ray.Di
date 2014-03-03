@@ -106,6 +106,18 @@ class DiarySingletonModule extends AbstractModule
 class DiaryInterceptor implements MethodInterceptor
 {
     public $log;
+    public $dsn;
+    private $closure;
+
+
+    /**
+     * @Inject
+     * @Named("dsn")
+     */
+    public function setDsn($dsn)
+    {
+        $this->dsn = $dsn;
+    }
 
     /**
      * @Inject
@@ -113,6 +125,7 @@ class DiaryInterceptor implements MethodInterceptor
     public function __construct(LogInterface $log)
     {
         $this->log = $log;
+//        $this->closure = function(){};
     }
 
     public function invoke(MethodInvocation $invocation)
@@ -251,6 +264,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $injector = Injector::create([new DiaryAopModule]);
         $DiCompiler = new DiCompiler($injector, new CompileLogger(new Logger()));
         $compileInjector = $DiCompiler->compile('Ray\Di\DiaryInterface');
+        $compileInjector = unserialize(serialize($compileInjector));
         $diary = $compileInjector->getInstance('Ray\Di\DiaryInterface');
         $result = $diary->returnSame('b');
         $this->assertSame('aop-b', $result);

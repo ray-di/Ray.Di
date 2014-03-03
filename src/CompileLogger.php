@@ -102,12 +102,11 @@ class CompileLogger implements LoggerInterface
      */
     private function buildInterceptor($instance)
     {
-        $boundInterceptors = (array)$instance->rayAopBind;
-        foreach ($boundInterceptors as $methodInterceptors) {       // 'doSomething => methodInterceptors
-            foreach ($methodInterceptors as $methodInterceptor) {   // methodInterceptors to methodInterceptor
-                foreach ($methodInterceptor as &$interceptor) {
-                    $interceptor = $this->getRef($interceptor);
-                }
+        $boundInterceptors = (array)$instance->rayAopBind; // 'methodName' => methodInterceptors[]
+        foreach ($boundInterceptors as $methodInterceptors) {
+            foreach ($methodInterceptors as &$methodInterceptor) {
+                /** @var $methodInterceptor \Ray\Aop\M*/
+                $methodInterceptor = $this->getRef($methodInterceptor);
             }
         }
 
