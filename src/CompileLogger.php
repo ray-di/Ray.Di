@@ -86,7 +86,7 @@ class CompileLogger implements LoggerInterface
         $container = $this->instanceContainer;
         $factory = array_pop($container);
 
-        return $factory->hash;
+        return (string)$factory;
     }
 
     /**
@@ -182,7 +182,7 @@ class CompileLogger implements LoggerInterface
      */
     private function add($instance)
     {
-        $index = $instance->hash;
+        $index = (string)$instance;
         $this->instanceContainer[$index] = $instance;
     }
 

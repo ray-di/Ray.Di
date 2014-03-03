@@ -6,32 +6,32 @@
  */
 namespace Ray\Di;
 
-class DependencyFactory
+final class DependencyFactory
 {
     /**
      * @var string
      */
-    public $hash;
+    private $hash;
 
     /**
      * @var string
      */
-    public $class;
+    private $class;
 
     /**
      * @var array
      */
-    public $args = [];
+    private $args = [];
 
     /**
      * @var object
      */
-    public $instance;
+    private $instance;
 
     /**
      * @var array
      */
-    public $setters = [];
+    private $setters = [];
 
     /**
      * @var null|string
@@ -129,5 +129,10 @@ class DependencyFactory
             $this->instance->rayAopBind = $this->interceptors;
         }
         return $instance;
+    }
+
+    public function __toString()
+    {
+        return $this->hash;
     }
 }
