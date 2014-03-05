@@ -21,10 +21,12 @@ class InjectorModule extends AbstractModule
         $this->bind('Aura\Di\ContainerInterface')->to('Ray\Di\Container');
         $this->bind('Aura\Di\ForgeInterface')->to('Ray\Di\Forge');
         $this->bind('Ray\Di\InjectorInterface')->to('Ray\Di\Injector')->in(Scope::SINGLETON);
-        $this->bind('Ray\Di\AnnotationInterface')->to('Ray\Di\Annotation');
+        $this->bind('Ray\Di\AnnotationInterface')->to('Ray\Di\Annotation')->in(Scope::SINGLETON);
+        $this->bind('Ray\Di\ConfigInterface')->to('Ray\Di\Config')->in(Scope::SINGLETON);
+        $this->bind('Ray\Di\AnnotationInterface')->to('Ray\Di\Annotation')->in(Scope::SINGLETON);
+        $this->bind('Ray\Aop\BindInterface')->toProvider(__NAMESPACE__ . '\Provider\BindProvider');
         $this->bind('Ray\Aop\CompilerInterface')->toProvider(__NAMESPACE__ . '\Provider\CompilerProvider');
-        $this->bind('Ray\Aop\BindInterface')->toInstance(new Bind);
-        $this->bind('Ray\Di\AbstractModule')->toInstance($this);
         $this->bind('Doctrine\Common\Annotations\Reader')->to('Doctrine\Common\Annotations\AnnotationReader')->in(Scope::SINGLETON);
+        $this->bind('Ray\Di\AbstractModule')->to(__CLASS__);
     }
 }

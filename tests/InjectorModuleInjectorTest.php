@@ -11,8 +11,9 @@ class DiIncludedModule extends AbstractModule
 {
     protected function configure()
     {
+        $this->bind('Ray\Di\AbstractModule')->to(__CLASS__);
         $this->bind()->annotatedWith('greeting')->toInstance('hello');
-        $this->install(new InjectorModule($this));
+        $this->install(new InjectorModule);
         $this->bind('Ray\Di\TestInterface')->toProvider('Ray\Di\TestProvider');
     }
 }
