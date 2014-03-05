@@ -73,12 +73,12 @@ class DiCompiler implements InstanceInterface, \Serializable
     public function serialize()
     {
           $serialized = serialize(
-            [
+              [
                 $this->classMap,
                 $this->logger,
                 $this->compiler
-            ]
-        );
+              ]
+          );
 
         return $serialized;
     }

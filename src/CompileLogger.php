@@ -30,6 +30,12 @@ class CompileLogger implements LoggerInterface
      * @var ConfigInterface
      */
     protected $config;
+
+    /**
+     * @var \SplObjectStorage
+     */
+    private $objectStorage;
+
     /**
      * @param LoggerInterface $logger
      *
@@ -39,6 +45,7 @@ class CompileLogger implements LoggerInterface
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
+        $this->objectStorage = new \SplObjectStorage;
     }
 
     /**
@@ -59,8 +66,11 @@ class CompileLogger implements LoggerInterface
      * @param object        $object
      * @param \Ray\Aop\Bind $bind
      */
-    public function log($class, array $params, array $setters = [], $instance, Bind $bind)
+    public function log($class, array $params, array $setters, $instance, Bind $bind)
     {
+        if ($instance instanceof DependencyProvider) {
+            return $this->buildProvider($instance);
+        }
         $this->logger->log($class, $params, $setters, $instance, $bind);
         $this->build($class, $instance, $params, $setters);
     }
@@ -78,7 +88,29 @@ class CompileLogger implements LoggerInterface
             throw new Exception\Compile($ref);
             // @codeCoverageIgnoreEnd
         }
+        if ($this->instanceContainer[$ref] instanceof DependencyReference) {
+            return $this->instanceContainer[$ref]();
+        }
         return $this->instanceContainer[$ref]->newInstance();
+    }
+
+    /**
+     * @param $object
+     *
+     * @return string
+     */
+    public function getObjectHash($object)
+    {
+        static $cnt = 0;
+
+        if ($this->objectStorage->contains($object)) {
+            return $this->objectStorage[$object];
+        }
+        $cnt++;
+        $hash = (string)$cnt;
+        $this->objectStorage[$object] = $hash;
+
+        return $hash;
     }
 
     public function getLashHash()
@@ -123,7 +155,7 @@ class CompileLogger implements LoggerInterface
         $boundInterceptors = (array)$instance->rayAopBind; // 'methodName' => methodInterceptors[]
         foreach ($boundInterceptors as $methodInterceptors) {
             foreach ($methodInterceptors as &$methodInterceptor) {
-                /** @var $methodInterceptor \Ray\Aop\M*/
+                /** @var $methodInterceptor \Ray\Aop\MethodInterceptor */
                 $methodInterceptor = $this->getRef($methodInterceptor);
             }
         }
@@ -131,6 +163,15 @@ class CompileLogger implements LoggerInterface
         return $boundInterceptors;
     }
 
+    /**
+     * @param DependencyProvider $dependencyProvider
+     */
+    private function buildProvider(DependencyProvider $dependencyProvider)
+    {
+        $instanceHash = $this->getObjectHash($dependencyProvider->instance);
+        $providerHash = $this->getObjectHash($dependencyProvider->provider);
+        $this->instanceContainer[$instanceHash] = new DependencyReference($providerHash, $this);
+    }
     /**
      * @param array $params
      *
@@ -153,19 +194,12 @@ class CompileLogger implements LoggerInterface
     /**
      * @param object $instance
      *
-     * @return InstanceRef
+     * @return DependencyReference
      */
     private function getRef($instance)
     {
-        $hash = spl_object_hash($instance);
-        if (in_array($hash, $this->refs)) {
-            return new InstanceRef($hash);
-        }
-
-        $this->refs[] = $hash;
-        $this->ref++;
-
-        return new InstanceRef($hash);
+        $hash = $this->getObjectHash($instance);
+        return new DependencyReference($hash, $this);
     }
 
     /**

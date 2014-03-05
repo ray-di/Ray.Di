@@ -25,16 +25,23 @@ class Log implements LogInterface
 
 class Writer implements WriterInterface
 {
+    private function __construct()
+    {
+    }
+
+    public static function newInstance()
+    {
+        return new self;
+    }
 }
 
 class WriterProvider implements ProviderInterface
 {
     public function get()
     {
-        return new Writer;
+        return Writer::newInstance();
     }
 }
-
 
 class Db implements DbInterface
 {

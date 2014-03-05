@@ -849,9 +849,12 @@ class Injector implements InjectorInterface, \Serializable
      */
     private function getProvidedInstance($target)
     {
-        $instance =  $this->getInstance($target)->get();
+        $provider = $this->getInstance($target);
+        /** @var $provider ProviderInterface */
+        $instance = $provider->get();
         if ($this->logger) {
-            $this->logger->log($target, [], [], $instance, new Bind);
+            $dependencyProvider = new DependencyProvider($provider, $instance);
+            $this->logger->log($target, [], [], $dependencyProvider, new Bind);
         }
 
         return $instance;

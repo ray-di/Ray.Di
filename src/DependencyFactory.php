@@ -67,7 +67,7 @@ final class DependencyFactory
         CompileLogger $logger
     ) {
         $this->class = get_class($object);
-        $this->hash = spl_object_hash($object);
+        $this->hash = $logger->getObjectHash($object);
         $this->args = $args;
         $this->setters = $setter;
         $this->logger = $logger;
@@ -98,8 +98,8 @@ final class DependencyFactory
 
         // constructor injection
         foreach ($this->args as &$arg) {
-            if ($arg instanceof InstanceRef) {
-                $arg = $this->logger->newInstance($arg->refIndex);
+            if ($arg instanceof DependencyReference) {
+                $arg = $arg();
             }
         }
         $instance = (new \ReflectionClass($this->class))->newInstanceArgs($this->args);
@@ -107,8 +107,8 @@ final class DependencyFactory
         // setter injection
         foreach ($this->setters as $method => &$args) {
             foreach ($args as &$arg) {
-                if ($arg instanceof InstanceRef) {
-                    $arg = $this->logger->newInstance($arg->refIndex);
+                if ($arg instanceof DependencyReference) {
+                    $arg = $arg();
                 }
             }
             call_user_func_array([$instance, $method], $args);
