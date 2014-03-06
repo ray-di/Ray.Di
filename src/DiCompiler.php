@@ -44,7 +44,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
         CompileLoggerInterface $logger,
         Cache $cache = null,
         $cacheKey = __CLASS__
-    ){
+    ) {
         $this->injector = $injector;
         $logger->setConfig($injector->getContainer()->getForge()->getConfig());
         $this->logger = $logger;
