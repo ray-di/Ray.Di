@@ -11,24 +11,22 @@ use Aura\Di\ConfigInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-class CompileLogger implements LoggerInterface
+final class CompileLogger implements CompileLoggerInterface
 {
     /**
      * @var LoggerInterface
      */
-    protected $logger;
-
-    protected $ref;
+    private $logger;
 
     /**
      * @var DependencyFactory[]
      */
-    protected $instanceContainer = [];
+    private $instanceContainer = [];
 
     /**
      * @var ConfigInterface
      */
-    protected $config;
+    private $config;
 
     /**
      * @var \SplObjectStorage
@@ -48,9 +46,7 @@ class CompileLogger implements LoggerInterface
     }
 
     /**
-     * @param ConfigInterface $config
-     *
-     * @return self
+     * {@inheritdoc}
      */
     public function setConfig(ConfigInterface $config)
     {
@@ -58,14 +54,9 @@ class CompileLogger implements LoggerInterface
 
         return $this;
     }
+
     /**
-     * Log injection
-     *
-     * @param string $class
-     * @param array  $params
-     * @param array  $setters
-     * @param object $instance
-     * @param Bind   $bind
+     * {@inheritdoc}
      */
     public function log($class, array $params, array $setters, $instance, Bind $bind)
     {
@@ -79,10 +70,7 @@ class CompileLogger implements LoggerInterface
     }
 
     /**
-     * @param string $ref
-     *
-     * @return mixed
-     * @throws \LogicException
+     * {@inheritdoc}
      */
     public function newInstance($ref)
     {
@@ -98,9 +86,7 @@ class CompileLogger implements LoggerInterface
     }
 
     /**
-     * @param $object
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getObjectHash($object)
     {
@@ -117,14 +103,16 @@ class CompileLogger implements LoggerInterface
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getLastHash()
+    public function setClassMap(array $classMap, $class)
     {
         $container = $this->instanceContainer;
         $factory = array_pop($container);
 
-        return (string)$factory;
+        $classMap[$class] = (string)$factory;
+
+        return $classMap;
     }
 
     /**
@@ -190,9 +178,6 @@ class CompileLogger implements LoggerInterface
             if (is_object($param)) {
                 $param = $this->getRef($param);
             }
-            if (is_array($param)) {
-                $param = $this->getArray($param);
-            }
         }
 
         return $params;
@@ -207,17 +192,6 @@ class CompileLogger implements LoggerInterface
     {
         $hash = $this->getObjectHash($instance);
         return new DependencyReference($hash, $this);
-    }
-
-    /**
-     * @param array $array
-     *
-     * @return self
-     */
-    private function getArray(array $array)
-    {
-        // @todo
-        return $array;
     }
 
     /**

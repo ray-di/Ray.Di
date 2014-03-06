@@ -6,7 +6,7 @@
  */
 namespace Ray\Di;
 
-class DiCompiler implements InstanceInterface, \Serializable
+final class DiCompiler implements InstanceInterface, \Serializable
 {
     /**
      * @var array
@@ -19,20 +19,15 @@ class DiCompiler implements InstanceInterface, \Serializable
     private $injector;
 
     /**
-     * @var DiCompiler
+     * @var CompileLoggerInterface
      */
-    protected $compiler;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    private $logger;
 
     /**
      * @param InjectorInterface $injector
      * @param CompileLogger     $logger
      */
-    public function __construct(InjectorInterface $injector, CompileLogger $logger)
+    public function __construct(InjectorInterface $injector, CompileLoggerInterface $logger)
     {
         $this->injector = $injector;
         $logger->setConfig($injector->getContainer()->getForge()->getConfig());
@@ -48,7 +43,7 @@ class DiCompiler implements InstanceInterface, \Serializable
     {
         $this->injector->setLogger($this->logger);
         $this->injector->getInstance($class);
-        $this->classMap[$class] = $this->logger->getLastHash();
+        $this->classMap = $this->logger->setClassMap($this->classMap, $class);
 
         return $this;
     }
@@ -68,13 +63,17 @@ class DiCompiler implements InstanceInterface, \Serializable
         return $instance;
     }
 
+    /**
+     * Destroy injector for runtime
+     *
+     * @return string
+     */
     public function serialize()
     {
           $serialized = serialize(
               [
                 $this->classMap,
-                $this->logger,
-                $this->compiler
+                $this->logger
               ]
           );
 
@@ -85,8 +84,7 @@ class DiCompiler implements InstanceInterface, \Serializable
     {
         list(
             $this->classMap,
-            $this->logger,
-            $this->compiler
+            $this->logger
         ) = unserialize($serialized);
     }
 }
