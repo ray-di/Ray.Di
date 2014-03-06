@@ -7,7 +7,7 @@ before_commands:
 
 tools:
     php_mess_detector:
-        enabled: false
+        enabled: true
         config:
             ruleset: ./phpmd.xml
     php_code_sniffer:
