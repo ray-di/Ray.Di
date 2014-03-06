@@ -24,7 +24,7 @@ final class DependencyReference
     private $instance;
 
     /**
-     * @param $refId
+     * @param string $refId
      * @param CompileLogger $logger
      */
     public function __construct($refId, CompileLogger $logger)

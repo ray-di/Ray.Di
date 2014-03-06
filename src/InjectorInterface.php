@@ -44,7 +44,9 @@ interface InjectorInterface extends InstanceInterface
     /**
      * Set logger
      *
-     * @return self
+     * @param LoggerInterface $logger
+     *
+     * @return mixed
      */
     public function setLogger(LoggerInterface $logger);
 }

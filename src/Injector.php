@@ -207,6 +207,11 @@ class Injector implements InjectorInterface, \Serializable
         $this->container = clone $this->container;
     }
 
+    /**
+     * @param AbstractModule $module
+     *
+     * @return self
+     */
     public function __invoke(AbstractModule $module)
     {
         $this->module = $module;
@@ -845,7 +850,7 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * @param $target
      *
-     * @return mixed
+     * @return Compiler
      */
     private function getProvidedInstance($target)
     {
@@ -876,7 +881,7 @@ class Injector implements InjectorInterface, \Serializable
     {
         $typeHintBy = $param[Definition::PARAM_TYPEHINT_BY];
         if ($typeHintBy == []) {
-            throw $this->raiseNotBoundException($param, $key, $typeHint, $annotate);
+            throw $this->getNotBoundException($param, $key, $typeHint, $annotate);
         }
         if ($typeHintBy[0] === Definition::PARAM_TYPEHINT_METHOD_IMPLEMETEDBY) {
             return [AbstractModule::TO => [AbstractModule::TO_CLASS, $typeHintBy[1]]];
@@ -892,8 +897,9 @@ class Injector implements InjectorInterface, \Serializable
      * @param string $annotate
      *
      * @return Exception\NotBound
+     * @throws Exception\OptionalInjectionNotBound
      */
-    private function raiseNotBoundException($param, $key, $typeHint, $annotate)
+    private function getNotBoundException($param, $key, $typeHint, $annotate)
     {
         if ($param[Definition::OPTIONAL] === true) {
             throw new Exception\OptionalInjectionNotBound($key);
@@ -902,6 +908,7 @@ class Injector implements InjectorInterface, \Serializable
         $class = array_pop($this->classes);
         $msg = "typehint='{$typeHint}', annotate='{$annotate}' for \${$name} in class '{$class}'";
         $e = (new Exception\NotBound($msg))->setModule($this->module);
+
         return $e;
     }
 

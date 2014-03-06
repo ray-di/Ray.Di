@@ -8,7 +8,6 @@ namespace Ray\Di\Module;
 
 use Ray\Di\AbstractModule;
 use Ray\Di\Scope;
-use Ray\Aop\Bind;
 
 /**
  * Dependency Injector Module.

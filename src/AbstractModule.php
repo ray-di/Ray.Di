@@ -412,6 +412,7 @@ abstract class AbstractModule implements ArrayAccess
     {
         $di = $this->dependencyInjector;
         $module = $di->getModule();
+        /** @var $di Injector */
         $di($this);
         $instance = $di->getInstance($class);
         if ($module instanceof AbstractModule) {

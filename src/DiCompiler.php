@@ -6,9 +6,6 @@
  */
 namespace Ray\Di;
 
-use Ray\Aop\Compiler;
-use Ray\Di\Exception;
-
 class DiCompiler implements InstanceInterface, \Serializable
 {
     /**
@@ -33,6 +30,7 @@ class DiCompiler implements InstanceInterface, \Serializable
 
     /**
      * @param InjectorInterface $injector
+     * @param CompileLogger     $logger
      */
     public function __construct(InjectorInterface $injector, CompileLogger $logger)
     {
@@ -42,15 +40,15 @@ class DiCompiler implements InstanceInterface, \Serializable
     }
 
     /**
-     * @param string $classd
+     * @param string $class
      *
-     * @return $this
+     * @return self
      */
     public function compile($class)
     {
         $this->injector->setLogger($this->logger);
         $this->injector->getInstance($class);
-        $this->classMap[$class] = $this->logger->getLashHash();
+        $this->classMap[$class] = $this->logger->getLastHash();
 
         return $this;
     }

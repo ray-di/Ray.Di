@@ -18,6 +18,10 @@ final class DependencyProvider
      */
     public $instance;
 
+    /**
+     * @param ProviderInterface $provider
+     * @param object            $instance
+     */
     public function __construct(ProviderInterface $provider, $instance)
     {
         $this->provider = $provider;

@@ -34,15 +34,9 @@ final class DependencyFactory
     private $setters = [];
 
     /**
-     * @var null|string
-     */
-    private $providerRef;
-
-    /**
      * @var CompileLogger
      */
     private $logger;
-
 
     /**
      * @var DependencyFactory[]

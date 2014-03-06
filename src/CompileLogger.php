@@ -19,7 +19,6 @@ class CompileLogger implements LoggerInterface
     protected $logger;
 
     protected $ref;
-    protected $refs = [];
 
     /**
      * @var DependencyFactory[]
@@ -50,6 +49,8 @@ class CompileLogger implements LoggerInterface
 
     /**
      * @param ConfigInterface $config
+     *
+     * @return self
      */
     public function setConfig(ConfigInterface $config)
     {
@@ -60,23 +61,25 @@ class CompileLogger implements LoggerInterface
     /**
      * Log injection
      *
-     * @param string        $class
-     * @param array         $params
-     * @param array         $setter
-     * @param object        $object
-     * @param \Ray\Aop\Bind $bind
+     * @param string $class
+     * @param array  $params
+     * @param array  $setters
+     * @param object $instance
+     * @param Bind   $bind
      */
     public function log($class, array $params, array $setters, $instance, Bind $bind)
     {
         if ($instance instanceof DependencyProvider) {
-            return $this->buildProvider($instance);
+            $this->buildProvider($instance);
+
+            return;
         }
         $this->logger->log($class, $params, $setters, $instance, $bind);
         $this->build($class, $instance, $params, $setters);
     }
 
     /**
-     * @param $ref
+     * @param string $ref
      *
      * @return mixed
      * @throws \LogicException
@@ -113,7 +116,10 @@ class CompileLogger implements LoggerInterface
         return $hash;
     }
 
-    public function getLashHash()
+    /**
+     * @return string
+     */
+    public function getLastHash()
     {
         $container = $this->instanceContainer;
         $factory = array_pop($container);
@@ -125,6 +131,7 @@ class CompileLogger implements LoggerInterface
      * @param object $instance
      * @param array  $params
      * @param array  $setters
+     * @param string $class
      */
     private function build($class, $instance, array $params, array $setters)
     {
@@ -204,6 +211,8 @@ class CompileLogger implements LoggerInterface
 
     /**
      * @param array $array
+     *
+     * @return self
      */
     private function getArray(array $array)
     {
@@ -212,7 +221,7 @@ class CompileLogger implements LoggerInterface
     }
 
     /**
-     * @param object $instance
+     * @param DependencyFactory $instance
      */
     private function add($instance)
     {
