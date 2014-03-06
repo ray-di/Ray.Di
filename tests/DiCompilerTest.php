@@ -7,6 +7,8 @@
  */
 namespace Ray\Di;
 
+use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
@@ -294,5 +296,20 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
     public function testPostConstruct($diary)
     {
         $this->assertTrue($diary->init);
+    }
+
+    public function testCreate()
+    {
+        $injectorFactory = function(){
+            return Injector::create([new DiaryAopModule]);
+        };
+        // cache create
+        $cache = new FilesystemCache(__DIR__ . '/tmp');
+        $injector = DiCompiler::create($injectorFactory, $cache, 'CacheKey');
+        $injector->getInstance('Ray\Di\DiaryInterface');
+        // cache read
+        $injector = DiCompiler::create($injectorFactory, $cache, 'CacheKey');
+        $instance = $injector->getInstance('Ray\Di\DiaryInterface');
+        $this->assertInstanceOf('Ray\Di\Diary', $instance);
     }
 }
