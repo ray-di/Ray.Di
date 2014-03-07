@@ -6,7 +6,7 @@
  */
 namespace Ray\Di;
 
-final class DependencyFactory
+final class DependencyFactory implements ProviderInterface
 {
     /**
      * @var string
@@ -83,7 +83,10 @@ final class DependencyFactory
         $this->postConstruct = $postConstruct;
     }
 
-    public function newInstance()
+    /**
+     * @return object|\Ray\Aop\Compiler
+     */
+    public function get()
     {
         // is singleton ?
         if ($this->instance) {
@@ -93,7 +96,7 @@ final class DependencyFactory
         // constructor injection
         foreach ($this->args as &$arg) {
             if ($arg instanceof DependencyReference) {
-                $arg = $arg();
+                $arg = $arg->get();
             }
         }
         $instance = (new \ReflectionClass($this->class))->newInstanceArgs($this->args);
@@ -102,7 +105,7 @@ final class DependencyFactory
         foreach ($this->setters as $method => &$args) {
             foreach ($args as &$arg) {
                 if ($arg instanceof DependencyReference) {
-                    $arg = $arg();
+                    $arg = $arg->get();
                 }
             }
             call_user_func_array([$instance, $method], $args);

@@ -79,10 +79,7 @@ final class CompileLogger implements CompileLoggerInterface
             throw new Exception\Compile($ref);
             // @codeCoverageIgnoreEnd
         }
-        if ($this->instanceContainer[$ref] instanceof DependencyReference) {
-            return $this->instanceContainer[$ref]();
-        }
-        return $this->instanceContainer[$ref]->newInstance();
+        return $this->instanceContainer[$ref]->get();
     }
 
     /**

@@ -6,7 +6,7 @@
  */
 namespace Ray\Di;
 
-final class DependencyReference
+final class DependencyReference implements ProviderInterface
 {
     /**
      * @var CompileLogger
@@ -33,7 +33,7 @@ final class DependencyReference
         $this->logger = $logger;
     }
 
-    public function __invoke()
+    public function get()
     {
         if (is_null($this->instance)) {
             $this->instance = $this->logger->newInstance($this->refId);
