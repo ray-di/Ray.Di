@@ -1,9 +1,0 @@
-- 1.0.0
-  Release Mar 31, 2013
-
-- 1.0.1
-  [DEP] Aura.Di 1.1
-  [FIX] #27,#28
-
-- 1.0.2
-  [ADD] Ray\Di\Module\InjectorModule

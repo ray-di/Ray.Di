@@ -1,0 +1,27 @@
+filter:
+    paths: [src/*]
+    excluded_paths: [docs/*,  tests/*, vendor/*]
+
+before_commands:
+    - 'composer install --dev --prefer-source'
+
+tools:
+    php_mess_detector:
+        enabled: true
+        config:
+            ruleset: ./phpmd.xml
+    php_code_sniffer:
+        enabled: true
+        config:
+            ruleset: ./phpcs.xml
+    php_analyzer:
+        enabled: true
+    php_cpd:
+        enabled: true
+    php_loc:
+        enabled: true
+        excluded_dirs:
+            - build
+            - tests
+            - vendor
+    external_code_coverage: true

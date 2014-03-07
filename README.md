@@ -4,7 +4,7 @@ Dependency Injection framework for PHP
 [![Latest Stable Version](https://poser.pugx.org/ray/di/v/stable.png)](https://packagist.org/packages/ray/di)
 [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=master)](http://travis-ci.org/koriym/Ray.Di)
 
-**Ray.Di** was created in order to get Guice style dependency1 injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency1 injection framework developed by Google.
+**Ray.Di** was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google.
 
  * Supports some of the [JSR-250](http://en.wikipedia.org/wiki/JSR_250) object lifecycle annotations (`@PostConstruct`, `@PreDestroy`)
  * Provides an [AOP Alliance](http://aopalliance.sourceforge.net/)-compliant aspect-oriented programming implementation.
@@ -17,11 +17,12 @@ _Not all features of Guice have been implemented._
 Getting Stated
 --------------
 
-Here is a basic example of dependency1 injection using Ray.Di.
+Here is a basic example of dependency injection using Ray.Di.
 
 ```php
-use Ray\Di\Injector;
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Inject;
+use Ray\Di\Injector;
 
 interface FinderInterface
 {
@@ -83,19 +84,22 @@ Our provider implementation class has dependencies of its own, which it receives
 It implements the Provider interface to define what's returned with complete type safety:
 
 ```php
+
+use Ray\Di\Di\Inject;
+
 class DatabaseTransactionLogProvider implements Provider
 {
-    private ConnectionInterface connection;
+    private $connection;
 
     /**
      * @Inject
      */
-    public DatabaseTransactionLogProvider(ConnectionInterface $connection)
+    public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection;
     }
 
-    public TransactionLog get()
+    public function get()
     {
         $transactionLog = new DatabaseTransactionLog;
         $transactionLog->setConnection($this->connection);
@@ -115,6 +119,9 @@ $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvid
 Ray comes with a built-in binding annotation `@Named` that takes a string.
 
 ```php
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+
 /**
  *  @Inject
  *  @Named("processor=Checkout")
@@ -171,6 +178,7 @@ protected function configure()
 ## Scopes
 
 By default, Ray returns a new instance each time it supplies a value. This behaviour is configurable via scopes.
+You can also configure scopes with the `@Scope` annotation.
 
 ```php
 protected function configure()
@@ -181,9 +189,12 @@ protected function configure()
 
 ## Object life cycle
 
-`@PostConstruct` is used on methods that need to get executed after dependency1 injection has finalized to perform any extra initialization.
+`@PostConstruct` is used on methods that need to get executed after dependency injection has finalized to perform any extra initialization.
 
 ```php
+
+use Ray\Di\Di\PostConstruct;
+
 /**
  * @PostConstruct
  */
@@ -197,6 +208,9 @@ public function onInit()
 This method is registered by using **register_shutdown_function**.
 
 ```php
+
+use Ray\Di\Di\PreDestroy;
+
 /**
  * @PreDestroy
  */
@@ -246,6 +260,10 @@ class BillingService
 Next, we define the interceptor by implementing the org.aopalliance.intercept.MethodInterceptor interface. When we need to call through to the underlying method, we do so by calling `$invocation->proceed()`:
 
 ```php
+
+use Ray\Aop\MethodInterceptor;
+use Ray\Aop\MethodInvocation;
+
 class WeekendBlocker implements MethodInterceptor
 {
     public function invoke(MethodInvocation $invocation)
@@ -264,10 +282,12 @@ class WeekendBlocker implements MethodInterceptor
 Finally, we configure everything. In this case we match any class, but only the methods with our `@NotOnWeekends` annotation:
 
 ```php
+
+use Ray\Di\AbstractModule;
+
 class WeekendModule extends AbstractModule
 {
-    public function configure()
-    {
+
     protected function configure()
     {
         $this->bindInterceptor(
@@ -303,6 +323,9 @@ Call Stack:
 You can bind interceptors in variouas ways as follows.
 
 ```php
+
+use Ray\Di\AbstractModule;
+
 class TaxModule extends AbstractModule
 {
     protected function configure()
@@ -317,6 +340,9 @@ class TaxModule extends AbstractModule
 ```
 
 ```php
+
+use Ray\Di\AbstractModule;
+
 class AopMatcherModule extends AbstractModule
 {
     pro
@@ -381,7 +407,7 @@ $app = $injector->getInsntance('ApplicationInterface');
 $app->run();
 ```
 
-Cachealbe class example
+Cacheable class example
 -----------------------
 
 ```php
@@ -421,6 +447,13 @@ class UserRepository
     }
 }
 ```
+
+Annotation Caching
+------------------
+
+If working with large legacy codebases it might not be feasible to cache entire class instances as the CacheInjector
+does. You can still achieve speed improvements by caching the annotations of each class if you pass an object
+implementing `Doctrine\Common\Cache` as the second argument to `Injector::create`
 
 Requirements
 ------------
