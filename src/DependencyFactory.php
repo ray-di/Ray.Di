@@ -123,6 +123,13 @@ final class DependencyFactory implements ProviderInterface
         }
         // interceptor ?
         if ($this->interceptors) {
+            foreach ($this->interceptors as &$methodInterceptors) {
+                foreach ($methodInterceptors as &$methodInterceptor) {
+                    if ($methodInterceptor instanceof DependencyReference) {
+                        $methodInterceptor = $methodInterceptor->get();
+                    }
+                }
+            }
             $this->instance->rayAopBind = $this->interceptors;
         }
         return $instance;
