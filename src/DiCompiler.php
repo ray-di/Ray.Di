@@ -6,8 +6,12 @@
  */
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
+use PHPParser_PrettyPrinter_Default;
+use Ray\Aop\Bind;
+use Ray\Aop\Compiler;
 
 final class DiCompiler implements InstanceInterface, \Serializable
 {
@@ -45,21 +49,49 @@ final class DiCompiler implements InstanceInterface, \Serializable
         Cache $cache = null,
         $cacheKey = __CLASS__
     ) {
-        $this->injector = $injector;
         $logger->setConfig($injector->getContainer()->getForge()->getConfig());
+        $injector->setLogger($logger);
+        $this->injector = $injector;
         $this->logger = $logger;
         $this->cache = $cache ?: new ArrayCache;
         $this->cacheKey = $cacheKey;
     }
 
-    public static function create(callable $injector, Cache $cache, $cacheKey = __METHOD__)
+    /**
+     * @param        $moduleProvider
+     * @param Cache  $cache
+     * @param string $cacheKey
+     *
+     * @return mixed|DiCompiler
+     */
+    public static function create(callable $moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
         if ($cache->contains($cacheKey)) {
             return $cache->fetch($cacheKey);
         }
-        $compiler = new self($injector(), new CompileLogger(new Logger), $cache, $cacheKey);
 
-        return $compiler;
+        $config = new Config(
+            new Annotation(
+                new Definition,
+                new AnnotationReader
+            )
+        );
+        $logger = new CompileLogger(new Logger);
+        $logger->setConfig($config);
+        $injector = new Injector(
+            new Container(new Forge($config)),
+            $moduleProvider(),
+            new Bind,
+            new Compiler(
+                $tmpDir,
+                new PHPParser_PrettyPrinter_Default
+            ),
+            $logger
+        );
+
+        $diCompiler = new DiCompiler($injector, $logger);
+
+        return $diCompiler;
     }
 
     /**
@@ -69,7 +101,9 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     public function compile($class)
     {
-        $this->injector->setLogger($this->logger);
+        if (! $this->injector) {
+            return;
+        }
         $this->injector->getInstance($class);
         $this->classMap = $this->logger->setClassMap($this->classMap, $class);
         $this->cache->save($this->cacheKey, $this);

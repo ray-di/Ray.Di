@@ -7,8 +7,12 @@
  */
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\FilesystemCache;
+use PHPParser_PrettyPrinter_Default;
+use Ray\Aop\Bind;
+use Ray\Aop\Compiler;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
@@ -143,7 +147,7 @@ class DiaryInterceptor implements MethodInterceptor
     public function __construct(LogInterface $log)
     {
         $this->log = $log;
-//        $this->closure = function(){};
+        $this->closure = function(){};
     }
 
     public function invoke(MethodInvocation $invocation)
@@ -168,11 +172,42 @@ class DiaryAopModule extends AbstractModule
 
 class DiCompilerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Injector
+     */
+    protected $injector;
+
+    /**
+     * @var Logger
+     */
+    protected $logger;
+
+    protected function setUp()
+    {
+        $config = new Config(
+            new Annotation(
+                new Definition,
+                new AnnotationReader
+            )
+        );
+        $logger = new CompileLogger(new Logger);
+        $logger->setConfig($config);
+        $this->injector = new Injector(
+            new Container(new Forge($config)),
+            new DiaryAopModule,
+            new Bind,
+            new Compiler(
+                sys_get_temp_dir(),
+                new PHPParser_PrettyPrinter_Default
+            ),
+            $logger
+        );
+        $this->logger = $logger;
+    }
+
     public function testGetInstance()
     {
-        $injector = Injector::create([new DiaryModule]);
-        $injector->getInstance('Ray\Di\DiaryInterface');
-        $DiCompiler = new DiCompiler($injector, new CompileLogger(new Logger()));
+        $DiCompiler = new DiCompiler($this->injector, $this->logger);
         $injector = $DiCompiler->compile('Ray\Di\DiaryInterface');
         $instance = $injector->getInstance('Ray\Di\DiaryInterface');
 
@@ -199,8 +234,8 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testSingleton()
     {
-        $injector = Injector::create([new DiarySingletonModule]);
-        $DiCompiler = new DiCompiler($injector, new CompileLogger(new Logger()));
+        $this->injector->setModule(new DiarySingletonModule);
+        $DiCompiler = new DiCompiler($this->injector, $this->logger);
 
         $compileInjector = $DiCompiler->compile('Ray\Di\DiaryInterface');
 
@@ -279,8 +314,8 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
     
     public function testAop()
     {
-        $injector = Injector::create([new DiaryAopModule]);
-        $DiCompiler = new DiCompiler($injector, new CompileLogger(new Logger()));
+
+        $DiCompiler = new DiCompiler($this->injector, $this->logger);
         $compileInjector = $DiCompiler->compile('Ray\Di\DiaryInterface');
         $compileInjector = unserialize(serialize($compileInjector));
         $diary = $compileInjector->getInstance('Ray\Di\DiaryInterface');
@@ -300,15 +335,16 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreate()
     {
-        $injectorFactory = function(){
-            return Injector::create([new DiaryAopModule]);
-        };
         // cache create
         $cache = new FilesystemCache(__DIR__ . '/tmp');
-        $injector = DiCompiler::create($injectorFactory, $cache, 'CacheKey');
+        $tmpDir = __DIR__ . '/tmp';
+        $moduleProvider = function() {
+            return new DiaryAopModule;
+        };
+        $injector = DiCompiler::create($moduleProvider, $cache, $tmpDir, 'CacheKey');
         $injector->getInstance('Ray\Di\DiaryInterface');
-        // cache read
-        $injector = DiCompiler::create($injectorFactory, $cache, 'CacheKey');
+        /** @var $insjector $injector */
+        $injector = DiCompiler::create($moduleProvider, $cache, $tmpDir, 'CacheKey');
         $instance = $injector->getInstance('Ray\Di\DiaryInterface');
         $this->assertInstanceOf('Ray\Di\Diary', $instance);
     }

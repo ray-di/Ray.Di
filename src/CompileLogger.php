@@ -11,7 +11,7 @@ use Aura\Di\ConfigInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-final class CompileLogger implements CompileLoggerInterface
+final class CompileLogger implements CompileLoggerInterface, \Serializable
 {
     /**
      * @var LoggerInterface
@@ -145,7 +145,7 @@ final class CompileLogger implements CompileLoggerInterface
     private function buildInterceptor($instance)
     {
         $boundInterceptors = (array)$instance->rayAopBind; // 'methodName' => methodInterceptors[]
-        foreach ($boundInterceptors as $methodInterceptors) {
+        foreach ($boundInterceptors as &$methodInterceptors) {
             foreach ($methodInterceptors as &$methodInterceptor) {
                 /** @var $methodInterceptor \Ray\Aop\MethodInterceptor */
                 $methodInterceptor = $this->getRef($methodInterceptor);
@@ -204,4 +204,23 @@ final class CompileLogger implements CompileLoggerInterface
     {
         return (string)$this->logger;
     }
+
+    public function serialize()
+    {
+        $serialized = serialize(
+            [
+                $this->instanceContainer
+            ]
+        );
+
+        return $serialized;
+    }
+
+    public function unserialize($serialized)
+    {
+        list(
+            $this->instanceContainer
+        ) = unserialize($serialized);
+    }
+
 }
