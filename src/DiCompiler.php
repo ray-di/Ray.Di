@@ -39,6 +39,12 @@ final class DiCompiler implements InstanceInterface, \Serializable
      * @var string
      */
     private $cacheKey;
+
+    /**
+     * @var string
+     */
+    private $aopClassDir;
+
     /**
      * @param InjectorInterface $injector
      * @param CompileLogger     $logger
@@ -46,15 +52,16 @@ final class DiCompiler implements InstanceInterface, \Serializable
     public function __construct(
         InjectorInterface $injector,
         CompileLoggerInterface $logger,
-        Cache $cache = null,
-        $cacheKey = __CLASS__
+        Cache $cache,
+        $cacheKey
     ) {
         $logger->setConfig($injector->getContainer()->getForge()->getConfig());
         $injector->setLogger($logger);
         $this->injector = $injector;
         $this->logger = $logger;
-        $this->cache = $cache ?: new ArrayCache;
+        $this->cache = $cache;
         $this->cacheKey = $cacheKey;
+        $this->aopClassDir = $injector->getAopClassDir();
     }
 
     /**
@@ -89,7 +96,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
             $logger
         );
 
-        $diCompiler = new DiCompiler($injector, $logger);
+        $diCompiler = new DiCompiler($injector, $logger, $cache, $cacheKey);
 
         return $diCompiler;
     }
