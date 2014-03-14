@@ -74,7 +74,8 @@ final class DiCompiler implements InstanceInterface, \Serializable
     public static function create(callable $moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
         if ($cache->contains($cacheKey)) {
-            list ($diCompiler, $aopDir) = $cache->fetch($cacheKey);
+            list ($diCompiler, $aopClassDir) = $cache->fetch($cacheKey);
+            (new AopClassLoader)->register($aopClassDir);
 
             return $diCompiler;
         }
@@ -115,7 +116,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
         }
         $this->injector->getInstance($class);
         $this->classMap = $this->logger->setClassMap($this->classMap, $class);
-        $this->cache->save($this->cacheKey, [$this, $this->aopClassDir);
+        $this->cache->save($this->cacheKey, [$this, $this->aopClassDir]);
         return $this;
     }
 
