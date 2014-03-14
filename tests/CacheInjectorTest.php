@@ -102,8 +102,8 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testCachedAopInject()
     {
-        require __DIR__ . '/scripts/cache.php';
-        $serialized = require __DIR__ . '/scripts/cache.php';
+        require __DIR__ . '/scripts/cache_billing.php';
+        $serialized = require __DIR__ . '/scripts/cache_billing.php';
         $instance = unserialize($serialized);
 
         $this->assertInstanceOf('Ray\Aop\WeavedInterface', $instance);
@@ -112,13 +112,13 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testCachedAopInjectClassAopFilesAreDeleted()
     {
-        $serialized = require __DIR__ . '/scripts/cache.php';
+        $serialized = require __DIR__ . '/scripts/cache_billing.php';
         foreach (glob(__DIR__ . '/scripts/aop_files/*.php') as $file) {
             unlink($file);
         }
         $instance = unserialize($serialized);
         $this->assertInstanceOf('Ray\Aop\WeavedInterface', $instance);
-        $this->assertInstanceOf('Ray\Aop\WeavedInterface', unserialize(require __DIR__ . '/scripts/cache.php'));
+        $this->assertInstanceOf('Ray\Aop\WeavedInterface', unserialize(require __DIR__ . '/scripts/cache_billing.php'));
         return $instance;
     }
 
