@@ -162,4 +162,9 @@ final class DiCompiler implements InstanceInterface, \Serializable
             $this->logger
         ) = unserialize($serialized);
     }
+
+    public function __toString()
+    {
+        return (string)$this->logger;
+    }
 }
