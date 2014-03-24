@@ -41,9 +41,9 @@ final class DiCompiler implements InstanceInterface, \Serializable
     private $cacheKey;
 
     /**
-     * @var string
+     * @var callable
      */
-    private $aopClassDir;
+    private static $factory;
 
     /**
      * @param InjectorInterface $injector
@@ -61,7 +61,6 @@ final class DiCompiler implements InstanceInterface, \Serializable
         $this->logger = $logger;
         $this->cache = $cache;
         $this->cacheKey = $cacheKey;
-        $this->aopClassDir = $injector->getAopClassDir();
     }
 
     /**
@@ -73,12 +72,34 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     public static function create(callable $moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
+        self::$factory = function() use ($moduleProvider, $cache, $cacheKey, $tmpDir) {
+            return self::createInstance($moduleProvider, $cache, $cacheKey, $tmpDir);
+
+            return $diInjector;
+        };
+
         if ($cache->contains($cacheKey)) {
-            list ($diCompiler, $aopClassDir) = $cache->fetch($cacheKey);
-            (new AopClassLoader)->register($aopClassDir);
+            (new AopClassLoader)->register($tmpDir);
+            $diCompiler = $cache->fetch($cacheKey);
 
             return $diCompiler;
         }
+
+        list(, $diCompiler) = self::createInstance($moduleProvider, $cache, $cacheKey, $tmpDir);
+
+        return $diCompiler;
+    }
+
+    /**
+     * @param callable $moduleProvider
+     * @param Cache    $cache
+     * @param string   $cacheKey
+     * @param string   $tmpDir
+     *
+     * @return DiCompiler
+     */
+    private static function createInstance($moduleProvider, Cache $cache, $cacheKey, $tmpDir)
+    {
 
         $config = new Config(
             new Annotation(
@@ -98,10 +119,9 @@ final class DiCompiler implements InstanceInterface, \Serializable
             ),
             $logger
         );
-
         $diCompiler = new DiCompiler($injector, $logger, $cache, $cacheKey);
 
-        return $diCompiler;
+        return [$injector, $diCompiler];
     }
 
     /**
@@ -111,12 +131,10 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     public function compile($class)
     {
-        if (! $this->injector) {
-            return;
-        }
         $this->injector->getInstance($class);
         $this->classMap = $this->logger->setClassMap($this->classMap, $class);
-        $this->cache->save($this->cacheKey, [$this, $this->aopClassDir]);
+        $this->cache->save($this->cacheKey, $this);
+
         return $this;
     }
 
@@ -130,12 +148,30 @@ final class DiCompiler implements InstanceInterface, \Serializable
     public function getInstance($class)
     {
         if (! isset($this->classMap[$class])) {
-            $this->compile($class);
+            return $this->recompile($class);
         }
         $hash = $this->classMap[$class];
         $instance = $this->logger->newInstance($hash);
 
         return $instance;
+    }
+
+    /**
+     * @param $class
+     *
+     * @return object
+     */
+    private function recompile($class)
+    {
+        $this->cache->delete($this->cacheKey);
+        list($injector, $diCompiler) = $this->injector ? [$this->injector, $this] : call_user_func(self::$factory);
+        /** @var $diCompiler DiCompiler */
+        $mappedClass = array_keys($this->classMap);
+        $mappedClass[] = $class;
+        foreach ($mappedClass as $newClass) {
+            $diCompiler->compile($newClass);
+        }
+        return $diCompiler->getInstance($class);
     }
 
     /**
@@ -148,7 +184,9 @@ final class DiCompiler implements InstanceInterface, \Serializable
           $serialized = serialize(
               [
                 $this->classMap,
-                $this->logger
+                $this->logger,
+                $this->cache,
+                $this->cacheKey
               ]
           );
 
@@ -159,7 +197,9 @@ final class DiCompiler implements InstanceInterface, \Serializable
     {
         list(
             $this->classMap,
-            $this->logger
+            $this->logger,
+            $this->cache,
+            $this->cacheKey
         ) = unserialize($serialized);
     }
 
