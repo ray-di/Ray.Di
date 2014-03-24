@@ -21,7 +21,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
     /**
      * @var DependencyFactory[]
      */
-    private $instanceContainer = [];
+    private $dependencyContainer = [];
 
     /**
      * @var ConfigInterface
@@ -74,12 +74,12 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
      */
     public function newInstance($ref)
     {
-        if (! isset($this->instanceContainer[$ref])) {
+        if (! isset($this->dependencyContainer[$ref])) {
             // @codeCoverageIgnoreStart
             throw new Exception\Compile($ref);
             // @codeCoverageIgnoreEnd
         }
-        return $this->instanceContainer[$ref]->get();
+        return $this->dependencyContainer[$ref]->get();
     }
 
     /**
@@ -104,7 +104,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
      */
     public function setClassMap(array $classMap, $class)
     {
-        $container = $this->instanceContainer;
+        $container = $this->dependencyContainer;
         $factory = array_pop($container);
 
         $classMap[$class] = (string)$factory;
@@ -162,7 +162,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
     {
         $instanceHash = $this->getObjectHash($dependencyProvider->instance);
         $providerHash = $this->getObjectHash($dependencyProvider->provider);
-        $this->instanceContainer[$instanceHash] = new DependencyReference($providerHash, $this);
+        $this->dependencyContainer[$instanceHash] = new DependencyReference($providerHash, $this);
     }
     /**
      * @param array $params
@@ -197,7 +197,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
     private function add($instance)
     {
         $index = (string)$instance;
-        $this->instanceContainer[$index] = $instance;
+        $this->dependencyContainer[$index] = $instance;
     }
 
     public function __toString()
@@ -209,7 +209,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
     {
         $serialized = serialize(
             [
-                $this->instanceContainer
+                $this->dependencyContainer
             ]
         );
 
@@ -219,7 +219,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
     public function unserialize($serialized)
     {
         list(
-            $this->instanceContainer
+            $this->dependencyContainer
         ) = unserialize($serialized);
     }
 
