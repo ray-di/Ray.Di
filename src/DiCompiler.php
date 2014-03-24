@@ -7,7 +7,6 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
@@ -72,7 +71,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     public static function create(callable $moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
-        self::$factory = function() use ($moduleProvider, $cache, $cacheKey, $tmpDir) {
+        self::$factory = function () use ($moduleProvider, $cache, $cacheKey, $tmpDir) {
             return self::createInstance($moduleProvider, $cache, $cacheKey, $tmpDir);
 
             return $diInjector;
@@ -171,6 +170,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
         foreach ($mappedClass as $newClass) {
             $diCompiler->compile($newClass);
         }
+
         return $diCompiler->getInstance($class);
     }
 
@@ -205,6 +205,6 @@ final class DiCompiler implements InstanceInterface, \Serializable
 
     public function __toString()
     {
-        return (string)$this->logger;
+        return (string) $this->logger;
     }
 }
