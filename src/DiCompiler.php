@@ -40,9 +40,9 @@ final class DiCompiler implements InstanceInterface, \Serializable
     private $cacheKey;
 
     /**
-     * @var callable
+     * @var array
      */
-    private static $factory;
+    private static $args;
 
     /**
      * @param InjectorInterface $injector
@@ -63,28 +63,24 @@ final class DiCompiler implements InstanceInterface, \Serializable
     }
 
     /**
-     * @param        $moduleProvider
-     * @param Cache  $cache
-     * @param string $cacheKey
+     * Return di compiler
+     *
+     * @param callable $moduleProvider
+     * @param Cache    $cache
+     * @param string   $cacheKey
      *
      * @return mixed|DiCompiler
      */
     public static function create(callable $moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
-        self::$factory = function () use ($moduleProvider, $cache, $cacheKey, $tmpDir) {
-            return self::createInstance($moduleProvider, $cache, $cacheKey, $tmpDir);
-
-            return $diInjector;
-        };
-
+        self::$args = func_get_args();
         if ($cache->contains($cacheKey)) {
             (new AopClassLoader)->register($tmpDir);
             $diCompiler = $cache->fetch($cacheKey);
 
             return $diCompiler;
         }
-
-        list(, $diCompiler) = self::createInstance($moduleProvider, $cache, $cacheKey, $tmpDir);
+        $diCompiler = self::createInstance($moduleProvider, $cache, $cacheKey, $tmpDir);
 
         return $diCompiler;
     }
@@ -99,7 +95,6 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     private static function createInstance($moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
-
         $config = new Config(
             new Annotation(
                 new Definition,
@@ -120,7 +115,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
         );
         $diCompiler = new DiCompiler($injector, $logger, $cache, $cacheKey);
 
-        return [$injector, $diCompiler];
+        return $diCompiler;
     }
 
     /**
@@ -163,7 +158,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
     private function recompile($class)
     {
         $this->cache->delete($this->cacheKey);
-        list($injector, $diCompiler) = $this->injector ? [$this->injector, $this] : call_user_func(self::$factory);
+        $diCompiler = $this->injector ? $this : call_user_func_array([$this, 'createInstance'], self::$args);
         /** @var $diCompiler DiCompiler */
         $mappedClass = array_keys($this->classMap);
         $mappedClass[] = $class;
