@@ -25,7 +25,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
     private $injector;
 
     /**
-     * @var CompileLoggerInterface
+     * @var CompilationLoggerInterface
      */
     private $logger;
 
@@ -46,11 +46,11 @@ final class DiCompiler implements InstanceInterface, \Serializable
 
     /**
      * @param InjectorInterface $injector
-     * @param CompileLogger     $logger
+     * @param CompilationLogger     $logger
      */
     public function __construct(
         InjectorInterface $injector,
-        CompileLoggerInterface $logger,
+        CompilationLoggerInterface $logger,
         Cache $cache,
         $cacheKey
     ) {
@@ -101,7 +101,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
                 new AnnotationReader
             )
         );
-        $logger = new CompileLogger(new Logger);
+        $logger = new CompilationLogger(new Logger);
         $logger->setConfig($config);
         $injector = new Injector(
             new Container(new Forge($config)),

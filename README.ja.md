@@ -18,7 +18,7 @@ Ray.Diは以下の特徴があります。
  * [Aura.Di](http://auraphp.github.com/Aura.Di )を拡張しています。
  * [Doctrine.Commons](http://www.doctrine-project.org/projects/common)アノテーションを使用しています。
 
-Getting Stated
+Getting Started
 --------------
 
 Ray.Diを使ったディペンデンシーインジェクション（[依存性の注入](http://ja.wikipedia.org/wiki/%E4%BE%9D%E5%AD%98%E6%80%A7%E3%81%AE%E6%B3%A8%E5%85%A5)）の一般的な例です。
@@ -154,7 +154,7 @@ protected function configure()
 }
 ```
 
-### Constructor Binfings
+### Constructor Bindings
 
 外部のクラスなどで`@Inject`が使えない場合などに、任意のコンストラクタに型を束縛することができます。
 
@@ -186,7 +186,7 @@ protected function configure()
 }
 ```
 
-## Object life cycle
+## Object Life Cycle
 
 オブジェクトライフサイクルのアノテーションを使ってオブジェクトの初期化や、PHPの終了時に呼ばれるメソッドを指定する事ができます。
 
