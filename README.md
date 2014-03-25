@@ -391,6 +391,11 @@ Best practice
 Your code should deal directly with the Injector as little as possible. Instead, you want to bootstrap your application by injecting one root object.
 The class of this object should use injection to obtain references to other objects on which it depends. The classes of those objects should do the same.
 
+Performance
+ ==========
+
+For performance boosts you can use the **CacheInjector** which performs caching on the injected object, or in order to increase the performance of object creation the **DiCompiler**.
+
 Caching dependency-injected objects
 -----------------------------------
 
@@ -407,6 +412,39 @@ $initialization = function() {
 $injector = new CacheInjector($injector, $initialization, 'cache-namespace', new ApcCache);
 $app = $injector->getInsntance('ApplicationInterface');
 $app->run();
+```
+
+Dependency-injection Compiler 
+-----------------------------
+
+The **Di Compiler** speeds up object creation/compilation by taking the creation methods and dependency relationships from the injection logs. Excelling in memory usage and speed.
+
+Of cource there is no cost of reading annotations at run time. It doesn't use the injector or the injection settings (modules)
+
+**Limitations**
+* Because objects are created from the injection log, there is a need to create all objects using the injector.[^1]
+**@PreDestroy** is not supported.
+
+```php
+$cache = new ApcCache;
+$cacheKey = 'context-key';
+$tmpDir = '/tmp';
+$moduleProvider = function() {
+    return new DiaryAopModule;
+};
+$injector = DiCompiler::create($moduleProvider, $cache, $cacheKey, $tmpDir);
+$injector->getInstance('Ray\Di\DiaryInterface');
+```
+
+**Pro Tip**
+
+You can run `compile()` before deployment and the first usage of the class. Then at runtime there is no compile cost.
+
+```php
+$injector = DiCompiler::create($moduleProvider, $cache, $cacheKey, $tmpDir);
+$injector->compile('Koriym\RayApp\Model\Author');
+$injector->compile('Koriym\RayApp\Model\Diary');
+...
 ```
 
 Cacheable class example
