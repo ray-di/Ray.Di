@@ -226,7 +226,7 @@ class Annotation implements AnnotationInterface
      */
 
     /**
-     * @param array $methodAnnotation
+     * @param array                 $methodAnnotation
      * @param ReflectionParameter[] $parameters
      * @param $named
      *
@@ -284,7 +284,7 @@ class Annotation implements AnnotationInterface
      *
      * @param string $nameParameter "value" or "key1=value1,ke2=value2"
      *
-     * @return array [$paramName => $named][]
+     * @return array           [$paramName => $named][]
      * @throws Exception\Named
      */
     private function getNamed($nameParameter)

@@ -42,7 +42,7 @@ class Logger implements LoggerInterface, \IteratorAggregate, \Serializable
         $this->logs[] = [$class, $params, $setter, $object, $bind];
         $setterLog = [];
         foreach ($setter as $method => $methodParams) {
-            $setterLog[] = $method . ':'. $this->getParamString((array)$methodParams);
+            $setterLog[] = $method . ':'. $this->getParamString((array) $methodParams);
         }
         $setter = $setter ? implode(' ', $setterLog) : '';
         $logMessage = "class:{$class} $setter";
@@ -57,11 +57,12 @@ class Logger implements LoggerInterface, \IteratorAggregate, \Serializable
             } elseif (is_callable($param)) {
                 $param = "(callable) {$param}";
             } elseif (is_scalar($param)) {
-                $param = '(' . gettype($param) . ') ' . (string)$param;
+                $param = '(' . gettype($param) . ') ' . (string) $param;
             } elseif (is_array($param)) {
                 $param = str_replace(["\n", " "], '', print_r($param, true));
             }
         }
+
         return implode(', ', $params);
     }
 
@@ -97,6 +98,7 @@ class Logger implements LoggerInterface, \IteratorAggregate, \Serializable
     public function unserialize($serialized)
     {
         unset($serialized);
+
         return '';
     }
 }

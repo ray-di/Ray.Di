@@ -51,10 +51,10 @@ final class DependencyFactory implements ProviderInterface
     private $postConstruct;
 
     /**
-     * @param object            $object
-     * @param array             $args
-     * @param array             $setter
-     * @param CompileLogger     $logger
+     * @param object        $object
+     * @param array         $args
+     * @param array         $setter
+     * @param CompileLogger $logger
      */
     public function __construct(
         $object,
@@ -133,6 +133,7 @@ final class DependencyFactory implements ProviderInterface
             }
             $this->instance->rayAopBind = new Bind($this->interceptors);
         }
+
         return $instance;
     }
 

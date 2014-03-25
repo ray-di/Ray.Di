@@ -190,6 +190,7 @@ abstract class AbstractModule implements ArrayAccess
         if (is_null($module)) {
             $this->bindings = new ArrayObject;
             $this->pointcuts = new ArrayObject;
+
             return;
         }
         $module->activate();
@@ -362,7 +363,7 @@ abstract class AbstractModule implements ArrayAccess
     public function install(AbstractModule $module)
     {
         $module->activate($this->dependencyInjector);
-        $this->pointcuts = new ArrayObject(array_merge((array)$module->pointcuts, (array)$this->pointcuts));
+        $this->pointcuts = new ArrayObject(array_merge((array) $module->pointcuts, (array) $this->pointcuts));
         $this->bindings = $this->mergeBindings($module);
         if ($module->modules) {
             $this->modules = array_merge($this->modules, $module->modules);
@@ -378,7 +379,7 @@ abstract class AbstractModule implements ArrayAccess
      */
     private function mergeBindings(AbstractModule $module)
     {
-        return new ArrayObject($this->mergeArray((array)$this->bindings, (array)$module->bindings));
+        return new ArrayObject($this->mergeArray((array) $this->bindings, (array) $module->bindings));
     }
 
     /**
@@ -432,7 +433,7 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function __invoke($class, Bind $bind)
     {
-        $bind->bind($class, (array)$this->pointcuts);
+        $bind->bind($class, (array) $this->pointcuts);
 
         return $bind;
     }
@@ -496,6 +497,7 @@ abstract class AbstractModule implements ArrayAccess
     public function __toString()
     {
         $this->stringer = new ModuleStringer();
+
         return $this->stringer->toString($this);
 
     }
