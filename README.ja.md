@@ -4,7 +4,7 @@ Dependency Injection framework for PHP
 [![Latest Stable Version](https://poser.pugx.org/ray/di/v/stable.png)](https://packagist.org/packages/ray/di)
 [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=master)](http://travis-ci.org/koriym/Ray.Di)
 
-**Ray.Di**はGoogleのJava用DI framework [Guice]((http://code.google.com/p/google-guice/wiki/Motivation?tm=6)の主要な機能を持つアノテーションベースのDIフレームワークです。
+**Ray.Di**はGoogleのJava用DI framework [Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6)の主要な機能を持つアノテーションベースのDIフレームワークです。
 DIを効率よく使用すると以下のようなメリットがあります。
 
 * ロジックとコンフィギュレーションの分離を促進し、ソースコードを読みやすくします。
@@ -276,6 +276,11 @@ Best practice
 可能な限りインジェクターを直接使わないコードにします。その代わりアプリケーションのbootstrapで **ルートオブジェクト** をインジェクトするようにします。
 このルートオブジェクトのクラスは依存する他のオブジェクトのインジェクションに使われます。その先のオブジェクトも同じで、依存が依存を必要として最終的にオブジェクトグラフが作られます。
 
+Performance boost
+=================
+
+インジェクト済みオブジェクトのキャッシュを行う**CacheInjector**、あるいはオブジェクトの生成を最適化する**DiCompiler**が利用可能です。
+
 Caching dependency-injected objects 
 -----------------------------------
 
@@ -293,6 +298,39 @@ $initialization = function() {
 $injector = new CacheInjector($injector, $initialization, 'cache-namespace', new ApcCache);
 $app = $injector->getInsntance('ApplicationInterface');
 $app->run();
+```
+
+Dependency-injection compiler 
+-----------------------------
+**DiCompiler**はオブジェクト生成方法や依存関係を**インジェクションのログ**から取り出しオブジェクトの再生成（コンパイル）を最適化します。ランタイムではアノテーション利用のコストがないのはもちろん、インジェクションの設定（Module）やインジェクターも使用しません。速度やメモリ消費の点で優れます。
+
+**制限**
+ * インジェクションログからオブジェクトを生成するので全てのオブジェクトの生成をインジェクターで行う必要があります。[^1]
+ * **@PreDestroy**は未サポートです。
+
+
+[^1]: 例えばインターセプターを**new**で生成して`bindInterceptor()`する事はできません。`requestInject($class)`でインスタンス化したものを束縛します。**new**でオブジェクトを生成すると生成がトラックできないためです。
+
+```php
+$cache = new ApcCache;
+$cacheKey = 'context-key';
+$tmpDir = '/tmp';
+$moduleProvider = function() {
+    return new DiaryAopModule;
+};
+$injector = DiCompiler::create($moduleProvider, $cache, $cacheKey, $tmpDir);
+$injector->getInstance('Ray\Di\DiaryInterface');
+
+```
+
+**Pro Tip**
+
+deploy前に出現クラスを事前に`compile()`する事ができます。ランタイムでコンパイルコストがかかりません。
+```php
+$injector = DiCompiler::create($moduleProvider, $cache, $cacheKey, $tmpDir);
+$injector->compile('Koriym\RayApp\Model\Author');
+$injector->compile('Koriym\RayApp\Model\Diary');
+...
 ```
 
 Requirement
@@ -336,4 +374,3 @@ $ php doc/sample/01-db/main.php
 $ cd doc/zf2-di-tests-clone/
 $ php runall.php
 ```
-
