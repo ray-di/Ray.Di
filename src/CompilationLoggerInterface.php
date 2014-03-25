@@ -11,7 +11,7 @@ use Aura\Di\ConfigInterface;
 /**
  * Interface for di compile logger
  */
-interface CompileLoggerInterface extends LoggerInterface
+interface CompilationLoggerInterface extends LoggerInterface
 {
     /**
      * @param ConfigInterface $config

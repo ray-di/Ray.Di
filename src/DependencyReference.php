@@ -9,7 +9,7 @@ namespace Ray\Di;
 final class DependencyReference implements ProviderInterface
 {
     /**
-     * @var CompileLogger
+     * @var CompilationLogger
      */
     private $logger;
 
@@ -25,9 +25,9 @@ final class DependencyReference implements ProviderInterface
 
     /**
      * @param string        $refId
-     * @param CompileLogger $logger
+     * @param CompilationLogger $logger
      */
-    public function __construct($refId, CompileLogger $logger)
+    public function __construct($refId, CompilationLogger $logger)
     {
         $this->refId = $refId;
         $this->logger = $logger;

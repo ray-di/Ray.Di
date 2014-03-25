@@ -41,7 +41,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
                 new AnnotationReader
             )
         );
-        $logger = new CompileLogger(new Logger);
+        $logger = new CompilationLogger(new Logger);
         $logger->setConfig($config);
         $this->injector = new Injector(
             new Container(new Forge($config)),

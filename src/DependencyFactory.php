@@ -36,7 +36,7 @@ final class DependencyFactory implements ProviderInterface
     private $setters = [];
 
     /**
-     * @var CompileLogger
+     * @var CompilationLogger
      */
     private $logger;
 
@@ -54,13 +54,13 @@ final class DependencyFactory implements ProviderInterface
      * @param object        $object
      * @param array         $args
      * @param array         $setter
-     * @param CompileLogger $logger
+     * @param CompilationLogger $logger
      */
     public function __construct(
         $object,
         array $args,
         array $setter,
-        CompileLogger $logger
+        CompilationLogger $logger
     ) {
         $this->class = get_class($object);
         $this->hash = $logger->getObjectHash($object);
