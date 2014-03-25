@@ -207,7 +207,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCached()
     {
-        exec('php ' . __DIR__ . '/scripts/cache_compiler.php', $return);
+        exec('php ' . __DIR__ . '/scripts/cache_diary.php', $return);
         $this->assertSame($return[0], 'works');
     }
 
@@ -217,7 +217,18 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCacheRead()
     {
-        exec('php ' . __DIR__ . '/scripts/cache_compiler.php', $return);
+        exec('php ' . __DIR__ . '/scripts/cache_diary.php', $return);
         $this->assertSame($return[0], 'works');
+    }
+
+    /**
+     * @depends testCached
+     * @runTestsInSeparateProcesses
+     */
+    public function testCacheReadWriter()
+    {
+        $injector = require __DIR__ . '/scripts/cache_compiler.php';
+        $instance = $injector->getInstance('Ray\Di\WriterInterface');
+        $this->assertInstanceOf('Ray\Di\Writer', $instance);
     }
 }

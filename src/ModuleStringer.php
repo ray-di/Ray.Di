@@ -21,7 +21,7 @@ class ModuleStringer
     public function toString(AbstractModule $module)
     {
         $output = '';
-        foreach ((array)$module->bindings as $bind => $bindTo) {
+        foreach ((array) $module->bindings as $bind => $bindTo) {
             foreach ($bindTo as $annotate => $to) {
                 $type = $to['to'][0];
                 $output .= ($annotate !== '*') ? "bind:{$bind} annotatedWith:{$annotate}" : "bind:{$bind}";
@@ -67,6 +67,7 @@ class ModuleStringer
             default:
                 $instance = "($type) $instance";
         }
+
         return " toInstance:" . $instance;
     }
 }

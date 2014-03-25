@@ -451,9 +451,9 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Get bound class or object
      *
-     * @param ArrayObject  $bindings   array | \ArrayAccess
-     * @param mixed  $definition
-     * @param string $class
+     * @param ArrayObject $bindings   array | \ArrayAccess
+     * @param mixed       $definition
+     * @param string      $class
      *
      * @return array|object
      * @throws Exception\NotBound
@@ -468,6 +468,7 @@ class Injector implements InjectorInterface, \Serializable
 
         if ($toType === AbstractModule::TO_PROVIDER) {
             $instance = $this->getToProviderBound($bindings, $class);
+
             return $instance;
         }
 
@@ -493,9 +494,9 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Return $isSingleton, $interfaceClass
      *
-     * @param string $class
-     * @param array  $definition
-     * @param ArrayObject  $bindings
+     * @param string      $class
+     * @param array       $definition
+     * @param ArrayObject $bindings
      *
      * @return array [$isSingleton, $interfaceClass]
      */
@@ -512,8 +513,8 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Throw exception if not bound
      *
-     * @param ArrayObject  $bindings
-     * @param string $class
+     * @param ArrayObject $bindings
+     * @param string      $class
      *
      * @return bool
      */
@@ -524,7 +525,7 @@ class Injector implements InjectorInterface, \Serializable
 
     /**
      * @param ArrayObject $bindings
-     * @param string $class
+     * @param string      $class
      *
      * @return object
      */
@@ -552,7 +553,7 @@ class Injector implements InjectorInterface, \Serializable
      * @param array      $setter
      * @param Definition $definition
      *
-     * @return array <$constructorParams, $setter>
+     * @return array             <$constructorParams, $setter>
      * @throws Exception\Binding
      * @throws \LogicException
      */
@@ -609,13 +610,14 @@ class Injector implements InjectorInterface, \Serializable
         foreach ($settings as $key => &$param) {
             $param = $this->extractParam($param, $key);
         }
+
         return [$method, $settings];
     }
 
     /**
      * Extract parameter as defined
      *
-     * @param array $param
+     * @param array  $param
      * @param string $key
      *
      * @return array
@@ -630,6 +632,7 @@ class Injector implements InjectorInterface, \Serializable
         if ($isNotBinding && array_key_exists(Definition::DEFAULT_VAL, $param)) {
             // default value
             $param = $param[Definition::DEFAULT_VAL];
+
             return $param;
         }
         if ($isNotBinding) {
@@ -659,6 +662,7 @@ class Injector implements InjectorInterface, \Serializable
     {
         if ($typeHint === '') {
             $param = $this->getInstanceWithContainer(Scope::PROTOTYPE, $bindingToType, $target);
+
             return $param;
         }
         $param = $this->typeBound($typeHint, $bindingToType, $target);
@@ -716,6 +720,7 @@ class Injector implements InjectorInterface, \Serializable
         $hasConstructorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
         if ($hasConstructorBinding) {
             $params[$index] = $module[$class]['*'][AbstractModule::TO][1][$parameter->name];
+
             return $params;
         }
         // has constructor default value ?
@@ -726,6 +731,7 @@ class Injector implements InjectorInterface, \Serializable
         $classRef = $parameter->getClass();
         if ($classRef && !$classRef->isInterface()) {
             $params[$index] = $this->getInstance($classRef->name);
+
             return $params;
         }
         $msg = is_null($classRef) ? "Valid interface is not found. (array ?)" : "Interface [{$classRef->name}] is not bound.";
@@ -771,7 +777,7 @@ class Injector implements InjectorInterface, \Serializable
      */
     public function __toString()
     {
-        return (string)($this->module);
+        return (string) ($this->module);
     }
 
     /**
@@ -779,7 +785,7 @@ class Injector implements InjectorInterface, \Serializable
      *
      * @param string $typeHint
      * @param string $bindingToType
-     * @param string  $target
+     * @param string $target
      *
      * @return mixed
      */
@@ -809,11 +815,13 @@ class Injector implements InjectorInterface, \Serializable
 
         if ($bindingToType === AbstractModule::TO_CALLABLE) {
             /* @var $target \Closure */
+
             return [$target(), true];
         }
 
         if (isset($binding[AbstractModule::IN])) {
             $param = $this->getInstanceWithContainer($binding[AbstractModule::IN], $bindingToType, $target);
+
             return [$param, true];
         }
 
@@ -824,7 +832,7 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Get instance with container
      *
-     * @param string $in (Scope::SINGLETON | Scope::PROTOTYPE)
+     * @param string $in            (Scope::SINGLETON | Scope::PROTOTYPE)
      * @param string $bindingToType
      * @param mixed  $target
      *

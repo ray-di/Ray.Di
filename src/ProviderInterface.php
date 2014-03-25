@@ -14,7 +14,7 @@ interface ProviderInterface
     /**
      * Get object
      *
-     * @return \Ray\Aop\Compiler
+     * @return mixed
      */
     public function get();
 }

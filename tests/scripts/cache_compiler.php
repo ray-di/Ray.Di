@@ -16,7 +16,5 @@ $moduleProvider = function() {
 };
 $cache->setNamespace('diary');
 $injector = DiCompiler::create($moduleProvider, $cache, 'diary', $tmpDir);
-$instance = $injector->getInstance('Ray\Di\DiaryInterface');
-$result = ($instance instanceof \Ray\Di\Diary) ? 'works' : 'failure';
 
-echo $result;
+return $injector;

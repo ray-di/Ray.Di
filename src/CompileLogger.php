@@ -21,7 +21,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
     /**
      * @var DependencyFactory[]
      */
-    private $instanceContainer = [];
+    private $dependencyContainer = [];
 
     /**
      * @var ConfigInterface
@@ -74,12 +74,13 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
      */
     public function newInstance($ref)
     {
-        if (! isset($this->instanceContainer[$ref])) {
+        if (! isset($this->dependencyContainer[$ref])) {
             // @codeCoverageIgnoreStart
             throw new Exception\Compile($ref);
             // @codeCoverageIgnoreEnd
         }
-        return $this->instanceContainer[$ref]->get();
+
+        return $this->dependencyContainer[$ref]->get();
     }
 
     /**
@@ -93,7 +94,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
             return $this->objectStorage[$object];
         }
         $cnt++;
-        $hash = (string)$cnt;
+        $hash = (string) $cnt;
         $this->objectStorage[$object] = $hash;
 
         return $hash;
@@ -104,10 +105,10 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
      */
     public function setClassMap(array $classMap, $class)
     {
-        $container = $this->instanceContainer;
+        $container = $this->dependencyContainer;
         $factory = array_pop($container);
 
-        $classMap[$class] = (string)$factory;
+        $classMap[$class] = (string) $factory;
 
         return $classMap;
     }
@@ -144,7 +145,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
      */
     private function buildInterceptor($instance)
     {
-        $boundInterceptors = (array)$instance->rayAopBind; // 'methodName' => methodInterceptors[]
+        $boundInterceptors = (array) $instance->rayAopBind; // 'methodName' => methodInterceptors[]
         foreach ($boundInterceptors as &$methodInterceptors) {
             foreach ($methodInterceptors as &$methodInterceptor) {
                 /** @var $methodInterceptor \Ray\Aop\MethodInterceptor */
@@ -162,7 +163,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
     {
         $instanceHash = $this->getObjectHash($dependencyProvider->instance);
         $providerHash = $this->getObjectHash($dependencyProvider->provider);
-        $this->instanceContainer[$instanceHash] = new DependencyReference($providerHash, $this);
+        $this->dependencyContainer[$instanceHash] = new DependencyReference($providerHash, $this);
     }
     /**
      * @param array $params
@@ -188,6 +189,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
     private function getRef($instance)
     {
         $hash = $this->getObjectHash($instance);
+
         return new DependencyReference($hash, $this);
     }
 
@@ -196,20 +198,20 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
      */
     private function add($instance)
     {
-        $index = (string)$instance;
-        $this->instanceContainer[$index] = $instance;
+        $index = (string) $instance;
+        $this->dependencyContainer[$index] = $instance;
     }
 
     public function __toString()
     {
-        return (string)$this->logger;
+        return (string) $this->logger;
     }
 
     public function serialize()
     {
         $serialized = serialize(
             [
-                $this->instanceContainer
+                $this->dependencyContainer
             ]
         );
 
@@ -219,8 +221,7 @@ final class CompileLogger implements CompileLoggerInterface, \Serializable
     public function unserialize($serialized)
     {
         list(
-            $this->instanceContainer
+            $this->dependencyContainer
         ) = unserialize($serialized);
     }
-
 }
