@@ -23,9 +23,11 @@ $rm = function ($dir) use (&$rm) {
         @rmdir($file);
     }
 };
-// clear cache folder
-$rm(__DIR__ . 'Ray/Di/scripts/aop_files');
-$rm(__DIR__ . 'Ray/Di/scripts/object_files');
+
+$rm(__DIR__ . '/scripts/aop_files');
+$rm(__DIR__ . '/scripts/object_files');
+$rm(__DIR__ . '/scripts/cache');
+$rm(__DIR__ . '/tmp');
+
 $_ENV['TMP_DIR'] = __DIR__ . '/tmp';
 $_ENV['PACKAGE_DIR'] = dirname(__DIR__);
-$rm($_ENV['TMP_DIR']);
