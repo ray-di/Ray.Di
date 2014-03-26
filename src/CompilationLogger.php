@@ -76,11 +76,27 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     {
         if (! isset($this->dependencyContainer[$ref])) {
             // @codeCoverageIgnoreStart
-            throw new Exception\Compile($ref);
+            $class = $this->getNotInjectedClass($ref);
+            throw new Exception\Compile($class);
             // @codeCoverageIgnoreEnd
         }
 
         return $this->dependencyContainer[$ref]->get();
+    }
+
+    /**
+     * @param string $ref
+     *
+     * @return string
+     */
+    private function getNotInjectedClass($ref)
+    {
+        foreach ($this->objectStorage as $key => $object) {
+            if ($key + 1 == $ref) {
+                $class = get_class($object);
+                return $class;
+            }
+        }
     }
 
     /**
@@ -189,7 +205,6 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private function getRef($instance)
     {
         $hash = $this->getObjectHash($instance);
-
         return new DependencyReference($hash, $this);
     }
 
@@ -200,6 +215,9 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     {
         $index = (string) $instance;
         $this->dependencyContainer[$index] = $instance;
+        if ($index > 1 && ! isset($this->dependencyContainer[$index - 1])) {
+//            throw new \LogicException($index - 1);
+        }
     }
 
     public function __toString()
