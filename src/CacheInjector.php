@@ -87,9 +87,6 @@ class CacheInjector implements InstanceInterface
         $classDir = $this->cache->fetch($key);
         $this->registerAopFileLoader($classDir);
         $instance = $this->cache->fetch("{$key}{$class}");
-        if (get_class($instance) === '__PHP_Incomplete_Class') {
-            $instance = $this->createInstance($class, $key);
-        }
 
         return $instance;
     }
