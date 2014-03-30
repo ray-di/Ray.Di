@@ -213,9 +213,6 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     {
         $index = (string) $instance;
         $this->dependencyContainer[$index] = $instance;
-        if ($index > 1 && ! isset($this->dependencyContainer[$index - 1])) {
-//            throw new \LogicException($index - 1);
-        }
     }
 
     public function __toString()
