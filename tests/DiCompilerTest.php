@@ -59,7 +59,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstance()
     {
-        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, $this->tmpDir);
+        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
         $injector = $DiCompiler->compile('Ray\Di\DiaryInterface');
         $instance = $injector->getInstance('Ray\Di\DiaryInterface');
 
@@ -87,7 +87,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
     public function testSingleton()
     {
         $this->injector->setModule(new DiarySingletonModule);
-        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, $this->tmpDir);
+        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
 
         $compileInjector = $DiCompiler->compile('Ray\Di\DiaryInterface');
 
@@ -234,7 +234,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testString()
     {
-        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, $this->tmpDir);
+        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
         $this->assertInternalType('string', (string)$DiCompiler);
     }
 
@@ -244,7 +244,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
     public function testCompileException()
     {
         $this->injector->setModule(new DiaryAopErrorModule);
-        $diCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, $this->tmpDir);
+        $diCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
         $diCompiler->getInstance('Ray\Di\DiaryInterface');
     }
 }
