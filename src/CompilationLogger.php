@@ -75,10 +75,8 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     public function newInstance($ref)
     {
         if (! isset($this->dependencyContainer[$ref])) {
-            // @codeCoverageIgnoreStart
             $class = $this->getNotInjectedClass($ref);
             throw new Exception\Compile($class);
-            // @codeCoverageIgnoreEnd
         }
 
         return $this->dependencyContainer[$ref]->get();
@@ -92,7 +90,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private function getNotInjectedClass($ref)
     {
         foreach ($this->objectStorage as $key => $object) {
-            if ($key + 1 == $ref) {
+            if ($key + 1 === (int)$ref) {
                 $class = get_class($object);
                 return $class;
             }

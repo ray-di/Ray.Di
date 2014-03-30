@@ -231,4 +231,20 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $instance = $injector->getInstance('Ray\Di\WriterInterface');
         $this->assertInstanceOf('Ray\Di\Writer', $instance);
     }
+
+    public function testString()
+    {
+        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, $this->tmpDir);
+        $this->assertInternalType('string', (string)$DiCompiler);
+    }
+
+    /**
+     * @expectedException \Ray\Di\Exception\Compile
+     */
+    public function testCompileException()
+    {
+        $this->injector->setModule(new DiaryAopErrorModule);
+        $diCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, $this->tmpDir);
+        $diCompiler->getInstance('Ray\Di\DiaryInterface');
+    }
 }
