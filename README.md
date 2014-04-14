@@ -392,7 +392,7 @@ Your code should deal directly with the Injector as little as possible. Instead,
 The class of this object should use injection to obtain references to other objects on which it depends. The classes of those objects should do the same.
 
 Performance
- ==========
+===========
 
 For performance boosts you can use the **CacheInjector** which performs caching on the injected object, or in order to increase the performance of object creation the **DiCompiler**.
 
