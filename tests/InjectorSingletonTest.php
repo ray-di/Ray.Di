@@ -7,7 +7,7 @@ use Ray\Di\Mock\RndDb;
 /**
  * Test class for SingletonModule.
  */
-class GetInstanceTest extends \PHPUnit_Framework_TestCase
+class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
