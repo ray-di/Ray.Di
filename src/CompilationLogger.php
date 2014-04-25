@@ -35,14 +35,15 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
 
     /**
      * @param LoggerInterface $logger
+     * @param \SplObjectStorage $splObjectStorage
      *
      * @Inject
      * @Named("logger")
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, \SplObjectStorage $splObjectStorage = null)
     {
         $this->logger = $logger;
-        $this->objectStorage = new \SplObjectStorage;
+        $this->objectStorage = ($splObjectStorage instanceof \SplObjectStorage) ? $splObjectStorage : new \SplObjectStorage();
     }
 
     /**

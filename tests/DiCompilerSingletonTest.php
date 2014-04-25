@@ -3,7 +3,9 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Cache\ArrayCache;
+use Ray\Di\Mock\AnnotatedSingleton;
 use Ray\Di\Mock\RndDb;
+use Ray\Di\Mock\SingletonConsumer;
 
 class DiCompilerSingletonTest extends InjectorSingletonTest
 {
@@ -170,5 +172,53 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
         $this->assertSame($result1, $result2);
         $this->assertSame($result2, $result3);
         $this->assertSame($result3, $result4);
+    }
+
+    public function testThatConsumerIsNotConstructedMoreThanOnce()
+    {
+        $moduleProvider = function() {return new Modules\SingletonModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+
+        $injector->getInstance( 'Ray\Di\Mock\SingletonConsumer' ); //One SingletonConsumer should exist.
+
+        $numberOfSingletonConsumers = count( SingletonConsumer::$instances );
+        $numberOfSingletonConsumersThatShouldBeConstructed = 1;
+
+        $this->assertEquals( $numberOfSingletonConsumersThatShouldBeConstructed, $numberOfSingletonConsumers );
+
+        $injector->getInstance( 'Ray\Di\Mock\SingletonConsumer' ); //Two SingletonConsumer should exist.
+
+        $numberOfSingletonConsumers = count( SingletonConsumer::$instances );
+        $numberOfSingletonConsumersThatShouldBeConstructed = 2;
+
+        $this->assertEquals( $numberOfSingletonConsumersThatShouldBeConstructed, $numberOfSingletonConsumers );
+
+        //Cleanup statics after test
+        SingletonConsumer::$instances = array();
+        AnnotatedSingleton::$number = 0;
+    }
+
+    public function testThatAnnotatedSingletonIsNotConstructedMoreThanOnce()
+    {
+        $moduleProvider = function() {return new Modules\SingletonModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+
+        $injector->getInstance( 'Ray\Di\Mock\SingletonConsumer' ); //One AnnotatedSingleton should exist.
+
+        $numberOfSingletonInstances = AnnotatedSingleton::$number;
+        $numberOfTimesSingletonsShouldBeConstructed = 1;
+
+        $this->assertEquals( $numberOfTimesSingletonsShouldBeConstructed, $numberOfSingletonInstances );
+
+        $injector->getInstance( 'Ray\Di\Mock\SingletonConsumer' ); //One AnnotatedSingleton should exist.
+
+        $numberOfSingletonInstances = AnnotatedSingleton::$number;
+        $numberOfTimesSingletonsShouldBeConstructed = 1;
+
+        $this->assertEquals( $numberOfTimesSingletonsShouldBeConstructed, $numberOfSingletonInstances );
+
+        //Cleanup statics after test
+        SingletonConsumer::$instances = array();
+        AnnotatedSingleton::$number = 0;
     }
 }

@@ -11,6 +11,7 @@ vendor
 cache.properties
 build
 composer.phar
+phpunit.phar
 *doctrinecache.data
 Ray*Aop.php
 atlassian-ide-plugin.xml
