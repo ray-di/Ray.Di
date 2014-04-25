@@ -91,7 +91,7 @@ final class DependencyFactory implements ProviderInterface
     public function get()
     {
         // is singleton ?
-        if ($this->instance) {
+        if($this->instance !== null) {
             return $this->instance;
         }
         // constructor injection
