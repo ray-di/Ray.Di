@@ -128,11 +128,22 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     public function compile($class)
     {
-        $this->injector->getInstance($class);
+        $this->_compile( $class );
+        return $this;
+    }
+
+    /**
+     * Compile and return result from Injector
+     *
+     * @param $class
+     * @return object
+     */
+    private function _compile( $class )
+    {
+        $object = $this->injector->getInstance($class);
         $this->classMap = $this->logger->setClassMap($this->classMap, $class);
         $this->cache->save($this->cacheKey, $this);
-
-        return $this;
+        return $object;
     }
 
     /**
@@ -164,12 +175,11 @@ final class DiCompiler implements InstanceInterface, \Serializable
         $diCompiler = $this->injector ? $this : call_user_func_array([$this, 'createInstance'], self::$args);
         /** @var $diCompiler DiCompiler */
         $mappedClass = array_keys($this->classMap);
-        $mappedClass[] = $class;
         foreach ($mappedClass as $newClass) {
             $diCompiler->compile($newClass);
         }
 
-        return $diCompiler->getInstance($class);
+        return $diCompiler->_compile( $class );
     }
 
     /**

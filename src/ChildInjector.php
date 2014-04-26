@@ -24,7 +24,7 @@ class ChildInjector extends Injector {
      */
     protected function safeGetInstance( $class )
     {
-        if( $this->injector instanceof InjectorInterface ) {
+        if( $this->injector instanceof InstanceInterface ) {
             return $this->injector->getInstance( $class );
         }
 
