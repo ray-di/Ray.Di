@@ -246,7 +246,7 @@ class Injector implements InjectorInterface, \Serializable
         $refClass = new \ReflectionClass($class);
 
         if ($refClass->isInterface()) {
-            return $this->getInstance($class);
+            return $this->safeGetInstance($class);
         }
 
         // weave aspect
@@ -272,6 +272,17 @@ class Injector implements InjectorInterface, \Serializable
         $this->postInject($object, $definition, $isSingleton, $interfaceClass);
 
         return $object;
+    }
+
+    /**
+     * Gets instance, but can use external means and is therefore safe.
+     *
+     * @param $class
+     * @return object
+     */
+    protected function safeGetInstance( $class )
+    {
+        return $this->getInstance( $class );
     }
 
     /**
@@ -534,14 +545,14 @@ class Injector implements InjectorInterface, \Serializable
         $provider = $bindings[$class]['*']['to'][1];
         $in = isset($bindings[$class]['*']['in']) ? $bindings[$class]['*']['in'] : null;
         if ($in !== Scope::SINGLETON) {
-            $instance = $this->getInstance($provider)->get();
+            $instance = $this->safeGetInstance($provider)->get();
 
             return $instance;
         }
         if ($this->container->has($class)) {
             return $this->container->get($class);
         }
-        $instance = $this->getInstance($provider)->get();
+        $instance = $this->safeGetInstance($provider)->get();
         $this->container->set($class, $instance);
 
         return $instance;
@@ -730,7 +741,7 @@ class Injector implements InjectorInterface, \Serializable
         // is typehint class ?
         $classRef = $parameter->getClass();
         if ($classRef && !$classRef->isInterface()) {
-            $params[$index] = $this->getInstance($classRef->name);
+            $params[$index] = $this->safeGetInstance($classRef->name);
 
             return $params;
         }
@@ -846,7 +857,7 @@ class Injector implements InjectorInterface, \Serializable
             return $instance;
         }
         $isToClassBinding = ($bindingToType === AbstractModule::TO_CLASS);
-        $instance = $isToClassBinding ? $this->getInstance($target) : $this->getProvidedInstance($target);
+        $instance = $isToClassBinding ? $this->safeGetInstance($target) : $this->getProvidedInstance($target);
 
         if ($in === Scope::SINGLETON) {
             $this->container->set($target, $instance);
@@ -862,7 +873,7 @@ class Injector implements InjectorInterface, \Serializable
      */
     private function getProvidedInstance($target)
     {
-        $provider = $this->getInstance($target);
+        $provider = $this->safeGetInstance($target);
         /** @var $provider ProviderInterface */
         $instance = $provider->get();
         if ($this->logger) {

@@ -116,7 +116,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function setClassMap(array $classMap, $class)
     {

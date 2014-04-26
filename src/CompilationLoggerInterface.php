@@ -34,4 +34,11 @@ interface CompilationLoggerInterface extends LoggerInterface
      * @return string
      */
     public function getObjectHash($object);
+
+    /**
+     * @param array $classMap
+     * @param $class
+     * @return array
+     */
+    public function setClassMap(array $classMap, $class);
 }
