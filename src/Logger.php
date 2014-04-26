@@ -36,8 +36,9 @@ class Logger implements LoggerInterface, \IteratorAggregate, \Serializable
      * @param array         $setter
      * @param object        $object
      * @param \Ray\Aop\Bind $bind
+     * @param bool          $isSingleton
      */
-    public function log($class, array $params, array $setter, $object, Bind $bind)
+    public function log($class, array $params, array $setter, $object, Bind $bind, $isSingleton = false)
     {
         $this->logs[] = [$class, $params, $setter, $object, $bind];
         $setterLog = [];

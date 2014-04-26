@@ -176,6 +176,10 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 
     public function testThatConsumerIsNotConstructedMoreThanOnce()
     {
+        //Set statics to known state
+        SingletonConsumer::$instances = array();
+        AnnotatedSingleton::$number = 0;
+
         $moduleProvider = function() {return new Modules\SingletonModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
@@ -193,13 +197,14 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 
         $this->assertEquals( $numberOfSingletonConsumersThatShouldBeConstructed, $numberOfSingletonConsumers );
 
-        //Cleanup statics after test
-        SingletonConsumer::$instances = array();
-        AnnotatedSingleton::$number = 0;
     }
 
     public function testThatAnnotatedSingletonIsNotConstructedMoreThanOnce()
     {
+        //Set statics to known state
+        SingletonConsumer::$instances = array();
+        AnnotatedSingleton::$number = 0;
+
         $moduleProvider = function() {return new Modules\SingletonModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
@@ -216,9 +221,5 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
         $numberOfTimesSingletonsShouldBeConstructed = 1;
 
         $this->assertEquals( $numberOfTimesSingletonsShouldBeConstructed, $numberOfSingletonInstances );
-
-        //Cleanup statics after test
-        SingletonConsumer::$instances = array();
-        AnnotatedSingleton::$number = 0;
     }
 }

@@ -19,8 +19,9 @@ class TestLogger implements LoggerInterface
      * @param array  $setter
      * @param object $object
      * @param Bind   $bind
+     * @param bool $isSingleton
      */
-    public function log($class, array $params, array $setter, $object, Bind $bind)
+    public function log($class, array $params, array $setter, $object, Bind $bind, $isSingleton = false)
     {
         $construct = serialize($params);
         $setter = serialize($setter);
