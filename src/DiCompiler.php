@@ -121,8 +121,9 @@ final class DiCompiler implements InstanceInterface, \Serializable
     }
 
     /**
-     * @param string $class
+     * Compile fluent interface
      *
+     * @param string $class
      * @return self
      */
     public function compile($class)
