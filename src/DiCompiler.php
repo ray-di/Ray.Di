@@ -103,7 +103,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
         );
         $logger = new CompilationLogger(new Logger);
         $logger->setConfig($config);
-        $injector = new Injector(
+        $injector = new ChildInjector(
             new Container(new Forge($config)),
             $moduleProvider(),
             new Bind,
@@ -113,7 +113,9 @@ final class DiCompiler implements InstanceInterface, \Serializable
             ),
             $logger
         );
+
         $diCompiler = new DiCompiler($injector, $logger, $cache, $cacheKey);
+        $injector->setChildInjector( $diCompiler );
 
         return $diCompiler;
     }
