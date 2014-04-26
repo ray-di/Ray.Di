@@ -235,7 +235,6 @@ class Injector implements InjectorInterface, \Serializable
         }
 
         // get bound config
-        //TODO $isSingleton is not trustworthy
         list($class, $isSingleton, $interfaceClass, $params, $setter, $definition) = $bound;
 
         // instantiate parameters
@@ -266,7 +265,7 @@ class Injector implements InjectorInterface, \Serializable
 
         // logger inject info
         if ($this->logger) {
-            $this->logger->log($class, $params, $setter, $object, $bind);
+            $this->logger->log($class, $params, $setter, $object, $bind, $isSingleton);
         }
 
         // Object life cycle, Singleton, and Save cache

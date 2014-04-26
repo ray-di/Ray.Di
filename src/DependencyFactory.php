@@ -55,14 +55,21 @@ final class DependencyFactory implements ProviderInterface
      * @param array         $args
      * @param array         $setter
      * @param CompilationLogger $logger
+     * @param bool          $isSingleton
      */
     public function __construct(
         $object,
         array $args,
         array $setter,
-        CompilationLogger $logger
+        CompilationLogger $logger,
+        $isSingleton
     ) {
         $this->class = get_class($object);
+
+        if( $isSingleton ) {
+            $this->instance = $object;
+        }
+
         $this->hash = $logger->getObjectHash($object);
         $this->args = $args;
         $this->setters = $setter;
