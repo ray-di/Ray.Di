@@ -4,7 +4,6 @@ namespace Ray\Di;
 
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
-use Ray\Di\Di\Scope;
 
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
