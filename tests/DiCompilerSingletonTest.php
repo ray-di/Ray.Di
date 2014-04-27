@@ -9,6 +9,12 @@ use Ray\Di\Mock\SingletonConsumer;
 
 class DiCompilerSingletonTest extends InjectorSingletonTest
 {
+    protected function setUp()
+    {
+        SingletonConsumer::$instances = [];
+        AnnotatedSingleton::$number = 0;
+    }
+
     public function testInSingletonInterface()
     {
         $moduleProvider = function() {return new Modules\SingletonModule;};
@@ -174,11 +180,19 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
         $this->assertSame($result3, $result4);
     }
 
-    public function testThatConsumerIsNotConstructedMoreThanOnce()
+    public function InjectorProvider()
     {
-        $moduleProvider = function() {return new Modules\SingletonModule;};
-        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        return [
+            [Injector::create([new Modules\SingletonModule])],
+            [DiCompiler::create(function() {return new Modules\SingletonModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR'])]
+        ];
+    }
 
+    /**
+     * @dataProvider InjectorProvider
+     */
+    public function testThatConsumerIsNotConstructedMoreThanOnce(InstanceInterface $injector)
+    {
         $injector->getInstance( 'Ray\Di\Mock\SingletonConsumer' ); //One SingletonConsumer should exist.
 
         $numberOfSingletonConsumers = count( SingletonConsumer::$instances );
@@ -192,17 +206,13 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
         $numberOfSingletonConsumersThatShouldBeConstructed = 2;
 
         $this->assertEquals( $numberOfSingletonConsumersThatShouldBeConstructed, $numberOfSingletonConsumers );
-
-        //Cleanup statics after test
-        SingletonConsumer::$instances = array();
-        AnnotatedSingleton::$number = 0;
     }
 
-    public function testThatAnnotatedSingletonIsNotConstructedMoreThanOnce()
+    /**
+     * @dataProvider InjectorProvider
+     */
+    public function testThatAnnotatedSingletonIsNotConstructedMoreThanOnce(InstanceInterface $injector)
     {
-        $moduleProvider = function() {return new Modules\SingletonModule;};
-        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
-
         $injector->getInstance( 'Ray\Di\Mock\SingletonConsumer' ); //One AnnotatedSingleton should exist.
 
         $numberOfSingletonInstances = AnnotatedSingleton::$number;
@@ -216,9 +226,5 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
         $numberOfTimesSingletonsShouldBeConstructed = 1;
 
         $this->assertEquals( $numberOfTimesSingletonsShouldBeConstructed, $numberOfSingletonInstances );
-
-        //Cleanup statics after test
-        SingletonConsumer::$instances = array();
-        AnnotatedSingleton::$number = 0;
     }
 }
