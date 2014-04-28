@@ -280,7 +280,7 @@ class Injector implements InjectorInterface, \Serializable
      * @param $class
      * @return object
      */
-    protected function safeGetInstance( $class )
+    protected function safeGetInstance($class)
     {
         return $this->getInstance( $class );
     }

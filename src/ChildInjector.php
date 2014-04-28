@@ -14,7 +14,7 @@ class ChildInjector extends Injector
     /**
      * @param InstanceInterface $injector
      */
-    public function setChildInjector( InstanceInterface $injector )
+    public function setChildInjector(InstanceInterface $injector)
     {
         $this->injector = $injector;
     }
@@ -22,7 +22,7 @@ class ChildInjector extends Injector
     /**
      * {@inheritDoc}
      */
-    protected function safeGetInstance( $class )
+    protected function safeGetInstance($class)
     {
         if ($this->injector instanceof InjectorInterface) {
             return $this->injector->getInstance( $class );
