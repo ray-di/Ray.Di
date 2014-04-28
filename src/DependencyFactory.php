@@ -51,11 +51,11 @@ final class DependencyFactory implements ProviderInterface
     private $postConstruct;
 
     /**
-     * @param object        $object
-     * @param array         $args
-     * @param array         $setter
+     * @param object            $object
+     * @param array             $args
+     * @param array             $setter
      * @param CompilationLogger $logger
-     * @param bool          $isSingleton
+     * @param bool              $isSingleton
      */
     public function __construct(
         $object,
@@ -66,7 +66,7 @@ final class DependencyFactory implements ProviderInterface
     ) {
         $this->class = get_class($object);
 
-        if( $isSingleton ) {
+        if ($isSingleton) {
             $this->instance = $object;
         }
 
@@ -98,7 +98,7 @@ final class DependencyFactory implements ProviderInterface
     public function get()
     {
         // is singleton ?
-        if($this->instance !== null) {
+        if ($this->instance !== null) {
             return $this->instance;
         }
         // constructor injection

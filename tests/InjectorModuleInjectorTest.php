@@ -55,6 +55,7 @@ class TestProvider implements ProviderInterface
     public function get()
     {
         $greetingTest =  $this->injector->getInstance('Ray\Di\GreetingTest');
+
         return $greetingTest;
     }
 }
@@ -72,7 +73,6 @@ class GreetingTest implements TestInterface
         $this->greeting = $greeting;
     }
 }
-
 
 class InjectorModuleInjectorTest extends \PHPUnit_Framework_TestCase
 {

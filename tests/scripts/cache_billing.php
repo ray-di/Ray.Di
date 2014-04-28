@@ -12,6 +12,7 @@ require_once dirname(__DIR__) . '/bootstrap.php';
 
 $injector = function () {
     $container = new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader))));
+
     return new Injector(
         $container,
         new Modules\AopModule,

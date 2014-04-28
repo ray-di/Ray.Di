@@ -78,7 +78,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
      */
     public function testToString()
     {
-        $this->assertTrue(is_string((string)$this->module));
+        $this->assertTrue(is_string((string) $this->module));
     }
 
     /**
@@ -93,28 +93,27 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Modules\InstanceModule;
         $module->activate();
-        $this->assertInternalType('string', (string)$module);
+        $this->assertInternalType('string', (string) $module);
     }
 
     public function testToStringInstance2()
     {
         $module = new Modules\InstanceModule2;
         $module->activate();
-        $this->assertInternalType('string', (string)$module);
+        $this->assertInternalType('string', (string) $module);
     }
-
 
     public function testToStringInstanceArray()
     {
         $module = new Modules\ArrayInstance;
-        $this->assertInternalType('string', (string)$module);
+        $this->assertInternalType('string', (string) $module);
     }
 
     public function testToStringDecoratedModule()
     {
         $module = new Modules\BasicModule(new Modules\ArrayInstance);
         $module->activate();
-        $this->assertInternalType('string', (string)$module);
+        $this->assertInternalType('string', (string) $module);
     }
 
     /**
@@ -193,7 +192,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Modules\TimeModule;
         $this->module->install($module);
-        $this->assertSame(2, count((array)($this->module->bindings)));
+        $this->assertSame(2, count((array) ($this->module->bindings)));
     }
 
     public function test_mergeModuleContent()
@@ -201,7 +200,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $module = new Modules\TimeModule;
         $this->module->install($module);
         $bindings = $this->module->bindings;
-        $bindingClass = array_keys((array)$bindings);
+        $bindingClass = array_keys((array) $bindings);
         $this->assertSame($bindingClass, ["Ray\\Di\\Mock\\DbInterface", '']);
     }
 
@@ -221,7 +220,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Modules\TwiceInstallModule;
         $module->activate();
-        $bindings = (array)$module->bindings;
+        $bindings = (array) $module->bindings;
         $result = $bindings['']['val_a']['to'];
         $this->assertSame('instance', $result[0]);
         $this->assertSame(1, $result[1]);
@@ -237,7 +236,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Modules\DoubleBindModule;
         $module->activate();
-        $bindings = (array)$module->bindings;
+        $bindings = (array) $module->bindings;
         $result = $bindings['Ray\\Di\\Mock\\DbInterface']['*']['to'][1];
         $this->assertSame($result, 'Ray\Di\Mock\UserDb2');
     }
@@ -252,7 +251,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Modules\InstallDoubleModule1;
         $module->activate();
-        $bindings = (array)$module->bindings;
+        $bindings = (array) $module->bindings;
         $result = $bindings['Ray\\Di\\Mock\\DbInterface']['*']['to'][1];
         $this->assertSame($result, 'Ray\Di\Mock\UserDb1');
     }
@@ -261,7 +260,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Modules\InstallDoubleModule2;
         $module->activate();
-        $bindings = (array)$module->bindings;
+        $bindings = (array) $module->bindings;
         $result = $bindings['Ray\\Di\\Mock\\DbInterface']['*']['to'][1];
         $this->assertSame($result, 'Ray\Di\Mock\UserDb2');
     }

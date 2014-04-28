@@ -34,7 +34,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private $objectStorage;
 
     /**
-     * @param LoggerInterface $logger
+     * @param LoggerInterface   $logger
      * @param \SplObjectStorage $splObjectStorage
      *
      * @Inject
@@ -91,8 +91,9 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private function getNotInjectedClass($ref)
     {
         foreach ($this->objectStorage as $key => $object) {
-            if ($key + 1 === (int)$ref) {
+            if ($key + 1 === (int) $ref) {
                 $class = get_class($object);
+
                 return $class;
             }
         }
@@ -205,6 +206,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private function getRef($instance)
     {
         $hash = $this->getObjectHash($instance);
+
         return new DependencyReference($hash, $this);
     }
 
