@@ -6,8 +6,8 @@ namespace Ray\Di;
  *
  * @package Ray\Di
  */
-class ChildInjector extends Injector {
-
+class ChildInjector extends Injector
+{
     /** @var InstanceInterface */
     private $injector;
 
@@ -31,4 +31,4 @@ class ChildInjector extends Injector {
         return parent::getInstance( $class );
     }
 
-} 
+}

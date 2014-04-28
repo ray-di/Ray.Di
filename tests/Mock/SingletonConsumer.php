@@ -3,8 +3,8 @@ namespace Ray\Di\Mock;
 
 use Ray\Di\Di\Inject;
 
-class SingletonConsumer {
-
+class SingletonConsumer
+{
     public static $instances = array();
 
     private $annotatedSingleton;
@@ -20,4 +20,4 @@ class SingletonConsumer {
         self::$instances[] = $this;
     }
 
-} 
+}

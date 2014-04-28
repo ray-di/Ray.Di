@@ -7,8 +7,8 @@ use Ray\Di\Di\PostConstruct;
 /**
  * @Scope("Singleton")
  */
-class AnnotatedSingleton {
-
+class AnnotatedSingleton
+{
     public static $number = 0;
 
     /**
@@ -19,4 +19,4 @@ class AnnotatedSingleton {
         self::$number++;
     }
 
-} 
+}
