@@ -31,3 +31,7 @@ $rm(__DIR__ . '/tmp');
 
 $_ENV['TMP_DIR'] = __DIR__ . '/tmp';
 $_ENV['PACKAGE_DIR'] = dirname(__DIR__);
+
+if ( function_exists( 'xdebug_break' ) ) {
+    ini_set( 'xdebug.max_nesting_level', 200 );
+}

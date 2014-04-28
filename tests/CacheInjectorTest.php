@@ -39,6 +39,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $instance = $this->injector->getInstance('Ray\Di\Definition\Basic');
         $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
+
         return $this->injector;
     }
 
@@ -94,7 +95,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $flag = false;
         $injector = function () {return Injector::create([new Modules\AopModule]);};
-        $initialization = function($instance) use (&$flag){ $flag = true;};
+        $initialization = function($instance) use (&$flag) { $flag = true;};
         $injector = new CacheInjector($injector, $initialization, 'test', new ArrayCache);
         $injector->getInstance('Ray\Di\Aop\RealBillingService');
         $this->assertTrue($flag);
@@ -107,6 +108,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
         $instance = unserialize($serialized);
 
         $this->assertInstanceOf('Ray\Aop\WeavedInterface', $instance);
+
         return $instance;
     }
 
@@ -119,6 +121,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
         $instance = unserialize($serialized);
         $this->assertInstanceOf('Ray\Aop\WeavedInterface', $instance);
         $this->assertInstanceOf('Ray\Aop\WeavedInterface', unserialize(require __DIR__ . '/scripts/cache_billing.php'));
+
         return $instance;
     }
 
@@ -148,7 +151,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     public function testInjectorNotReturned()
     {
         $injector = function () {return null;};
-        $initialization = function($instance) use (&$flag){ $flag = true;};
+        $initialization = function($instance) use (&$flag) { $flag = true;};
         $injector = new CacheInjector($injector, $initialization, __FUNCTION__, new ArrayCache);
         $injector->getInstance('Ray\Di\Definition\LifeCycleOnShutdown');
     }

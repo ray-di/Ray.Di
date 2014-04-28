@@ -2,9 +2,7 @@
 
 namespace Ray\Di;
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
-use Ray\Aop\Compiler;
 
 require_once dirname(__DIR__) . '/bootstrap.php';
 require_once dirname(__DIR__) . '/Mock/Diary/diary_classes.php';

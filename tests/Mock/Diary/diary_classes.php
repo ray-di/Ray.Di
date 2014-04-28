@@ -4,12 +4,10 @@ namespace Ray\Di;
 
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
-use Ray\Di\Di\Scope;
 
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
-
 
 interface DbInterface{}
 interface DiaryInterface{}
@@ -121,7 +119,6 @@ class DiaryInterceptor implements MethodInterceptor
     public $log;
     public $dsn;
     private $closure;
-
 
     /**
      * @Inject

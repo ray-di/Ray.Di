@@ -34,15 +34,16 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private $objectStorage;
 
     /**
-     * @param LoggerInterface $logger
+     * @param LoggerInterface   $logger
+     * @param \SplObjectStorage $splObjectStorage
      *
      * @Inject
      * @Named("logger")
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, \SplObjectStorage $splObjectStorage = null)
     {
         $this->logger = $logger;
-        $this->objectStorage = new \SplObjectStorage;
+        $this->objectStorage = ($splObjectStorage instanceof \SplObjectStorage) ? $splObjectStorage : new \SplObjectStorage();
     }
 
     /**
@@ -58,7 +59,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     /**
      * {@inheritdoc}
      */
-    public function log($class, array $params, array $setters, $instance, Bind $bind)
+    public function log($class, array $params, array $setters, $instance, Bind $bind, $isSingleton = false)
     {
         if ($instance instanceof DependencyProvider) {
             $this->buildProvider($instance);
@@ -66,7 +67,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
             return;
         }
         $this->logger->log($class, $params, $setters, $instance, $bind);
-        $this->build($class, $instance, $params, $setters);
+        $this->build($class, $instance, $params, $setters, $isSingleton);
     }
 
     /**
@@ -90,8 +91,9 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private function getNotInjectedClass($ref)
     {
         foreach ($this->objectStorage as $key => $object) {
-            if ($key + 1 === (int)$ref) {
+            if ($key + 1 === (int) $ref) {
                 $class = get_class($object);
+
                 return $class;
             }
         }
@@ -115,7 +117,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function setClassMap(array $classMap, $class)
     {
@@ -132,14 +134,15 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
      * @param array  $params
      * @param array  $setters
      * @param string $class
+     * @param bool   $isSingleton
      */
-    private function build($class, $instance, array $params, array $setters)
+    private function build($class, $instance, array $params, array $setters, $isSingleton)
     {
         $params = $this->makeParamRef($params);
         foreach ($setters as &$methodPrams) {
             $methodPrams = $this->makeParamRef($methodPrams);
         }
-        $dependencyFactory = new DependencyFactory($instance, $params, $setters, $this);
+        $dependencyFactory = new DependencyFactory($instance, $params, $setters, $this, $isSingleton);
         list(,,$definition) = $this->config->fetch($class);
         // @PostConstruct
         $postConstructMethod = $definition['PostConstruct'];
@@ -203,6 +206,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private function getRef($instance)
     {
         $hash = $this->getObjectHash($instance);
+
         return new DependencyReference($hash, $this);
     }
 

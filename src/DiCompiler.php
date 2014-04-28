@@ -46,7 +46,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
 
     /**
      * @param InjectorInterface $injector
-     * @param CompilationLogger     $logger
+     * @param CompilationLogger $logger
      */
     public function __construct(
         InjectorInterface $injector,
@@ -103,7 +103,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
         );
         $logger = new CompilationLogger(new Logger);
         $logger->setConfig($config);
-        $injector = new Injector(
+        $injector = new ChildInjector(
             new Container(new Forge($config)),
             $moduleProvider(),
             new Bind,
@@ -113,14 +113,17 @@ final class DiCompiler implements InstanceInterface, \Serializable
             ),
             $logger
         );
+
         $diCompiler = new DiCompiler($injector, $logger, $cache, $cacheKey);
+        $injector->setChildInjector( $diCompiler );
 
         return $diCompiler;
     }
 
     /**
-     * @param string $class
+     * Compile fluent interface
      *
+     * @param  string $class
      * @return self
      */
     public function compile($class)

@@ -12,7 +12,7 @@ class RndDb implements DbInterface
     /**
      * @var string
      */
-    public $madeBy = '';
+    public $madeBy = __CLASS__;
 
     public function __construct()
     {

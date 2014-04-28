@@ -24,7 +24,7 @@ final class DependencyReference implements ProviderInterface
     private $instance;
 
     /**
-     * @param string        $refId
+     * @param string            $refId
      * @param CompilationLogger $logger
      */
     public function __construct($refId, CompilationLogger $logger)

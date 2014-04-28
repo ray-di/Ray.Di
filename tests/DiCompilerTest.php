@@ -163,7 +163,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $instance = $compileInjector->getInstance('Ray\Di\WriterInterface');
         $this->assertInstanceOf('Ray\Di\Writer', $instance);
     }
-    
+
     public function testAop()
     {
 
@@ -235,7 +235,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
     public function testString()
     {
         $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
-        $this->assertInternalType('string', (string)$DiCompiler);
+        $this->assertInternalType('string', (string) $DiCompiler);
     }
 
     /**
