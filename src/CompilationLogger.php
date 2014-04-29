@@ -32,7 +32,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
      * @var \SplObjectStorage
      */
     private $objectStorage;
-
+    
     /**
      * @param LoggerInterface $logger
      *
@@ -75,26 +75,10 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     public function newInstance($ref)
     {
         if (! isset($this->dependencyContainer[$ref])) {
-            $class = $this->getNotInjectedClass($ref);
-            throw new Exception\Compile($class);
+            throw new Exception\Compile($ref);
         }
 
         return $this->dependencyContainer[$ref]->get();
-    }
-
-    /**
-     * @param string $ref
-     *
-     * @return string
-     */
-    private function getNotInjectedClass($ref)
-    {
-        foreach ($this->objectStorage as $key => $object) {
-            if ($key + 1 === (int)$ref) {
-                $class = get_class($object);
-                return $class;
-            }
-        }
     }
 
     /**
@@ -177,7 +161,8 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     {
         $instanceHash = $this->getObjectHash($dependencyProvider->instance);
         $providerHash = $this->getObjectHash($dependencyProvider->provider);
-        $this->dependencyContainer[$instanceHash] = new DependencyReference($providerHash, $this);
+        $dependencyReference = new DependencyReference($providerHash, $this, get_class($dependencyProvider));
+        $this->dependencyContainer[$instanceHash] = $dependencyReference;
     }
     /**
      * @param array $params
@@ -203,7 +188,8 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private function getRef($instance)
     {
         $hash = $this->getObjectHash($instance);
-        return new DependencyReference($hash, $this);
+        $type = is_object($instance) ? get_class($instance) : gettype($instance);
+        return new DependencyReference($hash, $this, $type);
     }
 
     /**
