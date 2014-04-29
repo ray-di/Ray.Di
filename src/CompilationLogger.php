@@ -32,7 +32,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
      * @var \SplObjectStorage
      */
     private $objectStorage;
-    
+
     /**
      * @param LoggerInterface $logger
      *

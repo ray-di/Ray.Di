@@ -6,11 +6,13 @@
  */
 namespace Ray\Di;
 
+use Aura\Di\ConfigInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\Cache;
 use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
+use Ray\Di\Exception\Compile;
 
 final class DiCompiler implements InstanceInterface, \Serializable
 {
@@ -40,6 +42,8 @@ final class DiCompiler implements InstanceInterface, \Serializable
     private $cacheKey;
 
     /**
+     * [callable $moduleProvider, Cache $cache, $cacheKey, $tmpDir]
+     *
      * @var array
      */
     private static $args;
@@ -95,14 +99,31 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     private static function createInstance($moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
-        $config = new Config(
-            new Annotation(
-                new Definition,
-                new AnnotationReader
-            )
-        );
+        $config = new Config(new Annotation(new Definition, new AnnotationReader));
         $logger = new CompilationLogger(new Logger);
         $logger->setConfig($config);
+        $injector = self::createInjector($moduleProvider, $tmpDir, $config, $logger);
+        $diCompiler = new DiCompiler($injector, $logger, $cache, $cacheKey);
+
+        return $diCompiler;
+    }
+
+    /**
+     * @param callable $moduleProvider
+     * @param string   $tmpDir
+     * @param Config   $config
+     * @param Logger   $logger
+     *
+     * @return Injector
+     */
+    private static function createInjector(
+        callable $moduleProvider,
+        $tmpDir,
+        ConfigInterface $config = null,
+        LoggerInterface $logger = null
+    ) {
+        $config = $config ?: new Config(new Annotation(new Definition, new AnnotationReader));
+        $logger =  $logger ?: new Logger;
         $injector = new Injector(
             new Container(new Forge($config)),
             $moduleProvider(),
@@ -113,9 +134,8 @@ final class DiCompiler implements InstanceInterface, \Serializable
             ),
             $logger
         );
-        $diCompiler = new DiCompiler($injector, $logger, $cache, $cacheKey);
 
-        return $diCompiler;
+        return $injector;
     }
 
     /**
@@ -165,8 +185,15 @@ final class DiCompiler implements InstanceInterface, \Serializable
         foreach ($mappedClass as $newClass) {
             $diCompiler->compile($newClass);
         }
+        try {
+            $instance = $diCompiler->getInstance($class);
+        } catch (Compile $e) {
+            list($provider, $tmpDir) = [self::$args[0], self::$args[3]];
+            $injector = self::createInjector($provider, $tmpDir);
+            $instance = $injector->getInstance($class);
+        }
 
-        return $diCompiler->getInstance($class);
+        return $instance;
     }
 
     /**
