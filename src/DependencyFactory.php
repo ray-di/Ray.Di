@@ -8,7 +8,7 @@ namespace Ray\Di;
 
 use Ray\Aop\Bind;
 
-final class DependencyFactory implements ProviderInterface
+final class DependencyFactory implements ProviderInterface, \Serializable
 {
     /**
      * @var string
@@ -95,15 +95,17 @@ final class DependencyFactory implements ProviderInterface
             return $this->instance;
         }
         // constructor injection
-        foreach ($this->args as &$arg) {
+        $args = $this->args;
+        foreach ($args as &$arg) {
             if ($arg instanceof DependencyReference) {
                 $arg = $arg->get();
             }
         }
-        $instance = (new \ReflectionClass($this->class))->newInstanceArgs($this->args);
+        $instance = (new \ReflectionClass($this->class))->newInstanceArgs($args);
 
         // setter injection
-        foreach ($this->setters as $method => &$args) {
+        $setters = $this->setters;
+        foreach ($setters as $method => &$args) {
             foreach ($args as &$arg) {
                 if ($arg instanceof DependencyReference) {
                     $arg = $arg->get();
@@ -124,14 +126,15 @@ final class DependencyFactory implements ProviderInterface
         }
         // interceptor ?
         if ($this->interceptors) {
-            foreach ($this->interceptors as &$methodInterceptors) {
+            $interceptors = $this->interceptors;
+            foreach ($interceptors as &$methodInterceptors) {
                 foreach ($methodInterceptors as &$methodInterceptor) {
                     if ($methodInterceptor instanceof DependencyReference) {
                         $methodInterceptor = $methodInterceptor->get();
                     }
                 }
             }
-            $this->instance->rayAopBind = new Bind($this->interceptors);
+            $this->instance->rayAopBind = new Bind($interceptors);
         }
 
         return $instance;
@@ -140,5 +143,35 @@ final class DependencyFactory implements ProviderInterface
     public function __toString()
     {
         return $this->hash;
+    }
+
+    public function serialize()
+    {
+        $serialized = serialize(
+            [
+                $this->hash,
+                $this->class,
+                $this->args,
+                $this->setters,
+                $this->logger,
+                $this->interceptors,
+                $this->postConstruct
+            ]
+        );
+
+        return $serialized;
+    }
+
+    public function unserialize($serialized)
+    {
+        list(
+            $this->hash,
+            $this->class,
+            $this->args,
+            $this->setters,
+            $this->logger,
+            $this->interceptors,
+            $this->postConstruct
+        ) = unserialize($serialized);
     }
 }
