@@ -8,7 +8,7 @@ namespace Ray\Di;
 
 use Ray\Di\Exception\Compile;
 
-final class DependencyReference implements ProviderInterface
+final class DependencyReference implements ProviderInterface, \Serializable
 {
     /**
      * @var CompilationLogger
@@ -56,5 +56,31 @@ final class DependencyReference implements ProviderInterface
         } catch (Compile $e) {
             throw new Compile($this->type);
         }
+    }
+
+    public function serialize()
+    {
+        serialize($this->logger);
+        serialize($this->refId);
+        serialize($this->type);
+
+        $serialized = serialize(
+            [
+                $this->logger,
+                $this->refId,
+                $this->type
+            ]
+        );
+
+        return $serialized;
+    }
+
+    public function unserialize($serialized)
+    {
+        list(
+            $this->logger,
+            $this->refId,
+            $this->type
+        ) = unserialize($serialized);
     }
 }
