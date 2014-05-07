@@ -9,7 +9,7 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 {
     public function testInSingletonInterface()
     {
-        $moduleProvider = function() {return new Modules\SingletonModule;};
+        $moduleProvider = function () {return new Modules\SingletonModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $dbInstance1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
@@ -22,7 +22,7 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 
     public function testInSingletonByProviderInterface()
     {
-        $moduleProvider = function() {return new Modules\SingletonProviderModule;};
+        $moduleProvider = function () {return new Modules\SingletonProviderModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $dbInstance1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
@@ -47,7 +47,7 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 
     public function testInSingletonByProviderClass()
     {
-        $moduleProvider = function() {return new Modules\SingletonProviderForClassModule;};
+        $moduleProvider = function () {return new Modules\SingletonProviderForClassModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $dbInstance1 = $injector->getInstance('Ray\Di\Mock\RndDb');
@@ -71,7 +71,7 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 
     public function testConsumerAskSingletonByClass()
     {
-        $moduleProvider = function() {return new Modules\SingletonProviderForClassModule;};
+        $moduleProvider = function () {return new Modules\SingletonProviderForClassModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
         $consumer = $injector->getInstance('Ray\Di\Mock\RndDbConsumer');
 
@@ -84,7 +84,7 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 
     public function testSerializedObjectSingleton()
     {
-        $moduleProvider = function() {return new Modules\SingletonProviderForClassModule;};
+        $moduleProvider = function () {return new Modules\SingletonProviderForClassModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
         $instance = $injector->getInstance('Ray\Di\Mock\RndDbConsumer');
         $consumer = unserialize(serialize($instance));
@@ -95,7 +95,7 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 
     public function testSerializedInjectorSingleton()
     {
-        $moduleProvider = function() {return new Modules\SingletonProviderForClassModule;};
+        $moduleProvider = function () {return new Modules\SingletonProviderForClassModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
         $injector = unserialize(serialize($injector));
         $instance = $injector->getInstance('Ray\Di\Mock\RndDbConsumer');
@@ -117,7 +117,7 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 
     public function testInSingletonInterfaceWithAnnotation()
     {
-        $moduleProvider = function() {return new Modules\SingletonAnnotationModule;};
+        $moduleProvider = function () {return new Modules\SingletonAnnotationModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
         $dbInstance1 = $injector->getInstance('Ray\Di\Mock\SingletonDbInterface');
         $dbInstance2 = $injector->getInstance('Ray\Di\Mock\SingletonDbInterface');
@@ -129,7 +129,7 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 
     public function testInjectInSingletonInterface()
     {
-        $moduleProvider = function() {return new Modules\SingletonModule;};
+        $moduleProvider = function () {return new Modules\SingletonModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $numberInstance1 = $injector->getInstance('Ray\Di\Mock\Number');
@@ -142,7 +142,7 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 
     public function testInjectInSingletonInterfaceWithAnnotation()
     {
-        $moduleProvider = function() {return new Modules\SingletonAnnotationModule;};
+        $moduleProvider = function () {return new Modules\SingletonAnnotationModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $numberInstance1 = $injector->getInstance('Ray\Di\Mock\SingletonNumber');
@@ -155,7 +155,7 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
 
     public function testInjectInSingletonInterface4times()
     {
-        $moduleProvider = function() {return new Modules\SingletonModule;};
+        $moduleProvider = function () {return new Modules\SingletonModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $numberInstance1 = $injector->getInstance('Ray\Di\Mock\DbInterface');

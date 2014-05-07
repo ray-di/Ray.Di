@@ -25,7 +25,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->injector = function () {return new Injector(new Container(new Forge(new Config(new Annotation(new Definition, new AnnotationReader)))), new Modules\BasicModule, new Bind, new Compiler($_ENV['TMP_DIR'], new PHPParser_PrettyPrinter_Default));};
-        $initialization = function() { $this->flag = true; };
+        $initialization = function () { $this->flag = true; };
         $this->injector = new CacheInjector($this->injector, $initialization, 'test', new FilesystemCache($_ENV['TMP_DIR']));
     }
 
@@ -55,7 +55,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     public function testToInstance()
     {
         $injector = function () {return Injector::create([new Modules\InstanceModule]);};
-        $initialization = function() {};
+        $initialization = function () {};
         $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['TMP_DIR']));
 
         $instance = $injector->getInstance('Ray\Di\Definition\Instance');
@@ -65,7 +65,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     public function testAop()
     {
         $injector = function () {return Injector::create([new Modules\AopModule]);};
-        $initialization = function() {};
+        $initialization = function () {};
         $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache($_ENV['TMP_DIR']));
         $instance = $injector->getInstance('Ray\Di\Aop\RealBillingService');
         /* @var $instance \Ray\Di\Aop\RealBillingService */
@@ -94,7 +94,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $flag = false;
         $injector = function () {return Injector::create([new Modules\AopModule]);};
-        $initialization = function($instance) use (&$flag){ $flag = true;};
+        $initialization = function ($instance) use (&$flag) { $flag = true;};
         $injector = new CacheInjector($injector, $initialization, 'test', new ArrayCache);
         $injector->getInstance('Ray\Di\Aop\RealBillingService');
         $this->assertTrue($flag);
@@ -148,7 +148,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
     public function testInjectorNotReturned()
     {
         $injector = function () {return null;};
-        $initialization = function($instance) use (&$flag){ $flag = true;};
+        $initialization = function ($instance) use (&$flag) { $flag = true;};
         $injector = new CacheInjector($injector, $initialization, __FUNCTION__, new ArrayCache);
         $injector->getInstance('Ray\Di\Definition\LifeCycleOnShutdown');
     }

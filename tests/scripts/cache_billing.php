@@ -22,7 +22,7 @@ $injector = function () {
         )
     );
 };
-$initialization = function($instance) {};
+$initialization = function ($instance) {};
 $injector = new CacheInjector($injector, $initialization, 'test', new FilesystemCache(__DIR__ . '/cache'));
 $billing = $injector->getInstance('Ray\Di\Aop\CacheBilling');
 

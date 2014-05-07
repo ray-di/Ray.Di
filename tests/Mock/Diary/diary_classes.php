@@ -138,7 +138,7 @@ class DiaryInterceptor implements MethodInterceptor
     public function __construct(LogInterface $log)
     {
         $this->log = $log;
-        $this->closure = function(){};
+        $this->closure = function () {};
     }
 
     public function invoke(MethodInvocation $invocation)

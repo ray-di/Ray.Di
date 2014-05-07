@@ -6,7 +6,7 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Mock\DbInterface;
 
-class MockInjectNamed
+class MockDefinitionAnnotate
 {
     /**
      * @var DbInterface

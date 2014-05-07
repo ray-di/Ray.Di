@@ -91,7 +91,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testSerialize()
     {
-        $unserializableObject = new TestObject(function(){}, new \PDO('sqlite::memory:'));
+        $unserializableObject = new TestObject(function () {}, new \PDO('sqlite::memory:'));
         $this->diLogger->log('Ray\Di\Mock\Db', [], [], $unserializableObject, new Bind);
         $serialized = serialize($this->diLogger);
         $this->assertInternalType('string', $serialized);
@@ -99,7 +99,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testUnserialize()
     {
-        $unserializableObject = new TestObject(function(){}, new \PDO('sqlite::memory:'));
+        $unserializableObject = new TestObject(function () {}, new \PDO('sqlite::memory:'));
         $this->diLogger->log('Ray\Di\Mock\Db', [], [], $unserializableObject, new Bind);
         $unSerialized = unserialize(serialize($this->diLogger));
         /** @var Logger $unSerialized */

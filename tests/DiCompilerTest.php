@@ -163,7 +163,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $instance = $compileInjector->getInstance('Ray\Di\WriterInterface');
         $this->assertInstanceOf('Ray\Di\Writer', $instance);
     }
-    
+
     public function testAop()
     {
 
@@ -190,7 +190,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         // cache create
         $cache = new FilesystemCache(__DIR__ . '/tmp');
         $tmpDir = __DIR__ . '/tmp';
-        $moduleProvider = function() {
+        $moduleProvider = function () {
             return new DiaryAopModule;
         };
         $injector = DiCompiler::create($moduleProvider, $cache, 'diary', $tmpDir);
