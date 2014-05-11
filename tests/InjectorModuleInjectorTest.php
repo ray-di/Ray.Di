@@ -73,7 +73,6 @@ class GreetingTest implements TestInterface
     }
 }
 
-
 class InjectorModuleInjectorTest extends \PHPUnit_Framework_TestCase
 {
 

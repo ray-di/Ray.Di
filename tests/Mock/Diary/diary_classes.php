@@ -10,7 +10,6 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
 
-
 interface DbInterface{}
 interface DiaryInterface{}
 interface LogInterface{}
@@ -121,7 +120,6 @@ class DiaryInterceptor implements MethodInterceptor
     public $log;
     public $dsn;
     private $closure;
-
 
     /**
      * @Inject

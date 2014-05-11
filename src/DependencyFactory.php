@@ -51,9 +51,9 @@ final class DependencyFactory implements ProviderInterface, \Serializable
     private $postConstruct;
 
     /**
-     * @param object        $object
-     * @param array         $args
-     * @param array         $setter
+     * @param object            $object
+     * @param array             $args
+     * @param array             $setter
      * @param CompilationLogger $logger
      */
     public function __construct(
