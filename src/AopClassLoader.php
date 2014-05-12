@@ -6,7 +6,7 @@
  */
 namespace Ray\Di;
 
-class AopClassLoader
+class AopClassLoader implements ClassLoaderInterface
 {
     public function register($classDir)
     {
