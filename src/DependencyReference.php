@@ -6,7 +6,9 @@
  */
 namespace Ray\Di;
 
-final class DependencyReference implements ProviderInterface
+use Ray\Di\Exception\Compile;
+
+final class DependencyReference implements ProviderInterface, \Serializable
 {
     /**
      * @var CompilationLogger
@@ -24,21 +26,61 @@ final class DependencyReference implements ProviderInterface
     private $instance;
 
     /**
-     * @param string        $refId
-     * @param CompilationLogger $logger
+     * Dependency type (class name)
+     *
+     * @var string
      */
-    public function __construct($refId, CompilationLogger $logger)
+    private $type;
+
+    /**
+     * @param string            $refId
+     * @param CompilationLogger $logger
+     * @param string            $type
+     */
+    public function __construct($refId, CompilationLogger $logger, $type)
     {
         $this->refId = $refId;
         $this->logger = $logger;
+        $this->type = $type;
     }
 
     public function get()
     {
-        if (is_null($this->instance)) {
-            $this->instance = $this->logger->newInstance($this->refId);
+        if ($this->instance !== null) {
+            return $this->instance;
         }
+        try {
+            $this->instance = $this->logger->newInstance($this->refId);
 
-        return $this->instance;
+            return $this->instance;
+        } catch (Compile $e) {
+            throw new Compile($this->type);
+        }
+    }
+
+    public function serialize()
+    {
+        serialize($this->logger);
+        serialize($this->refId);
+        serialize($this->type);
+
+        $serialized = serialize(
+            [
+                $this->logger,
+                $this->refId,
+                $this->type
+            ]
+        );
+
+        return $serialized;
+    }
+
+    public function unserialize($serialized)
+    {
+        list(
+            $this->logger,
+            $this->refId,
+            $this->type
+        ) = unserialize($serialized);
     }
 }

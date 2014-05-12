@@ -2,26 +2,15 @@
 
 namespace Ray\Di;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Ray\Di\Mock\RndDb;
 
-/**
- * Test class for SingletonModule.
- */
-class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
+class DiCompilerSingletonTest extends InjectorSingletonTest
 {
-    protected function setUp()
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function testInSingletonInterface()
     {
-        $injector = Injector::create([new Modules\SingletonModule()]);
+        $moduleProvider = function () {return new Modules\SingletonModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $dbInstance1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
         $dbInstance2 = $injector->getInstance('Ray\Di\Mock\DbInterface');
@@ -33,7 +22,8 @@ class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
 
     public function testInSingletonByProviderInterface()
     {
-        $injector = Injector::create([new Modules\SingletonProviderModule()]);
+        $moduleProvider = function () {return new Modules\SingletonProviderModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $dbInstance1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
         $dbInstance2 = $injector->getInstance('Ray\Di\Mock\DbInterface');
@@ -57,7 +47,8 @@ class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
 
     public function testInSingletonByProviderClass()
     {
-        $injector = Injector::create([new Modules\SingletonProviderForClassModule()]);
+        $moduleProvider = function () {return new Modules\SingletonProviderForClassModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $dbInstance1 = $injector->getInstance('Ray\Di\Mock\RndDb');
         $dbInstance2 = $injector->getInstance('Ray\Di\Mock\RndDb');
@@ -80,7 +71,8 @@ class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
 
     public function testConsumerAskSingletonByClass()
     {
-        $injector = Injector::create([new Modules\SingletonProviderForClassModule()]);
+        $moduleProvider = function () {return new Modules\SingletonProviderForClassModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
         $consumer = $injector->getInstance('Ray\Di\Mock\RndDbConsumer');
 
         $a = spl_object_hash($consumer->db1);
@@ -92,7 +84,8 @@ class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
 
     public function testSerializedObjectSingleton()
     {
-        $injector = Injector::create([new Modules\SingletonProviderForClassModule()]);
+        $moduleProvider = function () {return new Modules\SingletonProviderForClassModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
         $instance = $injector->getInstance('Ray\Di\Mock\RndDbConsumer');
         $consumer = unserialize(serialize($instance));
         $a = spl_object_hash($consumer->db1);
@@ -102,7 +95,9 @@ class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
 
     public function testSerializedInjectorSingleton()
     {
-        $injector = unserialize(serialize(Injector::create([new Modules\SingletonProviderForClassModule()])));
+        $moduleProvider = function () {return new Modules\SingletonProviderForClassModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $injector = unserialize(serialize($injector));
         $instance = $injector->getInstance('Ray\Di\Mock\RndDbConsumer');
         $consumer = unserialize(serialize($instance));
         $a = spl_object_hash($consumer->db1);
@@ -122,8 +117,8 @@ class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
 
     public function testInSingletonInterfaceWithAnnotation()
     {
-        $injector = Injector::create([new Modules\SingletonAnnotationModule()]);
-
+        $moduleProvider = function () {return new Modules\SingletonAnnotationModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
         $dbInstance1 = $injector->getInstance('Ray\Di\Mock\SingletonDbInterface');
         $dbInstance2 = $injector->getInstance('Ray\Di\Mock\SingletonDbInterface');
 
@@ -134,7 +129,8 @@ class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
 
     public function testInjectInSingletonInterface()
     {
-        $injector = Injector::create([new Modules\SingletonModule()]);
+        $moduleProvider = function () {return new Modules\SingletonModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $numberInstance1 = $injector->getInstance('Ray\Di\Mock\Number');
         $numberInstance2 = $injector->getInstance('Ray\Di\Mock\Number');
@@ -146,7 +142,8 @@ class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
 
     public function testInjectInSingletonInterfaceWithAnnotation()
     {
-        $injector = Injector::create([new Modules\SingletonAnnotationModule()]);
+        $moduleProvider = function () {return new Modules\SingletonAnnotationModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $numberInstance1 = $injector->getInstance('Ray\Di\Mock\SingletonNumber');
         $numberInstance2 = $injector->getInstance('Ray\Di\Mock\SingletonNumber');
@@ -158,7 +155,8 @@ class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
 
     public function testInjectInSingletonInterface4times()
     {
-        $injector = Injector::create([new Modules\SingletonModule()]);
+        $moduleProvider = function () {return new Modules\SingletonModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
 
         $numberInstance1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
         $numberInstance2 = $injector->getInstance('Ray\Di\Mock\DbInterface');
@@ -173,5 +171,4 @@ class InjectorSingletonTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($result2, $result3);
         $this->assertSame($result3, $result4);
     }
-
 }

@@ -163,7 +163,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $instance = $compileInjector->getInstance('Ray\Di\WriterInterface');
         $this->assertInstanceOf('Ray\Di\Writer', $instance);
     }
-    
+
     public function testAop()
     {
 
@@ -190,7 +190,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         // cache create
         $cache = new FilesystemCache(__DIR__ . '/tmp');
         $tmpDir = __DIR__ . '/tmp';
-        $moduleProvider = function() {
+        $moduleProvider = function () {
             return new DiaryAopModule;
         };
         $injector = DiCompiler::create($moduleProvider, $cache, 'diary', $tmpDir);
@@ -235,16 +235,14 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
     public function testString()
     {
         $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
-        $this->assertInternalType('string', (string)$DiCompiler);
+        $this->assertInternalType('string', (string) $DiCompiler);
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\Compile
-     */
     public function testCompileException()
     {
         $this->injector->setModule(new DiaryAopErrorModule);
         $diCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
-        $diCompiler->getInstance('Ray\Di\DiaryInterface');
+        $instance = $diCompiler->getInstance('Ray\Di\DiaryInterface');
+        $this->assertInstanceOf('Ray\Di\Diary', $instance);
     }
 }

@@ -10,7 +10,6 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
 
-
 interface DbInterface{}
 interface DiaryInterface{}
 interface LogInterface{}
@@ -122,7 +121,6 @@ class DiaryInterceptor implements MethodInterceptor
     public $dsn;
     private $closure;
 
-
     /**
      * @Inject
      * @Named("dsn")
@@ -138,7 +136,7 @@ class DiaryInterceptor implements MethodInterceptor
     public function __construct(LogInterface $log)
     {
         $this->log = $log;
-        $this->closure = function(){};
+        $this->closure = function () {};
     }
 
     public function invoke(MethodInvocation $invocation)

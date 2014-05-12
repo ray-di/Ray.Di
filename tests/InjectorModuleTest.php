@@ -7,7 +7,6 @@ use Ray\Di\Module\InjectorModule;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-
 class InjectorTestClass
 {
     public $hash;

@@ -11,7 +11,7 @@ require_once dirname(__DIR__) . '/Mock/Diary/diary_classes.php';
 $tmpDir = __DIR__ . '/cache';
 $cache = new FilesystemCache($tmpDir);
 
-$moduleProvider = function() {
+$moduleProvider = function () {
     return new DiaryAopModule;
 };
 $cache->setNamespace('diary');

@@ -24,7 +24,7 @@ class TestLogger implements LoggerInterface
     {
         $construct = serialize($params);
         $setter = serialize($setter);
-        $intercept = ($object instanceof Weaver) ? (string)$object->___getBind() : '[]';
+        $intercept = ($object instanceof Weaver) ? (string) $object->___getBind() : '[]';
         $log = "Injector class={$class} constructor={$construct} setter={$setter} interceptor={$intercept}";
         self::$log = $log;
     }

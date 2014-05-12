@@ -11,7 +11,7 @@ class ConcreteClass3RequiresConcreteClass2
     /**
      * @Inject
      */
-    public function injectDependencies( ConcreteClass2NoConstructor $class )
+    public function injectDependencies(ConcreteClass2NoConstructor $class)
     {
         $this->object = $class;
     }

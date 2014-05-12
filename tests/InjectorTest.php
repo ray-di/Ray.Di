@@ -28,7 +28,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
      */
     protected $container;
 
-
     protected function setUp()
     {
         parent::setUp();
@@ -179,7 +178,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         /* @var $instance \Ray\Di\Aop\RealBillingService */
         list($amount,) = $instance->chargeOrder();
         $expected = 105;
-        $this->assertSame($expected, (int)$amount);
+        $this->assertSame($expected, (int) $amount);
     }
 
     public function testBindInterceptors()
@@ -189,7 +188,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         /* @var $instance \Ray\Di\Aop\RealBillingService */
         list($amount,) = $instance->chargeOrder();
         $expected = 105;
-        $this->assertSame($expected, (int)$amount);
+        $this->assertSame($expected, (int) $amount);
     }
 
     public function testBindDoubleInterceptors()
@@ -200,7 +199,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         /* @var $instance \Ray\Di\Aop\AnnotateTaxBilling */
         list($amount,) = $instance->chargeOrder();
         $expected = 110;
-        $this->assertSame($expected, (int)$amount);
+        $this->assertSame($expected, (int) $amount);
     }
 
     public function testBindInterceptorsToChildClass()
@@ -210,18 +209,18 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         /* @var $instance \Ray\Di\Aop\ChildRealBillingService */
         list($amount,) = $instance->chargeOrder();
         $expected = 110;
-        $this->assertSame($expected, (int)$amount);
+        $this->assertSame($expected, (int) $amount);
     }
 
     public function testToString()
     {
         $this->injector->setModule(new Modules\AnnotateModule);
-        $this->assertTrue(is_string((string)$this->injector));
+        $this->assertTrue(is_string((string) $this->injector));
     }
 
     public function testClassHint()
     {
-        $this->assertTrue(is_string((string)$this->injector));
+        $this->assertTrue(is_string((string) $this->injector));
         $instance = $this->injector->getInstance('Ray\Di\Definition\ClassHint');
         $this->assertInstanceOf('\Ray\Di\Mock\Db', $instance->db);
     }
@@ -422,7 +421,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $module = (new InstanceInstallModule);
         $module->activate();
-        $actual = ((array)$module->bindings['']['id']['to']);
+        $actual = ((array) $module->bindings['']['id']['to']);
         $expected = ['instance', 'PC6001'];
         $this->assertSame($expected, $actual);
     }
@@ -454,7 +453,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->setModule(new Modules\BasicModule);
         $this->injector->getInstance('Ray\Di\Definition\Basic');
         $logger = $this->injector->getLogger();
-        $this->assertInternalType('string', (string)$logger);
+        $this->assertInternalType('string', (string) $logger);
     }
 
     public function testGetLoggerForStringSingleton()
@@ -464,7 +463,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $logger = $this->injector->getLogger();
         $expected = 'class:Ray\Di\Definition\Basic setDb:Ray\Di\Mock\UserDb#prototype' . PHP_EOL;
         $expected .= 'class:Ray\Di\Definition\UseBasic setBasic1:Ray\Di\Definition\Basic#prototype setBasic2:Ray\Di\Definition\Basic#singleton, Ray\Di\Definition\Basic#singleton';
-        $this->assertContains($expected, (string)$logger);
+        $this->assertContains($expected, (string) $logger);
     }
     public function testCircularBindings()
     {

@@ -8,6 +8,7 @@ namespace Ray\Di;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Ray\Di\Exception\NoInjectorReturn;
+use Ray\Di\ClassLoaderInterface;
 
 /**
  * Injector with cache container.
@@ -38,6 +39,11 @@ class CacheInjector implements InstanceInterface
     private $namespace;
 
     /**
+     * @var ClassLoaderInterface
+     */
+    private $classLoader;
+
+    /**
      * @param callable      $injector       = function () {return Injector::create([new Module])};
      * @param callable      $initialization = function ($instance, InjectorInterface $injector) {};
      * @param string        $namespace      cache namespace
@@ -47,7 +53,8 @@ class CacheInjector implements InstanceInterface
         callable $injector,
         callable $initialization,
         $namespace,
-        CacheProvider $cache
+        CacheProvider $cache,
+        ClassLoaderInterface $classLoader = null
     ) {
         $this->injector = $injector;
         $this->initialization = $initialization;
@@ -55,6 +62,7 @@ class CacheInjector implements InstanceInterface
         $this->cache = $cache;
         $cache->setNamespace($namespace);
         $this->cache = $cache;
+        $this->classLoader = $classLoader ?: new AopClassLoader;
     }
 
     /**
@@ -85,7 +93,8 @@ class CacheInjector implements InstanceInterface
     private function cachedInstance($class, $key)
     {
         $classDir = $this->cache->fetch($key);
-        $this->registerAopFileLoader($classDir);
+        $this->classLoader->register($classDir);
+
         $instance = $this->cache->fetch("{$key}{$class}");
 
         return $instance;
@@ -118,25 +127,6 @@ class CacheInjector implements InstanceInterface
         call_user_func_array($this->initialization, [$instance, $injector]);
 
         return $instance;
-    }
-
-    /**
-     * Register generated aop file auto loader
-     *
-     * @param $classDir
-     */
-    private function registerAopFileLoader($classDir)
-    {
-        spl_autoload_register(
-            function ($class) use ($classDir) {
-                $file = $classDir . DIRECTORY_SEPARATOR . $class . '.php';
-                if (file_exists($file)) {
-                    // @codeCoverageIgnoreStart
-                    include $file;
-                    // @@codeCoverageIgnoreEnd
-                }
-            }
-        );
     }
 
     /**

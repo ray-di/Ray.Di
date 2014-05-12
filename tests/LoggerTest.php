@@ -56,7 +56,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $setter = ['setA' => [null], 'setB' => [null]];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $this->diLogger->log('Ray\Di\Mock\Db', $params, $setter, $object, new Bind);
-        $this->assertInternalType('string', (string)$this->diLogger);
+        $this->assertInternalType('string', (string) $this->diLogger);
     }
 
     public function testLogCallableParam()
@@ -65,7 +65,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $setter = ['setA' => [null], 'setB' => [null], 'setCallable' => [__NAMESPACE__ . '\someFunction'] ];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $this->diLogger->log('Ray\Di\Mock\Db', $params, $setter, $object, new Bind);
-        $this->assertInternalType('string', (string)$this->diLogger);
+        $this->assertInternalType('string', (string) $this->diLogger);
     }
 
     public function testLogArrayParam()
@@ -74,7 +74,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $setter = ['setA' => [null], 'setB' => [null]];
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $this->diLogger->log('Ray\Di\Mock\Db', $params, $setter, $object, new Bind);
-        $this->assertInternalType('string', (string)$this->diLogger);
+        $this->assertInternalType('string', (string) $this->diLogger);
     }
 
     public function testLogObjectParam()
@@ -86,12 +86,12 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $diLogger = $this->diLogger;
         $this->diLogger->log('Ray\Di\Mock\Db', $params, $setter, $object, new Bind);
         $diLogger->log('Ray\Di\Mock\Db', $params, $setter, $object, new Bind);
-        $this->assertSame((string)$diLogger, (string)$this->diLogger);
+        $this->assertSame((string) $diLogger, (string) $this->diLogger);
     }
 
     public function testSerialize()
     {
-        $unserializableObject = new TestObject(function(){}, new \PDO('sqlite::memory:'));
+        $unserializableObject = new TestObject(function () {}, new \PDO('sqlite::memory:'));
         $this->diLogger->log('Ray\Di\Mock\Db', [], [], $unserializableObject, new Bind);
         $serialized = serialize($this->diLogger);
         $this->assertInternalType('string', $serialized);
@@ -99,7 +99,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testUnserialize()
     {
-        $unserializableObject = new TestObject(function(){}, new \PDO('sqlite::memory:'));
+        $unserializableObject = new TestObject(function () {}, new \PDO('sqlite::memory:'));
         $this->diLogger->log('Ray\Di\Mock\Db', [], [], $unserializableObject, new Bind);
         $unSerialized = unserialize(serialize($this->diLogger));
         /** @var Logger $unSerialized */
