@@ -27,7 +27,7 @@
         "doctrine/annotations": "1.*",
         "doctrine/cache": "1.*",
         "nikic/php-parser": "0.*",
-        "ray/aop": "1.*",
+        "ray/aop": "1.*@dev",
         "aura/di": "1.*"
     },
     "autoload": {
