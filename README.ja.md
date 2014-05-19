@@ -66,9 +66,8 @@ echo(($works) ? 'It works!' : 'It DOES NOT work!');
 
 ### Provider Bindings
 
-[Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) はインターフェイスと実装クラスの`プロバイダー`を束縛します。
+[Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) はインターフェイスと実装クラスの`プロバイダー`を束縛します。`プロバイダー`は必要とされる依存（インスタンス）を`get`メソッドで返します。
 
-シンプルでインスタンス（値）を返すだけの、Providerインターフェイスを実装したプロバイダークラスを作成します。
 ```php
 use Ray\Di\ProviderInterface;
 
