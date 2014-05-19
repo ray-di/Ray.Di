@@ -258,7 +258,7 @@ class TaxModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->subclassesOf('Ray\Di\Aop\RealBillingService'),
             $this->matcher->annotatedWith('Tax'),
-            [new TaxCharger]
+            [$this->requestInjection('TaxCharger')]
         );
     }
 }
@@ -272,8 +272,8 @@ class AopMatcherModule extends AbstractModule
     {
         $this->bindInterceptor(
             $this->matcher->any(),                 // In any class and
-            $this->matcher->startWith('delete'), // ..the method start with "delete"
-            [new Logger]
+            $this->matcher->startWith('delete'),   // ..the method start with "delete"
+            [$this->requestInjection('Logger')]
         );
     }
 }
