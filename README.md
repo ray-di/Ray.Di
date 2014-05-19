@@ -126,9 +126,9 @@ use Ray\Di\Di\Named;
 
 /**
  *  @Inject
- *  @Named("processor=Checkout")
+ *  @Named("processor=checkout")
  */
-public RealBillingService(CreditCardProcessor $processor)
+public RealBillingService(CreditCardProcessorInterface $processor)
 {
 ...
 ```
@@ -137,8 +137,22 @@ To bind a specific name, pass that string using the `annotatedWith()` method.
 ```php
 protected function configure()
 {
-    $this->bind('CreditCardProcessorInterface')->annotatedWith('Checkout')->to('CheckoutCreditCardProcessor');
+    $this->bind('CreditCardProcessorInterface')->annotatedWith('checkout')->to('CheckoutCreditCardProcessor');
 }
+```
+
+You need to specify in case of multiple parameter.
+```php
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+
+/**
+ *  @Inject
+ *  @Named("processor=checkout,backup=subProcessor")
+ */
+public RealBillingService(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)
+{
+...
 ```
 
 ### Instance Bindings
