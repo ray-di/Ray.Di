@@ -112,14 +112,26 @@ $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvid
 
 ### Named Binding
 
-Rayには`@Named`という文字列で`名前`を指定できるビルトインアノテーションがあります。
+Rayには`@Named`という文字列で`名前`を指定できるビルトインアノテーションがあります。同じインターフェイスの依存を`名前`で区別します。
 
+依存が１つの場合
 ```php
 /**
  *  @Inject
- *  @Named("processor=Checkout") 
+ *  @Named("checkout") 
  */
-public RealBillingService(CreditCardProcessor $processor)
+public RealBillingService(CreditCardProcessorInterface $processor)
+{
+...
+```
+
+同一メソッドで依存が複数ある場合は変数名を指定します。
+```php
+/**
+ *  @Inject
+ *  @Named("processonr=checkout,subProcessor=backup") 
+ */
+public RealBillingService(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)
 {
 ...
 ```
@@ -129,7 +141,7 @@ public RealBillingService(CreditCardProcessor $processor)
 ```php
 protected function configure()
 {
-    $this->bind('CreditCardProcessorInterface')->annotatedWith('Checkout')->to('CheckoutCreditCardProcessor');
+    $this->bind('CreditCardProcessorInterface')->annotatedWith('checkout')->to('CheckoutCreditCardProcessor')    $this->bind('CreditCardProcessorInterface')->annotatedWith('backup')->to('CheckoutBackupCreditCardProcessor');
 }
 ```
 
