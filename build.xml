@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="PHP.Skeleton" default="build">
+<project default="build">
     <property name="composer.path" value="${basedir}/composer.phar" />
     <available property="composer.exists" file="${composer.path}" />
 
@@ -14,11 +14,13 @@
             <arg value="composer.phar" />
             <arg value="global" />
             <arg value="require" />
-            <arg value="h4cc/phpqatools:1.*" />
-            <arg value="covex-nn/phpcb:1.*" />
-            <arg value="apigen/apigen:3.*@dev" />
+            <arg value="h4cc/phpqatools:~1.4" />
+            <arg value="apigen/apigen:dev-master" />
+            <arg value="covex-nn/phpcb:~1.0" />
+            <arg value="fabpot/php-cs-fixer:~0.4" />
         </exec>
     </target>
+
     <target name="tools-parallel" description="Run tools in parallel">
         <parallel threadCount="2">
             <sequential>
@@ -33,7 +35,6 @@
 
     <target name="clean" description="Cleanup build artifacts">
         <delete dir="${basedir}/build/api"/>
-        <delete dir="${basedir}/build/docblox"/>
         <delete dir="${basedir}/build/code-browser"/>
         <delete dir="${basedir}/build/coverage"/>
         <delete dir="${basedir}/build/logs"/>
@@ -49,9 +50,15 @@
         <mkdir dir="${basedir}/build/pdepend"/>
     </target>
 
-    <target name="vendor" description="Load composer repositories" depends="composer">
+    <target name="vendor" description="Load composer repositories" depends="composer-update">
         <exec executable="${composer.path}" failonerror="true">
             <arg value="install" />
+        </exec>
+    </target>
+
+    <target name="composer-update" description="Load composer repositories" depends="composer">
+        <exec executable="${composer.path}" failonerror="true">
+            <arg value="self-update" />
         </exec>
     </target>
 
@@ -154,7 +161,7 @@
 
     <target name="apigen" description="Generate API documentation using ApiGen">
         <exec executable="apigen.php">
-            <arg line="--source src --destination ${basedir}/build/apin" />
+            <arg line="--source src --destination ${basedir}/build/api" />
         </exec>
     </target>
 
