@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "af369c7d19e2f1a921cbec6436717a92",
+    "hash": "dcf94935a045c69dd0a13bb22acd86e8",
     "packages": [
         {
             "name": "aura/di",
@@ -353,27 +353,32 @@
         },
         {
             "name": "ray/aop",
-            "version": "1.2.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "958e3c8c50e00387a095317c2e937f792d892ca0"
+                "reference": "cc114558bf76ed91474b7f857183d03ab8bffb4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/958e3c8c50e00387a095317c2e937f792d892ca0",
-                "reference": "958e3c8c50e00387a095317c2e937f792d892ca0",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/cc114558bf76ed91474b7f857183d03ab8bffb4a",
+                "reference": "cc114558bf76ed91474b7f857183d03ab8bffb4a",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "1.*",
-                "nikic/php-parser": "*",
+                "nikic/php-parser": "0.*",
                 "php": ">=5.4.0"
             },
             "suggest": {
                 "ray/di": "DI framework supports Ray.Aop"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Ray\\Aop\\": "src/"
@@ -396,7 +401,7 @@
                 "aop",
                 "aspect"
             ],
-            "time": "2014-02-26 22:42:41"
+            "time": "2014-05-16 03:32:30"
         }
     ],
     "packages-dev": [
@@ -406,9 +411,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "ray/aop": 20
+    },
     "platform": {
         "php": ">=5.4.0"
     },

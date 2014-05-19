@@ -66,9 +66,8 @@ echo(($works) ? 'It works!' : 'It DOES NOT work!');
 
 ### Provider Bindings
 
-[Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) はインターフェイスと実装クラスの`プロバイダー`を束縛します。
+[Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) はインターフェイスと実装クラスの`プロバイダー`を束縛します。`プロバイダー`は必要とされる依存（インスタンス）を`get`メソッドで返します。
 
-シンプルでインスタンス（値）を返すだけの、Providerインターフェイスを実装したプロバイダークラスを作成します。
 ```php
 use Ray\Di\ProviderInterface;
 
@@ -113,14 +112,26 @@ $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvid
 
 ### Named Binding
 
-Rayには`@Named`という文字列で`名前`を指定できるビルトインアノテーションがあります。
+Rayには`@Named`という文字列で`名前`を指定できるビルトインアノテーションがあります。同じインターフェイスの依存を`名前`で区別します。
 
+依存が１つの場合
 ```php
 /**
  *  @Inject
- *  @Named("processor=Checkout") 
+ *  @Named("checkout") 
  */
-public RealBillingService(CreditCardProcessor $processor)
+public RealBillingService(CreditCardProcessorInterface $processor)
+{
+...
+```
+
+同一メソッドで依存が複数ある場合は変数名を指定します。
+```php
+/**
+ *  @Inject
+ *  @Named("processonr=checkout,subProcessor=backup") 
+ */
+public RealBillingService(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)
 {
 ...
 ```
@@ -130,7 +141,7 @@ public RealBillingService(CreditCardProcessor $processor)
 ```php
 protected function configure()
 {
-    $this->bind('CreditCardProcessorInterface')->annotatedWith('Checkout')->to('CheckoutCreditCardProcessor');
+    $this->bind('CreditCardProcessorInterface')->annotatedWith('checkout')->to('CheckoutCreditCardProcessor')    $this->bind('CreditCardProcessorInterface')->annotatedWith('backup')->to('CheckoutBackupCreditCardProcessor');
 }
 ```
 
@@ -247,7 +258,7 @@ class TaxModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->subclassesOf('Ray\Di\Aop\RealBillingService'),
             $this->matcher->annotatedWith('Tax'),
-            [new TaxCharger]
+            [$this->requestInjection('TaxCharger')]
         );
     }
 }
@@ -261,8 +272,8 @@ class AopMatcherModule extends AbstractModule
     {
         $this->bindInterceptor(
             $this->matcher->any(),                 // In any class and
-            $this->matcher->startWith('delete'), // ..the method start with "delete"
-            [new Logger]
+            $this->matcher->startWith('delete'),   // ..the method start with "delete"
+            [$this->requestInjection('Logger')]
         );
     }
 }
