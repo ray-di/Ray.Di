@@ -447,7 +447,9 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return isset($this->bindings[$offset]);
+        $isExist = isset($this->bindings[$offset]);
+
+        return $isExist;
     }
 
     /**
@@ -459,7 +461,9 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function offsetGet($offset)
     {
-        return isset($this->bindings[$offset]) ? $this->bindings[$offset] : null;
+        $result = isset($this->bindings[$offset]) ? $this->bindings[$offset] : null;
+
+        return $result;
     }
 
     /**
