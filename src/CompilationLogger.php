@@ -34,6 +34,11 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private $objectStorage;
 
     /**
+     * @var int
+     */
+    private $storageCnt = 0;
+
+    /**
      * @param LoggerInterface $logger
      *
      * @Inject
@@ -86,13 +91,11 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
      */
     public function getObjectHash($object)
     {
-        static $cnt = 0;
-
         if ($this->objectStorage->contains($object)) {
             return $this->objectStorage[$object];
         }
-        $cnt++;
-        $hash = (string) $cnt;
+        $this->storageCnt++;
+        $hash = (string) $this->storageCnt;
         $this->objectStorage[$object] = $hash;
 
         return $hash;
@@ -105,7 +108,6 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     {
         $container = $this->dependencyContainer;
         $factory = array_pop($container);
-
         $classMap[$class] = (string) $factory;
 
         return $classMap;
