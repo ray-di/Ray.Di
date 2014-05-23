@@ -97,7 +97,15 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
         $this->storageCnt++;
         $hash = (string) $this->storageCnt;
         $this->objectStorage[$object] = $hash;
-
+        // object hash logging for debug
+/*
+        error_log(sprintf('%s@%s.%s #%s',
+            substr(md5(spl_object_hash($this->objectStorage)), 0, 3),
+            $hash,
+            get_class($object),
+            spl_object_hash($object))
+        );
+*/
         return $hash;
     }
 
