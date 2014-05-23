@@ -171,4 +171,18 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
         $this->assertSame($result2, $result3);
         $this->assertSame($result3, $result4);
     }
+
+    public function testRequestInject()
+    {
+        $moduleProvider = function () {return new Modules\SingletonRequestInjectionModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $instance = $injector->getInstance('Ray\Di\Mock\SingletonInterceptorConsumer');
+        /** @var $instance \Ray\Di\Mock\SingletonInterceptorConsumer */
+        $db1 = $instance->getDb();
+        $this->assertInstanceOf('Ray\Di\Mock\DbInterface', $db1);
+        $db2 = $instance->getDb();
+        $this->assertInstanceOf('Ray\Di\Mock\DbInterface', $db2);
+        $this->assertSame($db1, $db2);
+        $this->assertSame(spl_object_hash($db1), spl_object_hash($db2));
+    }
 }
