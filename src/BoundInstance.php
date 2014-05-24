@@ -102,7 +102,8 @@ class BoundInstance implements BoundInstanceInterface
         $class = $this->removeLeadingBackSlash($class);
         $isAbstract = $this->isAbstract($class);
         list(, , $definition) = $this->config->fetch($class);
-        $interfaceClass = $isSingleton = false;
+        $isSingleton = false;
+        $interfaceClass = '';
         if ($isAbstract) {
             return $this->abstractBinding($class, $definition);
         }
@@ -267,7 +268,7 @@ class BoundInstance implements BoundInstanceInterface
      * Throw exception if not bound
      *
      * @param \ArrayObject $bindings
-     * @param string      $class
+     * @param string       $class
      *
      * @return bool
      */
