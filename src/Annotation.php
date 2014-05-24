@@ -170,11 +170,10 @@ class Annotation implements AnnotationInterface
     /**
      * Set annotation key-value for DI
      *
-     * @param string           $name        annotation name
+     * @param string           $name
      * @param ReflectionMethod $method
      * @param array            $annotations
      *
-     * @return void
      * @throws Exception\MultipleAnnotationNotAllowed
      */
     private function setAnnotationName($name, ReflectionMethod $method, array $annotations)
@@ -228,7 +227,7 @@ class Annotation implements AnnotationInterface
     /**
      * @param array                 $methodAnnotation
      * @param ReflectionParameter[] $parameters
-     * @param $named
+     * @param mixed                 $named
      *
      * @return array
      */
@@ -263,8 +262,8 @@ class Annotation implements AnnotationInterface
     /**
      * Return name
      *
-     * @param mixed $named
-     * @param $parameter
+     * @param mixed               $named
+     * @param ReflectionParameter $parameter
      *
      * @return string
      */

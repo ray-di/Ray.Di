@@ -122,10 +122,10 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     }
 
     /**
+     * @param string $class
      * @param object $instance
      * @param array  $params
      * @param array  $setters
-     * @param string $class
      */
     private function build($class, $instance, array $params, array $setters)
     {
@@ -147,7 +147,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     }
 
     /**
-     * @param $instance
+     * @param object $instance
      *
      * @return array
      */

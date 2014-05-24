@@ -240,7 +240,7 @@ class Definition extends ArrayObject
     /**
      * Return user annotation by annotation name
      *
-     * @param $annotationName
+     * @param string $annotationName
      *
      * @return array [$methodName, $methodAnnotation]
      */

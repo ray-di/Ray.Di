@@ -140,6 +140,9 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         return $instance;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->hash;

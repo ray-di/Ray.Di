@@ -114,7 +114,6 @@ class Config implements ConfigInterface
     }
 
     /**
-     *
      * When cloning this object, reset the params and setter values (but
      * leave the reflection values in place).
      *
@@ -127,7 +126,6 @@ class Config implements ConfigInterface
     }
 
     /**
-     *
      * Resets the params and setter values.
      *
      * @return void
@@ -161,7 +159,6 @@ class Config implements ConfigInterface
     }
 
     /**
-     *
      * Gets the $definition property.
      *
      * @return Definition
@@ -271,7 +268,6 @@ class Config implements ConfigInterface
         return $unifiedParams;
     }
     /**
-     *
      * Returns a \ReflectionClass for a named class.
      *
      * @param mixed  $class  The class to reflect on

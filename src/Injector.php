@@ -392,9 +392,9 @@ class Injector implements InjectorInterface, \Serializable
         return $this->getBoundDefinition($class, $isSingleton, $interfaceClass);
     }
     /**
-     * @param $class
-     * @param $isSingleton
-     * @param $interfaceClass
+     * @param string $class
+     * @param bool   $isSingleton
+     * @param string $interfaceClass
      *
      * @return array
      */
@@ -451,9 +451,9 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Get bound class or object
      *
-     * @param ArrayObject $bindings   array | \ArrayAccess
-     * @param mixed       $definition
-     * @param string      $class
+     * @param mixed  $bindings
+     * @param mixed  $definition
+     * @param string $class
      *
      * @return array|object
      * @throws Exception\NotBound
@@ -740,8 +740,8 @@ class Injector implements InjectorInterface, \Serializable
     }
 
     /**
-     * @param array $setter
-     * @param       $object
+     * @param array  $setter
+     * @param object $object
      */
     private function setterMethod(array $setter, $object)
     {
@@ -800,10 +800,10 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Set param by instance bound(TO_INSTANCE, TO_CALLABLE, or already set in container)
      *
-     * @param $param
-     * @param $bindingToType
-     * @param $target
-     * @param $binding
+     * @param array  $param
+     * @param string $bindingToType
+     * @param mixed  $target
+     * @param mixed  $binding
      *
      * @return array [$param, $isBound]
      */
@@ -856,7 +856,7 @@ class Injector implements InjectorInterface, \Serializable
     }
 
     /**
-     * @param $target
+     * @param string $target interface name
      *
      * @return Compiler
      */
@@ -899,7 +899,7 @@ class Injector implements InjectorInterface, \Serializable
     }
 
     /**
-     * @param $param
+     * @param array  $param
      * @param string $key
      * @param string $typeHint
      * @param string $annotate
@@ -907,7 +907,7 @@ class Injector implements InjectorInterface, \Serializable
      * @return Exception\NotBound
      * @throws Exception\OptionalInjectionNotBound
      */
-    private function getNotBoundException($param, $key, $typeHint, $annotate)
+    private function getNotBoundException(array $param, $key, $typeHint, $annotate)
     {
         if ($param[Definition::OPTIONAL] === true) {
             throw new Exception\OptionalInjectionNotBound($key);

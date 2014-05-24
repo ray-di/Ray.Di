@@ -171,7 +171,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
     }
 
     /**
-     * @param $class
+     * @param string $class
      *
      * @return object
      */

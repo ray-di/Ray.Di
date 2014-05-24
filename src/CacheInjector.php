@@ -36,7 +36,7 @@ class CacheInjector implements InstanceInterface
     /**
      * @var string
      */
-    private $namespace;
+    private $cacheNamespace;
 
     /**
      * @var ClassLoaderInterface
@@ -44,23 +44,29 @@ class CacheInjector implements InstanceInterface
     private $classLoader;
 
     /**
-     * @param callable      $injector       = function () {return Injector::create([new Module])};
-     * @param callable      $initialization = function ($instance, InjectorInterface $injector) {};
-     * @param string        $namespace      cache namespace
-     * @param CacheProvider $cache
+     * Constructor
+     *
+     * $injector       function () {return Injector::create([new Module])};
+     * $initialization  function ($instance, InjectorInterface $injector) {};
+     *
+     * @param callable             $injector
+     * @param callable             $initialization
+     * @param string               $cacheNamespace
+     * @param CacheProvider        $cache
+     * @param ClassLoaderInterface $classLoader
      */
     public function __construct(
         callable $injector,
         callable $initialization,
-        $namespace,
+        $cacheNamespace,
         CacheProvider $cache,
         ClassLoaderInterface $classLoader = null
     ) {
         $this->injector = $injector;
         $this->initialization = $initialization;
-        $this->namespace = $namespace;
+        $this->cacheNamespace = $cacheNamespace;
         $this->cache = $cache;
-        $cache->setNamespace($namespace);
+        $cache->setNamespace($cacheNamespace);
         $this->cache = $cache;
         $this->classLoader = $classLoader ?: new AopClassLoader;
     }
@@ -74,7 +80,7 @@ class CacheInjector implements InstanceInterface
      */
     public function getInstance($class)
     {
-        $key = $this->namespace . $class;
+        $key = $this->cacheNamespace . $class;
         $instance= $this->cache->contains($key) ?
             $this->cachedInstance($class, $key) :
             $this->createInstance($class, $key);
