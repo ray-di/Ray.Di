@@ -264,7 +264,7 @@ class BoundInstance implements BoundInstanceInterface
      * Return $isSingleton, $interfaceClass
      *
      * @param string       $class
-     * @param array        $definition
+     * @param \ArrayObject        $definition
      * @param \ArrayObject $bindings
      *
      * @return array [$isSingleton, $interfaceClass]
