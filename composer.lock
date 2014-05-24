@@ -357,17 +357,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "cc114558bf76ed91474b7f857183d03ab8bffb4a"
+                "reference": "c994ebdb9123b92e52a9e58d806a76a0246ec513"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/cc114558bf76ed91474b7f857183d03ab8bffb4a",
-                "reference": "cc114558bf76ed91474b7f857183d03ab8bffb4a",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/c994ebdb9123b92e52a9e58d806a76a0246ec513",
+                "reference": "c994ebdb9123b92e52a9e58d806a76a0246ec513",
                 "shasum": ""
             },
             "require": {
-                "doctrine/annotations": "1.*",
-                "nikic/php-parser": "0.*",
+                "doctrine/annotations": "~1.1",
+                "nikic/php-parser": "~0.9",
                 "php": ">=5.4.0"
             },
             "suggest": {
@@ -376,7 +376,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -401,15 +401,11 @@
                 "aop",
                 "aspect"
             ],
-            "time": "2014-05-16 03:32:30"
+            "time": "2014-05-19 10:10:54"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "ray/aop": 20
@@ -417,7 +413,5 @@
     "platform": {
         "php": ">=5.4.0"
     },
-    "platform-dev": [
-
-    ]
+    "platform-dev": []
 }
