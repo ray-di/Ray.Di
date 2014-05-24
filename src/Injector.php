@@ -392,15 +392,7 @@ class Injector implements InjectorInterface, \Serializable
         return [$method, $settings];
     }
 
-    /**
-     * Extract parameter as defined
-     *
-     * @param array  $param
-     * @param string $key
-     *
-     * @return array
-     */
-    private function extractParam(array $param, $key)
+    function a(array $param, $key)
     {
         $annotate = $param[Definition::PARAM_ANNOTATE];
         $typeHint = $param[Definition::PARAM_TYPEHINT];
@@ -425,6 +417,66 @@ class Injector implements InjectorInterface, \Serializable
         }
 
         return $this->extractNotBoundParam($typeHint, $bindingToType, $target);
+    }
+
+
+    /**
+     * Extract parameter as defined
+     *
+     * @param array  $param
+     * @param string $key
+     *
+     * @return array
+     */
+    private function extractParam(array $param, $key)
+    {
+        $annotate = $param[Definition::PARAM_ANNOTATE];
+        $typeHint = $param[Definition::PARAM_TYPEHINT];
+        $hasTypeHint =  isset($this->module[$typeHint][$annotate]) &&  isset($this->module[$typeHint][$annotate]) && ($this->module[$typeHint][$annotate] !== []);
+        $binding = $hasTypeHint ? $this->module[$typeHint][$annotate] : false;
+        $hasNoBound = $binding === false || isset($binding[AbstractModule::TO]) === false;
+        if ($hasNoBound) {
+            return $this->getNoBoundParam($param, $key);
+        }
+
+        return $this->getParam($param, $binding);
+    }
+
+    /**
+     * @param array  $param
+     * @param string $key
+     *
+     * @return array
+     */
+    private function getNoBoundParam(array $param, $key)
+    {
+        if (array_key_exists(Definition::DEFAULT_VAL, $param)) {
+
+            return $param[Definition::DEFAULT_VAL];
+        }
+        $binding = $this->jitBinding($param, $param[Definition::PARAM_TYPEHINT], $param[Definition::PARAM_ANNOTATE], $key);
+        $param = $this->getParam($param, $binding);
+
+        return $param;
+    }
+
+    /**
+     * @param array $param
+     * @param array $binding
+     *
+     * @return array
+     */
+    private function getParam(array $param, array $binding)
+    {
+        list($bindingToType, $target) = $binding[AbstractModule::TO];
+
+        list($param, $bound) = $this->instanceBound($param, $bindingToType, $target, $binding);
+        if ($bound) {
+            return $param;
+        }
+        $param = $this->extractNotBoundParam($param[Definition::PARAM_TYPEHINT], $bindingToType, $target);
+
+        return $param;
     }
 
     /**
