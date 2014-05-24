@@ -155,6 +155,7 @@ class BoundInstance implements BoundInstanceInterface
     private function getBoundDefinition($class, $isSingleton, $interfaceClass)
     {
         list($config, $setter, $definition) = $this->config->fetch($class);
+        $isSingleton = $isSingleton || (Scope::SINGLETON === $definition[Definition::SCOPE]);
         $hasDirectBinding = isset($this->module->bindings[$class]);
         /** @var $definition Definition */
         if ($definition->hasDefinition() || $hasDirectBinding) {
