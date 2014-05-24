@@ -228,11 +228,6 @@ class Injector implements InjectorInterface, \Serializable
      */
     public function getInstance($class)
     {
-        $maxNesting = ini_get('xdebug.max_nesting_level');
-        if ($maxNesting) {
-            ini_set('xdebug.max_nesting_level', 300);
-        }
-
         // log
         $this->classes[] = $class;
 
@@ -277,9 +272,6 @@ class Injector implements InjectorInterface, \Serializable
         // Object life cycle, Singleton, and Save cache
         $this->postInject($object, $definition, $isSingleton, $interfaceClass);
 
-        if ($maxNesting) {
-            ini_set('xdebug.max_nesting_level', $maxNesting);
-        }
         return $object;
     }
 
