@@ -206,8 +206,8 @@ class BoundInstance implements BoundInstanceInterface
      * Get bound class or object
      *
      * @param \ArrayObject  $bindings
-     * @param mixed  $definition
-     * @param string $class
+     * @param mixed         $definition
+     * @param string        $class
      *
      * @return array|object
      * @throws Exception\NotBound
