@@ -5,7 +5,6 @@ namespace Ray\Di;
 use Aura\Di\ConfigInterface;
 use Aura\Di\ContainerInterface;
 use Ray\Di\Definition;
-use Ray\Aop\Bind;
 
 class BoundInstance implements BoundInstanceInterface
 {
@@ -94,7 +93,7 @@ class BoundInstance implements BoundInstanceInterface
      *
      * @param string $class
      *
-     * @return array|object
+     * @return boolean
      */
     private function binding($class, AbstractModule $module)
     {
@@ -124,7 +123,7 @@ class BoundInstance implements BoundInstanceInterface
      * @param string       $class
      * @param \ArrayObject $definition
      *
-     * @return array|object
+     * @return boolean
      * @throws Exception\NotBound
      */
     private function abstractBinding($class, $definition)
@@ -206,7 +205,7 @@ class BoundInstance implements BoundInstanceInterface
     /**
      * Get bound class or object
      *
-     * @param mixed  $bindings
+     * @param \ArrayObject  $bindings
      * @param mixed  $definition
      * @param string $class
      *
