@@ -519,12 +519,27 @@ class Injector implements InjectorInterface, \Serializable
         if (isset($params[$index])) {
             return $params;
         }
-        $hasConstructorBinding = ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
-        if ($hasConstructorBinding) {
+        if ($this->hasConstructorBinding($module, $class)) {
             $params[$index] = $module[$class]['*'][AbstractModule::TO][1][$parameter->name];
 
             return $params;
         }
+        $param = $this->getNoBoundConstructorParam($parameter, $params, $index, $class);
+
+        return $param;
+    }
+
+    /**
+     * @param \ReflectionParameter $parameter
+     * @param array                $params
+     * @param string               $index
+     * @param string               $class
+     *
+     * @return array
+     * @throws Exception\NotBound
+     */
+    private function getNoBoundConstructorParam(\ReflectionParameter $parameter, array $params, $index, $class)
+    {
         // has constructor default value ?
         if ($parameter->isDefaultValueAvailable() === true) {
             return $params;
@@ -539,6 +554,17 @@ class Injector implements InjectorInterface, \Serializable
         $msg = is_null($classRef) ? "Valid interface is not found. (array ?)" : "Interface [{$classRef->name}] is not bound.";
         $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
         throw new Exception\NotBound($msg);
+    }
+
+    /**
+     * @param AbstractModule $module
+     * @param string         $class
+     *
+     * @return bool
+     */
+    private function hasConstructorBinding(AbstractModule $module, $class)
+    {
+        return ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
     }
 
     /**

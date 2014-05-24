@@ -206,8 +206,8 @@ class BoundInstance implements BoundInstanceInterface
      * Get bound class or object
      *
      * @param \ArrayObject  $bindings
-     * @param mixed  $definition
-     * @param string $class
+     * @param mixed         $definition
+     * @param string        $class
      *
      * @return array|object
      * @throws Exception\NotBound
@@ -226,6 +226,19 @@ class BoundInstance implements BoundInstanceInterface
             return $instance;
         }
 
+        return $this->getBoundClassByInfo($class, $definition, $bindings, $toType);
+    }
+
+    /**
+     * @param string       $class
+     * @param \ArrayObject $definition
+     * @param \ArrayObject $bindings
+     * @param string       $toType
+     *
+     * @return array|object
+     */
+    private function getBoundClassByInfo($class, $definition, $bindings, $toType)
+    {
         list($isSingleton, $interfaceClass) = $this->getBindingInfo($class, $definition, $bindings);
 
         if ($isSingleton && $this->container->has($interfaceClass)) {
@@ -242,7 +255,9 @@ class BoundInstance implements BoundInstanceInterface
             $class = $bindings[$class]['*']['to'][1];
         }
 
-        return [$class, $isSingleton, $interfaceClass];
+        $boundInfo = [$class, $isSingleton, $interfaceClass];
+
+        return $boundInfo;
     }
 
     /**
