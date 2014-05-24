@@ -24,11 +24,11 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "doctrine/annotations": "1.*",
-        "doctrine/cache": "1.*",
-        "nikic/php-parser": "0.*",
-        "ray/aop": "1.*@dev",
-        "aura/di": "1.*"
+        "doctrine/annotations": "~1.1",
+        "doctrine/cache": "~1.3",
+        "nikic/php-parser": "~0.9",
+        "ray/aop": "~1.2",
+        "aura/di": "~1.0"
     },
     "autoload": {
         "psr-4": {

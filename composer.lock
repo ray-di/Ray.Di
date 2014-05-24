@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "dcf94935a045c69dd0a13bb22acd86e8",
+    "hash": "8ba8582cbcc3a9ae6afb292f2ceefb00",
     "packages": [
         {
             "name": "aura/di",
@@ -353,16 +353,16 @@
         },
         {
             "name": "ray/aop",
-            "version": "dev-master",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "c994ebdb9123b92e52a9e58d806a76a0246ec513"
+                "reference": "8a6fcdb80725288b8ac6829ee138031a67d698e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/c994ebdb9123b92e52a9e58d806a76a0246ec513",
-                "reference": "c994ebdb9123b92e52a9e58d806a76a0246ec513",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/8a6fcdb80725288b8ac6829ee138031a67d698e1",
+                "reference": "8a6fcdb80725288b8ac6829ee138031a67d698e1",
                 "shasum": ""
             },
             "require": {
@@ -401,15 +401,13 @@
                 "aop",
                 "aspect"
             ],
-            "time": "2014-05-19 10:10:54"
+            "time": "2014-05-19 10:06:55"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "ray/aop": 20
-    },
+    "stability-flags": [],
     "platform": {
         "php": ">=5.4.0"
     },
