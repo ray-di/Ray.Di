@@ -89,11 +89,12 @@ class Injector implements InjectorInterface, \Serializable
     public $boundInstance;
 
     /**
-     * @param ContainerInterface $container
-     * @param AbstractModule     $module
-     * @param BindInterface      $bind
-     * @param CompilerInterface  $compiler
-     * @param LoggerInterface    $logger
+     * @param ContainerInterface     $container
+     * @param AbstractModule         $module
+     * @param BindInterface          $bind
+     * @param CompilerInterface      $compiler
+     * @param LoggerInterface        $logger
+     * @param BoundInstanceInterface $boundInstance
      *
      * @Inject
      */
@@ -102,7 +103,8 @@ class Injector implements InjectorInterface, \Serializable
         AbstractModule $module,
         BindInterface $bind,
         CompilerInterface $compiler,
-        LoggerInterface $logger = null
+        LoggerInterface $logger = null,
+        BoundInstanceInterface $boundInstance = null
     ) {
         $this->container = $container;
         $this->module = $module;
@@ -112,7 +114,7 @@ class Injector implements InjectorInterface, \Serializable
 
         $this->preDestroyObjects = new SplObjectStorage;
         $this->config = $container->getForge()->getConfig();
-        $this->boundInstance = new BoundInstance($this, $this->config, $container, $logger);
+        $this->boundInstance = $boundInstance ?: new BoundInstance($this, $this->config, $container, $logger);
         $this->module->activate($this);
         AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
     }
@@ -706,7 +708,8 @@ class Injector implements InjectorInterface, \Serializable
                 $this->compiler,
                 $this->logger,
                 $this->preDestroyObjects,
-                $this->config
+                $this->config,
+                $this->boundInstance
             ]
         );
 
@@ -722,7 +725,8 @@ class Injector implements InjectorInterface, \Serializable
             $this->compiler,
             $this->logger,
             $this->preDestroyObjects,
-            $this->config
+            $this->config,
+            $this->boundInstance
         ) = unserialize($data);
 
         AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
@@ -731,7 +735,6 @@ class Injector implements InjectorInterface, \Serializable
             $this->notifyPreShutdown();
             // @codeCoverageIgnoreEnd
         });
-        $this->boundInstance = new BoundInstance($this, $this->config, $this->container, $this->logger);
 
     }
 }
