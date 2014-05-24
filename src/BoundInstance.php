@@ -7,7 +7,7 @@ use Aura\Di\ContainerInterface;
 use Ray\Di\Definition;
 use Ray\Aop\Bind;
 
-class BoundInstance
+class BoundInstance implements BoundInstanceInterface
 {
     /**
      * @var InjectorInterface
