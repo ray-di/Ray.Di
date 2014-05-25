@@ -373,4 +373,16 @@ class BoundInstance implements BoundInstanceInterface
         return $setter;
     }
 
+    /**
+     * @param string         $class
+     * @param array          $params
+     * @param AbstractModule $module
+     *
+     * @return array
+     */
+    public function bindConstruct($class, array $params, AbstractModule $module)
+    {
+        return $this->binder->bindConstructor($class, $params, $module);
+    }
+
 }

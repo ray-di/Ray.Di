@@ -268,4 +268,98 @@ class Binder
 
         return $e;
     }
+
+    /**
+     * Return parameter using TO_CONSTRUCTOR
+     *
+     * 1) If parameter is provided, return. (check)
+     * 2) If parameter is NOT provided and TO_CONSTRUCTOR binding is available, return parameter with it
+     * 3) No binding found, throw exception.
+     *
+     * @param string         $class
+     * @param array          $params
+     * @param AbstractModule $module
+     *
+     * @return array
+     * @throws Exception\NotBound
+     */
+    public function bindConstructor($class, array $params, AbstractModule $module)
+    {
+        $ref = method_exists($class, '__construct') ? new \ReflectionMethod($class, '__construct') : false;
+        if ($ref === false) {
+            return $params;
+        }
+        $parameters = $ref->getParameters();
+        foreach ($parameters as $index => $parameter) {
+            /* @var $parameter \ReflectionParameter */
+            $params = $this->constructParams($params, $index, $parameter, $module, $class);
+        }
+
+        return $params;
+    }
+
+    /**
+     * @param array                $params
+     * @param int                  $index
+     * @param \ReflectionParameter $parameter
+     * @param AbstractModule       $module
+     * @param string               $class
+     *
+     * @return array
+     * @throws Exception\NotBound
+     */
+    private function constructParams(array $params, $index, \ReflectionParameter $parameter, AbstractModule $module, $class)
+    {
+        // has binding ?
+        $params = array_values($params);
+        if (isset($params[$index])) {
+            return $params;
+        }
+        if ($this->hasConstructorBinding($module, $class)) {
+            $params[$index] = $module[$class]['*'][AbstractModule::TO][1][$parameter->name];
+
+            return $params;
+        }
+        $param = $this->getNoBoundConstructorParam($parameter, $params, $index, $class);
+
+        return $param;
+    }
+
+    /**
+     * @param \ReflectionParameter $parameter
+     * @param array                $params
+     * @param string               $index
+     * @param string               $class
+     *
+     * @return array
+     * @throws Exception\NotBound
+     */
+    private function getNoBoundConstructorParam(\ReflectionParameter $parameter, array $params, $index, $class)
+    {
+        // has constructor default value ?
+        if ($parameter->isDefaultValueAvailable() === true) {
+            return $params;
+        }
+        // is typehint class ?
+        $classRef = $parameter->getClass();
+        if ($classRef && !$classRef->isInterface()) {
+            $params[$index] = $this->injector->getInstance($classRef->name);
+
+            return $params;
+        }
+        $msg = is_null($classRef) ? "Valid interface is not found. (array ?)" : "Interface [{$classRef->name}] is not bound.";
+        $msg .= " Injection requested at argument #{$index} \${$parameter->name} in {$class} constructor.";
+        throw new Exception\NotBound($msg);
+    }
+
+    /**
+     * @param AbstractModule $module
+     * @param string         $class
+     *
+     * @return bool
+     */
+    private function hasConstructorBinding(AbstractModule $module, $class)
+    {
+        return ($module[$class]['*'][AbstractModule::TO][0] === AbstractModule::TO_CONSTRUCTOR);
+    }
 }
