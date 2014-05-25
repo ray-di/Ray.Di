@@ -354,7 +354,7 @@ class BoundInstance implements BoundInstanceInterface
      *
      * @return array
      */
-    private  function getSetter(array $setterDefinitions)
+    private function getSetter(array $setterDefinitions)
     {
         $bound = [];
         foreach ($setterDefinitions as $setterDefinition) {
