@@ -16,7 +16,6 @@ use Ray\Aop\Bind;
 use Ray\Aop\BindInterface;
 use Ray\Aop\Compiler;
 use Ray\Aop\CompilerInterface;
-use Ray\Di\Exception;
 use ReflectionClass;
 use SplObjectStorage;
 use PHPParser_PrettyPrinter_Default;
