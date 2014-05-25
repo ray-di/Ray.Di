@@ -144,6 +144,7 @@ class BoundInstance implements BoundInstanceInterface
 
         return false;
     }
+
     /**
      * @param string $class
      * @param bool   $isSingleton
@@ -183,8 +184,8 @@ class BoundInstance implements BoundInstanceInterface
         }
 
         return $isAbstract;
-
     }
+
     /**
      * Remove leading back slash
      *
@@ -264,7 +265,7 @@ class BoundInstance implements BoundInstanceInterface
      * Return $isSingleton, $interfaceClass
      *
      * @param string       $class
-     * @param \ArrayObject        $definition
+     * @param \ArrayObject $definition
      * @param \ArrayObject $bindings
      *
      * @return array [$isSingleton, $interfaceClass]
@@ -279,6 +280,7 @@ class BoundInstance implements BoundInstanceInterface
         return [$isSingleton, $interfaceClass];
 
     }
+
     /**
      * Throw exception if not bound
      *
@@ -316,6 +318,7 @@ class BoundInstance implements BoundInstanceInterface
         return $instance;
 
     }
+
     /**
      * Return dependency using modules.
      *
@@ -333,7 +336,6 @@ class BoundInstance implements BoundInstanceInterface
         if ($setterDefinitions) {
             $setter = $this->injector->getSetter($setterDefinitions);
         }
-
         // constructor injection ?
         $params = isset($setter['__construct']) ? $setter['__construct'] : [];
         $result = [$params, $setter];
