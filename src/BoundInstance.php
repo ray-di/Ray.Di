@@ -43,6 +43,8 @@ class BoundInstance implements BoundInstanceInterface
      */
     private $definition;
 
+    private $binder;
+
     /**
      * @param InjectorInterface  $injector
      * @param ConfigInterface    $config
@@ -53,12 +55,15 @@ class BoundInstance implements BoundInstanceInterface
         InjectorInterface $injector,
         ConfigInterface $config,
         ContainerInterface $container,
-        LoggerInterface $logger = null
+        AbstractModule $module,
+        LoggerInterface $logger = null,
+        Binder $binder = null
     ) {
         $this->injector = $injector;
         $this->config = $config;
         $this->container = $container;
         $this->logger = $logger;
+        $this->binder = $binder ?: new Binder($module, $injector, $this->config, $logger);
     }
 
     /**
@@ -69,6 +74,7 @@ class BoundInstance implements BoundInstanceInterface
      */
     public function hasBound($class, AbstractModule $module)
     {
+        $this->class = $class;
         return $this->binding($class, $module);
     }
 
@@ -334,7 +340,7 @@ class BoundInstance implements BoundInstanceInterface
         // main
         $setterDefinitions = (isset($definition[Definition::INJECT][Definition::INJECT_SETTER])) ? $definition[Definition::INJECT][Definition::INJECT_SETTER] : null;
         if ($setterDefinitions) {
-            $setter = $this->injector->getSetter($setterDefinitions);
+            $setter = $this->getSetter($setterDefinitions);
         }
         // constructor injection ?
         $params = isset($setter['__construct']) ? $setter['__construct'] : [];
@@ -342,4 +348,29 @@ class BoundInstance implements BoundInstanceInterface
 
         return $result;
     }
+
+    /**
+     * @param array $setterDefinitions
+     *
+     * @return array
+     */
+    private  function getSetter(array $setterDefinitions)
+    {
+        $bound = [];
+        foreach ($setterDefinitions as $setterDefinition) {
+            try {
+                $bound[] = $this->binder->bindMethod($this->module, $this->class, $setterDefinition);
+            } catch (Exception\OptionalInjectionNotBound $e) {
+                // no optional dependency
+            }
+        }
+        $setter = [];
+        foreach ($bound as $item) {
+            list($setterMethod, $object) = $item;
+            $setter[$setterMethod] = $object;
+        }
+
+        return $setter;
+    }
+
 }
