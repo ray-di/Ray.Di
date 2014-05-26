@@ -23,24 +23,41 @@ class ModuleStringer
         $output = '';
         foreach ((array) $module->bindings as $bind => $bindTo) {
             foreach ($bindTo as $annotate => $to) {
-                $type = $to['to'][0];
-                $output .= ($annotate !== '*') ? "bind:{$bind} annotatedWith:{$annotate}" : "bind:{$bind}";
-                if ($type === 'class') {
-                    $output .= " to:" . $to['to'][1];
-                }
-                if ($type === 'instance') {
-                    $output .= $this->getInstanceString($to);
-                }
-                if ($type === 'provider') {
-                    $provider = $to['to'][1];
-                    $output .= " toProvider:" . $provider;
-                }
-                $output .= PHP_EOL;
+                $output .= $this->getOneLineString($to, $annotate, $bind);
             }
         }
 
         return $output;
     }
+
+    /**
+     * Return one lies string log
+     *
+     * @param array  $to
+     * @param string $annotate
+     * @param string $bind
+     *
+     * @return string
+     */
+    private function getOneLineString(array $to, $annotate, $bind)
+    {
+        $type = $to['to'][0];
+        $output = ($annotate !== '*') ? "bind:{$bind} annotatedWith:{$annotate}" : "bind:{$bind}";
+        if ($type === 'class') {
+            $output .= " to:" . $to['to'][1];
+        }
+        if ($type === 'instance') {
+            $output .= $this->getInstanceString($to);
+        }
+        if ($type === 'provider') {
+            $provider = $to['to'][1];
+            $output .= " toProvider:" . $provider;
+        }
+        $output .= PHP_EOL;
+
+        return $output;
+    }
+
 
     /**
      * @param array $to

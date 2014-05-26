@@ -10,6 +10,8 @@ if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
         . "See http://getcomposer.org for help with installing composer\n");
 }
 
+ini_set('xdebug.max_nesting_level', 300);
+
 // vendor
 $loader = require dirname(__DIR__) . '/vendor/autoload.php';
 /** @var $loader \Composer\Autoload\ClassLoader */

@@ -94,6 +94,32 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         if ($this->instance !== null) {
             return $this->instance;
         }
+        // create object and inject dependencies
+        $instance = $this->newInstance();
+
+        // provider ?
+        if ($instance instanceof ProviderInterface) {
+            $instance = $instance->get();
+        }
+        $this->instance = $instance;
+
+        // @PostConstruct
+        if ($this->postConstruct) {
+            $instance->{$this->postConstruct}();
+        }
+        // interceptor ?
+        if ($this->interceptors) {
+            $this->bindInterceptor();
+        }
+
+        return $instance;
+    }
+
+    /**
+     * @return object
+     */
+    private function newInstance()
+    {
         // constructor injection
         $args = $this->args;
         foreach ($args as &$arg) {
@@ -114,32 +140,28 @@ final class DependencyFactory implements ProviderInterface, \Serializable
             call_user_func_array([$instance, $method], $args);
         }
 
-        // provider ?
-        if ($instance instanceof ProviderInterface) {
-            $instance = $instance->get();
-        }
-        $this->instance = $instance;
-
-        // @PostConstruct
-        if ($this->postConstruct) {
-            $instance->{$this->postConstruct}();
-        }
-        // interceptor ?
-        if ($this->interceptors) {
-            $interceptors = $this->interceptors;
-            foreach ($interceptors as &$methodInterceptors) {
-                foreach ($methodInterceptors as &$methodInterceptor) {
-                    if ($methodInterceptor instanceof DependencyReference) {
-                        $methodInterceptor = $methodInterceptor->get();
-                    }
-                }
-            }
-            $this->instance->rayAopBind = new Bind($interceptors);
-        }
-
         return $instance;
     }
 
+    /**
+     * @return void
+     */
+    private function bindInterceptor()
+    {
+        $interceptors = $this->interceptors;
+        foreach ($interceptors as &$methodInterceptors) {
+            foreach ($methodInterceptors as &$methodInterceptor) {
+                if ($methodInterceptor instanceof DependencyReference) {
+                    $methodInterceptor = $methodInterceptor->get();
+                }
+            }
+        }
+        $this->instance->rayAopBind = new Bind($interceptors);
+    }
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->hash;

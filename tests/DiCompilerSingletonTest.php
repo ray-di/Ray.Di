@@ -3,7 +3,9 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\Mock\RndDb;
+use Ray\Di\Modules\SingletonRequestInjectionModule;
 
 class DiCompilerSingletonTest extends InjectorSingletonTest
 {
@@ -170,5 +172,47 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
         $this->assertSame($result1, $result2);
         $this->assertSame($result2, $result3);
         $this->assertSame($result3, $result4);
+    }
+
+    public function testRequestInject()
+    {
+        $moduleProvider = function () {return new Modules\SingletonRequestInjectionModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $instance = $injector->getInstance('Ray\Di\Mock\SingletonInterceptorConsumer');
+        /** @var $instance \Ray\Di\Mock\SingletonInterceptorConsumer */
+        $db1 = $instance->getDb();
+        $this->assertInstanceOf('Ray\Di\Mock\DbInterface', $db1);
+        $db2 = $instance->getDb();
+        $this->assertInstanceOf('Ray\Di\Mock\DbInterface', $db2);
+        $this->assertSame($db1, $db2);
+        $this->assertSame(spl_object_hash($db1), spl_object_hash($db2));
+    }
+
+    public function testCachedRequestInject()
+    {
+        require __DIR__ . '/scripts/singleton_db.php';
+
+        $moduleProvider = function () {return new SingletonRequestInjectionModule;};
+        $injector = DiCompiler::create($moduleProvider, new FilesystemCache($_ENV['TMP_DIR']), __METHOD__, $_ENV['TMP_DIR']);
+        $instance = $injector->getInstance('Ray\Di\Mock\SingletonInterceptorConsumer');
+
+        $db1 = $instance->getDb();
+        $this->assertInstanceOf('Ray\Di\Mock\DbInterface', $db1);
+        $db2 = $instance->getDb();
+        $this->assertInstanceOf('Ray\Di\Mock\DbInterface', $db2);
+        $this->assertSame($db1, $db2);
+        $this->assertSame(spl_object_hash($db1), spl_object_hash($db2));
+
+    }
+
+    public function testCachedRequestInjectionSameInterceptor()
+    {
+        $moduleProvider = function () {return new SingletonRequestInjectionModule;};
+        $injector = DiCompiler::create($moduleProvider, new FilesystemCache($_ENV['TMP_DIR']), __METHOD__, $_ENV['TMP_DIR']);
+        $instance1 = $injector->getInstance('Ray\Di\Mock\SingletonInterceptorConsumer');
+        $instance2 = $injector->getInstance('Ray\Di\Mock\SingletonInterceptorConsumer2');
+        $interceptor1 = $instance1->rayAopBind['getDb'][0];
+        $interceptor2 = $instance2->rayAopBind['getDb'][0];
+        $this->assertSame(spl_object_hash($interceptor1), spl_object_hash($interceptor2));
     }
 }

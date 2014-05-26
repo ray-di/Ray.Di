@@ -8,5 +8,8 @@ namespace Ray\Di;
 
 interface ClassLoaderInterface
 {
+    /**
+     * @return void
+     */
     public function register($classDir);
 }

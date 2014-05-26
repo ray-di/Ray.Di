@@ -34,6 +34,11 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private $objectStorage;
 
     /**
+     * @var int
+     */
+    private $storageCnt = 0;
+
+    /**
      * @param LoggerInterface $logger
      *
      * @Inject
@@ -86,15 +91,21 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
      */
     public function getObjectHash($object)
     {
-        static $cnt = 0;
-
         if ($this->objectStorage->contains($object)) {
             return $this->objectStorage[$object];
         }
-        $cnt++;
-        $hash = (string) $cnt;
+        $this->storageCnt++;
+        $hash = (string) $this->storageCnt;
         $this->objectStorage[$object] = $hash;
-
+        // object hash logging for debug
+/*
+        error_log(sprintf('%s@%s.%s #%s',
+            substr(md5(spl_object_hash($this->objectStorage)), 0, 3),
+            $hash,
+            get_class($object),
+            spl_object_hash($object))
+        );
+*/
         return $hash;
     }
 
@@ -105,17 +116,16 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     {
         $container = $this->dependencyContainer;
         $factory = array_pop($container);
-
         $classMap[$class] = (string) $factory;
 
         return $classMap;
     }
 
     /**
+     * @param string $class
      * @param object $instance
      * @param array  $params
      * @param array  $setters
-     * @param string $class
      */
     private function build($class, $instance, array $params, array $setters)
     {
@@ -137,7 +147,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     }
 
     /**
-     * @param $instance
+     * @param object $instance
      *
      * @return array
      */

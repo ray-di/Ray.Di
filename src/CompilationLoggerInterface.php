@@ -29,7 +29,7 @@ interface CompilationLoggerInterface extends LoggerInterface
     public function newInstance($ref);
 
     /**
-     * @param object
+     * @param object $object
      *
      * @return string
      */
