@@ -13,7 +13,7 @@ final class InjectorFactory
 {
     /**
      * Return Injector instance
-     * 
+     *
      * @param array $modules
      * @param Cache $cache
      * @param null  $tmpDir
