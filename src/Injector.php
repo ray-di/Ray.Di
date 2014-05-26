@@ -76,9 +76,10 @@ class Injector implements InjectorInterface, \Serializable
      */
     public $boundInstance;
 
-    private $extractor;
-
-    private $classs;
+    /**
+     * @var Binder
+     */
+    private $binder;
 
     /**
      * @param ContainerInterface     $container
@@ -107,7 +108,7 @@ class Injector implements InjectorInterface, \Serializable
         $this->preDestroyObjects = new SplObjectStorage;
         $this->config = $container->getForge()->getConfig();
         $this->boundInstance = $boundInstance ?: new BoundInstance($this, $this->config, $container, $module, $logger);
-        $this->extractor = new Binder($module, $this, $this->config, $logger);
+        $this->binder = new Binder($module, $this, $this->config, $logger);
         $this->module->activate($this);
         AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
     }
@@ -221,8 +222,6 @@ class Injector implements InjectorInterface, \Serializable
      */
     public function getInstance($class)
     {
-        $this->class = $class;
-
         if ($this->boundInstance->hasBound($class, $this->module)) {
             return $this->boundInstance->getBound();
         }

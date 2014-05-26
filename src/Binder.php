@@ -7,14 +7,38 @@ use Ray\Aop\Compiler;
 use Ray\Di\Definition;
 use Ray\Di\Exception;
 
-class Binder
+final class Binder
 {
+    /**
+     * @var AbstractModule
+     */
     private $module;
+
+    /**
+     * @var InjectorInterface
+     */
     private $injector;
 
+    /**
+     * @var \Aura\Di\ConfigInterface
+     */
     private $config;
+
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
+
+    /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * @var string
+     */
     private $class;
+
 
     public function __construct(
         AbstractModule $module,

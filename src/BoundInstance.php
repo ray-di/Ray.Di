@@ -49,6 +49,11 @@ class BoundInstance implements BoundInstanceInterface
     private $binder;
 
     /**
+     * @var string
+     */
+    private $class;
+
+    /**
      * @param InjectorInterface  $injector
      * @param ConfigInterface    $config
      * @param ContainerInterface $container
