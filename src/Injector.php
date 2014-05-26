@@ -116,28 +116,7 @@ class Injector implements InjectorInterface, \Serializable
      */
     public static function create(array $modules = [], Cache $cache = null)
     {
-        $annotationReader = ($cache instanceof Cache) ? new CachedReader(new AnnotationReader, $cache) : new AnnotationReader;
-        $injector = new self(
-            new Container(new Forge(new Config(new Annotation(new Definition, $annotationReader)))),
-            new EmptyModule,
-            new Bind,
-            new Compiler(
-                sys_get_temp_dir(),
-                new PHPParser_PrettyPrinter_Default
-            ),
-            new Logger
-        );
-
-        if (count($modules) > 0) {
-            $module = array_shift($modules);
-            foreach ($modules as $extraModule) {
-                /* @var $module AbstractModule */
-                $module->install($extraModule);
-            }
-            $injector->setModule($module);
-        }
-
-        return $injector;
+        return (new InjectorFactory)->newInstance($modules, $cache);
     }
 
     /**
