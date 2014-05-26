@@ -24,13 +24,6 @@ use Ray\Di\Di\Inject;
 class Injector implements InjectorInterface, \Serializable
 {
     /**
-     * Config
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
      * Container
      *
      * @var \Ray\Di\Container
@@ -326,7 +319,6 @@ class Injector implements InjectorInterface, \Serializable
                 $this->compiler,
                 $this->logger,
                 $this->preDestroyObjects,
-                $this->config,
                 $this->boundInstance
             ]
         );
@@ -343,7 +335,6 @@ class Injector implements InjectorInterface, \Serializable
             $this->compiler,
             $this->logger,
             $this->preDestroyObjects,
-            $this->config,
             $this->boundInstance
         ) = unserialize($data);
 
