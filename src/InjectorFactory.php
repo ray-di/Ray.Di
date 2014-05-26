@@ -2,6 +2,7 @@
 
 namespace Ray\Di;
 
+use Aura\Di\ConfigInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
@@ -12,6 +13,40 @@ use Ray\Aop\Compiler;
 final class InjectorFactory
 {
     /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @param ConfigInterface $config
+     *
+     * @return $this
+     */
+    public function setConfig(ConfigInterface $config = null)
+    {
+        $this->config = $config;
+
+        return $this;
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     *
+     * @return $this
+     */
+    public function setLogger(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+    
+    /**
      * Return Injector instance
      *
      * @param array $modules
@@ -20,19 +55,24 @@ final class InjectorFactory
      *
      * @return Injector
      */
-    public function newInstance(array $modules = [], Cache $cache = null, $tmpDir = null)
-    {
-        $tmpDir =  $tmpDir ?: sys_get_temp_dir();
+    public function newInstance(
+        array $modules = [],
+        Cache $cache = null,
+        $tmpDir = null
+    ) {
         $annotationReader = ($cache instanceof Cache) ? new CachedReader(new AnnotationReader, $cache) : new AnnotationReader;
+        $config = $this->config ?: new Config(new Annotation(new Definition, $annotationReader));
+        $logger = $this->logger ?: new Logger;
+        $tmpDir =  $tmpDir ?: sys_get_temp_dir();
         $injector = new Injector(
-            new Container(new Forge(new Config(new Annotation(new Definition, $annotationReader)))),
+            new Container(new Forge($config)),
             new EmptyModule,
             new Bind,
             new Compiler(
                 $tmpDir,
                 new PHPParser_PrettyPrinter_Default
             ),
-            new Logger
+            $logger
         );
 
         if (count($modules) > 0) {

@@ -8,6 +8,7 @@ namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
@@ -115,7 +116,6 @@ final class DiCompiler implements InstanceInterface, \Serializable
      * @param string   $tmpDir
      * @param Config   $config
      * @param Logger   $logger
-     *
      * @return Injector
      */
     private static function createInjector(
@@ -124,18 +124,10 @@ final class DiCompiler implements InstanceInterface, \Serializable
         ConfigInterface $config = null,
         LoggerInterface $logger = null
     ) {
-        $config = $config ?: new Config(new Annotation(new Definition, new AnnotationReader));
-        $logger =  $logger ?: new Logger;
-        $injector = new Injector(
-            new Container(new Forge($config)),
-            $moduleProvider(),
-            new Bind,
-            new Compiler(
-                $tmpDir,
-                new PHPParser_PrettyPrinter_Default
-            ),
-            $logger
-        );
+        $injector = (new InjectorFactory)
+            ->setConfig($config)
+            ->setLogger($logger)
+            ->newInstance([$moduleProvider()], new ArrayCache, $tmpDir);
 
         return $injector;
     }
