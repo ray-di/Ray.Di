@@ -7,7 +7,6 @@
 namespace Ray\Di;
 
 use Aura\Di\ContainerInterface;
-use Aura\Di\Lazy;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
