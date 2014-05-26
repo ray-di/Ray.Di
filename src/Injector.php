@@ -7,30 +7,18 @@
 namespace Ray\Di;
 
 use Aura\Di\ContainerInterface;
-use Aura\Di\Lazy;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
-use Ray\Aop\Bind;
 use Ray\Aop\BindInterface;
 use Ray\Aop\Compiler;
 use Ray\Aop\CompilerInterface;
 use ReflectionClass;
 use SplObjectStorage;
-use PHPParser_PrettyPrinter_Default;
 use Serializable;
 use Ray\Di\Di\Inject;
 
 class Injector implements InjectorInterface, \Serializable
 {
-    /**
-     * Config
-     *
-     * @var Config
-     */
-    protected $config;
-
     /**
      * Container
      *
@@ -76,10 +64,6 @@ class Injector implements InjectorInterface, \Serializable
      */
     public $boundInstance;
 
-    private $extractor;
-
-    private $classs;
-
     /**
      * @param ContainerInterface     $container
      * @param AbstractModule         $module
@@ -103,18 +87,24 @@ class Injector implements InjectorInterface, \Serializable
         $this->bind = $bind;
         $this->compiler = $compiler;
         $this->logger = $logger;
-
         $this->preDestroyObjects = new SplObjectStorage;
-        $this->config = $container->getForge()->getConfig();
-        $this->boundInstance = $boundInstance ?: new BoundInstance($this, $this->config, $container, $module, $logger);
-        $this->extractor = new Binder($module, $this, $this->config, $logger);
+        $this->boundInstance = $boundInstance ?: new BoundInstance($this, $container, $module, $logger);
         $this->module->activate($this);
         AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
     }
 
+    /**
+     * Notify pre-destroy
+     */
     public function __destruct()
     {
-        $this->notifyPreShutdown();
+        $this->preDestroyObjects->rewind();
+        while ($this->preDestroyObjects->valid()) {
+            $object = $this->preDestroyObjects->current();
+            $method = $this->preDestroyObjects->getInfo();
+            $object->$method();
+            $this->preDestroyObjects->next();
+        }
     }
 
     /**
@@ -122,28 +112,7 @@ class Injector implements InjectorInterface, \Serializable
      */
     public static function create(array $modules = [], Cache $cache = null)
     {
-        $annotationReader = ($cache instanceof Cache) ? new CachedReader(new AnnotationReader, $cache) : new AnnotationReader;
-        $injector = new self(
-            new Container(new Forge(new Config(new Annotation(new Definition, $annotationReader)))),
-            new EmptyModule,
-            new Bind,
-            new Compiler(
-                sys_get_temp_dir(),
-                new PHPParser_PrettyPrinter_Default
-            ),
-            new Logger
-        );
-
-        if (count($modules) > 0) {
-            $module = array_shift($modules);
-            foreach ($modules as $extraModule) {
-                /* @var $module AbstractModule */
-                $module->install($extraModule);
-            }
-            $injector->setModule($module);
-        }
-
-        return $injector;
+        return (new InjectorFactory)->newInstance($modules, $cache);
     }
 
     /**
@@ -221,17 +190,12 @@ class Injector implements InjectorInterface, \Serializable
      */
     public function getInstance($class)
     {
-        $this->class = $class;
-
         if ($this->boundInstance->hasBound($class, $this->module)) {
             return $this->boundInstance->getBound();
         }
 
         // get bound config
         list($class, $isSingleton, $interfaceClass, $params, $setter, $definition) = $this->boundInstance->getDefinition();
-
-        // instantiate parameters
-        $params = $this->instantiateParams($params);
 
         // be all parameters ready
         $params = $this->boundInstance->bindConstruct($class, $params, $this->module);
@@ -248,13 +212,15 @@ class Injector implements InjectorInterface, \Serializable
         /* @var $bind \Ray\Aop\Bind */
 
         $object = $bind->hasBinding() ?
-            $this->compiler->newInstance($class, $params, $bind) : $this->newInstance($class, $params) ;
+            $this->compiler->newInstance($class, $params, $bind) : (new \ReflectionClass($class))->newInstanceArgs($params);
 
         // do not call constructor twice. ever.
         unset($setter['__construct']);
 
         // call setter methods
-        $this->setterMethod($setter, $object);
+        foreach ($setter as $method => $value) {
+            call_user_func_array([$object, $method], $value);
+        }
 
         // logger inject info
         if ($this->logger) {
@@ -265,42 +231,6 @@ class Injector implements InjectorInterface, \Serializable
         $this->postInject($object, $definition, $isSingleton, $interfaceClass);
 
         return $object;
-    }
-
-    /**
-     * Notify pre-destroy
-     *
-     * @return void
-     */
-    private function notifyPreShutdown()
-    {
-        $this->preDestroyObjects->rewind();
-        while ($this->preDestroyObjects->valid()) {
-            $object = $this->preDestroyObjects->current();
-            $method = $this->preDestroyObjects->getInfo();
-            $object->$method();
-            $this->preDestroyObjects->next();
-        }
-    }
-
-    /**
-     * Return parameters
-     *
-     * @param array $params
-     *
-     * @return array
-     */
-    private function instantiateParams(array $params)
-    {
-        // lazy-load params as needed
-        $keys = array_keys($params);
-        foreach ($keys as $key) {
-            if ($params[$key] instanceof Lazy) {
-                $params[$key] = $params[$key]();
-            }
-        }
-
-        return $params;
     }
 
     /**
@@ -321,33 +251,6 @@ class Injector implements InjectorInterface, \Serializable
         // set singleton object
         if ($isSingleton) {
             $this->container->set($interfaceClass, $object);
-        }
-    }
-
-    /**
-     * Return new instance
-     *
-     * @param string $class
-     * @param array  $params
-     *
-     * @return object
-     */
-    private function newInstance($class, array $params)
-    {
-        return call_user_func_array(
-            [$this->config->getReflect($class), 'newInstance'],
-            $params
-        );
-    }
-
-    /**
-     * @param array  $setter
-     * @param object $object
-     */
-    private function setterMethod(array $setter, $object)
-    {
-        foreach ($setter as $method => $value) {
-            call_user_func_array([$object, $method], $value);
         }
     }
 
@@ -391,7 +294,6 @@ class Injector implements InjectorInterface, \Serializable
                 $this->compiler,
                 $this->logger,
                 $this->preDestroyObjects,
-                $this->config,
                 $this->boundInstance
             ]
         );
@@ -408,14 +310,13 @@ class Injector implements InjectorInterface, \Serializable
             $this->compiler,
             $this->logger,
             $this->preDestroyObjects,
-            $this->config,
             $this->boundInstance
         ) = unserialize($data);
 
         AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
         register_shutdown_function(function () {
             // @codeCoverageIgnoreStart
-            $this->notifyPreShutdown();
+            $this->__destruct();
             // @codeCoverageIgnoreEnd
         });
 

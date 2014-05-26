@@ -4,6 +4,7 @@ namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
 use Aura\Di\ContainerInterface;
+use Aura\Di\Lazy;
 use Ray\Di\Definition;
 
 class BoundInstance implements BoundInstanceInterface
@@ -49,8 +50,12 @@ class BoundInstance implements BoundInstanceInterface
     private $binder;
 
     /**
+     * @var string
+     */
+    private $class;
+
+    /**
      * @param InjectorInterface  $injector
-     * @param ConfigInterface    $config
      * @param ContainerInterface $container
      * @param AbstractModule     $module
      * @param LoggerInterface    $logger
@@ -58,14 +63,13 @@ class BoundInstance implements BoundInstanceInterface
      */
     public function __construct(
         InjectorInterface $injector,
-        ConfigInterface $config,
         ContainerInterface $container,
         AbstractModule $module,
         LoggerInterface $logger = null,
         Binder $binder = null
     ) {
         $this->injector = $injector;
-        $this->config = $config;
+        $this->config = $container->getForge()->getConfig();
         $this->container = $container;
         $this->logger = $logger;
         $this->binder = $binder ?: new Binder($module, $injector, $this->config, $logger);
@@ -387,6 +391,27 @@ class BoundInstance implements BoundInstanceInterface
      */
     public function bindConstruct($class, array $params, AbstractModule $module)
     {
+        $params = $this->instantiateParams($params);
         return $this->binder->bindConstructor($class, $params, $module);
+    }
+
+    /**
+     * Return parameters
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    private function instantiateParams(array $params)
+    {
+        // lazy-load params as needed
+        $keys = array_keys($params);
+        foreach ($keys as $key) {
+            if ($params[$key] instanceof \Aura\Di\Lazy) {
+                $params[$key] = $params[$key]();
+            }
+        }
+
+        return $params;
     }
 }

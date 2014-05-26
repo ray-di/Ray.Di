@@ -49,9 +49,10 @@ final class DiCompiler implements InstanceInterface, \Serializable
     private static $args;
 
     /**
-     * @param InjectorInterface $injector
-     * @param CompilationLogger $logger
-     * @param string            $cacheKey
+     * @param InjectorInterface          $injector
+     * @param CompilationLoggerInterface $logger
+     * @param Cache                      $cache
+     * @param string                     $cacheKey
      */
     public function __construct(
         InjectorInterface $injector,
