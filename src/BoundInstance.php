@@ -4,6 +4,7 @@ namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
 use Aura\Di\ContainerInterface;
+use Aura\Di\Lazy;
 use Ray\Di\Definition;
 
 class BoundInstance implements BoundInstanceInterface
@@ -390,6 +391,27 @@ class BoundInstance implements BoundInstanceInterface
      */
     public function bindConstruct($class, array $params, AbstractModule $module)
     {
+        $params = $this->instantiateParams($params);
         return $this->binder->bindConstructor($class, $params, $module);
+    }
+
+    /**
+     * Return parameters
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    private function instantiateParams(array $params)
+    {
+        // lazy-load params as needed
+        $keys = array_keys($params);
+        foreach ($keys as $key) {
+            if ($params[$key] instanceof \Aura\Di\Lazy) {
+                $params[$key] = $params[$key]();
+            }
+        }
+
+        return $params;
     }
 }

@@ -230,9 +230,6 @@ class Injector implements InjectorInterface, \Serializable
         // get bound config
         list($class, $isSingleton, $interfaceClass, $params, $setter, $definition) = $this->boundInstance->getDefinition();
 
-        // instantiate parameters
-        $params = $this->instantiateParams($params);
-
         // be all parameters ready
         $params = $this->boundInstance->bindConstruct($class, $params, $this->module);
 
@@ -267,26 +264,6 @@ class Injector implements InjectorInterface, \Serializable
         $this->postInject($object, $definition, $isSingleton, $interfaceClass);
 
         return $object;
-    }
-
-    /**
-     * Return parameters
-     *
-     * @param array $params
-     *
-     * @return array
-     */
-    private function instantiateParams(array $params)
-    {
-        // lazy-load params as needed
-        $keys = array_keys($params);
-        foreach ($keys as $key) {
-            if ($params[$key] instanceof Lazy) {
-                $params[$key] = $params[$key]();
-            }
-        }
-
-        return $params;
     }
 
     /**
