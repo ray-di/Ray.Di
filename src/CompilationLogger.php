@@ -143,7 +143,9 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
             $interceptors = $this->buildInterceptor($instance);
             $dependencyFactory->setInterceptors($interceptors);
         }
-        $this->add($dependencyFactory);
+        $index = (string) $dependencyFactory;
+        $this->dependencyContainer[$index] = $dependencyFactory;
+
     }
 
     /**
@@ -202,14 +204,6 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
         return new DependencyReference($hash, $this, $type);
     }
 
-    /**
-     * @param DependencyFactory $instance
-     */
-    private function add($instance)
-    {
-        $index = (string) $instance;
-        $this->dependencyContainer[$index] = $instance;
-    }
 
     public function __toString()
     {
