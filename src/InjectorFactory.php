@@ -22,7 +22,7 @@ final class InjectorFactory
      */
     public function newInstance(array $modules = [], Cache $cache = null, $tmpDir = null)
     {
-        $tmpDir ?: sys_get_temp_dir();
+        $tmpDir =  $tmpDir ?: sys_get_temp_dir();
         $annotationReader = ($cache instanceof Cache) ? new CachedReader(new AnnotationReader, $cache) : new AnnotationReader;
         $injector = new Injector(
             new Container(new Forge(new Config(new Annotation(new Definition, $annotationReader)))),
