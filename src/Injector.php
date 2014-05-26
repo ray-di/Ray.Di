@@ -253,7 +253,9 @@ class Injector implements InjectorInterface, \Serializable
         unset($setter['__construct']);
 
         // call setter methods
-        $this->setterMethod($setter, $object);
+        foreach ($setter as $method => $value) {
+            call_user_func_array([$object, $method], $value);
+        }
 
         // logger inject info
         if ($this->logger) {
@@ -337,17 +339,6 @@ class Injector implements InjectorInterface, \Serializable
             [$this->config->getReflect($class), 'newInstance'],
             $params
         );
-    }
-
-    /**
-     * @param array  $setter
-     * @param object $object
-     */
-    private function setterMethod(array $setter, $object)
-    {
-        foreach ($setter as $method => $value) {
-            call_user_func_array([$object, $method], $value);
-        }
     }
 
     /**
