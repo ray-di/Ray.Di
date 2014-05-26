@@ -55,7 +55,6 @@ class BoundInstance implements BoundInstanceInterface
 
     /**
      * @param InjectorInterface  $injector
-     * @param ConfigInterface    $config
      * @param ContainerInterface $container
      * @param AbstractModule     $module
      * @param LoggerInterface    $logger
