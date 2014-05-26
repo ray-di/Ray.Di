@@ -10,9 +10,6 @@ use Aura\Di\ConfigInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
-use PHPParser_PrettyPrinter_Default;
-use Ray\Aop\Bind;
-use Ray\Aop\Compiler;
 use Ray\Di\Exception\Compile;
 
 final class DiCompiler implements InstanceInterface, \Serializable

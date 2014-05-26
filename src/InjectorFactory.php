@@ -51,7 +51,7 @@ final class InjectorFactory
      *
      * @param array $modules
      * @param Cache $cache
-     * @param null  $tmpDir
+     * @param string  $tmpDir
      *
      * @return Injector
      */
