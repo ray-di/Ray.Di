@@ -45,7 +45,7 @@ final class InjectorFactory
 
         return $this;
     }
-    
+
     /**
      * Return Injector instance
      *
