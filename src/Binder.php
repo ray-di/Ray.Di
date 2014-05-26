@@ -30,9 +30,11 @@ class Binder
     }
 
     /**
-     * Bind method
+     * Return method bound setting
      *
-     * @param array $setterDefinition
+     * @param AbstractModule $module
+     * @param string         $class
+     * @param array          $setterDefinition
      *
      * @return array
      */

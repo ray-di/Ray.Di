@@ -43,13 +43,18 @@ class BoundInstance implements BoundInstanceInterface
      */
     private $definition;
 
+    /**
+     * @var Binder
+     */
     private $binder;
 
     /**
      * @param InjectorInterface  $injector
      * @param ConfigInterface    $config
      * @param ContainerInterface $container
+     * @param AbstractModule     $module
      * @param LoggerInterface    $logger
+     * @param Binder             $binder
      */
     public function __construct(
         InjectorInterface $injector,
@@ -384,5 +389,4 @@ class BoundInstance implements BoundInstanceInterface
     {
         return $this->binder->bindConstructor($class, $params, $module);
     }
-
 }
