@@ -77,11 +77,6 @@ class Injector implements InjectorInterface, \Serializable
     public $boundInstance;
 
     /**
-     * @var Binder
-     */
-    private $binder;
-
-    /**
      * @param ContainerInterface     $container
      * @param AbstractModule         $module
      * @param BindInterface          $bind
@@ -104,11 +99,8 @@ class Injector implements InjectorInterface, \Serializable
         $this->bind = $bind;
         $this->compiler = $compiler;
         $this->logger = $logger;
-
         $this->preDestroyObjects = new SplObjectStorage;
-        $this->config = $container->getForge()->getConfig();
-        $this->boundInstance = $boundInstance ?: new BoundInstance($this, $this->config, $container, $module, $logger);
-        $this->binder = new Binder($module, $this, $this->config, $logger);
+        $this->boundInstance = $boundInstance ?: new BoundInstance($this, $container, $module, $logger);
         $this->module->activate($this);
         AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
     }
@@ -247,7 +239,7 @@ class Injector implements InjectorInterface, \Serializable
         /* @var $bind \Ray\Aop\Bind */
 
         $object = $bind->hasBinding() ?
-            $this->compiler->newInstance($class, $params, $bind) : $this->newInstance($class, $params) ;
+            $this->compiler->newInstance($class, $params, $bind) : (new \ReflectionClass($class))->newInstanceArgs($params);
 
         // do not call constructor twice. ever.
         unset($setter['__construct']);
@@ -323,22 +315,6 @@ class Injector implements InjectorInterface, \Serializable
         if ($isSingleton) {
             $this->container->set($interfaceClass, $object);
         }
-    }
-
-    /**
-     * Return new instance
-     *
-     * @param string $class
-     * @param array  $params
-     *
-     * @return object
-     */
-    private function newInstance($class, array $params)
-    {
-        return call_user_func_array(
-            [$this->config->getReflect($class), 'newInstance'],
-            $params
-        );
     }
 
     /**

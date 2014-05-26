@@ -63,14 +63,13 @@ class BoundInstance implements BoundInstanceInterface
      */
     public function __construct(
         InjectorInterface $injector,
-        ConfigInterface $config,
         ContainerInterface $container,
         AbstractModule $module,
         LoggerInterface $logger = null,
         Binder $binder = null
     ) {
         $this->injector = $injector;
-        $this->config = $config;
+        $this->config = $container->getForge()->getConfig();
         $this->container = $container;
         $this->logger = $logger;
         $this->binder = $binder ?: new Binder($module, $injector, $this->config, $logger);
