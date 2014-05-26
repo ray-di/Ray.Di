@@ -105,9 +105,18 @@ class Injector implements InjectorInterface, \Serializable
         AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
     }
 
+    /**
+     * Notify pre-destroy
+     */
     public function __destruct()
     {
-        $this->notifyPreShutdown();
+        $this->preDestroyObjects->rewind();
+        while ($this->preDestroyObjects->valid()) {
+            $object = $this->preDestroyObjects->current();
+            $method = $this->preDestroyObjects->getInfo();
+            $object->$method();
+            $this->preDestroyObjects->next();
+        }
     }
 
     /**
@@ -261,22 +270,6 @@ class Injector implements InjectorInterface, \Serializable
     }
 
     /**
-     * Notify pre-destroy
-     *
-     * @return void
-     */
-    private function notifyPreShutdown()
-    {
-        $this->preDestroyObjects->rewind();
-        while ($this->preDestroyObjects->valid()) {
-            $object = $this->preDestroyObjects->current();
-            $method = $this->preDestroyObjects->getInfo();
-            $object->$method();
-            $this->preDestroyObjects->next();
-        }
-    }
-
-    /**
      * Return parameters
      *
      * @param array $params
@@ -381,7 +374,7 @@ class Injector implements InjectorInterface, \Serializable
         AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
         register_shutdown_function(function () {
             // @codeCoverageIgnoreStart
-            $this->notifyPreShutdown();
+            $this->__destruct();
             // @codeCoverageIgnoreEnd
         });
 
