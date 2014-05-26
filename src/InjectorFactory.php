@@ -49,9 +49,9 @@ final class InjectorFactory
     /**
      * Return Injector instance
      *
-     * @param array $modules
-     * @param Cache $cache
-     * @param string  $tmpDir
+     * @param array  $modules
+     * @param Cache  $cache
+     * @param string $tmpDir
      *
      * @return Injector
      */

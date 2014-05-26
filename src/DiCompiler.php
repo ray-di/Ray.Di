@@ -113,6 +113,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
      * @param string   $tmpDir
      * @param Config   $config
      * @param Logger   $logger
+     * 
      * @return Injector
      */
     private static function createInjector(
