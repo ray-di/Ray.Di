@@ -1,7 +1,8 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
     "hash": "8ba8582cbcc3a9ae6afb292f2ceefb00",
     "packages": [
@@ -353,16 +354,16 @@
         },
         {
             "name": "ray/aop",
-            "version": "1.2.4",
+            "version": "1.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "8a6fcdb80725288b8ac6829ee138031a67d698e1"
+                "reference": "159edfaa1c7121a7a36b6a10da19485c261e87b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/8a6fcdb80725288b8ac6829ee138031a67d698e1",
-                "reference": "8a6fcdb80725288b8ac6829ee138031a67d698e1",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/159edfaa1c7121a7a36b6a10da19485c261e87b6",
+                "reference": "159edfaa1c7121a7a36b6a10da19485c261e87b6",
                 "shasum": ""
             },
             "require": {
@@ -401,15 +402,23 @@
                 "aop",
                 "aspect"
             ],
-            "time": "2014-05-19 10:06:55"
+            "time": "2014-05-27 10:29:01"
         }
     ],
-    "packages-dev": [],
-    "aliases": [],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": [
+
+    ],
     "platform": {
         "php": ">=5.4.0"
     },
-    "platform-dev": []
+    "platform-dev": [
+
+    ]
 }
