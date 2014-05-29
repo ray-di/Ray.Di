@@ -14,3 +14,4 @@ composer.phar
 *doctrinecache.data
 Ray*Aop.php
 atlassian-ide-plugin.xml
+tests/test.log

@@ -11,6 +11,7 @@ if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
 }
 
 ini_set('xdebug.max_nesting_level', 300);
+ini_set('error_log', __DIR__ . '/test.log');
 
 // vendor
 $loader = require dirname(__DIR__) . '/vendor/autoload.php';
