@@ -98,14 +98,17 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
         $hash = (string) $this->storageCnt;
         $this->objectStorage[$object] = $hash;
         // object hash logging for debug
-/*
-        error_log(sprintf('%s@%s.%s #%s',
-            substr(md5(spl_object_hash($this->objectStorage)), 0, 3),
+        $shortHash = function ($data, $algo = 'CRC32') {
+            return strtr(rtrim(base64_encode(pack('H*', $algo($data))), '='), '+/', '-_');
+        };
+        $log = sprintf(
+            'ray/di.install ref:%s class:%s hash:%s',
             $hash,
             get_class($object),
-            spl_object_hash($object))
+            $shortHash(spl_object_hash($object))
         );
-*/
+        error_log($log);
+
         return $hash;
     }
 
@@ -116,8 +119,14 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     {
         $container = $this->dependencyContainer;
         $factory = array_pop($container);
+        /** @var $factory DependencyFactory */
         $classMap[$class] = (string) $factory;
-
+        $log = sprintf(
+            'ray/di.map     ref:%s class:%s',
+            $factory,
+            $class
+        );
+        error_log($log);
         return $classMap;
     }
 
@@ -133,6 +142,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
         foreach ($setters as &$methodPrams) {
             $methodPrams = $this->makeParamRef($methodPrams);
         }
+
         $dependencyFactory = new DependencyFactory($instance, $params, $setters, $this);
         list(,,$definition) = $this->config->fetch($class);
         // @PostConstruct
@@ -145,7 +155,14 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
         }
         $index = (string) $dependencyFactory;
         $this->dependencyContainer[$index] = $dependencyFactory;
-
+        $diLog = $dependencyFactory->getDependencyLog();
+        if ($diLog) {
+            error_log('ray/di.depends ' . $diLog);
+        }
+        $aopLog = $dependencyFactory->getInterceptorLog();
+        if ($aopLog) {
+            error_log('ray/di.aspect  ' . $aopLog);
+        }
     }
 
     /**

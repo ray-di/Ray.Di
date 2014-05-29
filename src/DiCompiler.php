@@ -156,8 +156,10 @@ final class DiCompiler implements InstanceInterface, \Serializable
     public function getInstance($class)
     {
         if (! isset($this->classMap[$class])) {
+            error_log('ray/di.compile class:' . $class);
             return $this->recompile($class);
         }
+        error_log('ray/di.get     class:' . $class);
         $hash = $this->classMap[$class];
         $instance = $this->logger->newInstance($hash);
 
