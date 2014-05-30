@@ -114,6 +114,9 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
      */
     public function setClassMap(array $classMap, $class)
     {
+        if (isset($classMap[$class])) {
+            return $classMap;
+        }
         $container = $this->dependencyContainer;
         $factory = array_pop($container);
         $classMap[$class] = (string) $factory;
