@@ -167,6 +167,70 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         return $this->hash;
     }
 
+    /**
+     * @return string
+     */
+    public function getDependencyLog()
+    {
+        $constructorArgs = $this->getArgsLogText($this->args);
+        $setterArgs = '';
+        foreach ($this->setters as $method => $args) {
+            $setterArgs .= sprintf(
+                ' %s:%s',
+                $method,
+                $this->getArgsLogText($args)
+            );
+        }
+        if (! $constructorArgs . $setterArgs) {
+            return '';
+        }
+        return sprintf('ref:%s __construct:%s%s',
+            $this->hash,
+            $constructorArgs,
+            $setterArgs
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function getInterceptorLog()
+    {
+        if (! is_array($this->interceptors)) {
+            return '';
+        }
+        $log = '';
+        foreach ($this->interceptors as $method => $interceptorReferences) {
+            $log = sprintf(
+                'ref:%s %s:%s',
+                $this->hash,
+                $method,
+                $this->getArgsLogText($interceptorReferences)
+            );
+        }
+
+        return $log;
+    }
+
+    /**
+     * @param mixed $args
+     *
+     * @return string
+     */
+    private function getArgsLogText($args)
+    {
+        foreach ($args as &$item) {
+            $item =  is_array($item) ? 'array(' . count($item) . ')' : $item;
+            $item = is_scalar($item) ? gettype($item) : $item;
+            if ($item instanceof DependencyReference) {
+                $item = (string) $item;
+            }
+        }
+        $args = (is_array($args)) ? implode(',', $args) : getype($args);
+
+        return $args;
+    }
+
     public function serialize()
     {
         $serialized = serialize(
