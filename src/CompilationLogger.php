@@ -39,6 +39,11 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private $storageCnt = 0;
 
     /**
+     * @var string
+     */
+    private $log = '';
+
+    /**
      * @param LoggerInterface $logger
      *
      * @Inject
@@ -80,6 +85,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     public function newInstance($ref)
     {
         if (! isset($this->dependencyContainer[$ref])) {
+            error_log($this->log);
             throw new Exception\Compile($ref);
         }
 
@@ -107,7 +113,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
             get_class($object),
             $shortHash(spl_object_hash($object))
         );
-        error_log($log);
+        $this->errorLog($log);
 
         return $hash;
     }
@@ -129,7 +135,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
             $factory,
             $class
         );
-        error_log($log);
+        $this->errorLog($log);
         return $classMap;
     }
 
@@ -160,11 +166,11 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
         $this->dependencyContainer[$index] = $dependencyFactory;
         $diLog = $dependencyFactory->getDependencyLog();
         if ($diLog) {
-            error_log('ray/di.depends ' . $diLog);
+            $this->errorLog('ray/di.depends ' . $diLog);
         }
         $aopLog = $dependencyFactory->getInterceptorLog();
         if ($aopLog) {
-            error_log('ray/di.aspect  ' . $aopLog);
+            $this->errorLog('ray/di.aspect  ' . $aopLog);
         }
     }
 
@@ -224,6 +230,14 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
         return new DependencyReference($hash, $this, $type);
     }
 
+    /**
+     * @param $log
+     */
+    private  function errorLog($log)
+    {
+        // error_log($log); // uncomment for development
+        $this->log .= $log . PHP_EOL;
+    }
 
     public function __toString()
     {
