@@ -184,7 +184,8 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         if (! $constructorArgs . $setterArgs) {
             return '';
         }
-        return sprintf('ref:%s __construct:%s%s',
+        return sprintf(
+            'ref:%s __construct:%s%s',
             $this->hash,
             $constructorArgs,
             $setterArgs

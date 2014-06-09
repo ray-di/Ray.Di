@@ -231,14 +231,19 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     }
 
     /**
-     * @param $log
+     * @param string $log
+     *
+     * Uncomment for error_log to log
      */
     private function errorLog($log)
     {
-        // error_log($log); // uncomment for development
+        // error_log($log);
         $this->log .= $log . PHP_EOL;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return (string) $this->logger;
