@@ -15,11 +15,6 @@
             "name": "Akihito Koriyama",
             "email": "akihito.koriyama@gmail.com",
             "role": "Lead"
-        },
-        {
-            "name": "Koji Iwasaki",
-            "email": "iwasaki@cresc.com",
-            "role": "Developer"
         }
     ],
     "require": {
