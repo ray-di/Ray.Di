@@ -140,7 +140,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
     public function compile($class)
     {
         $this->injector->getInstance($class);
-        $this->classMap = $this->logger->setClassMap($this->classMap, $class);
+        $this->logger->setMapRef($class);
         $this->cache->save($this->cacheKey, $this);
 
         return $this;
@@ -155,11 +155,11 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     public function getInstance($class)
     {
-        if (! isset($this->classMap[$class])) {
+        if (! $this->logger->isSetMapRef($class)) {
             $instance = $this->recompile($class);
             return $instance;
         }
-        $hash = $this->classMap[$class];
+        $hash = $this->logger->getMapRef($class);
         /*
         error_log(sprintf(
             'ray/di.get     class:%s ref:%s',

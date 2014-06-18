@@ -44,6 +44,11 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     private $log = '';
 
     /**
+     * @var array
+     */
+    private $classMap = [];
+
+    /**
      * @param LoggerInterface $logger
      *
      * @Inject
@@ -119,24 +124,39 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
-    public function setClassMap(array $classMap, $class)
+    public function setMapRef($class)
     {
-        if (isset($classMap[$class])) {
-            return $classMap;
+        if (isset($this->classMap[$class])) {
+            return;
         }
         $container = $this->dependencyContainer;
         $factory = array_pop($container);
         /** @var $factory DependencyFactory */
-        $classMap[$class] = (string) $factory;
+        $this->classMap[$class] = (string) $factory;
         $log = sprintf(
             'ray/di.map     ref:%s class:%s',
             $factory,
             $class
         );
         $this->errorLog($log);
-        return $classMap;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMapRef($class)
+    {
+        return $this->classMap[$class];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isSetMapRef($class)
+    {
+        return isset($this->classMap[$class]);
     }
 
     /**
@@ -253,6 +273,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     {
         $serialized = serialize(
             [
+                $this->classMap,
                 $this->dependencyContainer
             ]
         );
@@ -263,6 +284,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     public function unserialize($serialized)
     {
         list(
+            $this->classMap,
             $this->dependencyContainer
         ) = unserialize($serialized);
     }

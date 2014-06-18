@@ -34,4 +34,26 @@ interface CompilationLoggerInterface extends LoggerInterface
      * @return string
      */
     public function getObjectHash($object);
+
+    /**
+     * @param string $class
+     *
+     * @return void
+     */
+    public function setMapRef($class);
+
+    /**
+     * @param string $class
+     *
+     * @return string
+     */
+    public function getMapRef($class);
+
+    /**
+     * @param string $class
+     *
+     * @return bool
+     */
+    public function isSetMapRef($class);
+
 }
