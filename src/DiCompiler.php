@@ -159,6 +159,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
             $instance = $this->recompile($class);
             return $instance;
         }
+        error_log(sprintf('ray/di.get     class:%s', $class));
         $instance = $this->getInstanceSafe($this->logger, $class);
 
         return $instance;
@@ -199,7 +200,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
         try {
             $instance = $injector->getInstance($class);
         } catch (Compile $e) {
-            error_log(sprintf('ray/di.retry class:%s', $class));
+            error_log(sprintf('ray/di.retry class:%s catch:%s exception:%s', $class, __METHOD__, (string) $e));
             list($provider, $tmpDir) = [self::$args[0], self::$args[3]];
             $injector = self::createInjector($provider, $tmpDir);
             $instance = $injector->getInstance($class);
