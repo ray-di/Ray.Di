@@ -11,7 +11,7 @@ use Aura\Di\ConfigInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-final class CompilationLogger implements CompilationLoggerInterface, \Serializable
+final class CompilationLogger implements CompilationLoggerInterface, InstanceInterface, \Serializable
 {
     /**
      * @var LoggerInterface
@@ -85,7 +85,21 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $class
+     *
+     * @return object
+     */
+    public function getInstance($class)
+    {
+        $ref = $this->classMap[$class];
+        return $this->newInstance($ref);
+    }
+
+    /**
+     * @param string $ref
+     *
+     * @return object
+     * @throws Exception\Compile
      */
     public function newInstance($ref)
     {
@@ -96,6 +110,7 @@ final class CompilationLogger implements CompilationLoggerInterface, \Serializab
 
         return $this->dependencyContainer[$ref]->get();
     }
+
 
     /**
      * {@inheritdoc}
