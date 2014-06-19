@@ -46,6 +46,8 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     private static $args;
 
+    private $wakeup = false;
+
     /**
      * @param InjectorInterface          $injector
      * @param CompilationLoggerInterface $logger
@@ -159,6 +161,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
             $instance = $this->recompile($class);
             return $instance;
         }
+        error_log(sprintf('ray/di.get class:%s', $class));
         $instance = $this->getInstanceSafe($this->logger, $class);
 
         return $instance;
@@ -171,8 +174,15 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     private function recompile($class)
     {
+        error_log(sprintf('ray/di.recompile class:%s', $class));
+
         $this->cache->delete($this->cacheKey);
-        $diCompiler = $this->injector ? $this : call_user_func_array([$this, 'createInstance'], self::$args);
+        if ($this->wakeup) {
+            $diCompiler = call_user_func_array([$this, 'createInstance'], self::$args);
+            $this->wakeup = false;
+        } else {
+            $diCompiler = $this->injector ? $this : call_user_func_array([$this, 'createInstance'], self::$args);
+        }
         /** @var $diCompiler DiCompiler */
         $mappedClass = array_keys($this->classMap);
         $mappedClass[] = $class;
@@ -235,6 +245,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
             $this->cache,
             $this->cacheKey
         ) = unserialize($serialized);
+        $this->wakeup = true;
     }
 
     public function __toString()
