@@ -173,6 +173,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
     private function recompile($class)
     {
         $this->cache->delete($this->cacheKey);
+//        $diCompiler = call_user_func_array([$this, 'createInstance'], self::$args);
         $diCompiler = $this->injector ? $this : call_user_func_array([$this, 'createInstance'], self::$args);
         /** @var $diCompiler DiCompiler */
         $mappedClass = array_keys($this->classMap);
