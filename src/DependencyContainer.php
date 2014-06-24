@@ -65,7 +65,6 @@ final class DependencyContainer
         if (isset($instance->rayAopBind)) {
             $interceptors = $this->buildInterceptor($instance);
             $dependencyFactory->setInterceptors($interceptors);
-            var_dump($dependencyFactory);
         }
         $refId = $this->attach($dependencyFactory);
         $dependencyFactory->setRefId($refId);
@@ -92,6 +91,7 @@ final class DependencyContainer
     public function newInstance($refId)
     {
         $instance = $this->container[$refId];
+
         return $instance instanceof DependencyFactory ? $instance->get() : $instance;
     }
 

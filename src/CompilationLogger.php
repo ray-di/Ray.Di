@@ -173,6 +173,7 @@ final class CompilationLogger implements CompilationLoggerInterface, InstanceInt
 
     public function unserialize($serialized)
     {
+        $this->dependencyContainer = new DependencyContainer($this);
         list(
             $this->classMap,
             $this->dependencyContainer
