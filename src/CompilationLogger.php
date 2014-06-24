@@ -281,7 +281,13 @@ final class CompilationLogger implements CompilationLoggerInterface, InstanceInt
      */
     public function __toString()
     {
-        return (string) $this->logger;
+        $log = '';
+        foreach ($this->dependencyContainer as $num => $item) {
+            $type = explode('\\', get_class($item))[2];
+            $log .= sprintf("num:%s type:%s name:%s\n", $num, $type, $item->getName());
+        }
+
+        return $log;
     }
 
     public function serialize()

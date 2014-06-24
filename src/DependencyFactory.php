@@ -170,6 +170,14 @@ final class DependencyFactory implements ProviderInterface, \Serializable
     /**
      * @return string
      */
+    public function getName()
+    {
+        return "{$this->class}#{$this->hash}";
+    }
+
+    /**
+     * @return string
+     */
     public function getDependencyLog()
     {
         $constructorArgs = $this->getArgsLogText($this->args);

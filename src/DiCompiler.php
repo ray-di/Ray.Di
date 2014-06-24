@@ -180,6 +180,8 @@ final class DiCompiler implements InstanceInterface, \Serializable
         foreach ($mappedClass as $newClass) {
             $diCompiler->compile($newClass);
         }
+        // log dependency container
+        error_log($this->logger);
         $instance = $this->getInstanceSafe($diCompiler, $class);
 
         return $instance;

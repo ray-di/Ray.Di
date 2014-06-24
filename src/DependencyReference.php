@@ -85,4 +85,13 @@ final class DependencyReference implements ProviderInterface, \Serializable
     {
         return '#' . $this->refId;
     }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return "{$this->type}#{$this->refId}";
+    }
+
 }
