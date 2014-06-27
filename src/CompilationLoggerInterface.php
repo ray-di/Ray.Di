@@ -28,12 +28,12 @@ interface CompilationLoggerInterface extends LoggerInterface
      */
     public function newInstance($ref);
 
-    /**
-     * @param object $object
-     *
-     * @return string
-     */
-    public function getObjectHash($object);
+//    /**
+//     * @param object $object
+//     *
+//     * @return string
+//     */
+//    public function getObjectHash($object);
 
     /**
      * @param string $class

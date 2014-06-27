@@ -13,11 +13,6 @@ final class DependencyFactory implements ProviderInterface, \Serializable
     /**
      * @var string
      */
-    private $hash;
-
-    /**
-     * @var string
-     */
     private $class;
 
     /**
@@ -50,6 +45,8 @@ final class DependencyFactory implements ProviderInterface, \Serializable
      */
     private $postConstruct;
 
+    private $refId;
+
     /**
      * @param object            $object
      * @param array             $args
@@ -63,10 +60,14 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         CompilationLogger $logger
     ) {
         $this->class = get_class($object);
-        $this->hash = $logger->getObjectHash($object);
         $this->args = $args;
         $this->setters = $setter;
         $this->logger = $logger;
+    }
+
+    public function setRefId($refId)
+    {
+        $this->refId = $refId;
     }
 
     /**
@@ -164,15 +165,7 @@ final class DependencyFactory implements ProviderInterface, \Serializable
      */
     public function __toString()
     {
-        return $this->hash;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return "{$this->class}#{$this->hash}";
+        return (string) $this->refId;
     }
 
     /**
@@ -194,7 +187,7 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         }
         return sprintf(
             'ref:%s __construct:%s%s',
-            $this->hash,
+            $this->refId,
             $constructorArgs,
             $setterArgs
         );
@@ -212,7 +205,7 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         foreach ($this->interceptors as $method => $interceptorReferences) {
             $log = sprintf(
                 'ref:%s %s:%s',
-                $this->hash,
+                $this->refId,
                 $method,
                 $this->getArgsLogText($interceptorReferences)
             );
@@ -244,7 +237,7 @@ final class DependencyFactory implements ProviderInterface, \Serializable
     {
         $serialized = serialize(
             [
-                $this->hash,
+                $this->refId,
                 $this->class,
                 $this->args,
                 $this->setters,
@@ -260,7 +253,7 @@ final class DependencyFactory implements ProviderInterface, \Serializable
     public function unserialize($serialized)
     {
         list(
-            $this->hash,
+            $this->refId,
             $this->class,
             $this->args,
             $this->setters,

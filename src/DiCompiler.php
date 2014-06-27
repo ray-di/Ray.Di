@@ -81,9 +81,11 @@ final class DiCompiler implements InstanceInterface, \Serializable
         if ($cache->contains($cacheKey)) {
             (new AopClassLoader)->register($tmpDir);
             $diCompiler = $cache->fetch($cacheKey);
+            error_log('ray/di.load    key:' . $cacheKey);
 
             return $diCompiler;
         }
+        error_log("ray/di.compile key:{$cacheKey}");
         $diCompiler = self::createInstance($moduleProvider, $cache, $cacheKey, $tmpDir);
 
         return $diCompiler;
@@ -141,6 +143,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
     {
         $this->injector->getInstance($class);
         $this->logger->setMapRef($class);
+        error_log("ray/di.save key:{$this->cacheKey} class;{$class}");
         $this->cache->save($this->cacheKey, $this);
 
         return $this;
@@ -157,6 +160,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
     {
         if (! $this->logger->isSetMapRef($class)) {
             $instance = $this->recompile($class);
+
             return $instance;
         }
         error_log(sprintf('ray/di.get     class:%s', $class));
@@ -172,7 +176,6 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     private function recompile($class)
     {
-        $this->cache->delete($this->cacheKey);
         $diCompiler = $this->injector ? $this : call_user_func_array([$this, 'createInstance'], self::$args);
         /** @var $diCompiler DiCompiler */
         $mappedClass = array_keys($this->classMap);
