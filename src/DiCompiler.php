@@ -159,7 +159,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
             $instance = $this->recompile($class);
             return $instance;
         }
-        error_log(sprintf('ray/di.get     class:%s', $class));
+        // error_log(sprintf('ray/di.get     class:%s', $class));
         $instance = $this->getInstanceSafe($this->logger, $class);
 
         return $instance;
@@ -181,7 +181,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
             $diCompiler->compile($newClass);
         }
         // log dependency container
-        error_log($this->logger);
+        // error_log($this->logger);
         $instance = $this->getInstanceSafe($diCompiler, $class);
 
         return $instance;

@@ -104,7 +104,7 @@ final class CompilationLogger implements CompilationLoggerInterface, InstanceInt
     public function newInstance($ref)
     {
         if (! isset($this->dependencyContainer[$ref])) {
-            error_log($this->log);
+            $this->errorLog((string) $this->log);
             throw new Exception\Compile($ref);
         }
 
@@ -267,12 +267,10 @@ final class CompilationLogger implements CompilationLoggerInterface, InstanceInt
 
     /**
      * @param string $log
-     *
-     * Uncomment for error_log to log
      */
     private function errorLog($log)
     {
-        error_log($log);
+        // error_log($log);
         $this->log .= $log . PHP_EOL;
     }
 
