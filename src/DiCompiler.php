@@ -140,7 +140,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
     public function compile($class)
     {
         $this->injector->getInstance($class);
-        $this->classMap = $this->logger->setClassMap($this->classMap, $class);
+        $this->logger->setMapRef($class);
         $this->cache->save($this->cacheKey, $this);
 
         return $this;
@@ -155,19 +155,12 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     public function getInstance($class)
     {
-        if (! isset($this->classMap[$class])) {
+        if (! $this->logger->isSetMapRef($class)) {
             $instance = $this->recompile($class);
             return $instance;
         }
-        $hash = $this->classMap[$class];
-        /*
-        error_log(sprintf(
-            'ray/di.get     class:%s ref:%s',
-            $class,
-            $hash
-        ));
-        */
-        $instance = $this->logger->newInstance($hash);
+        // error_log(sprintf('ray/di.get     class:%s', $class));
+        $instance = $this->getInstanceSafe($this->logger, $class);
 
         return $instance;
     }
@@ -187,9 +180,29 @@ final class DiCompiler implements InstanceInterface, \Serializable
         foreach ($mappedClass as $newClass) {
             $diCompiler->compile($newClass);
         }
+        // log dependency container
+        // error_log($this->logger);
+        $instance = $this->getInstanceSafe($diCompiler, $class);
+
+        return $instance;
+    }
+
+    /**
+     * Retry get instance if fail
+     *
+     * this is defensive implementation just in case.
+     *
+     * @param InstanceInterface $injector
+     * @param string            $class
+     *
+     * @return object
+     */
+    private function getInstanceSafe(InstanceInterface $injector, $class)
+    {
         try {
-            $instance = $diCompiler->getInstance($class);
+            $instance = $injector->getInstance($class);
         } catch (Compile $e) {
+            error_log(sprintf('ray/di.retry class:%s catch:%s exception:%s', $class, __METHOD__, (string) $e));
             list($provider, $tmpDir) = [self::$args[0], self::$args[3]];
             $injector = self::createInjector($provider, $tmpDir);
             $instance = $injector->getInstance($class);

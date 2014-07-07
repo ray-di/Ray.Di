@@ -137,6 +137,7 @@ class CacheInjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->getInstance('Ray\Di\Definition\LifeCycleOnShutdown');
         register_shutdown_function(
             function () {
+                $this->assertTrue(isset($GLOBALS['PreDestroy_on_shutdown']));
                 $this->assertSame('@PreDestroy', $GLOBALS['PreDestroy_on_shutdown']);
             }
         );

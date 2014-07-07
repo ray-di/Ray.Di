@@ -54,18 +54,13 @@ final class DependencyReference implements ProviderInterface, \Serializable
 
             return $this->instance;
         } catch (Compile $e) {
-            error_log((string) $this->logger);
-
-            throw new Compile($this->type);
+            $msg = sprintf('ref:%s class:%s logger:%s', $this->refId, $this->type, (string) $this->logger);
+            throw new Compile($msg);
         }
     }
 
     public function serialize()
     {
-        serialize($this->logger);
-        serialize($this->refId);
-        serialize($this->type);
-
         $serialized = serialize(
             [
                 $this->logger,
@@ -90,4 +85,13 @@ final class DependencyReference implements ProviderInterface, \Serializable
     {
         return '#' . $this->refId;
     }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return "{$this->type}#{$this->refId}";
+    }
+
 }

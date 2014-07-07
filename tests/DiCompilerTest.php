@@ -245,4 +245,13 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $instance = $diCompiler->getInstance('Ray\Di\DiaryInterface');
         $this->assertInstanceOf('Ray\Di\Diary', $instance);
     }
+
+    public function testCompileTwice()
+    {
+        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
+        $DiCompiler->compile('Ray\Di\DiaryInterface');
+        $DiCompiler->compile('Ray\Di\DiaryInterface');
+        $instance = $DiCompiler->getInstance('Ray\Di\DiaryInterface');
+        $this->assertInstanceOf('Ray\Di\Diary', $instance);
+    }
 }
