@@ -45,13 +45,6 @@ interface CompilationLoggerInterface extends LoggerInterface
     /**
      * @param string $class
      *
-     * @return string
-     */
-    public function getMapRef($class);
-
-    /**
-     * @param string $class
-     *
      * @return bool
      */
     public function isSetMapRef($class);

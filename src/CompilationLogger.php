@@ -161,14 +161,6 @@ final class CompilationLogger implements CompilationLoggerInterface, InstanceInt
     /**
      * {@inheritdoc}
      */
-    public function getMapRef($class)
-    {
-        return $this->classMap[$class];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function isSetMapRef($class)
     {
         return isset($this->classMap[$class]);
