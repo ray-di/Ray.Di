@@ -185,7 +185,7 @@ abstract class AbstractModule implements ArrayAccess
         ModuleStringerInterface $stringer = null
     ) {
         $this->modules[] = get_class($this);
-        $this->matcher = $matcher ? : new Matcher(new Reader);
+        $this->matcher = $matcher ? : new Matcher;
         $this->stringer = $stringer ?: new ModuleStringer;
         if (is_null($module)) {
             $this->bindings = new ArrayObject;
@@ -209,7 +209,7 @@ abstract class AbstractModule implements ArrayAccess
             return;
         }
         $this->activated = true;
-        $this->dependencyInjector = $injector ? : Injector::create([$this]);
+        $this->dependencyInjector = $injector ? : (new InjectorFactory)->newInstance([$this]);
         $this->configure();
     }
 

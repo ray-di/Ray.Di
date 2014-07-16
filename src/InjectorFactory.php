@@ -3,8 +3,6 @@
 namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
 use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
@@ -60,7 +58,7 @@ final class InjectorFactory
         Cache $cache = null,
         $tmpDir = null
     ) {
-        $annotationReader = ($cache instanceof Cache) ? new CachedReader(new AnnotationReader, $cache) : new AnnotationReader;
+        $annotationReader = (new AnnotationReaderFactory)->getInstance();
         $config = $this->config ?: new Config(new Annotation(new Definition, $annotationReader));
         $logger = $this->logger ?: new Logger;
         $tmpDir =  $tmpDir ?: sys_get_temp_dir();

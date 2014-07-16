@@ -12,6 +12,7 @@ use Doctrine\Common\Cache\Cache;
 use Ray\Aop\BindInterface;
 use Ray\Aop\Compiler;
 use Ray\Aop\CompilerInterface;
+use Ray\Aop\Matcher;
 use ReflectionClass;
 use SplObjectStorage;
 use Serializable;
@@ -112,7 +113,14 @@ class Injector implements InjectorInterface, \Serializable
      */
     public static function create(array $modules = [], Cache $cache = null)
     {
-        return (new InjectorFactory)->newInstance($modules, $cache);
+        $annotationReaderFactory = new AnnotationReaderFactory;
+        if (! is_null($cache)) {
+            $annotationReaderFactory->setCache($cache);
+        }
+        $annotationReader = $annotationReaderFactory->getInstance();
+        Matcher::setAnnotationReader($annotationReader);
+
+        return (new InjectorFactory)->newInstance($modules);
     }
 
     /**
