@@ -125,7 +125,7 @@ final class CompilationLogger implements CompilationLoggerInterface, InstanceInt
         $this->objectStorage[$object] = $hash;
         // object hash logging for debug
         $shortHash = function ($data, $algo = 'CRC32') {
-            return strtr(rtrim(base64_encode(pack('H*', $algo($data))), '='), '+/', '-_');
+            return strtr(rtrim(base64_encode(pack('H*', sprintf('%u', $algo($data)))), '='), '+/', '-_');
         };
         $log = sprintf(
             'ray/di.install ref:%s class:%s hash:%s',
