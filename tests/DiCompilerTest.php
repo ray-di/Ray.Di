@@ -196,7 +196,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $injector = DiCompiler::create($moduleProvider, $cache, 'diary', $tmpDir);
 
         $injector->getInstance('Ray\Di\DiaryInterface');
-        /** @var $insjector $injector */
+        /** @var $injector $injector */
         $injector = DiCompiler::create($moduleProvider, $cache, 'diary', $tmpDir);
         $instance = $injector->getInstance('Ray\Di\DiaryInterface');
         $this->assertInstanceOf('Ray\Di\Diary', $instance);
