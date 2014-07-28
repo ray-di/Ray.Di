@@ -90,7 +90,6 @@ class Injector implements InjectorInterface, \Serializable
         $this->logger = $logger;
         $this->preDestroyObjects = new SplObjectStorage;
         $this->boundInstance = $boundInstance ?: new BoundInstance($this, $container, $module, $logger);
-        $this->module->activate($this);
         AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
     }
 
@@ -198,6 +197,9 @@ class Injector implements InjectorInterface, \Serializable
      */
     public function getInstance($class)
     {
+        // module activation
+        $this->module->activate($this);
+
         if ($this->boundInstance->hasBound($class, $this->module)) {
             return $this->boundInstance->getBound();
         }

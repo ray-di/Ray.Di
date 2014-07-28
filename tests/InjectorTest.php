@@ -265,7 +265,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testProviderIsNotExists()
     {
         $this->injector = new Injector($this->container, new Modules\ProvideNotExistsModule, new Bind, new Compiler($_ENV['TMP_DIR'], new PHPParser_PrettyPrinter_Default), new Logger);
-
+        $this->injector->getInstance('dummy');
     }
 
     public function testConstructorBindingsWithDefault()
