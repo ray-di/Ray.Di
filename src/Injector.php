@@ -8,6 +8,7 @@ namespace Ray\Di;
 
 use Aura\Di\ContainerInterface;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Ray\Aop\BindInterface;
 use Ray\Aop\Compiler;
@@ -90,7 +91,6 @@ class Injector implements InjectorInterface, \Serializable
         $this->logger = $logger;
         $this->preDestroyObjects = new SplObjectStorage;
         $this->boundInstance = $boundInstance ?: new BoundInstance($this, $container, $module, $logger);
-        $this->module->activate($this);
         AnnotationRegistry::registerFile(__DIR__ . '/DiAnnotation.php');
     }
 
@@ -111,16 +111,17 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * {@inheritdoc}
      */
-    public static function create(array $modules = [], Cache $cache = null)
+    public static function create(array $modules = [], Cache $cache = null, $tmdDir = null)
     {
-        $annotationReaderFactory = new AnnotationReaderFactory;
-        if (! is_null($cache)) {
-            $annotationReaderFactory->setCache($cache);
-        }
-        $annotationReader = $annotationReaderFactory->getInstance();
+        $locator = new Locator;
+        $cache = $cache ?: new ArrayCache;
+        $locator->setCache($cache);
+        $tmdDir = $tmdDir ?: sys_get_temp_dir();
+        $annotationReader = $locator->getAnnotationReader();
         Matcher::setAnnotationReader($annotationReader);
+        $injector = (new InjectorFactory)->newInstance($modules, $cache, $tmdDir);
 
-        return (new InjectorFactory)->newInstance($modules);
+        return $injector;
     }
 
     /**
@@ -198,6 +199,9 @@ class Injector implements InjectorInterface, \Serializable
      */
     public function getInstance($class)
     {
+        // module activation
+        $this->module->activate($this);
+
         if ($this->boundInstance->hasBound($class, $this->module)) {
             return $this->boundInstance->getBound();
         }

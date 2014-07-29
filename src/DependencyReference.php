@@ -93,5 +93,4 @@ final class DependencyReference implements ProviderInterface, \Serializable
     {
         return "{$this->type}#{$this->refId}";
     }
-
 }
