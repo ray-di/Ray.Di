@@ -3,10 +3,12 @@
 namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
+use Ray\Aop\Matcher;
 
 final class InjectorFactory
 {
@@ -58,7 +60,9 @@ final class InjectorFactory
         Cache $cache = null,
         $tmpDir = null
     ) {
-        $annotationReader = (new AnnotationReaderFactory)->getInstance();
+        (new AopClassLoader)->register($tmpDir);
+
+        $annotationReader = (new Locator)->getAnnotationReader();
         $config = $this->config ?: new Config(new Annotation(new Definition, $annotationReader));
         $logger = $this->logger ?: new Logger;
         $tmpDir =  $tmpDir ?: sys_get_temp_dir();
@@ -75,6 +79,9 @@ final class InjectorFactory
 
         if (count($modules) > 0) {
             $module = array_shift($modules);
+            if ($module instanceof CacheableModule) {
+                $module = $module->get($cache);
+            }
             foreach ($modules as $extraModule) {
                 /* @var $module AbstractModule */
                 $module->install($extraModule);

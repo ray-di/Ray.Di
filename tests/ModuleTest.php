@@ -265,4 +265,21 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($result, 'Ray\Di\Mock\UserDb2');
     }
 
+    public function testEnableInvokeCache()
+    {
+        AbstractModule::enableInvokeCache();
+        $module = new Modules\AopMatcherModule;
+        $binder = $module('Ray\Di\Aop\RealBillingService', new Bind);
+        $binder = $module('Ray\Di\Aop\RealBillingService', new Bind);
+        $this->assertInstanceOf('\Ray\Aop\Bind', $binder);
+    }
+
+    public function testEnableInvokeCacheNohit()
+    {
+        AbstractModule::enableInvokeCache();
+        (new Locator())->cleaAll();
+        $module = new Modules\AopMatcherModule;
+        $binder = $module('Ray\Di\Aop\RealBillingService', new Bind);
+        $this->assertInstanceOf('\Ray\Aop\Bind', $binder);
+    }
 }

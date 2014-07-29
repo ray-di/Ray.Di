@@ -9,6 +9,7 @@ namespace Ray\Di;
 use ArrayAccess;
 use ArrayObject;
 use Doctrine\Common\Annotations\AnnotationReader as Reader;
+use Doctrine\Common\Cache\Cache;
 use Ray\Aop\AbstractMatcher;
 use Ray\Aop\Bind;
 use Ray\Aop\Matcher;
@@ -175,6 +176,11 @@ abstract class AbstractModule implements ArrayAccess
     private $stringer;
 
     /**
+     * @var bool
+     */
+    private static $invokeCache = false;
+
+    /**
      * @param AbstractModule          $module
      * @param AbstractMatcher         $matcher
      * @param ModuleStringerInterface $stringer
@@ -196,6 +202,7 @@ abstract class AbstractModule implements ArrayAccess
         $module->activate();
         $this->bindings = $module->bindings;
         $this->pointcuts = $module->pointcuts;
+        $this->cache = (new Locator)->getCache();
     }
 
     /**
@@ -433,10 +440,43 @@ abstract class AbstractModule implements ArrayAccess
      */
     public function __invoke($class, Bind $bind)
     {
+        if (self::$invokeCache) {
+            return $this->invokeCache($class, $bind);
+        }
+
         $bind->bind($class, (array) $this->pointcuts);
 
         return $bind;
     }
+
+    /**
+     * Return matched binder
+     *
+     * @param string $class
+     * @param Bind   $bind
+     *
+     * @return Bind $bind
+     */
+    public function invokeCache($class, Bind $bind)
+    {
+        $cache = (new Locator)->getCache();
+        if (! $cache) {
+            $bind->bind($class, (array) $this->pointcuts);
+
+            return $bind;
+        }
+        /** @var $cache Cache */
+        $key = __METHOD__ . $class . (string) $bind;
+        $bound = $cache->fetch($key);
+        if ($bound) {
+            return $bound;
+        }
+        $bind->bind($class, (array) $this->pointcuts);
+        $cache->save($key, $bind);
+
+        return $bind;
+    }
+
 
     /**
      * ArrayAccess::offsetExists
@@ -508,13 +548,8 @@ abstract class AbstractModule implements ArrayAccess
 
     }
 
-    /**
-     * Keep only bindings and pointcuts.
-     *
-     * @return string[]
-     */
-    public function __sleep()
+    public static function enableInvokeCache()
     {
-        return ['bindings', 'pointcuts'];
+        self::$invokeCache = true;
     }
 }
