@@ -7,13 +7,14 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 class Locator
 {
     /**
-     * @var CachedReader
+     * @var Reader
      */
     private static $annotationReader;
 
@@ -31,7 +32,7 @@ class Locator
     }
 
     /**
-     * @return CachedReader
+     * @return Reader
      */
     public function getAnnotationReader()
     {
