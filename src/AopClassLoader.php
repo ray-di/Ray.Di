@@ -8,6 +8,9 @@ namespace Ray\Di;
 
 class AopClassLoader implements ClassLoaderInterface
 {
+    /**
+     * @param string $classDir
+     */
     public function register($classDir)
     {
         spl_autoload_register(

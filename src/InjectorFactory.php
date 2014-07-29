@@ -79,7 +79,7 @@ final class InjectorFactory
 
         if (count($modules) > 0) {
             $module = array_shift($modules);
-            if ($module instanceof CacheableModule) {
+            if ($cache instanceof Cache && $module instanceof CacheableModule) {
                 $module = $module->get($cache);
             }
             foreach ($modules as $extraModule) {

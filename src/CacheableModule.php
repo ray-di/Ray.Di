@@ -22,6 +22,11 @@ class CacheableModule extends AbstractModule
     private $moduleProvider;
 
     /**
+     * @var string
+     */
+    private $cacheKey;
+
+    /**
      * @param callable $moduleProvider
      * @param string   $key
      */
