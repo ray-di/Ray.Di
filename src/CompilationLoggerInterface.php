@@ -48,5 +48,4 @@ interface CompilationLoggerInterface extends LoggerInterface
      * @return bool
      */
     public function isSetMapRef($class);
-
 }
