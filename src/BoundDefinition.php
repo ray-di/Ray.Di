@@ -25,7 +25,7 @@ class BoundDefinition
      *
      * @var string
      */
-    public $interfaceClass;
+    public $interface;
 
     /**
      * @var array

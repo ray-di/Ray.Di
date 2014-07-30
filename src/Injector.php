@@ -222,25 +222,25 @@ class Injector implements InjectorInterface, \Serializable
         $module = $this->module;
         $bind = $module($definition->class, new $this->bind);
         /* @var $bind \Ray\Aop\Bind */
-        $object = $bind->hasBinding() ? $this->compiler->newInstance($definition->class, $params, $bind) : $refClass->newInstanceArgs($params);
+        $instance = $bind->hasBinding() ? $this->compiler->newInstance($definition->class, $params, $bind) : $refClass->newInstanceArgs($params);
 
         // do not call constructor twice. ever.
         unset($definition->setter['__construct']);
 
         // call setter methods
         foreach ($definition->setter as $method => $value) {
-            call_user_func_array([$object, $method], $value);
+            call_user_func_array([$instance, $method], $value);
         }
 
         // logger inject info
         if ($this->logger) {
-            $this->logger->log($definition->class, $params, $definition->setter, $object, $bind);
+            $this->logger->log($definition->class, $params, $definition->setter, $instance, $bind);
         }
 
-        // Object life cycle, Singleton, and Save cache
-        $this->postInject($object, $definition);
+        // object life cycle, store singleton instance.
+        $this->postInject($instance, $definition);
 
-        return $object;
+        return $instance;
     }
 
     /**
@@ -248,8 +248,6 @@ class Injector implements InjectorInterface, \Serializable
      *
      * @param object     $object
      * @param Definition $definition
-     * @param bool       $isSingleton
-     * @param string     $interfaceClass
      */
     private function postInject($object, BoundDefinition $definition)
     {
@@ -260,17 +258,15 @@ class Injector implements InjectorInterface, \Serializable
 
         // set singleton object
         if ($definition->isSingleton) {
-            $this->container->set($definition->interfaceClass, $object);
+            $this->container->set($definition->interface, $object);
         }
     }
 
     /**
      * Set object life cycle
      *
-     * @param object     $instance
-     * @param Definition $definition
-     *
-     * @return void
+     * @param object          $instance
+     * @param BoundDefinition $definition
      */
     private function setLifeCycle($instance, BoundDefinition $definition)
     {

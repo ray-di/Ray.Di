@@ -117,7 +117,7 @@ class BoundInstance implements BoundInstanceInterface
         $isAbstract = $this->isAbstract($class);
         list(, , $definition) = $this->config->fetch($class);
         $isSingleton = false;
-        $interfaceClass = '';
+        $interface = '';
         if ($isAbstract) {
             return $this->abstractBinding($class, $definition);
         }
@@ -129,7 +129,7 @@ class BoundInstance implements BoundInstanceInterface
             return true;
         }
         $this->bound = null;
-        $this->definition = $this->getBoundDefinition($class, $isSingleton, $interfaceClass);
+        $this->definition = $this->getBoundDefinition($class, $isSingleton, $interface);
 
         return false;
     }
@@ -153,9 +153,9 @@ class BoundInstance implements BoundInstanceInterface
 
             return true;
         }
-        list($class, $isSingleton, $interfaceClass) = $bound;
+        list($class, $isSingleton, $interface) = $bound;
         $this->bound = [];
-        $this->definition =  $this->getBoundDefinition($class, $isSingleton, $interfaceClass);
+        $this->definition =  $this->getBoundDefinition($class, $isSingleton, $interface);
 
         return false;
     }
@@ -163,11 +163,11 @@ class BoundInstance implements BoundInstanceInterface
     /**
      * @param string $class
      * @param bool   $isSingleton
-     * @param string $interfaceClass
+     * @param string $interface
      *
      * @return array
      */
-    private function getBoundDefinition($class, $isSingleton, $interfaceClass)
+    private function getBoundDefinition($class, $isSingleton, $interface)
     {
         $boundDefinition = new BoundDefinition;
         list($boundDefinition->params, $boundDefinition->setter, $definition) = $this->config->fetch($class);
@@ -178,7 +178,7 @@ class BoundInstance implements BoundInstanceInterface
             list($boundDefinition->params, $boundDefinition->setter) = $this->bindModule($boundDefinition->setter, $definition);
         }
         $boundDefinition->class = $class;
-        $boundDefinition->interfaceClass = $interfaceClass;
+        $boundDefinition->interface = $interface;
         $boundDefinition->postConstruct = $definition[Definition::POST_CONSTRUCT];
         $boundDefinition->preDestroy = $definition[Definition::PRE_DESTROY];
 
@@ -259,10 +259,10 @@ class BoundInstance implements BoundInstanceInterface
      */
     private function getBoundClassByInfo($class, $definition, $bindings, $toType)
     {
-        list($isSingleton, $interfaceClass) = $this->getBindingInfo($class, $definition, $bindings);
+        list($isSingleton, $interface) = $this->getBindingInfo($class, $definition, $bindings);
 
-        if ($isSingleton && $this->container->has($interfaceClass)) {
-            $object = $this->container->get($interfaceClass);
+        if ($isSingleton && $this->container->has($interface)) {
+            $object = $this->container->get($interface);
 
             return $object;
         }
@@ -275,28 +275,28 @@ class BoundInstance implements BoundInstanceInterface
             $class = $bindings[$class]['*']['to'][1];
         }
 
-        $boundInfo = [$class, $isSingleton, $interfaceClass];
+        $boundInfo = [$class, $isSingleton, $interface];
 
         return $boundInfo;
     }
 
     /**
-     * Return $isSingleton, $interfaceClass
+     * Return $isSingleton, $interface
      *
      * @param string       $class
      * @param \ArrayObject $definition
      * @param \ArrayObject $bindings
      *
-     * @return array [$isSingleton, $interfaceClass]
+     * @return array [$isSingleton, $interface]
      */
     private function getBindingInfo($class, $definition, $bindings)
     {
         $inType = isset($bindings[$class]['*'][AbstractModule::IN]) ? $bindings[$class]['*'][AbstractModule::IN] : null;
         $inType = is_array($inType) ? $inType[0] : $inType;
         $isSingleton = $inType === Scope::SINGLETON || $definition['Scope'] == Scope::SINGLETON;
-        $interfaceClass = $class;
+        $interface = $class;
 
-        return [$isSingleton, $interfaceClass];
+        return [$isSingleton, $interface];
 
     }
 
