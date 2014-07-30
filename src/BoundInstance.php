@@ -96,7 +96,7 @@ class BoundInstance implements BoundInstanceInterface
     }
 
     /**
-     * @return array
+     * @return BoundDefinition
      */
     public function getDefinition()
     {
@@ -169,16 +169,20 @@ class BoundInstance implements BoundInstanceInterface
      */
     private function getBoundDefinition($class, $isSingleton, $interfaceClass)
     {
-        list($config, $setter, $definition) = $this->config->fetch($class);
-        $isSingleton = $isSingleton || strcasecmp(Scope::SINGLETON, $definition[Definition::SCOPE]) === 0;
+        $boundDefinition = new BoundDefinition;
+        list($boundDefinition->params, $boundDefinition->setter, $definition) = $this->config->fetch($class);
+        $boundDefinition->isSingleton = $isSingleton || (strcasecmp(Scope::SINGLETON, $definition[Definition::SCOPE]) === 0);
         $hasDirectBinding = isset($this->module->bindings[$class]);
         /** @var $definition Definition */
         if ($definition->hasDefinition() || $hasDirectBinding) {
-            list($config, $setter) = $this->bindModule($setter, $definition);
+            list($boundDefinition->params, $boundDefinition->setter) = $this->bindModule($boundDefinition->setter, $definition);
         }
+        $boundDefinition->class = $class;
+        $boundDefinition->interfaceClass = $interfaceClass;
+        $boundDefinition->postConstruct = $definition[Definition::POST_CONSTRUCT];
+        $boundDefinition->preDestroy = $definition[Definition::PRE_DESTROY];
 
-        return [$class, $isSingleton, $interfaceClass, $config, $setter, $definition];
-
+        return $boundDefinition;
     }
 
     /**
