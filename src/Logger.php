@@ -31,21 +31,22 @@ class Logger implements LoggerInterface, \IteratorAggregate, \Serializable
     /**
      * logger injection information
      *
-     * @param string        $class
-     * @param array         $params
-     * @param array         $setter
-     * @param object        $object
-     * @param \Ray\Aop\Bind $bind
+     * @param BoundDefinition $definition
+     * @param array           $params
+     * @param array           $setter
+     * @param object          $object
+     * @param \Ray\Aop\Bind   $bind
+     * @param bool            $isSingleton
      */
-    public function log($class, array $params, array $setter, $object, Bind $bind)
+    public function log(BoundDefinition $definition, array $params, array $setter, $object, Bind $bind)
     {
-        $this->logs[] = [$class, $params, $setter, $object, $bind];
+        $this->logs[] = [$definition->class, $params, $setter, $object, $bind];
         $setterLog = [];
         foreach ($setter as $method => $methodParams) {
             $setterLog[] = $method . ':'. $this->getParamString((array) $methodParams);
         }
         $setter = $setter ? implode(' ', $setterLog) : '';
-        $logMessage = "class:{$class} $setter";
+        $logMessage = "class:{$definition->class} $setter";
         $this->logMessages[] = $logMessage;
     }
 

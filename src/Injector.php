@@ -234,7 +234,7 @@ class Injector implements InjectorInterface, \Serializable
 
         // logger inject info
         if ($this->logger) {
-            $this->logger->log($definition->class, $params, $definition->setter, $instance, $bind);
+            $this->logger->log($definition, $params, $definition->setter, $instance, $bind);
         }
 
         // object life cycle, store singleton instance.

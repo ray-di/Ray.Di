@@ -116,6 +116,7 @@ class BoundInstance implements BoundInstanceInterface
         $class = $this->removeLeadingBackSlash($class);
         $isAbstract = $this->isAbstract($class);
         list(, , $definition) = $this->config->fetch($class);
+        $d = (array)$definition;
         $isSingleton = false;
         $interface = '';
         if ($isAbstract) {
@@ -129,8 +130,8 @@ class BoundInstance implements BoundInstanceInterface
             return true;
         }
         $this->bound = null;
-        $this->definition = $this->getBoundDefinition($class, $isSingleton, $interface);
-
+        $this->definition = $this->getBoundDefinition($class, $isSingleton, $interface, $definition);
+        $d = (array)$this->definition;
         return false;
     }
 
@@ -167,7 +168,7 @@ class BoundInstance implements BoundInstanceInterface
      *
      * @return array
      */
-    private function getBoundDefinition($class, $isSingleton, $interface)
+    private function getBoundDefinition($class, $isSingleton, $interface, \ArrayObject $configDefinition = null)
     {
         $boundDefinition = new BoundDefinition;
         list($boundDefinition->params, $boundDefinition->setter, $definition) = $this->config->fetch($class);
@@ -181,6 +182,7 @@ class BoundInstance implements BoundInstanceInterface
         $boundDefinition->interface = $interface;
         $boundDefinition->postConstruct = $definition[Definition::POST_CONSTRUCT];
         $boundDefinition->preDestroy = $definition[Definition::PRE_DESTROY];
+        $boundDefinition->inject = $configDefinition[Definition::INJECT];
 
         return $boundDefinition;
     }
