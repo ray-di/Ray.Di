@@ -380,8 +380,8 @@ $ git clone git://github.com/koriym/Ray.Di.git
 $ cd Ray.Di
 $ composer install
 $ phpunit
-$ php doc/sample/00-newsletter.php
-$ php doc/sample/01-db/main.php
-$ cd doc/zf2-di-tests-clone/
+$ php docs/sample/00-newsletter.php
+$ php docs/sample/01-db/main.php
+$ cd docs/zf2-di-tests-clone/
 $ php runall.php
 ```
