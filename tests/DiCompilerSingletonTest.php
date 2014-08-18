@@ -215,4 +215,18 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
         $interceptor2 = $instance2->rayAopBind['getDb'][0];
         $this->assertSame(spl_object_hash($interceptor1), spl_object_hash($interceptor2));
     }
+
+    public function testInNamedSingletonInterface()
+    {
+        $moduleProvider = function () {return new Modules\SingletonNamedModule;};
+        $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+
+        $dbInstance1 =  $injector->getInstance('Ray\Di\Mock\RndDbNamedConsumer');
+        $dbInstance2 =  $injector->getInstance('Ray\Di\Mock\RndDbNamedConsumer');
+
+        $a = spl_object_hash($dbInstance1);
+        $b = spl_object_hash($dbInstance2);
+        $this->assertSame($a, $b);
+    }
+
 }

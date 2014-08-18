@@ -207,42 +207,40 @@ class Injector implements InjectorInterface, \Serializable
         }
 
         // get bound config
-        list($class, $isSingleton, $interfaceClass, $params, $setter, $definition) = $this->boundInstance->getDefinition();
+        $definition = $this->boundInstance->getDefinition();
 
         // be all parameters ready
-        $params = $this->boundInstance->bindConstruct($class, $params, $this->module);
+        $params = $this->boundInstance->bindConstruct($class, $definition->params, $this->module);
 
-        $refClass = new \ReflectionClass($class);
+        $refClass = new \ReflectionClass($definition->class);
 
         if ($refClass->isInterface()) {
-            return $this->getInstance($class);
+            return $this->getInstance($definition->class);
         }
 
         // weave aspect
         $module = $this->module;
-        $bind = $module($class, new $this->bind);
+        $bind = $module($definition->class, new $this->bind);
         /* @var $bind \Ray\Aop\Bind */
-
-        $object = $bind->hasBinding() ?
-            $this->compiler->newInstance($class, $params, $bind) : (new \ReflectionClass($class))->newInstanceArgs($params);
+        $instance = $bind->hasBinding() ? $this->compiler->newInstance($definition->class, $params, $bind) : $refClass->newInstanceArgs($params);
 
         // do not call constructor twice. ever.
-        unset($setter['__construct']);
+        unset($definition->setter['__construct']);
 
         // call setter methods
-        foreach ($setter as $method => $value) {
-            call_user_func_array([$object, $method], $value);
+        foreach ($definition->setter as $method => $value) {
+            call_user_func_array([$instance, $method], $value);
         }
 
         // logger inject info
         if ($this->logger) {
-            $this->logger->log($class, $params, $setter, $object, $bind);
+            $this->logger->log($definition, $params, $definition->setter, $instance, $bind);
         }
 
-        // Object life cycle, Singleton, and Save cache
-        $this->postInject($object, $definition, $isSingleton, $interfaceClass);
+        // object life cycle, store singleton instance.
+        $this->postInject($instance, $definition);
 
-        return $object;
+        return $instance;
     }
 
     /**
@@ -250,10 +248,8 @@ class Injector implements InjectorInterface, \Serializable
      *
      * @param object     $object
      * @param Definition $definition
-     * @param bool       $isSingleton
-     * @param string     $interfaceClass
      */
-    private function postInject($object, Definition $definition, $isSingleton, $interfaceClass)
+    private function postInject($object, BoundDefinition $definition)
     {
         // set life cycle
         if ($definition) {
@@ -261,27 +257,25 @@ class Injector implements InjectorInterface, \Serializable
         }
 
         // set singleton object
-        if ($isSingleton) {
-            $this->container->set($interfaceClass, $object);
+        if ($definition->isSingleton) {
+            $this->container->set($definition->interface, $object);
         }
     }
 
     /**
      * Set object life cycle
      *
-     * @param object     $instance
-     * @param Definition $definition
-     *
-     * @return void
+     * @param object          $instance
+     * @param BoundDefinition $definition
      */
-    private function setLifeCycle($instance, Definition $definition = null)
+    private function setLifeCycle($instance, BoundDefinition $definition)
     {
-        $postConstructMethod = $definition[Definition::POST_CONSTRUCT];
+        $postConstructMethod = $definition->postConstruct;
         if ($postConstructMethod) {
             call_user_func(array($instance, $postConstructMethod));
         }
-        if (!is_null($definition[Definition::PRE_DESTROY])) {
-            $this->preDestroyObjects->attach($instance, $definition[Definition::PRE_DESTROY]);
+        if (!is_null($definition->preDestroy)) {
+            $this->preDestroyObjects->attach($instance, $definition->preDestroy);
         }
 
     }

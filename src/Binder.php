@@ -268,7 +268,9 @@ final class Binder
         $instance = $provider->get();
         if ($this->logger) {
             $dependencyProvider = new DependencyProvider($provider, $instance);
-            $this->logger->log($target, [], [], $dependencyProvider, new Bind);
+            $definition = new BoundDefinition;
+            $definition->class = $target;
+            $this->logger->log($definition, [], [], $dependencyProvider, new Bind);
         }
 
         return $instance;

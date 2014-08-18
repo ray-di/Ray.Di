@@ -73,15 +73,15 @@ final class CompilationLogger implements CompilationLoggerInterface, InstanceInt
     /**
      * {@inheritdoc}
      */
-    public function log($class, array $params, array $setters, $instance, Bind $bind)
+    public function log(BoundDefinition $definition, array $params, array $setters, $instance, Bind $bind)
     {
         if ($instance instanceof DependencyProvider) {
             $this->buildProvider($instance);
 
             return;
         }
-        $this->logger->log($class, $params, $setters, $instance, $bind);
-        $this->build($class, $instance, $params, $setters);
+        $this->logger->log($definition, $params, $setters, $instance, $bind);
+        $this->build($definition->class, $instance, $params, $setters, $definition->isSingleton);
     }
 
     /**
@@ -171,15 +171,16 @@ final class CompilationLogger implements CompilationLoggerInterface, InstanceInt
      * @param object $instance
      * @param array  $params
      * @param array  $setters
+     * @param bool   $isSingleton
      */
-    private function build($class, $instance, array $params, array $setters)
+    private function build($class, $instance, array $params, array $setters, $isSingleton)
     {
         $params = $this->makeParamRef($params);
         foreach ($setters as &$methodPrams) {
             $methodPrams = $this->makeParamRef($methodPrams);
         }
 
-        $dependencyFactory = new DependencyFactory($instance, $params, $setters, $this);
+        $dependencyFactory = new DependencyFactory($instance, $params, $setters, $this, $isSingleton);
         list(,,$definition) = $this->config->fetch($class);
         // @PostConstruct
         $postConstructMethod = $definition['PostConstruct'];
