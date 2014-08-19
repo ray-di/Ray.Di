@@ -166,7 +166,7 @@ class BoundInstance implements BoundInstanceInterface
      * @param bool   $isSingleton
      * @param string $interface
      *
-     * @return array
+     * @return BoundDefinition
      */
     private function getBoundDefinition($class, $isSingleton, $interface, \ArrayObject $configDefinition = null)
     {

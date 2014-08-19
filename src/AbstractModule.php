@@ -8,7 +8,6 @@ namespace Ray\Di;
 
 use ArrayAccess;
 use ArrayObject;
-use Doctrine\Common\Annotations\AnnotationReader as Reader;
 use Doctrine\Common\Cache\Cache;
 use Ray\Aop\AbstractMatcher;
 use Ray\Aop\Bind;

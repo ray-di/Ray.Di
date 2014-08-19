@@ -253,7 +253,7 @@ class Injector implements InjectorInterface, \Serializable
      * Post inject procedure
      *
      * @param object     $object
-     * @param Definition $definition
+     * @param BoundDefinition $definition
      */
     private function postInject($object, BoundDefinition $definition)
     {

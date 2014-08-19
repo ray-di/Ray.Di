@@ -3,12 +3,10 @@
 namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
-use Ray\Aop\Matcher;
 
 final class InjectorFactory
 {

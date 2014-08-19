@@ -7,7 +7,6 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Cache\Cache;
-use Ray\Di\Exception\ModuleProvider;
 
 class CacheableModule extends AbstractModule
 {
