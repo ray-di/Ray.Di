@@ -9,7 +9,7 @@ namespace Ray\Di;
 /**
  * String for module
  */
-class ModuleStringer
+class ModuleStringer implements ModuleStringerInterface
 {
     /**
      * Return module information as string
