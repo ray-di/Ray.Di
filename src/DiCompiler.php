@@ -20,12 +20,12 @@ final class DiCompiler implements InstanceInterface, \Serializable
     private $classMap = [];
 
     /**
-     * @var InjectorInterface
+     * @var AbstractCompilationLogger
      */
     private $injector;
 
     /**
-     * @var CompilationLoggerInterface
+     * @var CompilationLogger
      */
     private $logger;
 
@@ -48,13 +48,13 @@ final class DiCompiler implements InstanceInterface, \Serializable
 
     /**
      * @param InjectorInterface          $injector
-     * @param CompilationLoggerInterface $logger
+     * @param AbstractCompilationLogger  $logger
      * @param Cache                      $cache
      * @param string                     $cacheKey
      */
     public function __construct(
         InjectorInterface $injector,
-        CompilationLoggerInterface $logger,
+        AbstractCompilationLogger $logger,
         Cache $cache,
         $cacheKey
     ) {

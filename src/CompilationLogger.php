@@ -11,7 +11,7 @@ use Aura\Di\ConfigInterface;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-final class CompilationLogger implements CompilationLoggerInterface, InstanceInterface, \Serializable
+final class CompilationLogger extends AbstractCompilationLogger
 {
     /**
      * @var LoggerInterface
