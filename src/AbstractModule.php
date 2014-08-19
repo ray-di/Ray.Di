@@ -201,7 +201,6 @@ abstract class AbstractModule implements ArrayAccess
         $module->activate();
         $this->bindings = $module->bindings;
         $this->pointcuts = $module->pointcuts;
-        $this->cache = (new Locator)->getCache();
     }
 
     /**
