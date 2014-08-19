@@ -52,4 +52,11 @@ class BoundDefinition
      * @var string
      */
     public $preDestroy;
+
+    /**
+     * Inject config
+     *
+     * @var array
+     */
+    public $inject;
 }
