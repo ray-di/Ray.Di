@@ -222,7 +222,8 @@ class Injector implements InjectorInterface, \Serializable
         $module = $this->module;
         $bind = $module($definition->class, new $this->bind);
         /* @var $bind \Ray\Aop\Bind */
-        $instance = $bind->hasBinding() ? $this->compiler->newInstance($definition->class, $params, $bind) : $refClass->newInstanceArgs($params);
+        $hasBinding = $bind->hasBinding();
+        $instance = $hasBinding ? $this->compiler->noBindNewInstance($definition->class, $params, $bind) : $refClass->newInstanceArgs($params);
 
         // do not call constructor twice. ever.
         unset($definition->setter['__construct']);
@@ -230,6 +231,11 @@ class Injector implements InjectorInterface, \Serializable
         // call setter methods
         foreach ($definition->setter as $method => $value) {
             call_user_func_array([$instance, $method], $value);
+        }
+
+        // attach interceptors
+        if ($hasBinding) {
+            $instance->rayAopBind = $bind;
         }
 
         // logger inject info

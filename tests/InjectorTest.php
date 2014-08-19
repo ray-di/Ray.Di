@@ -495,4 +495,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\Ray\Di\Mock\ConcreteClassWithoutConstructor', $instance->object->object);
     }
+
+    public function testWeaverDoesNotValidWhenInjection()
+    {
+        $this->injector->setModule(new Modules\SetterAopModule);
+        $instance = $this->injector->getInstance('Ray\Di\Definition\Basic');
+        $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
+    }
 }
