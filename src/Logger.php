@@ -36,7 +36,6 @@ class Logger implements LoggerInterface, \IteratorAggregate, \Serializable
      * @param array           $setter
      * @param object          $object
      * @param \Ray\Aop\Bind   $bind
-     * @param bool            $isSingleton
      */
     public function log(BoundDefinition $definition, array $params, array $setter, $object, Bind $bind)
     {

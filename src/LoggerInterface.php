@@ -21,7 +21,6 @@ interface LoggerInterface
      * @param array           $setter
      * @param object          $object
      * @param Bind            $bind
-     * @param bool            $isSingleton
      *
      * @return void
      */
