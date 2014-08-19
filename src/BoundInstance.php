@@ -40,7 +40,7 @@ class BoundInstance implements BoundInstanceInterface
     private $bound;
 
     /**
-     * @var array
+     * @var BoundDefinition
      */
     private $definition;
 

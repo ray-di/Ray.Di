@@ -77,7 +77,7 @@ class Config implements ConfigInterface
      *
      * $params[$class][$method] = [$param1varName, $param2varName ...]
      *
-     * @var array
+     * @var \ArrayObject
      */
     protected $methodReflect;
 

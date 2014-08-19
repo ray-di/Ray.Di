@@ -26,7 +26,7 @@ final class DependencyFactory implements ProviderInterface, \Serializable
     private $args = [];
 
     /**
-     * @var object
+     * @var mixed
      */
     private $instance;
 
@@ -109,6 +109,7 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         if ($instance instanceof ProviderInterface) {
             $instance = $instance->get();
         }
+
         $this->instance = $instance;
 
         // @PostConstruct
