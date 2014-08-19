@@ -75,8 +75,6 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         $this->setters = $setter;
         $this->logger = $logger;
         $this->isSingleton = $isSingleton;
-        error_log($this->class);
-        error_log($isSingleton);
     }
 
     /**
