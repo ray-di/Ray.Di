@@ -141,7 +141,7 @@ abstract class AbstractModule implements ArrayAccess
     /**
      * Pointcuts
      *
-     * @var array
+     * @var ArrayObject
      */
     public $pointcuts = [];
 
