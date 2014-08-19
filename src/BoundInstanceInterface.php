@@ -22,7 +22,7 @@ interface BoundInstanceInterface
     public function getBound();
 
     /**
-     * @return array
+     * @return BoundDefinition
      */
     public function getDefinition();
 }

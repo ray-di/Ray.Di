@@ -24,7 +24,7 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Container
      *
-     * @var \Ray\Di\Container
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -57,12 +57,12 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * Compiler(Aspect Weaver)
      *
-     * @var Compiler
+     * @var CompilerInterface
      */
     private $compiler;
 
     /**
-     * @var BoundInstance
+     * @var BoundInstanceInterface
      */
     public $boundInstance;
 
