@@ -118,7 +118,7 @@ Rayには`@Named`という文字列で`名前`を指定できるビルトイン�
 ```php
 /**
  *  @Inject
- *  @Named("checkout") 
+ *  @Named("checkout")
  */
 public RealBillingService(CreditCardProcessorInterface $processor)
 {
@@ -129,7 +129,7 @@ public RealBillingService(CreditCardProcessorInterface $processor)
 ```php
 /**
  *  @Inject
- *  @Named("processonr=checkout,subProcessor=backup") 
+ *  @Named("processonr=checkout,subProcessor=backup")
  */
 public RealBillingService(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)
 {
@@ -292,7 +292,7 @@ Performance boost
 
 インジェクト済みオブジェクトのキャッシュを行う**CacheInjector**、あるいはオブジェクトの生成を最適化する**DiCompiler**が利用可能です。
 
-Caching dependency-injected objects 
+Caching dependency-injected objects
 -----------------------------------
 
 インジェクト済みのキャッシュを保存して利用すればパフォーマンスは大きく向上します。
@@ -311,7 +311,7 @@ $app = $injector->getInsntance('ApplicationInterface');
 $app->run();
 ```
 
-Dependency-injection compiler 
+Dependency-injection compiler
 -----------------------------
 **DiCompiler**はオブジェクト生成方法や依存関係を**インジェクションのログ**から取り出しオブジェクトの再生成（コンパイル）を最適化します。ランタイムではアノテーション利用のコストがないのはもちろん、インジェクションの設定（Module）やインジェクターも使用しません。速度やメモリ消費の点で優れます。
 
@@ -363,11 +363,8 @@ Installation
 Ray.Diをインストールにするには [Composer](http://getcomposer.org)を利用する事を勧めます。
 
 ```bash
-# Install Composer
-$ curl -sS https://getcomposer.org/installer | php
-
 # Add Ray.Di as a dependency
-$ php composer.phar require ray/di:*
+$ composer require ray/di:*
 ```
 
 Testing Ray.Di
@@ -376,12 +373,8 @@ Testing Ray.Di
 インストールしてテストを行うにはこのようにします。
 
 ```bash
-$ git clone git://github.com/koriym/Ray.Di.git
+$ composer create-project ray/di Ray.Di 1.*
 $ cd Ray.Di
-$ composer install
 $ phpunit
-$ php docs/sample/00-newsletter.php
-$ php docs/sample/01-db/main.php
-$ cd docs/zf2-di-tests-clone/
-$ php runall.php
+$ php docs/run_sample.php
 ```

@@ -428,7 +428,7 @@ $app = $injector->getInsntance('ApplicationInterface');
 $app->run();
 ```
 
-Dependency-injection Compiler 
+Dependency-injection Compiler
 -----------------------------
 
 The **Di Compiler** speeds up object creation/compilation by taking the creation methods and dependency relationships from the injection logs. Excelling in memory usage and speed.
@@ -528,9 +528,6 @@ Installation
 The recommended way to install Ray.Di is through [Composer](https://github.com/composer/composer).
 
 ```bash
-# Install Composer
-$ curl -sS https://getcomposer.org/installer | php
-
 # Add Ray.Di as a dependency
 $ php composer.phar require ray/di:*
 ```
@@ -541,12 +538,8 @@ Testing Ray.Di
 Here's how to install Ray.Di from source and run the unit tests and samples.
 
 ```bash
-$ git clone git://github.com/koriym/Ray.Di.git
+$ composer create-project ray/di Ray.Di 1.*
 $ cd Ray.Di
-$ composer install
 $ phpunit
-$ php docs/sample/00-newsletter.php
-$ php docs/sample/01-db/main.php
-$ cd docs/zf2-di-tests-clone/
-$ php runall.php
+$ php docs/run_sample.php
 ```
