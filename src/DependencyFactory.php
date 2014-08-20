@@ -41,7 +41,11 @@ final class DependencyFactory implements ProviderInterface, \Serializable
     private $logger;
 
     /**
-     * @var DependencyFactory[]
+     * Method interceptors
+     *
+     * [$method1 => MethodInterceptors[], $method2 =>  MethodInterceptors[] ... ]
+     *
+     * @var array
      */
     private $interceptors;
 
@@ -159,7 +163,9 @@ final class DependencyFactory implements ProviderInterface, \Serializable
     {
         $interceptors = $this->interceptors;
         foreach ($interceptors as &$methodInterceptors) {
+            /** @var array $methodInterceptors */
             foreach ($methodInterceptors as &$methodInterceptor) {
+                /** @var $methodInterceptor \Ray\Aop\MethodInterceptor|DependencyReference $methodInterceptor */
                 if ($methodInterceptor instanceof DependencyReference) {
                     $methodInterceptor = $methodInterceptor->get();
                 }
