@@ -25,4 +25,13 @@ interface BoundInstanceInterface
      * @return BoundDefinition
      */
     public function getDefinition();
+
+    /**
+     * @param string         $class
+     * @param array          $params
+     * @param AbstractModule $module
+     *
+     * @return mixed
+     */
+    public function bindConstruct($class, array $params, AbstractModule $module);
 }

@@ -104,6 +104,15 @@ class BoundInstance implements BoundInstanceInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function bindConstruct($class, array $params, AbstractModule $module)
+    {
+        $params = $this->instantiateParams($params);
+        return $this->binder->bindConstructor($class, $params, $module);
+    }
+
+    /**
      * Return bound object or inject info
      *
      * @param string $class
@@ -384,19 +393,6 @@ class BoundInstance implements BoundInstanceInterface
         }
 
         return $setter;
-    }
-
-    /**
-     * @param string         $class
-     * @param array          $params
-     * @param AbstractModule $module
-     *
-     * @return array
-     */
-    public function bindConstruct($class, array $params, AbstractModule $module)
-    {
-        $params = $this->instantiateParams($params);
-        return $this->binder->bindConstructor($class, $params, $module);
     }
 
     /**
