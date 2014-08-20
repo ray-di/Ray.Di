@@ -20,12 +20,12 @@ final class DiCompiler implements InstanceInterface, \Serializable
     private $classMap = [];
 
     /**
-     * @var AbstractCompilationLogger
+     * @var InjectorInterface
      */
     private $injector;
 
     /**
-     * @var CompilationLogger
+     * @var AbstractCompilationLogger
      */
     private $logger;
 
