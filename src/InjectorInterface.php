@@ -49,4 +49,13 @@ interface InjectorInterface extends InstanceInterface
      * @return mixed
      */
     public function setLogger(LoggerInterface $logger);
+
+    /**
+     * Enable interceptor bind cache
+     *
+     * Interceptors must be cacheable (serializable)
+     *
+     * @return $this
+     */
+    public function enableBindCache();
 }

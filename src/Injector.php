@@ -250,6 +250,16 @@ class Injector implements InjectorInterface, \Serializable
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function enableBindCache()
+    {
+        AbstractModule::enableInvokeCache();
+
+        return $this;
+    }
+
+    /**
      * Post inject procedure
      *
      * @param object          $object
