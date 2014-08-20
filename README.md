@@ -542,4 +542,5 @@ $ composer create-project ray/di Ray.Di 1.*
 $ cd Ray.Di
 $ phpunit
 $ php docs/run_sample.php
+$ php docs/runtime/run.php
 ```
