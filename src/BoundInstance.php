@@ -133,7 +133,7 @@ class BoundInstance implements BoundInstanceInterface
         $bound = $this->getBoundClass($this->module->bindings, $definition, $class);
         if (is_object($bound)) {
             $this->bound =  $bound;
-            $this->definition = [];
+            $this->definition = null;
 
             return true;
         }
@@ -157,7 +157,7 @@ class BoundInstance implements BoundInstanceInterface
         }
         if (is_object($bound)) {
             $this->bound = $bound;
-            $this->definition = [];
+            $this->definition = null;
 
             return true;
         }
