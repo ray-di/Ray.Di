@@ -2,7 +2,7 @@
 /**
  * Run all example
  *
- * $ php runall.php
+ * $ php run_sample.php
  */
 $list = [
     'sample/01-linked-binding.php',
