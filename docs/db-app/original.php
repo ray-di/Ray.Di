@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/src.php';
+require __DIR__ . '/autoload.php';
 
 $pdo = new \PDO('sqlite::memory:', null, null);
 $user = new User($pdo);

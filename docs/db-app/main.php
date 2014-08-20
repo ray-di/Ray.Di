@@ -2,13 +2,12 @@
 
 use Ray\Di\Injector;
 
-require __DIR__ . '/src.php';
+require __DIR__ . '/autoload.php';
 
-// get weaved instance (Ray\Aop\Weaver)
-$di = Injector::create([new UserModule]);
-$user = $di->getInstance('User');
+$injector = Injector::create([new UserModule]);
+$user = $injector->getInstance('User');
 
-/* @var $user \Ray\Di\Sample\User */
+/* @var $user User */
 $user->createUser('Koriym', rand(18,35));
 $user->createUser('Bear', rand(18,35));
 $user->createUser('Yoshi', rand(18,35));

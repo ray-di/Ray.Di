@@ -1,29 +1,37 @@
-README sample
 
-$ cd 01-db
+original
 
-$ php original.php 
+```
+$ php original.php
+```
+
 ```php
 <?php
 array (
-  0 => 
+  0 =>
   array (
     'Name' => 'Koriym',
     'Age' => '19',
   ),
-  1 => 
+  1 =>
   array (
     'Name' => 'Bear',
     'Age' => '26',
   ),
-  2 => 
+  2 =>
   array (
     'Name' => 'Yoshi',
     'Age' => '33',
   ),
 )
 ```
+
+with aop
+
+```
 $ php main.php
+```
+
 ```php
 <?php
 begin Transaction["Koriym",18]
