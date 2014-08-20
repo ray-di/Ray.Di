@@ -364,7 +364,7 @@ Ray.Diをインストールにするには [Composer](http://getcomposer.org)を
 
 ```bash
 # Add Ray.Di as a dependency
-$ composer require ray/di:*
+$ composer require ray/di 1.*
 ```
 
 Testing Ray.Di

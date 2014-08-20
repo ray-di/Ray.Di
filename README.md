@@ -529,7 +529,7 @@ The recommended way to install Ray.Di is through [Composer](https://github.com/c
 
 ```bash
 # Add Ray.Di as a dependency
-$ php composer.phar require ray/di:*
+$ composer require ray/di 1.*
 ```
 
 Testing Ray.Di
