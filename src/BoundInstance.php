@@ -125,6 +125,7 @@ class BoundInstance implements BoundInstanceInterface
         $class = $this->removeLeadingBackSlash($class);
         $isAbstract = $this->isAbstract($class);
         list(, , $definition) = $this->config->fetch($class);
+        $d = (array)$definition;
         $isSingleton = false;
         $interface = '';
         if ($isAbstract) {
