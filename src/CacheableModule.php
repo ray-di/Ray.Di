@@ -48,7 +48,7 @@ class CacheableModule extends AbstractModule
         }
         $module = $this->moduleProvider;
         $module = $module();
-        $module->activate();
+        /** @var $module AbstractModule */
         $cache->save($this->key, $module);
 
         return $module;
