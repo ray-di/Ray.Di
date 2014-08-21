@@ -139,6 +139,7 @@ class BoundInstance implements BoundInstanceInterface
         }
         $this->bound = null;
         $this->definition = $this->getBoundDefinition($class, $isSingleton, $interface, $definition);
+
         return false;
     }
 
