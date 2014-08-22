@@ -33,14 +33,14 @@ class ModuleCacheModule extends AbstractModule
     private $tmpDir;
 
     /**
-     * @param callable                 $moduleProvider
-     * @param \Ray\Aop\AbstractMatcher $key
-     * @param ModuleStringerInterface  $tmpDir
+     * @param callable $moduleProvider
+     * @param string   $cacheKey
+     * @param string   $tmpDir
      */
-    public function __construct(callable $moduleProvider, $key, $tmpDir)
+    public function __construct(callable $moduleProvider, $cacheKey, $tmpDir)
     {
         $this->moduleProvider = $moduleProvider;
-        $this->cacheKey = $key;
+        $this->cacheKey = $cacheKey;
         $this->tmpDir = $tmpDir;
     }
 
