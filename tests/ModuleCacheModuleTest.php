@@ -39,4 +39,16 @@ class ModuleCacheModuleTest extends \PHPUnit_Framework_TestCase
         $db = $injector->getInstance('Ray\Di\Mock\DbInterface');
         $this->assertInstanceOf('Ray\Di\Mock\DbInterface', $db);
     }
+
+    public function testModuleCacheInjector()
+    {
+        $injector = ModuleCacheInjector::create(
+            function() {return new BasicModule;},
+            new ArrayCache,
+            'cache-key-' . __FUNCTION__,
+            $_ENV['TMP_DIR']
+        );
+        $db = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $this->assertInstanceOf('Ray\Di\Mock\DbInterface', $db);
+    }
 }
