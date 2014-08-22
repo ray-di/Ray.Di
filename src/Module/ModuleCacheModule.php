@@ -47,12 +47,13 @@ class ModuleCacheModule extends AbstractModule
     /**
      * @param Cache $cache
      *
-     * @return callable|
+     * @return AbstractModule
      */
     public function get(Cache $cache)
     {
         $module = $cache->fetch($this->key);
         if ($module) {
+
             return $module;
         }
         $module = $this->moduleProvider;
