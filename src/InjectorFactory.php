@@ -7,6 +7,7 @@ use Doctrine\Common\Cache\Cache;
 use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
+use Ray\Di\Module\CacheableModule;
 
 final class InjectorFactory
 {

@@ -5,6 +5,7 @@ namespace Ray\Di;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\Modules\BasicModule;
+use Ray\Di\Module\CacheableModule;
 
 class CacheableModuleTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +23,7 @@ class CacheableModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testNew()
     {
-        $this->assertInstanceOf('Ray\Di\CacheableModule', $this->cacheModule);
+        $this->assertInstanceOf('Ray\Di\Module\CacheableModule', $this->cacheModule);
     }
 
     public function testGet()
