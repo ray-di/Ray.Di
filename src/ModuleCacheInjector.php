@@ -11,7 +11,14 @@ use Ray\Di\Module\ModuleCacheModule;
 
 class ModuleCacheInjector
 {
-
+    /**
+     * @param callable $moduleProvider
+     * @param Cache    $cache
+     * @param string   $cacheKey
+     * @param string   $tmpDir
+     *
+     * @return Injector
+     */
     public static function create(callable $moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
         $module = new ModuleCacheModule($moduleProvider, $cacheKey, $tmpDir);
@@ -19,5 +26,4 @@ class ModuleCacheInjector
 
         return $injector;
     }
-
 }
