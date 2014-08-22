@@ -26,13 +26,20 @@ class CacheableModule extends AbstractModule
     private $cacheKey;
 
     /**
-     * @param callable $moduleProvider
-     * @param string   $key
+     * @var string
      */
-    public function __construct(callable $moduleProvider, $key)
+    private $tmpDir;
+
+    /**
+     * @param callable                 $moduleProvider
+     * @param \Ray\Aop\AbstractMatcher $key
+     * @param ModuleStringerInterface  $tmpDir
+     */
+    public function __construct(callable $moduleProvider, $key, $tmpDir)
     {
         $this->moduleProvider = $moduleProvider;
         $this->cacheKey = $key;
+        $this->tmpDir = $tmpDir;
     }
 
     /**
@@ -48,7 +55,8 @@ class CacheableModule extends AbstractModule
         }
         $module = $this->moduleProvider;
         $module = $module();
-        $module->activate();
+        $injector = (new InjectorFactory)->newInstance([$module], $cache, $this->tmpDir);
+        $module->activate($injector);
         $cache->save($this->key, $module);
 
         return $module;

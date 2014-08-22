@@ -17,7 +17,7 @@ class CacheableModuleTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $moduleProvider = function() {return new BasicModule;};
-        $this->cacheModule = new CacheableModule($moduleProvider, 'cache-key');
+        $this->cacheModule = new CacheableModule($moduleProvider, 'cache-key', $_ENV['TMP_DIR']);
     }
 
     public function testNew()
