@@ -7,7 +7,7 @@ use Doctrine\Common\Cache\Cache;
 use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
-use Ray\Di\Module\CacheableModule;
+use Ray\Di\Module\ModuleCacheModule;
 
 final class InjectorFactory
 {
@@ -78,7 +78,7 @@ final class InjectorFactory
 
         if (count($modules) > 0) {
             $module = array_shift($modules);
-            if ($cache instanceof Cache && $module instanceof CacheableModule) {
+            if ($cache instanceof Cache && $module instanceof ModuleCacheModule) {
                 $module = $module->get($cache);
             }
             foreach ($modules as $extraModule) {

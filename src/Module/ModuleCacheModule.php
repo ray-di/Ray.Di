@@ -10,7 +10,7 @@ use Doctrine\Common\Cache\Cache;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorFactory;
 
-class CacheableModule extends AbstractModule
+class ModuleCacheModule extends AbstractModule
 {
     /**
      * @var string

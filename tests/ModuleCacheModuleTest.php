@@ -5,9 +5,9 @@ namespace Ray\Di;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\Modules\BasicModule;
-use Ray\Di\Module\CacheableModule;
+use Ray\Di\Module\ModuleCacheModule;
 
-class CacheableModuleTest extends \PHPUnit_Framework_TestCase
+class ModuleCacheModuleTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Annotation
@@ -18,12 +18,12 @@ class CacheableModuleTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $moduleProvider = function() {return new BasicModule;};
-        $this->cacheModule = new CacheableModule($moduleProvider, 'cache-key', $_ENV['TMP_DIR']);
+        $this->cacheModule = new ModuleCacheModule($moduleProvider, 'cache-key', $_ENV['TMP_DIR']);
     }
 
     public function testNew()
     {
-        $this->assertInstanceOf('Ray\Di\Module\CacheableModule', $this->cacheModule);
+        $this->assertInstanceOf('Ray\Di\Module\ModuleCacheModule', $this->cacheModule);
     }
 
     public function testGet()
