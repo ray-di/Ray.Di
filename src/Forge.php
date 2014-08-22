@@ -9,7 +9,6 @@ namespace Ray\Di;
 use Aura\Di\ConfigInterface;
 use Aura\Di\Forge as AuraForge;
 use Aura\Di\ForgeInterface;
-use Ray\Di\Di\Inject;
 
 /**
  * Creates objects using reflection and the specified configuration values.
@@ -19,7 +18,7 @@ class Forge extends AuraForge implements ForgeInterface
     /**
      * @param ConfigInterface $config
      *
-     * @Inject
+     * @Ray\Di\Di\Inject
      */
     public function __construct(ConfigInterface $config)
     {

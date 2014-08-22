@@ -8,7 +8,6 @@ namespace Ray\Di;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Ray\Di\Exception\NoInjectorReturn;
-use Ray\Di\ClassLoaderInterface;
 
 /**
  * Injector with cache container.

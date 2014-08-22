@@ -9,7 +9,6 @@ namespace Ray\Di;
 use Aura\Di\Container as AuraContainer;
 use Aura\Di\ContainerInterface;
 use Aura\Di\ForgeInterface;
-use Ray\Di\Di\Inject;
 
 /**
  * Dependency injection container.
@@ -19,7 +18,7 @@ class Container extends AuraContainer implements ContainerInterface
     /**
      * @param ForgeInterface $forge
      *
-     * @Inject
+     * @Ray\Di\Di\Inject
      */
     public function __construct(ForgeInterface $forge)
     {

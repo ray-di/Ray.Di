@@ -15,9 +15,8 @@ use Ray\Aop\Compiler;
 use Ray\Aop\CompilerInterface;
 use Ray\Aop\Matcher;
 use ReflectionClass;
-use SplObjectStorage;
 use Serializable;
-use Ray\Di\Di\Inject;
+use SplObjectStorage;
 
 class Injector implements InjectorInterface, \Serializable
 {
@@ -74,7 +73,7 @@ class Injector implements InjectorInterface, \Serializable
      * @param LoggerInterface        $logger
      * @param BoundInstanceInterface $boundInstance
      *
-     * @Inject
+     * @Ray\Di\Di\Inject
      */
     public function __construct(
         ContainerInterface $container,
