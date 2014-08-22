@@ -5,6 +5,7 @@ namespace Ray\Di\Sample;
 use Ray\Di\Injector;
 use Doctrine\Common\Cache\FilesystemCache;
 use Ray\Di\CacheableModule;
+use Ray\Di\ModuleCacheInjector;
 
 
 require dirname(dirname(__DIR__)) . '/vendor/autoload.php';
@@ -14,10 +15,7 @@ $tmpDir = __DIR__ . '/tmp';
 $cache = new FilesystemCache($tmpDir);
 $cacheKey = 'cache-key';
 $moduleProvider = function() {return new MovieListerModule;};
-$module = new CacheableModule($moduleProvider, $cacheKey);
-
-$injector = Injector::create([$module], $cache, $tmpDir)->enableBindCache();
-//$injector = Injector::create([new MovieListerModule], $cache, $tmpDir)->enableBindCache();
+$injector = ModuleCacheInjector::create($moduleProvider, $cache, $cacheKey, $tmpDir);
 foreach (range(1, 1000) as $i) {
     $movieLister = $injector->getInstance('Ray\Di\Sample\MovieListerInterface');
 }

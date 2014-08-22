@@ -6,8 +6,8 @@
  */
 namespace Ray\Di\Module\Provider;
 
-use Ray\Aop\Compiler;
 use PHPParser_PrettyPrinter_Default;
+use Ray\Aop\Compiler;
 use Ray\Di\ProviderInterface;
 
 /**

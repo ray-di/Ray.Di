@@ -464,9 +464,10 @@ abstract class AbstractModule implements ArrayAccess
             return $bind;
         }
         /** @var $cache Cache */
-        $key = __METHOD__ . $class . (string) $bind;
+        $key = md5(get_class($this) . __METHOD__ . $class . (string) $bind);
         $bound = $cache->fetch($key);
         if ($bound) {
+
             return $bound;
         }
         $bind->bind($class, (array) $this->pointcuts);

@@ -6,8 +6,8 @@
  */
 namespace Ray\Di\Module\Provider;
 
-use Ray\Di\ProviderInterface;
 use Ray\Aop\Bind;
+use Ray\Di\ProviderInterface;
 
 class BindProvider implements ProviderInterface
 {

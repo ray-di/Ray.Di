@@ -4,7 +4,6 @@ namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
 use Aura\Di\ContainerInterface;
-use Aura\Di\Lazy;
 use Ray\Di\Definition;
 
 class BoundInstance implements BoundInstanceInterface

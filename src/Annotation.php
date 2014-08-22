@@ -11,7 +11,6 @@ use Ray\Di\Exception\NotReadable;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
-use Ray\Di\Di\Inject;
 
 /**
  * Annotation scanner.
@@ -61,7 +60,7 @@ class Annotation implements AnnotationInterface
      * @param Definition $definition
      * @param Reader     $reader
      *
-     * @Inject
+     * @Ray\Di\Di\Inject
      */
     public function __construct(Definition $definition, Reader $reader)
     {

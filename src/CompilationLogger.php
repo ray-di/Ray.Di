@@ -6,10 +6,8 @@
  */
 namespace Ray\Di;
 
-use Ray\Aop\Bind;
 use Aura\Di\ConfigInterface;
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
+use Ray\Aop\Bind;
 
 final class CompilationLogger extends AbstractCompilationLogger
 {
@@ -51,8 +49,8 @@ final class CompilationLogger extends AbstractCompilationLogger
     /**
      * @param LoggerInterface $logger
      *
-     * @Inject
-     * @Named("logger")
+     * @Ray\Di\Di\Inject
+     * @Ray\Di\Di\Named("logger")
      */
     public function __construct(LoggerInterface $logger)
     {
