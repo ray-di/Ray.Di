@@ -467,6 +467,7 @@ abstract class AbstractModule implements ArrayAccess
         $key = __METHOD__ . $class . (string) $bind;
         $bound = $cache->fetch($key);
         if ($bound) {
+            self::$invokeCache = false;
             return $bound;
         }
         $bind->bind($class, (array) $this->pointcuts);
