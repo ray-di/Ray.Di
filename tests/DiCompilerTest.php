@@ -13,6 +13,7 @@ use Doctrine\Common\Cache\FilesystemCache;
 use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
+use Ray\Di\Modules\BasicModule;
 
 require_once __DIR__ . '/Mock/Diary/diary_classes.php';
 
@@ -253,5 +254,13 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $DiCompiler->compile('Ray\Di\DiaryInterface');
         $instance = $DiCompiler->getInstance('Ray\Di\DiaryInterface');
         $this->assertInstanceOf('Ray\Di\Diary', $instance);
+    }
+
+    public function testNewInstancePerGetInstance()
+    {
+        $injector = DiCompiler::create(function() {return new BasicModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $db1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $db2 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $this->assertNotSame($db1, $db2);
     }
 }
