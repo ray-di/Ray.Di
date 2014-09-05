@@ -87,17 +87,18 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testSingleton()
     {
-        $this->injector->setModule(new DiarySingletonModule);
-        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
+        $compiler = DiCompiler::create(function(){return new DiarySingletonModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+//        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
 
-        $compileInjector = $DiCompiler->compile('Ray\Di\DiaryInterface');
+//        $compiler = Injector::create([new DiarySingletonModule]);
+//        $compiler->compile('Ray\Di\DiaryInterface');
 
-        $instance = $compileInjector->getInstance('Ray\Di\DiaryInterface');
+        $instance = $compiler->getInstance('Ray\Di\DiaryInterface');
         $dbHash1 = spl_object_hash($instance->log);
         $dbHash2 = spl_object_hash($instance->db->log);
         $this->assertSame($dbHash1, $dbHash2);
 
-        return $compileInjector;
+        return $compiler;
     }
 
     /**
