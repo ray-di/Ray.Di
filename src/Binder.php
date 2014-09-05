@@ -76,6 +76,37 @@ final class Binder
     }
 
     /**
+     * Return parameter using TO_CONSTRUCTOR
+     *
+     * 1) If parameter is provided, return. (check)
+     * 2) If parameter is NOT provided and TO_CONSTRUCTOR binding is available, return parameter with it
+     * 3) No binding found, throw exception.
+     *
+     * @param string         $class
+     * @param array          $params
+     * @param AbstractModule $module
+     *
+     * @return array
+     * @throws Exception\NotBound
+     */
+    public function bindConstructor($class, array $params, AbstractModule $module)
+    {
+        $ref = method_exists($class, '__construct') ? new \ReflectionMethod($class, '__construct') : false;
+        if ($ref === false) {
+            return $params;
+        }
+        $parameters = $ref->getParameters();
+        foreach ($parameters as $index => $parameter) {
+            /* @var $parameter \ReflectionParameter */
+            $params = $this->constructParams($params, $index, $parameter, $module, $class);
+        }
+
+        return $params;
+    }
+
+
+
+    /**
      * Extract parameter as defined
      *
      * @param array  $param
@@ -239,7 +270,7 @@ final class Binder
      *
      * @return mixed
      */
-    public function getInstanceWithContainer($in, $bindingToType, $target)
+    private function getInstanceWithContainer($in, $bindingToType, $target)
     {
         if ($in === Scope::SINGLETON && $this->container->has($target)) {
             $instance = $this->container->get($target);
@@ -295,35 +326,6 @@ final class Binder
         $e = (new Exception\NotBound($msg))->setModule($this->module);
 
         return $e;
-    }
-
-    /**
-     * Return parameter using TO_CONSTRUCTOR
-     *
-     * 1) If parameter is provided, return. (check)
-     * 2) If parameter is NOT provided and TO_CONSTRUCTOR binding is available, return parameter with it
-     * 3) No binding found, throw exception.
-     *
-     * @param string         $class
-     * @param array          $params
-     * @param AbstractModule $module
-     *
-     * @return array
-     * @throws Exception\NotBound
-     */
-    public function bindConstructor($class, array $params, AbstractModule $module)
-    {
-        $ref = method_exists($class, '__construct') ? new \ReflectionMethod($class, '__construct') : false;
-        if ($ref === false) {
-            return $params;
-        }
-        $parameters = $ref->getParameters();
-        foreach ($parameters as $index => $parameter) {
-            /* @var $parameter \ReflectionParameter */
-            $params = $this->constructParams($params, $index, $parameter, $module, $class);
-        }
-
-        return $params;
     }
 
     /**
