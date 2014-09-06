@@ -265,7 +265,8 @@ final class DependencyFactory implements ProviderInterface, \Serializable
                 $this->setters,
                 $this->logger,
                 $this->interceptors,
-                $this->postConstruct
+                $this->postConstruct,
+                $this->isSingleton
             ]
         );
 
@@ -281,7 +282,8 @@ final class DependencyFactory implements ProviderInterface, \Serializable
             $this->setters,
             $this->logger,
             $this->interceptors,
-            $this->postConstruct
+            $this->postConstruct,
+            $this->isSingleton
         ) = unserialize($serialized);
     }
 }

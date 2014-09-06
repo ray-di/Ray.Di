@@ -4,6 +4,7 @@ namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
 use Aura\Di\ContainerInterface;
+use Ray\Aop\ReflectiveMethodInvocation;
 use Ray\Di\Definition;
 
 class BoundInstance implements BoundInstanceInterface
@@ -54,6 +55,16 @@ class BoundInstance implements BoundInstanceInterface
     private $class;
 
     /**
+     * @var bool
+     */
+    private $isSingleton = false;
+
+    /**
+     * @var string
+     */
+    private $name = AbstractModule::NAME_UNSPECIFIED;
+
+    /**
      * @param InjectorInterface  $injector
      * @param ContainerInterface $container
      * @param AbstractModule     $module
@@ -77,11 +88,13 @@ class BoundInstance implements BoundInstanceInterface
     /**
      * @param string         $class
      * @param AbstractModule $module
+     * @param string         $name
      *
      * @return bool
      */
-    public function hasBound($class, AbstractModule $module)
+    public function hasBound($class, AbstractModule $module, $name = AbstractModule::NAME_UNSPECIFIED)
     {
+        $this->name = $name;
         $this->class = $class;
         return $this->binding($class, $module);
     }
@@ -99,6 +112,9 @@ class BoundInstance implements BoundInstanceInterface
      */
     public function getDefinition()
     {
+        if ($this->isSingleton) {
+            $this->definition->isSingleton = true;
+        }
         return $this->definition;
     }
 
@@ -124,7 +140,6 @@ class BoundInstance implements BoundInstanceInterface
         $class = $this->removeLeadingBackSlash($class);
         $isAbstract = $this->isAbstract($class);
         list(, , $definition) = $this->config->fetch($class);
-        $d = (array)$definition;
         $isSingleton = false;
         $interface = '';
         if ($isAbstract) {
@@ -187,6 +202,9 @@ class BoundInstance implements BoundInstanceInterface
             list($boundDefinition->params, $boundDefinition->setter) = $this->bindModule($boundDefinition->setter, $definition);
         }
         $boundDefinition->class = $class;
+        if ((new \ReflectionClass($class))->isSubclassOf('Ray\\Aop\\MethodInterceptor')) {
+            $boundDefinition->isSingleton = true;
+        }
         $boundDefinition->interface = $interface;
         $boundDefinition->postConstruct = $definition[Definition::POST_CONSTRUCT];
         $boundDefinition->preDestroy = $definition[Definition::PRE_DESTROY];
@@ -248,7 +266,7 @@ class BoundInstance implements BoundInstanceInterface
             return false;
         }
 
-        $toType = $bindings[$class]['*']['to'][0];
+        $toType = $bindings[$class][$this->name]['to'][0];
 
         if ($toType === AbstractModule::TO_PROVIDER) {
             $instance = $this->getToProviderBound($bindings, $class);
@@ -272,17 +290,18 @@ class BoundInstance implements BoundInstanceInterface
         list($isSingleton, $interface) = $this->getBindingInfo($class, $definition, $bindings);
 
         if ($isSingleton && $this->container->has($interface)) {
+            $this->isSingleton = true;
             $object = $this->container->get($interface);
 
             return $object;
         }
 
         if ($toType === AbstractModule::TO_INSTANCE) {
-            return $bindings[$class]['*']['to'][1];
+            return $bindings[$class][$this->name]['to'][1];
         }
 
         if ($toType === AbstractModule::TO_CLASS) {
-            $class = $bindings[$class]['*']['to'][1];
+            $class = $bindings[$class][$this->name]['to'][1];
         }
 
         $boundInfo = [$class, $isSingleton, $interface];
@@ -301,7 +320,7 @@ class BoundInstance implements BoundInstanceInterface
      */
     private function getBindingInfo($class, $definition, $bindings)
     {
-        $inType = isset($bindings[$class]['*'][AbstractModule::IN]) ? $bindings[$class]['*'][AbstractModule::IN] : null;
+        $inType = isset($bindings[$class][$this->name][AbstractModule::IN]) ? $bindings[$class][$this->name][AbstractModule::IN] : null;
         $inType = is_array($inType) ? $inType[0] : $inType;
         $isSingleton = $inType === Scope::SINGLETON || $definition['Scope'] == Scope::SINGLETON;
         $interface = $class;
@@ -320,7 +339,7 @@ class BoundInstance implements BoundInstanceInterface
      */
     private function isBound($bindings, $class)
     {
-        return (!isset($bindings[$class]) || !isset($bindings[$class]['*']['to'][0]));
+        return (!isset($bindings[$class]) || !isset($bindings[$class][$this->name]['to'][0]));
     }
 
     /**
@@ -331,9 +350,10 @@ class BoundInstance implements BoundInstanceInterface
      */
     private function getToProviderBound(\ArrayObject $bindings, $class)
     {
-        $provider = $bindings[$class]['*']['to'][1];
-        $in = isset($bindings[$class]['*']['in']) ? $bindings[$class]['*']['in'] : null;
-        if ($in !== Scope::SINGLETON) {
+        $provider = $bindings[$class][$this->name]['to'][1];
+        $in = isset($bindings[$class][$this->name]['in']) ? $bindings[$class][$this->name]['in'] : null;
+        $this->isSingleton = ($in === Scope::SINGLETON);
+        if (! $this->isSingleton) {
             $instance = $this->injector->getInstance($provider)->get();
 
             return $instance;

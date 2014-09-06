@@ -58,4 +58,14 @@ interface InjectorInterface extends InstanceInterface
      * @return $this
      */
     public function enableBindCache();
+
+    /**
+     * Return named binding instance
+     *
+     * @param $class
+     * @param $name
+     *
+     * @return mixed
+     */
+    public function getNamedInstance($class, $name);
 }

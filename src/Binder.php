@@ -122,10 +122,14 @@ final class Binder
         $binding = $hasTypeHint ? $this->module[$typeHint][$annotate] : false;
         $hasNoBound = $binding === false || isset($binding[AbstractModule::TO]) === false;
         if ($hasNoBound) {
+            // No bound parameter
             return $this->getNoBoundParam($param, $key);
         }
 
-        return $this->getParam($param, $binding);
+        // Bound in module
+        $param =  $this->getParam($param, $binding);
+
+        return $param;
     }
 
     /**
@@ -177,13 +181,13 @@ final class Binder
     private function extractNotBoundParam($typeHint, $bindingToType, $target)
     {
         if ($typeHint === '') {
-            $param = $this->getInstanceWithContainer(Scope::PROTOTYPE, $bindingToType, $target);
+            $instance = $this->getInstanceWithContainer(Scope::PROTOTYPE, $bindingToType, $target);
 
-            return $param;
+            return $instance;
         }
-        $param = $this->typeBound($typeHint, $bindingToType, $target);
+        $instance = $this->typeBound($typeHint, $bindingToType, $target);
 
-        return $param;
+        return $instance;
 
     }
 
@@ -200,6 +204,7 @@ final class Binder
     {
         list(, , $definition) = $this->config->fetch($typeHint);
         $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
+
         $param = $this->getInstanceWithContainer($in, $bindingToType, $target);
 
         return $param;
@@ -227,9 +232,9 @@ final class Binder
         }
 
         if (isset($binding[AbstractModule::IN])) {
-            $param = $this->getInstanceWithContainer($binding[AbstractModule::IN], $bindingToType, $target);
+            $instance = $this->injector->getNamedInstance($param[Definition::PARAM_TYPEHINT], $param[Definition::PARAM_ANNOTATE]);
 
-            return [$param, true];
+            return [$instance, true];
         }
 
         return [$param, false];
