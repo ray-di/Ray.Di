@@ -60,9 +60,8 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstance()
     {
-        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
-        $injector = $DiCompiler->compile('Ray\Di\DiaryInterface');
-        $instance = $injector->getInstance('Ray\Di\DiaryInterface');
+        $compiler = DiCompiler::create(function () {return new DiaryAopModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $instance = $compiler->getInstance('Ray\Di\DiaryInterface');
 
         /** @var $instance \Ray\Di\Diary */
         $this->assertInstanceOf('Ray\Di\Diary', $instance);
@@ -88,11 +87,6 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
     public function testSingleton()
     {
         $compiler = DiCompiler::create(function(){return new DiarySingletonModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
-//        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
-
-//        $compiler = Injector::create([new DiarySingletonModule]);
-//        $compiler->compile('Ray\Di\DiaryInterface');
-
         $instance = $compiler->getInstance('Ray\Di\DiaryInterface');
         $dbHash1 = spl_object_hash($instance->log);
         $dbHash2 = spl_object_hash($instance->db->log);
@@ -168,11 +162,9 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testAop()
     {
-
-        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, $this->tmpDir);
-        $compileInjector = $DiCompiler->compile('Ray\Di\DiaryInterface');
-        $compileInjector = unserialize(serialize($compileInjector));
-        $diary = $compileInjector->getInstance('Ray\Di\DiaryInterface');
+        $compiler = DiCompiler::create(function() {return new DiaryAopModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $compiler = unserialize(serialize($compiler));
+        $diary = $compiler->getInstance('Ray\Di\DiaryInterface');
         $result = $diary->returnSame('b');
         $this->assertSame('aop-b', $result);
 
