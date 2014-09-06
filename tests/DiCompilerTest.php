@@ -86,11 +86,11 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testSingleton()
     {
-        $compiler = DiCompiler::create(function(){return new DiarySingletonModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $compiler = DiCompiler::create(function () {return new DiarySingletonModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
         $instance = $compiler->getInstance('Ray\Di\DiaryInterface');
-        $dbHash1 = spl_object_hash($instance->log);
-        $dbHash2 = spl_object_hash($instance->db->log);
-        $this->assertSame($dbHash1, $dbHash2);
+        $hash1 = spl_object_hash($instance->log);
+        $hash2 = spl_object_hash($instance->db->log);
+        $this->assertSame($hash1, $hash2);
 
         return $compiler;
     }
@@ -162,7 +162,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testAop()
     {
-        $compiler = DiCompiler::create(function() {return new DiaryAopModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $compiler = DiCompiler::create(function () {return new DiaryAopModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
         $compiler = unserialize(serialize($compiler));
         $diary = $compiler->getInstance('Ray\Di\DiaryInterface');
         $result = $diary->returnSame('b');
@@ -251,7 +251,7 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testNewInstancePerGetInstance()
     {
-        $injector = DiCompiler::create(function() {return new BasicModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $injector = DiCompiler::create(function () {return new BasicModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
         $db1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
         $db2 = $injector->getInstance('Ray\Di\Mock\DbInterface');
         $this->assertNotSame($db1, $db2);
