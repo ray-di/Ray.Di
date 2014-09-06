@@ -27,5 +27,6 @@ class InjectorModule extends AbstractModule
         $this->bind('Ray\Aop\CompilerInterface')->toProvider(__NAMESPACE__ . '\Provider\CompilerProvider');
         $this->bind('Doctrine\Common\Annotations\Reader')->to('Doctrine\Common\Annotations\AnnotationReader')->in(Scope::SINGLETON);
         $this->bind('Ray\Di\AbstractModule')->to(__CLASS__);
+        $this->bind('Ray\Di\LoggerInterface')->to('Ray\Di\Logger')->in(Scope::SINGLETON);
     }
 }
