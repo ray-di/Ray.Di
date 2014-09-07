@@ -103,7 +103,7 @@ final class DependencyFactory implements ProviderInterface, \Serializable
     public function get()
     {
         // is singleton ?
-        if ($this->instance !== null) {
+        if ($this->instance !== null && $this->isSingleton === true) {
             return $this->instance;
         }
         // create object and inject dependencies
@@ -265,7 +265,8 @@ final class DependencyFactory implements ProviderInterface, \Serializable
                 $this->setters,
                 $this->logger,
                 $this->interceptors,
-                $this->postConstruct
+                $this->postConstruct,
+                $this->isSingleton
             ]
         );
 
@@ -281,7 +282,8 @@ final class DependencyFactory implements ProviderInterface, \Serializable
             $this->setters,
             $this->logger,
             $this->interceptors,
-            $this->postConstruct
+            $this->postConstruct,
+            $this->isSingleton
         ) = unserialize($serialized);
     }
 }

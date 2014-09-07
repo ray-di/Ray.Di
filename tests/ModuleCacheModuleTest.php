@@ -17,7 +17,7 @@ class ModuleCacheModuleTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $moduleProvider = function() {return new BasicModule;};
+        $moduleProvider = function () {return new BasicModule;};
         $this->cacheModule = new ModuleCacheModule($moduleProvider, 'cache-key', $_ENV['TMP_DIR']);
     }
 
@@ -43,7 +43,7 @@ class ModuleCacheModuleTest extends \PHPUnit_Framework_TestCase
     public function testModuleCacheInjector()
     {
         $injector = ModuleCacheInjector::create(
-            function() {return new BasicModule;},
+            function () {return new BasicModule;},
             new ArrayCache,
             'cache-key-' . __FUNCTION__,
             $_ENV['TMP_DIR']

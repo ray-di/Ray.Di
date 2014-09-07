@@ -61,6 +61,11 @@ class Injector implements InjectorInterface, \Serializable
     private $compiler;
 
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
      * @var BoundInstanceInterface
      */
     public $boundInstance;
@@ -198,10 +203,18 @@ class Injector implements InjectorInterface, \Serializable
      */
     public function getInstance($class)
     {
+        return $this->getNamedInstance($class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNamedInstance($class, $name = AbstractModule::NAME_UNSPECIFIED)
+    {
         // module activation
         $this->module->activate($this);
 
-        if ($this->boundInstance->hasBound($class, $this->module)) {
+        if ($this->boundInstance->hasBound($class, $this->module, $name)) {
             return $this->boundInstance->getBound();
         }
 
@@ -247,7 +260,6 @@ class Injector implements InjectorInterface, \Serializable
 
         return $instance;
     }
-
     /**
      * {@inheritdoc}
      */

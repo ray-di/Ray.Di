@@ -220,13 +220,12 @@ class DiCompilerSingletonTest extends InjectorSingletonTest
     {
         $moduleProvider = function () {return new Modules\SingletonNamedModule;};
         $injector = DiCompiler::create($moduleProvider, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
-
-        $dbInstance1 =  $injector->getInstance('Ray\Di\Mock\RndDbNamedConsumer');
-        $dbInstance2 =  $injector->getInstance('Ray\Di\Mock\RndDbNamedConsumer');
-
-        $a = spl_object_hash($dbInstance1);
-        $b = spl_object_hash($dbInstance2);
-        $this->assertSame($a, $b);
+        $injector = Injector::create([new Modules\SingletonNamedModule]);
+        $consumer1 =  $injector->getInstance('Ray\Di\Mock\RndDbNamedConsumer');
+        /** @var $consumer1 \Ray\Di\Mock\RndDbNamedConsumer */
+        $consumer2 =  $injector->getInstance('Ray\Di\Mock\RndDbNamedConsumer');
+        /** @var $consumer2 \Ray\Di\Mock\RndDbNamedConsumer */
+        $this->assertSame(spl_object_hash($consumer1->db1), spl_object_hash($consumer2->db1));
     }
 
 }

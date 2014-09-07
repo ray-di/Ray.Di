@@ -16,7 +16,7 @@ class RndDbNamedConsumer
      * @Inject
      * @Named("db")
      */
-    public function setDb1(RndDb $db1)
+    public function setDb1(DbInterface $db1)
     {
         $this->db1 = $db1;
     }

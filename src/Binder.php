@@ -76,6 +76,37 @@ final class Binder
     }
 
     /**
+     * Return parameter using TO_CONSTRUCTOR
+     *
+     * 1) If parameter is provided, return. (check)
+     * 2) If parameter is NOT provided and TO_CONSTRUCTOR binding is available, return parameter with it
+     * 3) No binding found, throw exception.
+     *
+     * @param string         $class
+     * @param array          $params
+     * @param AbstractModule $module
+     *
+     * @return array
+     * @throws Exception\NotBound
+     */
+    public function bindConstructor($class, array $params, AbstractModule $module)
+    {
+        $ref = method_exists($class, '__construct') ? new \ReflectionMethod($class, '__construct') : false;
+        if ($ref === false) {
+            return $params;
+        }
+        $parameters = $ref->getParameters();
+        foreach ($parameters as $index => $parameter) {
+            /* @var $parameter \ReflectionParameter */
+            $params = $this->constructParams($params, $index, $parameter, $module, $class);
+        }
+
+        return $params;
+    }
+
+
+
+    /**
      * Extract parameter as defined
      *
      * @param array  $param
@@ -91,10 +122,14 @@ final class Binder
         $binding = $hasTypeHint ? $this->module[$typeHint][$annotate] : false;
         $hasNoBound = $binding === false || isset($binding[AbstractModule::TO]) === false;
         if ($hasNoBound) {
+            // No bound parameter
             return $this->getNoBoundParam($param, $key);
         }
 
-        return $this->getParam($param, $binding);
+        // Bound in module
+        $param =  $this->getParam($param, $binding);
+
+        return $param;
     }
 
     /**
@@ -146,13 +181,13 @@ final class Binder
     private function extractNotBoundParam($typeHint, $bindingToType, $target)
     {
         if ($typeHint === '') {
-            $param = $this->getInstanceWithContainer(Scope::PROTOTYPE, $bindingToType, $target);
+            $instance = $this->getInstanceWithContainer(Scope::PROTOTYPE, $bindingToType, $target);
 
-            return $param;
+            return $instance;
         }
-        $param = $this->typeBound($typeHint, $bindingToType, $target);
+        $instance = $this->typeBound($typeHint, $bindingToType, $target);
 
-        return $param;
+        return $instance;
 
     }
 
@@ -169,10 +204,12 @@ final class Binder
     {
         list(, , $definition) = $this->config->fetch($typeHint);
         $in = isset($definition[Definition::SCOPE]) ? $definition[Definition::SCOPE] : Scope::PROTOTYPE;
+
         $param = $this->getInstanceWithContainer($in, $bindingToType, $target);
 
         return $param;
     }
+
     /**
      * Set param by instance bound(TO_INSTANCE, TO_CALLABLE, or already set in container)
      *
@@ -195,15 +232,32 @@ final class Binder
             return [$target(), true];
         }
 
-        if (isset($binding[AbstractModule::IN])) {
-            $param = $this->getInstanceWithContainer($binding[AbstractModule::IN], $bindingToType, $target);
+        if (isset($binding[AbstractModule::IN]) && $binding[AbstractModule::IN] === Scope::SINGLETON) {
 
-            return [$param, true];
+            return $this->getSingletonInstance($target, $bindingToType, $param);
         }
 
         return [$param, false];
     }
 
+    /**
+     * @param string $target
+     * @param string $bindingToType
+     * @param array  $param
+     *
+     * @return array
+     */
+    private function getSingletonInstance($target, $bindingToType, array $param)
+    {
+        if ($bindingToType === 'class') {
+            $instance = $this->injector->getNamedInstance($param[Definition::PARAM_TYPEHINT], $param[Definition::PARAM_ANNOTATE]);
+
+            return [$instance, true];
+        }
+        $instance = $this->getInstanceWithContainer(Scope::SINGLETON, AbstractModule::TO_PROVIDER, $target);
+
+        return [$instance, true];
+    }
 
     /**
      * JIT binding
@@ -239,7 +293,7 @@ final class Binder
      *
      * @return mixed
      */
-    public function getInstanceWithContainer($in, $bindingToType, $target)
+    private function getInstanceWithContainer($in, $bindingToType, $target)
     {
         if ($in === Scope::SINGLETON && $this->container->has($target)) {
             $instance = $this->container->get($target);
@@ -295,35 +349,6 @@ final class Binder
         $e = (new Exception\NotBound($msg))->setModule($this->module);
 
         return $e;
-    }
-
-    /**
-     * Return parameter using TO_CONSTRUCTOR
-     *
-     * 1) If parameter is provided, return. (check)
-     * 2) If parameter is NOT provided and TO_CONSTRUCTOR binding is available, return parameter with it
-     * 3) No binding found, throw exception.
-     *
-     * @param string         $class
-     * @param array          $params
-     * @param AbstractModule $module
-     *
-     * @return array
-     * @throws Exception\NotBound
-     */
-    public function bindConstructor($class, array $params, AbstractModule $module)
-    {
-        $ref = method_exists($class, '__construct') ? new \ReflectionMethod($class, '__construct') : false;
-        if ($ref === false) {
-            return $params;
-        }
-        $parameters = $ref->getParameters();
-        foreach ($parameters as $index => $parameter) {
-            /* @var $parameter \ReflectionParameter */
-            $params = $this->constructParams($params, $index, $parameter, $module, $class);
-        }
-
-        return $params;
     }
 
     /**
