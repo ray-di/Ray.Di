@@ -201,7 +201,7 @@ class Injector implements InjectorInterface, \Serializable
     /**
      * {@inheritdoc}
      */
-    public function getInstance($class, $name = AbstractModule::NAME_UNSPECIFIED)
+    public function getInstance($class)
     {
         return $this->getNamedInstance($class);
     }
