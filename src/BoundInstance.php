@@ -365,7 +365,6 @@ class BoundInstance implements BoundInstanceInterface
         $this->container->set($class, $instance);
 
         return $instance;
-
     }
 
     /**

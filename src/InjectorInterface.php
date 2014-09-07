@@ -62,8 +62,8 @@ interface InjectorInterface extends InstanceInterface
     /**
      * Return named binding instance
      *
-     * @param $class
-     * @param $name
+     * @param string $class
+     * @param string $name
      *
      * @return mixed
      */

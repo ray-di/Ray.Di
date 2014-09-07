@@ -243,7 +243,7 @@ final class Binder
     /**
      * @param string $target
      * @param string $bindingToType
-     * @param array $param
+     * @param array  $param
      *
      * @return array
      */
