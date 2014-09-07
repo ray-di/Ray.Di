@@ -209,6 +209,7 @@ final class Binder
 
         return $param;
     }
+
     /**
      * Set param by instance bound(TO_INSTANCE, TO_CALLABLE, or already set in container)
      *
@@ -231,15 +232,32 @@ final class Binder
             return [$target(), true];
         }
 
-        if (isset($binding[AbstractModule::IN])) {
-            $instance = $this->injector->getNamedInstance($param[Definition::PARAM_TYPEHINT], $param[Definition::PARAM_ANNOTATE]);
+        if (isset($binding[AbstractModule::IN]) && $binding[AbstractModule::IN] === Scope::SINGLETON) {
 
-            return [$instance, true];
+            return $this->getSingletonInstance($target, $bindingToType, $param);
         }
 
         return [$param, false];
     }
 
+    /**
+     * @param string $target
+     * @param string $bindingToType
+     * @param array $param
+     *
+     * @return array
+     */
+    private function getSingletonInstance($target, $bindingToType, array $param)
+    {
+        if ($bindingToType === 'class') {
+            $instance = $this->injector->getNamedInstance($param[Definition::PARAM_TYPEHINT], $param[Definition::PARAM_ANNOTATE]);
+
+            return [$instance, true];
+        }
+        $instance = $this->getInstanceWithContainer(Scope::SINGLETON, AbstractModule::TO_PROVIDER, $target);
+
+        return [$instance, true];
+    }
 
     /**
      * JIT binding
