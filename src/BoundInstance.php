@@ -206,6 +206,7 @@ class BoundInstance implements BoundInstanceInterface
             $boundDefinition->isSingleton = true;
         }
         $boundDefinition->interface = $interface;
+        $boundDefinition->name = $this->name;
         $boundDefinition->postConstruct = $definition[Definition::POST_CONSTRUCT];
         $boundDefinition->preDestroy = $definition[Definition::PRE_DESTROY];
         $boundDefinition->inject = $configDefinition[Definition::INJECT];

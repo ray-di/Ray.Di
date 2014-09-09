@@ -79,7 +79,7 @@ final class CompilationLogger extends AbstractCompilationLogger
             return;
         }
         $this->logger->log($definition, $params, $setters, $instance, $bind);
-        $this->build($definition->class, $instance, $params, $setters, $definition->isSingleton);
+        $this->build($definition, $instance, $params, $setters);
     }
 
     /**
@@ -171,15 +171,15 @@ final class CompilationLogger extends AbstractCompilationLogger
      * @param array  $setters
      * @param bool   $isSingleton
      */
-    private function build($class, $instance, array $params, array $setters, $isSingleton)
+    private function build(BoundDefinition $definition, $instance, array $params, array $setters)
     {
         $params = $this->makeParamRef($params);
         foreach ($setters as &$methodPrams) {
             $methodPrams = $this->makeParamRef($methodPrams);
         }
 
-        $dependencyFactory = new DependencyFactory($instance, $params, $setters, $this, $isSingleton);
-        list(,,$definition) = $this->config->fetch($class);
+        $dependencyFactory = new DependencyFactory($instance, $params, $setters, $this, $definition);
+        list(,,$definition) = $this->config->fetch($definition->class);
         // @PostConstruct
         $postConstructMethod = $definition['PostConstruct'];
         $dependencyFactory->setPostConstruct($postConstructMethod);

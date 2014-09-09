@@ -71,14 +71,14 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         array $args,
         array $setter,
         CompilationLogger $logger,
-        $isSingleton
+        BoundDefinition $definition
     ) {
         $this->class = get_class($object);
         $this->hash = $logger->getObjectHash($object);
         $this->args = $args;
         $this->setters = $setter;
         $this->logger = $logger;
-        $this->isSingleton = $isSingleton;
+        $this->isSingleton = $definition->isSingleton;
     }
 
     /**
