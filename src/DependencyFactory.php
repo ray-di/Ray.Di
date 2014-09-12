@@ -64,7 +64,7 @@ final class DependencyFactory implements ProviderInterface, \Serializable
      * @param array             $args
      * @param array             $setter
      * @param CompilationLogger $logger
-     * @param bool              $isSingleton
+     * @param BoundDefinition   $definition
      */
     public function __construct(
         $object,
@@ -74,7 +74,7 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         BoundDefinition $definition
     ) {
         $this->class = get_class($object);
-        $this->hash = $logger->getObjectHash($object);
+        $this->hash = $logger->getObjectIndex($object, $definition);
         $this->args = $args;
         $this->setters = $setter;
         $this->logger = $logger;

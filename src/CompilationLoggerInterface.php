@@ -33,7 +33,7 @@ interface CompilationLoggerInterface extends LoggerInterface
      *
      * @return string
      */
-    public function getObjectHash($object);
+    public function getObjectIndex($object, BoundDefinition $definition);
 
     /**
      * @param string $class

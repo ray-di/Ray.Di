@@ -150,13 +150,15 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($dbHash1, $dbHash2);
     }
 
-    /**
-     * @depends testSingleton
-     */
-    public function testProvider(DiCompiler $compileInjector)
+    public function testProvider()
     {
-        $compileInjector->compile('Ray\Di\WriterInterface');
-        $instance = $compileInjector->getInstance('Ray\Di\WriterInterface');
+        $compiler = DiCompiler::create(function () {return new DiarySingletonModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $instance = $compiler->getInstance('Ray\Di\DiaryInterface');
+        $hash1 = spl_object_hash($instance->log);
+        $hash2 = spl_object_hash($instance->db->log);
+        $this->assertSame($hash1, $hash2);
+        $compiler->compile('Ray\Di\WriterInterface');
+        $instance = $compiler->getInstance('Ray\Di\WriterInterface');
         $this->assertInstanceOf('Ray\Di\Writer', $instance);
     }
 
@@ -232,7 +234,10 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('string', (string) $DiCompiler);
     }
 
-    public function testCompileException()
+    /**
+     * @expectedException \Ray\Di\Exception\UnknownCompiledObject
+     */
+    public function testUnknownCompiledObjectException()
     {
         $this->injector->setModule(new DiaryAopErrorModule);
         $diCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);

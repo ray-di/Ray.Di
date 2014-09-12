@@ -3,6 +3,7 @@
 namespace Ray\Di;
 
 use Ray\Aop\Bind;
+use Ray\Di\Exception\UnknownCompiledObject;
 
 class TestObject
 {
@@ -83,6 +84,9 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('string', (string) $this->diLogger);
     }
 
+    /**
+     * @expectedException \Ray\Di\Exception\UnknownCompiledObject
+     */
     public function testLogObjectParam()
     {
         $stdObj = new \stdClass;
