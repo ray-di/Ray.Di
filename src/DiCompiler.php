@@ -102,6 +102,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
         $config = new Config(new Annotation(new Definition, new AnnotationReader));
         $logger = new CompilationLogger(new Logger);
         $logger->setConfig($config);
+        (new Locator)->setLogger($logger);
         $injector = self::createInjector($moduleProvider, $tmpDir, $config, $logger);
         $diCompiler = new DiCompiler($injector, $logger, $cache, $cacheKey);
 
