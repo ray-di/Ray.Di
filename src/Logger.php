@@ -101,4 +101,20 @@ class Logger implements LoggerInterface, \IteratorAggregate, \Serializable
 
         return '';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSingletonInstance($key, $instance)
+    {
+        // dummy method for di compiler singleton container
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSingletonKey(BoundDefinition $definition)
+    {
+        // dummy method for di compiler singleton container
+    }
 }

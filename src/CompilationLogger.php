@@ -23,6 +23,11 @@ final class CompilationLogger extends AbstractCompilationLogger
     private $dependencyContainer = [];
 
     /**
+     * @var array
+     */
+    private $singletonContainer = [];
+
+    /**
      * @var ConfigInterface
      */
     private $config;
@@ -120,6 +125,9 @@ final class CompilationLogger extends AbstractCompilationLogger
             return $this->objectStorage[$object];
         }
         if (is_null($definition)) {
+            if ($object instanceof \Ray\Di\Injector) {
+                return 'injector';
+            }
             throw new UnknownCompiledObject(get_class($object));
         }
         $hash = "{$definition->class}-{$definition->interface}-{$definition->name}";
@@ -274,6 +282,34 @@ final class CompilationLogger extends AbstractCompilationLogger
     {
         // error_log($log);
         $this->log .= $log . PHP_EOL;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSingletonInstance($key, $instance)
+    {
+        $this->singletonContainer[$key] = $instance;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSingletonInstance($key)
+    {
+        $instance = isset($this->singletonContainer[$key]) ? $this->singletonContainer[$key] : null;
+
+        return $instance;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSingletonKey(BoundDefinition $definition)
+    {
+        $key = "{$definition->class}-{$definition->interface}-{$definition->name}";
+
+        return $key;
     }
 
     /**

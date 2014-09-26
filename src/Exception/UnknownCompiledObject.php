@@ -6,8 +6,6 @@
  */
 namespace Ray\Di\Exception;
 
-use LogicException;
-
-class UnknownCompiledObject extends LogicException implements ExceptionInterface
+class UnknownCompiledObject extends Compile implements ExceptionInterface
 {
 }

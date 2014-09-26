@@ -11,6 +11,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Ray\Di\Exception\Compile;
+use Ray\Di\Exception\UnknownCompiledObject;
 
 final class DiCompiler implements InstanceInterface, \Serializable
 {
@@ -140,11 +141,18 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     public function compile($class)
     {
-        $this->injector->getInstance($class);
+        $instance = $this->injector->getInstance($class);
         $this->logger->setMapRef($class);
+        $definition = $this->injector->getDefinition();
+        /** @var $definition BoundDefinition */
+        if ($definition->isSingleton === true) {
+            $key = $this->logger->getSingletonKey($definition);
+            $this->logger->setSingletonInstance($key, $instance);
+        }
+
         $this->cache->save($this->cacheKey, $this);
 
-        return $this;
+        return $instance;
     }
 
     /**
@@ -175,9 +183,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
     {
         $diCompiler = $this->injector ? $this : call_user_func_array([$this, 'createInstance'], self::$args);
         /** @var $diCompiler DiCompiler */
-        $diCompiler->compile($class);
-        // log dependency container
-        $instance = $this->getInstanceSafe($diCompiler, $class);
+        $instance = $diCompiler->compile($class);
 
         return $instance;
     }
@@ -215,7 +221,6 @@ final class DiCompiler implements InstanceInterface, \Serializable
     {
           $serialized = serialize(
               [
-                $this->classMap,
                 $this->logger,
                 $this->cache,
                 $this->cacheKey
@@ -228,7 +233,6 @@ final class DiCompiler implements InstanceInterface, \Serializable
     public function unserialize($serialized)
     {
         list(
-            $this->classMap,
             $this->logger,
             $this->cache,
             $this->cacheKey

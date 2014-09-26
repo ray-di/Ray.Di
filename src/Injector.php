@@ -71,6 +71,11 @@ class Injector implements InjectorInterface, \Serializable
     public $boundInstance;
 
     /**
+     * @var BoundDefinition
+     */
+    private $definition;
+
+    /**
      * @param ContainerInterface     $container
      * @param AbstractModule         $module
      * @param BindInterface          $bind
@@ -219,7 +224,7 @@ class Injector implements InjectorInterface, \Serializable
         }
 
         // get bound config
-        $definition = $this->boundInstance->getDefinition();
+        $this->definition = $definition = $this->boundInstance->getDefinition();
 
         // be all parameters ready
         $params = $this->boundInstance->bindConstruct($class, $definition->params, $this->module);
@@ -260,6 +265,12 @@ class Injector implements InjectorInterface, \Serializable
 
         return $instance;
     }
+
+    public function getDefinition()
+    {
+        return $this->definition;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -285,6 +296,8 @@ class Injector implements InjectorInterface, \Serializable
 
         // set singleton object
         if ($definition->isSingleton) {
+            $key = $this->logger->getSingletonKey($definition);
+            $this->logger->setSingletonInstance($key, $object);
             $this->container->set($definition->interface, $object);
         }
     }
