@@ -61,7 +61,7 @@ class Locator
      *
      * @return $this
      */
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger = null)
     {
         self::$logger = $logger;
 

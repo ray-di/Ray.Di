@@ -78,6 +78,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     public static function create(callable $moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
+        (new Locator)->setLogger();
         self::$args = func_get_args();
         if ($cache->contains($cacheKey)) {
             (new AopClassLoader)->register($tmpDir);
