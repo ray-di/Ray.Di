@@ -76,6 +76,11 @@ class Injector implements InjectorInterface, \Serializable
     private $definition;
 
     /**
+     * @var DiCompiler
+     */
+    private $diCompiler;
+
+    /**
      * @param ContainerInterface     $container
      * @param AbstractModule         $module
      * @param BindInterface          $bind
@@ -176,6 +181,11 @@ class Injector implements InjectorInterface, \Serializable
         $this->logger = $logger;
     }
 
+    public function setDiCompiler(DiCompiler $diCompiler)
+    {
+        $this->diCompiler = $diCompiler;
+    }
+
     /**
      * Return aop generated file path
      *
@@ -226,6 +236,13 @@ class Injector implements InjectorInterface, \Serializable
         // get bound config
         $this->definition = $definition = $this->boundInstance->getDefinition();
 
+        // compiled ?
+        $instance = $this->getCompiledDependency($definition);
+        if ($instance) {
+            return $instance;
+        }
+
+
         // be all parameters ready
         $params = $this->boundInstance->bindConstruct($class, $definition->params, $this->module);
 
@@ -264,6 +281,17 @@ class Injector implements InjectorInterface, \Serializable
         $this->postInject($instance, $definition);
 
         return $instance;
+    }
+
+    public function getCompiledDependency(BoundDefinition $definition)
+    {
+        if ($this->logger instanceof CompilationLogger) {
+            $instance = $this->logger->getCompiledInstance($definition);
+
+            return $instance;
+        }
+
+        return null;
     }
 
     public function getDefinition()

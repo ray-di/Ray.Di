@@ -48,4 +48,12 @@ interface CompilationLoggerInterface extends LoggerInterface
      * @return bool
      */
     public function isSetMapRef($class);
+
+
+    /**
+     * @param Definition $definition
+     *
+     * @return mixed
+     */
+    public function getCompiledInstance(BoundDefinition $definition);
 }

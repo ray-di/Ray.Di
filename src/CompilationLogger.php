@@ -8,6 +8,7 @@ namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
 use Ray\Aop\Bind;
+use Ray\Di\Exception\Compile;
 use Ray\Di\Exception\UnknownCompiledObject;
 
 final class CompilationLogger extends AbstractCompilationLogger
@@ -125,26 +126,41 @@ final class CompilationLogger extends AbstractCompilationLogger
             return $this->objectStorage[$object];
         }
         if (is_null($definition)) {
-            if ($object instanceof \Ray\Di\Injector) {
-                return 'injector';
-            }
             throw new UnknownCompiledObject(get_class($object));
         }
-        $hash = "{$definition->class}-{$definition->interface}-{$definition->name}";
-        $this->objectStorage[$object] = $hash;
+        $index = $this->getDefinitionIndex($definition);
+        $this->objectStorage[$object] = $index;
         // object hash logging for debug
         $shortHash = function ($data, $algo = 'CRC32') {
             return strtr(rtrim(base64_encode(pack('H*', sprintf('%u', $algo($data)))), '='), '+/', '-_');
         };
         $log = sprintf(
             'ray/di.install ref:%s class:%s hash:%s',
-            $hash,
+            $index,
             get_class($object),
             $shortHash(spl_object_hash($object))
         );
         $this->errorLog($log);
 
-        return $hash;
+        return $index;
+    }
+
+    /**
+     * @param BoundDefinition $definition
+     *
+     * @return mixed|null|object
+     */
+    public function getCompiledInstance(BoundDefinition $definition)
+    {
+        $index = $this->getDefinitionIndex($definition);
+        if (! isset($this->dependencyContainer[$index])) {
+
+            return null;
+        }
+        $instance = $this->newInstance($index);
+        $this->getObjectIndex($instance, $definition);
+
+        return $instance;
     }
 
     /**
@@ -170,6 +186,18 @@ final class CompilationLogger extends AbstractCompilationLogger
     public function isSetMapRef($class)
     {
         return isset($this->classMap[$class]);
+    }
+
+    /**
+     * @param BoundDefinition $definition
+     *
+     * @return string
+     */
+    private function getDefinitionIndex(BoundDefinition $definition)
+    {
+        $index = "{$definition->class}-{$definition->interface}-{$definition->name}";
+
+        return $index;
     }
 
     /**
@@ -331,7 +359,9 @@ final class CompilationLogger extends AbstractCompilationLogger
         $serialized = serialize(
             [
                 $this->classMap,
-                $this->dependencyContainer
+                $this->dependencyContainer,
+                $this->logger,
+                $this->config
             ]
         );
 
@@ -342,7 +372,10 @@ final class CompilationLogger extends AbstractCompilationLogger
     {
         list(
             $this->classMap,
-            $this->dependencyContainer
+            $this->dependencyContainer,
+            $this->logger,
+            $this->config
         ) = unserialize($serialized);
+        $this->objectStorage = new \SplObjectStorage;
     }
 }

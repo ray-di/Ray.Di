@@ -101,11 +101,14 @@ final class DiCompiler implements InstanceInterface, \Serializable
     private static function createInstance($moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
         $config = new Config(new Annotation(new Definition, new AnnotationReader));
-        $logger = new CompilationLogger(new Logger);
+        $logger = (new Locator)->getLogger();
+        if (! $logger) {
+            $logger = new CompilationLogger(new Logger);
+        }
         $logger->setConfig($config);
-        (new Locator)->setLogger($logger);
         $injector = self::createInjector($moduleProvider, $tmpDir, $config, $logger);
         $diCompiler = new DiCompiler($injector, $logger, $cache, $cacheKey);
+        $injector->setDiCompiler($diCompiler);
 
         return $diCompiler;
     }
@@ -175,14 +178,25 @@ final class DiCompiler implements InstanceInterface, \Serializable
     }
 
     /**
+     * @param CompilationLogger $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        $this->injector->setLogger($logger);
+    }
+
+    /**
      * @param string $class
      *
      * @return object
      */
     private function recompile($class)
     {
+        if ($this->logger) {
+            (new Locator)->setLogger($this->logger);
+        }
         $diCompiler = $this->injector ? $this : call_user_func_array([$this, 'createInstance'], self::$args);
-        /** @var $diCompiler DiCompiler */
         $instance = $diCompiler->compile($class);
 
         return $instance;
