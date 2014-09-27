@@ -118,11 +118,6 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         // create object and inject dependencies
         $instance = $this->newInstance();
 
-        // provider ?
-        if ($instance instanceof ProviderInterface) {
-            $instance = $instance->get();
-        }
-
         $this->instance = $instance;
 
         // @PostConstruct

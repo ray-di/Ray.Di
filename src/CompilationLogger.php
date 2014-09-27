@@ -113,7 +113,12 @@ final class CompilationLogger extends AbstractCompilationLogger
             throw new Exception\Compile($ref);
         }
 
-        return $this->dependencyContainer[$ref]->get();
+        $instance = $this->dependencyContainer[$ref]->get();
+        if ($instance instanceof ProviderInterface) {
+            $instance = $instance->get();
+        }
+
+        return $instance;
     }
 
 
@@ -157,7 +162,7 @@ final class CompilationLogger extends AbstractCompilationLogger
 
             return null;
         }
-        $instance = $this->newInstance($index);
+        $instance = $this->dependencyContainer[$index]->get();
         $this->getObjectIndex($instance, $definition);
 
         return $instance;
