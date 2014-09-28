@@ -218,10 +218,12 @@ final class DiCompiler implements InstanceInterface, \Serializable
         try {
             $instance = $injector->getInstance($class);
         } catch (Compile $e) {
+            // @codeCoverageIgnoreStart
             error_log(sprintf('ray/di.retry class:%s catch:%s exception:%s', $class, __METHOD__, (string) $e));
             list($provider, $tmpDir) = [self::$args[0], self::$args[3]];
             $injector = self::createInjector($provider, $tmpDir);
             $instance = $injector->getInstance($class);
+            // @codeCoverageIgnoreEnd
         }
 
         return $instance;

@@ -3,7 +3,6 @@
 namespace Ray\Di;
 
 use Ray\Aop\Bind;
-use Ray\Di\Exception\UnknownCompiledObject;
 
 class TestObject
 {
@@ -35,11 +34,11 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var LoggerInterface
      */
-    protected $diLogger;
+    protected $compilationLogger;
 
     protected function setUp()
     {
-        $this->diLogger = new Logger;
+        $this->compilationLogger = new Logger;
     }
 
     protected function tearDown()
@@ -48,7 +47,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 
     public function testNew()
     {
-        $this->assertInstanceOf('Ray\Di\Logger', $this->diLogger);
+        $this->assertInstanceOf('Ray\Di\Logger', $this->compilationLogger);
     }
 
     public function testLog()
@@ -58,8 +57,8 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $definition = new BoundDefinition;
         $definition->class = 'Ray\Di\Mock\Db';
-        $this->diLogger->log($definition, $params, $setter, $object, new Bind);
-        $this->assertInternalType('string', (string) $this->diLogger);
+        $this->compilationLogger->log($definition, $params, $setter, $object, new Bind);
+        $this->assertInternalType('string', (string) $this->compilationLogger);
     }
 
     public function testLogCallableParam()
@@ -69,8 +68,8 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $definition = new BoundDefinition;
         $definition->class = 'Ray\Di\Mock\Db';
-        $this->diLogger->log($definition, $params, $setter, $object, new Bind);
-        $this->assertInternalType('string', (string) $this->diLogger);
+        $this->compilationLogger->log($definition, $params, $setter, $object, new Bind);
+        $this->assertInternalType('string', (string) $this->compilationLogger);
     }
 
     public function testLogArrayParam()
@@ -80,27 +79,8 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
         $definition = new BoundDefinition;
         $definition->class = 'Ray\Di\Mock\Db';
-        $this->diLogger->log($definition, $params, $setter, $object, new Bind);
-        $this->assertInternalType('string', (string) $this->diLogger);
-    }
-
-    /**
-     * @expectedException \Ray\Di\Exception\UnknownCompiledObject
-     */
-    public function testLogObjectParam()
-    {
-        $stdObj = new \stdClass;
-        $params = [1, $stdObj];
-        $setter = ['setA' => [null], 'setB' => [null]];
-        $object = (new \ReflectionClass(__NAMESPACE__ . '\TestObject'))->newInstanceArgs($params);
-        $diLogger = $this->diLogger;
-        $definition = new BoundDefinition;
-        $definition->class = 'Ray\Di\Mock\Db';
-        $this->diLogger->log($definition, $params, $setter, $object, new Bind);
-        $definition = new BoundDefinition;
-        $definition->class = 'Ray\Di\Mock\Db';
-        $diLogger->log($definition, $params, $setter, $object, new Bind);
-        $this->assertSame((string) $diLogger, (string) $this->diLogger);
+        $this->compilationLogger->log($definition, $params, $setter, $object, new Bind);
+        $this->assertInternalType('string', (string) $this->compilationLogger);
     }
 
     public function testSerialize()
@@ -108,8 +88,8 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $unserializableObject = new TestObject(function () {}, new \PDO('sqlite::memory:'));
         $definition = new BoundDefinition;
         $definition->class = 'Ray\Di\Mock\Db';
-        $this->diLogger->log($definition, [], [], $unserializableObject, new Bind);
-        $serialized = serialize($this->diLogger);
+        $this->compilationLogger->log($definition, [], [], $unserializableObject, new Bind);
+        $serialized = serialize($this->compilationLogger);
         $this->assertInternalType('string', $serialized);
     }
 
@@ -118,10 +98,10 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $unserializableObject = new TestObject(function () {}, new \PDO('sqlite::memory:'));
         $definition = new BoundDefinition;
         $definition->class = 'Ray\Di\Mock\Db';
-        $this->diLogger->log($definition, [], [], $unserializableObject, new Bind);
-        $unSerialized = unserialize(serialize($this->diLogger));
+        $this->compilationLogger->log($definition, [], [], $unserializableObject, new Bind);
+        $unSerialized = unserialize(serialize($this->compilationLogger));
         /** @var Logger $unSerialized */
 
-        $this->assertInstanceOf(get_class($this->diLogger), $unSerialized);
+        $this->assertInstanceOf(get_class($this->compilationLogger), $unSerialized);
     }
 }

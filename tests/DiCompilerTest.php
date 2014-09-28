@@ -261,4 +261,10 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $db2 = $injector->getInstance('Ray\Di\Mock\DbInterface');
         $this->assertNotSame($db1, $db2);
     }
+
+    public function testSetLogger()
+    {
+        $compiler = DiCompiler::create(function () {return new DiaryAopModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $compiler->setLogger(new CompilationLogger(new Logger));
+    }
 }
