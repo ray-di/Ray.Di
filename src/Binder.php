@@ -318,10 +318,6 @@ final class Binder
     private function getProvidedInstance($target)
     {
         $provider = $this->injector->getInstance($target);
-        if (! $provider instanceof ProviderInterface) {
-
-            return $provider;
-        }
         /** @var $provider ProviderInterface */
         $instance = $provider->get();
         if ($this->logger) {
