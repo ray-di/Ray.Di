@@ -163,7 +163,7 @@ final class CompilationLogger extends AbstractCompilationLogger
             return null;
         }
         $instance = $this->dependencyContainer[$index]->get();
-        $this->getObjectIndex($instance, $definition);
+        $this->lastDependencyFactoryIndex = $this->getObjectIndex($instance, $definition);
 
         return $instance;
     }
