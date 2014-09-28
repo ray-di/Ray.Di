@@ -278,6 +278,11 @@ class Injector implements InjectorInterface, \Serializable
         return $instance;
     }
 
+    /**
+     * @param BoundDefinition $definition
+     *
+     * @return mixed|null|object
+     */
     public function getCompiledDependency(BoundDefinition $definition)
     {
         if ($this->logger instanceof CompilationLogger) {

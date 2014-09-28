@@ -27,12 +27,17 @@ interface LoggerInterface
     public function log(BoundDefinition $definition, array $params, array $setter, $object, Bind $bind);
 
     /**
-     * @param BoundDefinition $definition
-     * @param                 $instance
+     * @param string $key
+     * @param object $instance
      *
      * @return mixed
      */
     public function setSingletonInstance($key, $instance);
 
+    /**
+     * @param BoundDefinition $definition
+     *
+     * @return string
+     */
     public function getSingletonKey(BoundDefinition $definition);
 }
