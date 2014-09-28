@@ -82,9 +82,4 @@ class Locator
         self::$annotationReader = null;
         self::$logger = null;
     }
-
-    function __call($name, $arguments)
-    {
-        // TODO: Implement __call() method.
-    }
 }

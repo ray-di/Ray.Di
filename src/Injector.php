@@ -61,11 +61,6 @@ class Injector implements InjectorInterface, \Serializable
     private $compiler;
 
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
      * @var BoundInstanceInterface
      */
     public $boundInstance;
