@@ -13,16 +13,13 @@
     "authors": [
         {
             "name": "Akihito Koriyama",
-            "email": "akihito.koriyama@gmail.com",
-            "role": "Lead"
+            "email": "akihito.koriyama@gmail.com"
         }
     ],
     "require": {
         "php": ">=5.4.0",
-        "doctrine/annotations": "~1.1",
         "doctrine/cache": "~1.3",
-        "nikic/php-parser": "~0.9",
-        "ray/aop": "~1.2",
+        "ray/aop": "~1.3",
         "aura/di": "~1.0"
     },
     "autoload": {

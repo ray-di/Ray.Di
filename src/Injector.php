@@ -119,7 +119,7 @@ class Injector implements InjectorInterface, \Serializable
 
     /**
      * Return new injector
-     * 
+     *
      * @param array $modules
      * @param Cache $cache
      * @param null  $tmdDir
