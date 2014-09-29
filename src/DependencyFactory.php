@@ -60,25 +60,32 @@ final class DependencyFactory implements ProviderInterface, \Serializable
     private $isSingleton;
 
     /**
+     * @var string
+     */
+    private $singletonContainerKey;
+
+
+    /**
      * @param object            $object
      * @param array             $args
      * @param array             $setter
      * @param CompilationLogger $logger
-     * @param bool              $isSingleton
+     * @param BoundDefinition   $definition
      */
     public function __construct(
         $object,
         array $args,
         array $setter,
         CompilationLogger $logger,
-        $isSingleton
+        BoundDefinition $definition
     ) {
         $this->class = get_class($object);
-        $this->hash = $logger->getObjectHash($object);
+        $this->hash = $logger->getObjectIndex($object, $definition);
         $this->args = $args;
         $this->setters = $setter;
         $this->logger = $logger;
-        $this->isSingleton = $isSingleton;
+        $this->isSingleton = $definition->isSingleton;
+        $this->singletonContainerKey = $this->logger->getSingletonKey($definition);
     }
 
     /**
@@ -103,16 +110,13 @@ final class DependencyFactory implements ProviderInterface, \Serializable
     public function get()
     {
         // is singleton ?
-        if ($this->instance !== null) {
-            return $this->instance;
+        $instance = ($this->isSingleton === true) ? $this->logger->getSingletonInstance($this->singletonContainerKey) : null;
+        if ($instance) {
+            return $instance;
         }
+
         // create object and inject dependencies
         $instance = $this->newInstance();
-
-        // provider ?
-        if ($instance instanceof ProviderInterface) {
-            $instance = $instance->get();
-        }
 
         $this->instance = $instance;
 
@@ -123,6 +127,10 @@ final class DependencyFactory implements ProviderInterface, \Serializable
         // interceptor ?
         if ($this->interceptors) {
             $this->bindInterceptor();
+        }
+
+        if ($this->isSingleton === true) {
+            $this->logger->setSingletonInstance($this->singletonContainerKey, $instance);
         }
 
         return $instance;
@@ -265,7 +273,9 @@ final class DependencyFactory implements ProviderInterface, \Serializable
                 $this->setters,
                 $this->logger,
                 $this->interceptors,
-                $this->postConstruct
+                $this->postConstruct,
+                $this->isSingleton,
+                $this->singletonContainerKey
             ]
         );
 
@@ -281,7 +291,9 @@ final class DependencyFactory implements ProviderInterface, \Serializable
             $this->setters,
             $this->logger,
             $this->interceptors,
-            $this->postConstruct
+            $this->postConstruct,
+            $this->isSingleton,
+            $this->singletonContainerKey
         ) = unserialize($serialized);
     }
 }

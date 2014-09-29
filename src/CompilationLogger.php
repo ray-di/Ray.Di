@@ -8,6 +8,8 @@ namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
 use Ray\Aop\Bind;
+use Ray\Di\Exception\Compile;
+use Ray\Di\Exception\UnknownCompiledObject;
 
 final class CompilationLogger extends AbstractCompilationLogger
 {
@@ -22,6 +24,11 @@ final class CompilationLogger extends AbstractCompilationLogger
     private $dependencyContainer = [];
 
     /**
+     * @var array
+     */
+    private $singletonContainer = [];
+
+    /**
      * @var ConfigInterface
      */
     private $config;
@@ -32,11 +39,6 @@ final class CompilationLogger extends AbstractCompilationLogger
     private $objectStorage;
 
     /**
-     * @var int
-     */
-    private $storageCnt = 0;
-
-    /**
      * @var string
      */
     private $log = '';
@@ -45,6 +47,11 @@ final class CompilationLogger extends AbstractCompilationLogger
      * @var array
      */
     private $classMap = [];
+
+    /**
+     * @var string
+     */
+    private $lastDependencyFactoryIndex;
 
     /**
      * @param LoggerInterface $logger
@@ -74,12 +81,12 @@ final class CompilationLogger extends AbstractCompilationLogger
     public function log(BoundDefinition $definition, array $params, array $setters, $instance, Bind $bind)
     {
         if ($instance instanceof DependencyProvider) {
-            $this->buildProvider($instance);
+            $this->buildProvider($instance, $definition);
 
             return;
         }
         $this->logger->log($definition, $params, $setters, $instance, $bind);
-        $this->build($definition->class, $instance, $params, $setters, $definition->isSingleton);
+        $this->build($definition, $instance, $params, $setters);
     }
 
     /**
@@ -106,34 +113,59 @@ final class CompilationLogger extends AbstractCompilationLogger
             throw new Exception\Compile($ref);
         }
 
-        return $this->dependencyContainer[$ref]->get();
+        $instance = $this->dependencyContainer[$ref]->get();
+        if ($instance instanceof ProviderInterface) {
+            $instance = $instance->get();
+        }
+
+        return $instance;
     }
 
 
     /**
      * {@inheritdoc}
      */
-    public function getObjectHash($object)
+    public function getObjectIndex($object, BoundDefinition $definition = null)
     {
         if ($this->objectStorage->contains($object)) {
             return $this->objectStorage[$object];
         }
-        $this->storageCnt++;
-        $hash = (string) $this->storageCnt;
-        $this->objectStorage[$object] = $hash;
+        if (is_null($definition)) {
+            throw new UnknownCompiledObject(get_class($object));
+        }
+        $index = $this->getDefinitionIndex($definition);
+        $this->objectStorage[$object] = $index;
         // object hash logging for debug
         $shortHash = function ($data, $algo = 'CRC32') {
             return strtr(rtrim(base64_encode(pack('H*', sprintf('%u', $algo($data)))), '='), '+/', '-_');
         };
         $log = sprintf(
             'ray/di.install ref:%s class:%s hash:%s',
-            $hash,
+            $index,
             get_class($object),
             $shortHash(spl_object_hash($object))
         );
         $this->errorLog($log);
 
-        return $hash;
+        return $index;
+    }
+
+    /**
+     * @param BoundDefinition $definition
+     *
+     * @return mixed|null|object
+     */
+    public function getCompiledInstance(BoundDefinition $definition)
+    {
+        $index = $this->getDefinitionIndex($definition);
+        if (! isset($this->dependencyContainer[$index])) {
+
+            return null;
+        }
+        $instance = $this->dependencyContainer[$index]->get();
+        $this->lastDependencyFactoryIndex = $this->getObjectIndex($instance, $definition);
+
+        return $instance;
     }
 
     /**
@@ -144,13 +176,10 @@ final class CompilationLogger extends AbstractCompilationLogger
         if (isset($this->classMap[$class])) {
             return;
         }
-        $container = $this->dependencyContainer;
-        $factory = array_pop($container);
-        /** @var $factory DependencyFactory */
-        $this->classMap[$class] = (string) $factory;
+        $this->classMap[$class] = $this->lastDependencyFactoryIndex;
         $log = sprintf(
             'ray/di.map     ref:%s class:%s',
-            $factory,
+            $this->lastDependencyFactoryIndex,
             $class
         );
         $this->errorLog($log);
@@ -165,21 +194,35 @@ final class CompilationLogger extends AbstractCompilationLogger
     }
 
     /**
-     * @param string $class
-     * @param object $instance
-     * @param array  $params
-     * @param array  $setters
-     * @param bool   $isSingleton
+     * @param BoundDefinition $definition
+     *
+     * @return string
      */
-    private function build($class, $instance, array $params, array $setters, $isSingleton)
+    private function getDefinitionIndex(BoundDefinition $definition)
     {
+        $index = "{$definition->class}-{$definition->interface}-{$definition->name}";
+
+        return $index;
+    }
+
+    /**
+     * @param BoundDefinition $definition
+     * @param object          $instance
+     * @param array           $params
+     * @param array           $setters
+     */
+    private function build(BoundDefinition $definition, $instance, array $params, array $setters)
+    {
+        // constructor parameters
         $params = $this->makeParamRef($params);
+
+        // setter parameters
         foreach ($setters as &$methodPrams) {
             $methodPrams = $this->makeParamRef($methodPrams);
         }
 
-        $dependencyFactory = new DependencyFactory($instance, $params, $setters, $this, $isSingleton);
-        list(,,$definition) = $this->config->fetch($class);
+        $dependencyFactory = new DependencyFactory($instance, $params, $setters, $this, $definition);
+        list(,,$definition) = $this->config->fetch($definition->class);
         // @PostConstruct
         $postConstructMethod = $definition['PostConstruct'];
         $dependencyFactory->setPostConstruct($postConstructMethod);
@@ -188,8 +231,7 @@ final class CompilationLogger extends AbstractCompilationLogger
             $interceptors = $this->buildInterceptor($instance);
             $dependencyFactory->setInterceptors($interceptors);
         }
-        $index = (string) $dependencyFactory;
-        $this->dependencyContainer[$index] = $dependencyFactory;
+        $this->setDependencyFactory($dependencyFactory);
         $diLog = $dependencyFactory->getDependencyLog();
         if ($diLog) {
             $this->errorLog('ray/di.depends ' . $diLog);
@@ -198,6 +240,16 @@ final class CompilationLogger extends AbstractCompilationLogger
         if ($aopLog) {
             $this->errorLog('ray/di.aspect  ' . $aopLog);
         }
+    }
+
+    /**
+     * @param DependencyFactory $dependencyFactory
+     */
+    private function setDependencyFactory(DependencyFactory $dependencyFactory)
+    {
+        $index = (string) $dependencyFactory;
+        $this->dependencyContainer[$index] = $dependencyFactory;
+        $this->lastDependencyFactoryIndex = $index;
     }
 
     /**
@@ -221,10 +273,10 @@ final class CompilationLogger extends AbstractCompilationLogger
     /**
      * @param DependencyProvider $dependencyProvider
      */
-    private function buildProvider(DependencyProvider $dependencyProvider)
+    private function buildProvider(DependencyProvider $dependencyProvider, BoundDefinition $definition)
     {
-        $instanceHash = $this->getObjectHash($dependencyProvider->instance);
-        $providerHash = $this->getObjectHash($dependencyProvider->provider);
+        $instanceHash = $this->getObjectIndex($dependencyProvider->instance, $definition);
+        $providerHash = $this->getObjectIndex($dependencyProvider->provider, $definition);
         $dependencyReference = new DependencyReference($providerHash, $this, get_class($dependencyProvider));
         $this->dependencyContainer[$instanceHash] = $dependencyReference;
     }
@@ -251,7 +303,7 @@ final class CompilationLogger extends AbstractCompilationLogger
      */
     private function getRef($instance)
     {
-        $hash = $this->getObjectHash($instance);
+        $hash = $this->getObjectIndex($instance);
         $type = is_object($instance) ? get_class($instance) : gettype($instance);
         return new DependencyReference($hash, $this, $type);
     }
@@ -263,6 +315,34 @@ final class CompilationLogger extends AbstractCompilationLogger
     {
         // error_log($log);
         $this->log .= $log . PHP_EOL;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSingletonInstance($key, $instance)
+    {
+        $this->singletonContainer[$key] = $instance;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSingletonInstance($key)
+    {
+        $instance = isset($this->singletonContainer[$key]) ? $this->singletonContainer[$key] : null;
+
+        return $instance;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSingletonKey(BoundDefinition $definition)
+    {
+        $key = "{$definition->class}-{$definition->interface}-{$definition->name}";
+
+        return $key;
     }
 
     /**
@@ -284,7 +364,9 @@ final class CompilationLogger extends AbstractCompilationLogger
         $serialized = serialize(
             [
                 $this->classMap,
-                $this->dependencyContainer
+                $this->dependencyContainer,
+                $this->logger,
+                $this->config
             ]
         );
 
@@ -295,7 +377,10 @@ final class CompilationLogger extends AbstractCompilationLogger
     {
         list(
             $this->classMap,
-            $this->dependencyContainer
+            $this->dependencyContainer,
+            $this->logger,
+            $this->config
         ) = unserialize($serialized);
+        $this->objectStorage = new \SplObjectStorage;
     }
 }

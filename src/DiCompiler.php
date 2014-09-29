@@ -11,14 +11,10 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Ray\Di\Exception\Compile;
+use Ray\Di\Exception\UnknownCompiledObject;
 
 final class DiCompiler implements InstanceInterface, \Serializable
 {
-    /**
-     * @var array
-     */
-    private $classMap = [];
-
     /**
      * @var InjectorInterface
      */
@@ -77,6 +73,7 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     public static function create(callable $moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
+        (new Locator)->setLogger();
         self::$args = func_get_args();
         if ($cache->contains($cacheKey)) {
             (new AopClassLoader)->register($tmpDir);
@@ -100,10 +97,14 @@ final class DiCompiler implements InstanceInterface, \Serializable
     private static function createInstance($moduleProvider, Cache $cache, $cacheKey, $tmpDir)
     {
         $config = new Config(new Annotation(new Definition, new AnnotationReader));
-        $logger = new CompilationLogger(new Logger);
+        $logger = (new Locator)->getLogger();
+        if (! $logger) {
+            $logger = new CompilationLogger(new Logger);
+        }
         $logger->setConfig($config);
         $injector = self::createInjector($moduleProvider, $tmpDir, $config, $logger);
         $diCompiler = new DiCompiler($injector, $logger, $cache, $cacheKey);
+        $injector->setDiCompiler($diCompiler);
 
         return $diCompiler;
     }
@@ -139,11 +140,18 @@ final class DiCompiler implements InstanceInterface, \Serializable
      */
     public function compile($class)
     {
-        $this->injector->getInstance($class);
+        $instance = $this->injector->getInstance($class);
         $this->logger->setMapRef($class);
+        $definition = $this->injector->getDefinition();
+        /** @var $definition BoundDefinition */
+        if ($definition->isSingleton === true) {
+            $key = $this->logger->getSingletonKey($definition);
+            $this->logger->setSingletonInstance($key, $instance);
+        }
+
         $this->cache->save($this->cacheKey, $this);
 
-        return $this;
+        return $instance;
     }
 
     /**
@@ -166,23 +174,26 @@ final class DiCompiler implements InstanceInterface, \Serializable
     }
 
     /**
+     * @param CompilationLogger $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        $this->injector->setLogger($logger);
+    }
+
+    /**
      * @param string $class
      *
      * @return object
      */
     private function recompile($class)
     {
-        $this->cache->delete($this->cacheKey);
-        $diCompiler = $this->injector ? $this : call_user_func_array([$this, 'createInstance'], self::$args);
-        /** @var $diCompiler DiCompiler */
-        $mappedClass = array_keys($this->classMap);
-        $mappedClass[] = $class;
-        foreach ($mappedClass as $newClass) {
-            $diCompiler->compile($newClass);
+        if ($this->logger) {
+            (new Locator)->setLogger($this->logger);
         }
-        // log dependency container
-        // error_log($this->logger);
-        $instance = $this->getInstanceSafe($diCompiler, $class);
+        $diCompiler = $this->injector ? $this : call_user_func_array([$this, 'createInstance'], self::$args);
+        $instance = $diCompiler->compile($class);
 
         return $instance;
     }
@@ -202,10 +213,12 @@ final class DiCompiler implements InstanceInterface, \Serializable
         try {
             $instance = $injector->getInstance($class);
         } catch (Compile $e) {
+            // @codeCoverageIgnoreStart
             error_log(sprintf('ray/di.retry class:%s catch:%s exception:%s', $class, __METHOD__, (string) $e));
             list($provider, $tmpDir) = [self::$args[0], self::$args[3]];
             $injector = self::createInjector($provider, $tmpDir);
             $instance = $injector->getInstance($class);
+            // @codeCoverageIgnoreEnd
         }
 
         return $instance;
@@ -220,7 +233,6 @@ final class DiCompiler implements InstanceInterface, \Serializable
     {
           $serialized = serialize(
               [
-                $this->classMap,
                 $this->logger,
                 $this->cache,
                 $this->cacheKey
@@ -233,7 +245,6 @@ final class DiCompiler implements InstanceInterface, \Serializable
     public function unserialize($serialized)
     {
         list(
-            $this->classMap,
             $this->logger,
             $this->cache,
             $this->cacheKey

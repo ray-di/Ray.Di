@@ -22,6 +22,8 @@ Getting Stated
 Here is a basic example of dependency injection using Ray.Di.
 
 ```php
+namespace MovieApp;
+
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Inject;
 use Ray\Di\Injector;
@@ -48,7 +50,7 @@ class Lister
 }
 
 
-class Module extends \Ray\Di\AbstractModule
+class Module extends AbstractModule
 {
     public function configure()
     {
@@ -75,7 +77,7 @@ $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvid
 The provider class implements Ray's Provider interface, which is a simple, general interface for supplying values:
 
 ```php
-use Ray\Di\ProviderInterface;
+namespace Ray\Di;
 
 interface ProviderInterface
 {
@@ -88,8 +90,9 @@ It implements the Provider interface to define what's returned with complete typ
 ```php
 
 use Ray\Di\Di\Inject;
+use Ray\Di\ProviderInterface;
 
-class DatabaseTransactionLogProvider implements Provider
+class DatabaseTransactionLogProvider implements ProviderInterface
 {
     private $connection;
 
@@ -110,6 +113,7 @@ class DatabaseTransactionLogProvider implements Provider
     }
 }
 ```
+
 Finally we bind to the provider using the `toProvider()` method:
 
 ```php
@@ -287,7 +291,7 @@ class WeekendBlocker implements MethodInterceptor
         $today = getdate();
         if ($today['weekday'][0] === 'S') {
             throw new \RuntimeException(
-          		$invocation->getMethod()->getName() . " not allowed on weekends!"
+                $invocation->getMethod()->getName() . " not allowed on weekends!"
             );
         }
         return $invocation->proceed();
@@ -303,7 +307,6 @@ use Ray\Di\AbstractModule;
 
 class WeekendModule extends AbstractModule
 {
-
     protected function configure()
     {
         $this->bindInterceptor(
@@ -361,7 +364,6 @@ use Ray\Di\AbstractModule;
 
 class AopMatcherModule extends AbstractModule
 {
-    pro
     protected function configure()
     {
         $this->bindInterceptor(

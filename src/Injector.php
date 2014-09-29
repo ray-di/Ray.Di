@@ -66,6 +66,16 @@ class Injector implements InjectorInterface, \Serializable
     public $boundInstance;
 
     /**
+     * @var BoundDefinition
+     */
+    private $definition;
+
+    /**
+     * @var DiCompiler
+     */
+    private $diCompiler;
+
+    /**
      * @param ContainerInterface     $container
      * @param AbstractModule         $module
      * @param BindInterface          $bind
@@ -166,6 +176,11 @@ class Injector implements InjectorInterface, \Serializable
         $this->logger = $logger;
     }
 
+    public function setDiCompiler(DiCompiler $diCompiler)
+    {
+        $this->diCompiler = $diCompiler;
+    }
+
     /**
      * Return aop generated file path
      *
@@ -198,15 +213,30 @@ class Injector implements InjectorInterface, \Serializable
      */
     public function getInstance($class)
     {
+        return $this->getNamedInstance($class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNamedInstance($class, $name = AbstractModule::NAME_UNSPECIFIED)
+    {
         // module activation
         $this->module->activate($this);
 
-        if ($this->boundInstance->hasBound($class, $this->module)) {
+        if ($this->boundInstance->hasBound($class, $this->module, $name)) {
             return $this->boundInstance->getBound();
         }
 
         // get bound config
-        $definition = $this->boundInstance->getDefinition();
+        $this->definition = $definition = $this->boundInstance->getDefinition();
+
+        // compiled ?
+        $instance = $this->getCompiledDependency($definition);
+        if ($instance) {
+            return $instance;
+        }
+
 
         // be all parameters ready
         $params = $this->boundInstance->bindConstruct($class, $definition->params, $this->module);
@@ -249,6 +279,27 @@ class Injector implements InjectorInterface, \Serializable
     }
 
     /**
+     * @param BoundDefinition $definition
+     *
+     * @return mixed|null|object
+     */
+    public function getCompiledDependency(BoundDefinition $definition)
+    {
+        if ($this->logger instanceof CompilationLogger) {
+            $instance = $this->logger->getCompiledInstance($definition);
+
+            return $instance;
+        }
+
+        return null;
+    }
+
+    public function getDefinition()
+    {
+        return $this->definition;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function enableBindCache()
@@ -273,6 +324,8 @@ class Injector implements InjectorInterface, \Serializable
 
         // set singleton object
         if ($definition->isSingleton) {
+            $key = $this->logger->getSingletonKey($definition);
+            $this->logger->setSingletonInstance($key, $object);
             $this->container->set($definition->interface, $object);
         }
     }

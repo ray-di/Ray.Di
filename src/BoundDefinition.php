@@ -59,4 +59,11 @@ class BoundDefinition
      * @var array
      */
     public $inject;
+
+    /**
+     * Name
+     *
+     * @var string
+     */
+    public $name;
 }

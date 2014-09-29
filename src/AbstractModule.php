@@ -214,7 +214,8 @@ abstract class AbstractModule implements ArrayAccess
             return;
         }
         $this->activated = true;
-        $this->dependencyInjector = $injector ? : (new InjectorFactory)->newInstance([$this]);
+        $logger = (new Locator)->getLogger();
+        $this->dependencyInjector = $injector ? : (new InjectorFactory)->setLogger($logger)->newInstance([$this]);
         $this->configure();
     }
 

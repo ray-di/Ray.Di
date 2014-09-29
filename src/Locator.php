@@ -23,6 +23,11 @@ class Locator
      */
     private static $cache;
 
+    /**
+     * @var LoggerInterface
+     */
+    private static $logger;
+
     public function setCache(Cache $cache)
     {
         self::$cache = $cache;
@@ -51,9 +56,30 @@ class Locator
         return self::$cache;
     }
 
+    /**
+     * @param AbstractCompilationLogger $logger
+     *
+     * @return $this
+     */
+    public function setLogger(AbstractCompilationLogger $logger = null)
+    {
+        self::$logger = $logger;
+
+        return $this;
+    }
+
+    /**
+     * @return AbstractCompilationLogger
+     */
+    public function getLogger()
+    {
+        return self::$logger;
+    }
+
     public function cleaAll()
     {
         self::$cache = null;
         self::$annotationReader = null;
+        self::$logger = null;
     }
 }

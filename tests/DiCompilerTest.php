@@ -13,6 +13,7 @@ use Doctrine\Common\Cache\FilesystemCache;
 use PHPParser_PrettyPrinter_Default;
 use Ray\Aop\Bind;
 use Ray\Aop\Compiler;
+use Ray\Di\Modules\BasicModule;
 
 require_once __DIR__ . '/Mock/Diary/diary_classes.php';
 
@@ -59,9 +60,8 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstance()
     {
-        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
-        $injector = $DiCompiler->compile('Ray\Di\DiaryInterface');
-        $instance = $injector->getInstance('Ray\Di\DiaryInterface');
+        $compiler = DiCompiler::create(function () {return new DiaryAopModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $instance = $compiler->getInstance('Ray\Di\DiaryInterface');
 
         /** @var $instance \Ray\Di\Diary */
         $this->assertInstanceOf('Ray\Di\Diary', $instance);
@@ -86,17 +86,13 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
 
     public function testSingleton()
     {
-        $this->injector->setModule(new DiarySingletonModule);
-        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
+        $compiler = DiCompiler::create(function () {return new DiarySingletonModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $instance = $compiler->getInstance('Ray\Di\DiaryInterface');
+        $hash1 = spl_object_hash($instance->log);
+        $hash2 = spl_object_hash($instance->db->log);
+        $this->assertSame($hash1, $hash2);
 
-        $compileInjector = $DiCompiler->compile('Ray\Di\DiaryInterface');
-
-        $instance = $compileInjector->getInstance('Ray\Di\DiaryInterface');
-        $dbHash1 = spl_object_hash($instance->log);
-        $dbHash2 = spl_object_hash($instance->db->log);
-        $this->assertSame($dbHash1, $dbHash2);
-
-        return $compileInjector;
+        return $compiler;
     }
 
     /**
@@ -154,23 +150,23 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($dbHash1, $dbHash2);
     }
 
-    /**
-     * @depends testSingleton
-     */
-    public function testProvider(DiCompiler $compileInjector)
+    public function testProvider()
     {
-        $compileInjector->compile('Ray\Di\WriterInterface');
-        $instance = $compileInjector->getInstance('Ray\Di\WriterInterface');
+        $compiler = DiCompiler::create(function () {return new DiarySingletonModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $instance = $compiler->getInstance('Ray\Di\DiaryInterface');
+        $hash1 = spl_object_hash($instance->log);
+        $hash2 = spl_object_hash($instance->db->log);
+        $this->assertSame($hash1, $hash2);
+        $compiler->compile('Ray\Di\WriterInterface');
+        $instance = $compiler->getInstance('Ray\Di\WriterInterface');
         $this->assertInstanceOf('Ray\Di\Writer', $instance);
     }
 
     public function testAop()
     {
-
-        $DiCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, $this->tmpDir);
-        $compileInjector = $DiCompiler->compile('Ray\Di\DiaryInterface');
-        $compileInjector = unserialize(serialize($compileInjector));
-        $diary = $compileInjector->getInstance('Ray\Di\DiaryInterface');
+        $compiler = DiCompiler::create(function () {return new DiaryAopModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $compiler = unserialize(serialize($compiler));
+        $diary = $compiler->getInstance('Ray\Di\DiaryInterface');
         $result = $diary->returnSame('b');
         $this->assertSame('aop-b', $result);
 
@@ -238,7 +234,10 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('string', (string) $DiCompiler);
     }
 
-    public function testCompileException()
+    /**
+     * @expectedException \Ray\Di\Exception\UnknownCompiledObject
+     */
+    public function testUnknownCompiledObjectException()
     {
         $this->injector->setModule(new DiaryAopErrorModule);
         $diCompiler = new DiCompiler($this->injector, $this->logger, new ArrayCache, __METHOD__);
@@ -253,5 +252,19 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $DiCompiler->compile('Ray\Di\DiaryInterface');
         $instance = $DiCompiler->getInstance('Ray\Di\DiaryInterface');
         $this->assertInstanceOf('Ray\Di\Diary', $instance);
+    }
+
+    public function testNewInstancePerGetInstance()
+    {
+        $injector = DiCompiler::create(function () {return new BasicModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $db1 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $db2 = $injector->getInstance('Ray\Di\Mock\DbInterface');
+        $this->assertNotSame($db1, $db2);
+    }
+
+    public function testSetLogger()
+    {
+        $compiler = DiCompiler::create(function () {return new DiaryAopModule;}, new ArrayCache, __METHOD__, $_ENV['TMP_DIR']);
+        $compiler->setLogger(new CompilationLogger(new Logger));
     }
 }

@@ -33,7 +33,7 @@ interface CompilationLoggerInterface extends LoggerInterface
      *
      * @return string
      */
-    public function getObjectHash($object);
+    public function getObjectIndex($object, BoundDefinition $definition);
 
     /**
      * @param string $class
@@ -48,4 +48,12 @@ interface CompilationLoggerInterface extends LoggerInterface
      * @return bool
      */
     public function isSetMapRef($class);
+
+
+    /**
+     * @param Definition $definition
+     *
+     * @return mixed
+     */
+    public function getCompiledInstance(BoundDefinition $definition);
 }

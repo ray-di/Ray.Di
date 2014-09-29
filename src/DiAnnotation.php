@@ -12,6 +12,5 @@ require_once __DIR__ . '/Di/Inject.php';
 require_once __DIR__ . '/Di/Named.php';
 require_once __DIR__ . '/Di/PostConstruct.php';
 require_once __DIR__ . '/Di/PreDestroy.php';
-require_once __DIR__ . '/Di/Named.php';
 require_once __DIR__ . '/Di/ProvidedBy.php';
 require_once __DIR__ . '/Di/Scope.php';

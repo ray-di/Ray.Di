@@ -14,7 +14,7 @@ interface BoundInstanceInterface
      *
      * @return bool
      */
-    public function hasBound($class, AbstractModule $module);
+    public function hasBound($class, AbstractModule $module, $name = AbstractModule::NAME_UNSPECIFIED);
 
     /**
      * @return object

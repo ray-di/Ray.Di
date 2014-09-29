@@ -164,11 +164,17 @@ class DiaryAopErrorModule extends AbstractModule
     protected function configure()
     {
         $this->install(new DiaryModule);
-        $diaryInterceptor = $this->requestInjection('Ray\Di\DiaryInterceptor');
+
+        // interceptor should be retrieved with requestInjection() method as below.
+        // $diaryInterceptor = $this->requestInjection('Ray\Di\DiaryInterceptor');
+
+        // this cause exception
+        $diaryInterceptor = new \Ray\Di\DiaryInterceptor(new Log);
+
         $this->bindInterceptor(
             $this->matcher->subclassesOf('Ray\Di\Diary'),
             $this->matcher->any(),
-            [new \Ray\Di\DiaryInterceptor(new Log)]
+            [$diaryInterceptor]
         );
     }
 }

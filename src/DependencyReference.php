@@ -49,14 +49,9 @@ final class DependencyReference implements ProviderInterface, \Serializable
         if ($this->instance !== null) {
             return $this->instance;
         }
-        try {
-            $this->instance = $this->logger->newInstance($this->refId);
+        $this->instance = $this->logger->newInstance($this->refId);
 
-            return $this->instance;
-        } catch (Compile $e) {
-            $msg = sprintf('ref:%s class:%s logger:%s', $this->refId, $this->type, (string) $this->logger);
-            throw new Compile($msg);
-        }
+        return $this->instance;
     }
 
     public function serialize()
@@ -84,13 +79,5 @@ final class DependencyReference implements ProviderInterface, \Serializable
     public function __toString()
     {
         return '#' . $this->refId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return "{$this->type}#{$this->refId}";
     }
 }
