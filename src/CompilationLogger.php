@@ -86,7 +86,11 @@ final class CompilationLogger extends AbstractCompilationLogger
             return;
         }
         $this->logger->log($definition, $params, $setters, $instance, $bind);
-        $this->build($definition, $instance, $params, $setters);
+        try {
+            $this->build($definition, $instance, $params, $setters);
+        } catch (Compile $e) {
+            // unknown object is found, no record for compiler
+        }
     }
 
     /**

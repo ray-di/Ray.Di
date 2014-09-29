@@ -234,9 +234,6 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('string', (string) $DiCompiler);
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\UnknownCompiledObject
-     */
     public function testUnknownCompiledObjectException()
     {
         $this->injector->setModule(new DiaryAopErrorModule);
