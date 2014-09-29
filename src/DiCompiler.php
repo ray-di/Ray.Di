@@ -16,11 +16,6 @@ use Ray\Di\Exception\UnknownCompiledObject;
 final class DiCompiler implements InstanceInterface, \Serializable
 {
     /**
-     * @var array
-     */
-    private $classMap = [];
-
-    /**
      * @var InjectorInterface
      */
     private $injector;
