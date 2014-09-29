@@ -11,6 +11,7 @@ interface BoundInstanceInterface
     /**
      * @param string         $class
      * @param AbstractModule $module
+     * @param string         $name
      *
      * @return bool
      */

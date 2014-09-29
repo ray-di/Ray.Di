@@ -6,8 +6,6 @@
  */
 namespace Ray\Di;
 
-use Ray\Di\Exception\Compile;
-
 final class DependencyReference implements ProviderInterface, \Serializable
 {
     /**

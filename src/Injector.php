@@ -118,7 +118,13 @@ class Injector implements InjectorInterface, \Serializable
     }
 
     /**
-     * {@inheritdoc}
+     * Return new injector
+     *
+     * @param array $modules
+     * @param Cache $cache
+     * @param null  $tmdDir
+     *
+     * @return Injector
      */
     public static function create(array $modules = [], Cache $cache = null, $tmdDir = null)
     {

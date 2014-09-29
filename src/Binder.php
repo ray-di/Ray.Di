@@ -289,7 +289,7 @@ final class Binder
      *
      * @param string $in            Scope::SINGLETON | Scope::PROTOTYPE
      * @param string $bindingToType AbstractModule::TO_CLASS | AbstractModule::TO_PROVIDER ...
-     * @param mixed  $target        target interface or class
+     * @param string $target        target interface or class
      *
      * @return mixed
      */
