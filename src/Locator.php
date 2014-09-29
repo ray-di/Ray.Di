@@ -57,11 +57,11 @@ class Locator
     }
 
     /**
-     * @param LoggerInterface $logger
+     * @param AbstractCompilationLogger $logger
      *
      * @return $this
      */
-    public function setLogger(LoggerInterface $logger = null)
+    public function setLogger(AbstractCompilationLogger $logger = null)
     {
         self::$logger = $logger;
 
@@ -69,7 +69,7 @@ class Locator
     }
 
     /**
-     * @return LoggerInterface
+     * @return AbstractCompilationLogger
      */
     public function getLogger()
     {
