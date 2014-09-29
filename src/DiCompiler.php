@@ -11,7 +11,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Ray\Di\Exception\Compile;
-use Ray\Di\Exception\UnknownCompiledObject;
 
 final class DiCompiler implements InstanceInterface, \Serializable
 {

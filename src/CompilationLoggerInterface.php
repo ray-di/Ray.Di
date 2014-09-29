@@ -51,7 +51,7 @@ interface CompilationLoggerInterface extends LoggerInterface
 
 
     /**
-     * @param Definition $definition
+     * @param BoundDefinition $definition
      *
      * @return mixed
      */

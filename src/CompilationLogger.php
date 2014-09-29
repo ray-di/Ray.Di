@@ -331,6 +331,7 @@ final class CompilationLogger extends AbstractCompilationLogger
 
     /**
      * {@inheritdoc}
+     * @param string $key
      */
     public function getSingletonInstance($key)
     {

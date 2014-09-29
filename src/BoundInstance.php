@@ -4,7 +4,6 @@ namespace Ray\Di;
 
 use Aura\Di\ConfigInterface;
 use Aura\Di\ContainerInterface;
-use Ray\Aop\ReflectiveMethodInvocation;
 use Ray\Di\Definition;
 
 class BoundInstance implements BoundInstanceInterface
