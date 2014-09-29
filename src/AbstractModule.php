@@ -418,6 +418,7 @@ abstract class AbstractModule implements ArrayAccess
     public function requestInjection($class)
     {
         $di = $this->dependencyInjector;
+        $di->setLogger((new Locator())->getLogger());
         $module = $di->getModule();
         /** @var $di Injector */
         $di($this);

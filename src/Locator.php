@@ -73,6 +73,9 @@ class Locator
      */
     public function getLogger()
     {
+        if (! self::$logger) {
+            self::$logger = new CompilationLogger(new Logger());
+        }
         return self::$logger;
     }
 
