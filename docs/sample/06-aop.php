@@ -54,9 +54,9 @@ class WeekendModule extends AbstractModule
     protected function configure()
     {
         $this->bindInterceptor(
-             $this->matcher->any(), // class matching
-             $this->matcher->annotatedWith('\Ray\Di\Sample\NotOnWeekends'), // method matching
-             [new WeekendBlocker] // interceptors
+            $this->matcher->any(), // class matching
+            $this->matcher->annotatedWith('\Ray\Di\Sample\NotOnWeekends'), // method matching
+            [$this->requestInjection('\Ray\Di\Sample\WeekendBlocker')]     // interceptors
         );
     }
 }
