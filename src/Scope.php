@@ -6,10 +6,7 @@
  */
 namespace Ray\Di;
 
-/**
- * Scope Definition
- */
-class Scope
+final class Scope
 {
     /**
      * Singleton scope

@@ -13,20 +13,28 @@ DIを効率よく使用すると以下のようなメリットがあります。
 
 Ray.Diは以下の特徴があります。
 
- * [JSR-250](http://en.wikipedia.org/wiki/JSR_250)のオブジェクトライフサイクル(`@PostConstruct`, `@PreDestroy`)のアノテーションをサポートしています。
  * [AOP Alliance](http://aopalliance.sourceforge.net/)に準拠したアスペクト指向プログラミングをサポートしています。
- * [Aura.Di](http://auraphp.github.com/Aura.Di )を拡張しています。
  * [Doctrine.Commons](http://www.doctrine-project.org/projects/common)アノテーションを使用しています。
 
 Getting Started
 --------------
 
 Ray.Diを使ったディペンデンシーインジェクション（[依存性の注入](http://ja.wikipedia.org/wiki/%E4%BE%9D%E5%AD%98%E6%80%A7%E3%81%AE%E6%B3%A8%E5%85%A5)）の一般的な例です。
+
 ```php
-use Ray\Di\Injector;
+namespace MovieApp;
+
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Inject;
+use Ray\Di\Injector;
+use MovieApp\FinderInterface;
+use MovieApp\Finder;
 
 interface FinderInterface
+{
+}
+
+interface ListerInterface
 {
 }
 
@@ -34,7 +42,7 @@ class Finder implements FinderInterface
 {
 }
 
-class Lister
+class Lister implements ListerInterface
 {
     public $finder;
 
@@ -47,22 +55,23 @@ class Lister
     }
 }
 
-
-class Module extends \Ray\Di\AbstractModule
+class ListerModule extends AbstractModule
 {
     public function configure()
     {
-        $this->bind('MovieApp\FinderInterface')->to('MovieApp\Finder');
+        $this->bind(FinderInterface::class)->to(Finder::class);
+        $this->bind(ListerInterface::class)->to(Lister::class);
     }
 }
-$injector = Injector::create([new Module]);
-$lister = $injector->getInstance('MovieApp\Lister');
-$works = ($lister->finder instanceof MovieApp\Finder);
+
+$injector = new Injector(new ListerModule);
+$lister = $injector->getInstance('ListerInterface::class');
+$works = ($lister->finder instanceof Finder::class);
 echo(($works) ? 'It works!' : 'It DOES NOT work!');
 
 // It works!
 ```
-これは **Linked Bindings** という束縛（バインディング）です。. Linked bindings はインターフェイスとその実装クラスを束縛します。
+これは **Linked Bindings** です。. Linked bindings はインターフェイスとその実装クラスを束縛します。
 
 ### Provider Bindings
 
@@ -77,8 +86,7 @@ interface ProviderInterface
 }
 ```
 
-このプロバイダーの実装は自身にコンストラクターで`@Inject`とアノテートしている依存があります。
-依存を使ってインスタンスを生成して`get()`メソッドで生成したインスタンスを返します。
+`@Inject`とアノテートするとプロバイダーにも依存が注入されるので`get()`メソッドで依存を提供します。
 
 ```php
 class DatabaseTransactionLogProvider implements Provider
@@ -102,7 +110,7 @@ class DatabaseTransactionLogProvider implements Provider
     }
 }
 ```
-このように依存が必要なインスタンスには **Provider Bindings**を使います。
+このように依存が必要であったり、生成が複雑なインスタンスは **Provider Bindings**を使います。
 
 ```php
 $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvider');
@@ -114,7 +122,7 @@ $this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvid
 
 Rayには`@Named`という文字列で`名前`を指定できるビルトインアノテーションがあります。同じインターフェイスの依存を`名前`で区別します。
 
-依存が１つの場合
+メソッドの引数が１つの場合
 ```php
 /**
  *  @Inject
@@ -125,7 +133,7 @@ public RealBillingService(CreditCardProcessorInterface $processor)
 ...
 ```
 
-同一メソッドで依存が複数ある場合は変数名を指定します。
+メソッドの引数が複数の場合は`変数名=名前`のペアでカンマ区切りの文字列を指定します。
 ```php
 /**
  *  @Inject
@@ -136,7 +144,7 @@ public RealBillingService(CreditCardProcessorInterface $processor, CreditCardPro
 ...
 ```
 
-特定の名前を使って束縛するために`annotatedWith()`メソッドを使います。
+名前を使って束縛するために`annotatedWith()`メソッドを使います。
 
 ```php
 protected function configure()
@@ -147,7 +155,7 @@ protected function configure()
 
 ### Instance Bindings
 
-値を直接束縛することができます。依存のないオブジェクトや配列やスカラー値などの時だけ利用するようにします。
+`toInstance`は値を直接束縛します。
 
 ```php
 protected function configure()
@@ -156,7 +164,7 @@ protected function configure()
 }
 ```
 
-PHPのスカラー値には型がないので、名前を使って束縛します。
+PHPのスカラー値にはタイプヒントが無いので名前を使って束縛します。
 
 ```php
 protected function configure()
@@ -165,24 +173,22 @@ protected function configure()
 }
 ```
 
-### Constructor Bindings
+### Explicit Binding
 
-外部のクラスなどで`@Inject`が使えない場合などに、任意のコンストラクタに型を束縛することができます。
-
-```php
-class TransactionLog
-{
-    public function __construct($db)
-    {
-     // ....
-```
-
-変数名を指定して束縛します。
+既存のクラスなどで`@Inject`アノテーションでインジェクトポイントが指定できない時に明示的にセッターや`@PostConstruct`を指定します。
 
 ```php
+use Ray\Di\InjectionPoints;
+
 protected function configure()
 {
-    $this->bind('TransactionLog')->toConstructor(['db' => new Database]);
+    $this
+        ->bind(FakeCarInterface::class)
+        ->toExplicit(
+            FakeCar::class,
+            (new InjectionPoints)->addMethod('setTires')->addMethod('setHardtop'),
+            'postConstruct'
+        );
 }
 ```
 
@@ -213,30 +219,17 @@ public function onInit()
     //....
 }
 ```
-
-このメソッドはPHPの **register_shutdown_function** 関数に要録されスクリプト処理が完了したとき、あるいは *exit()* がコールされたときに呼ばれます。
-
-```php
-/**
- * @PreDestroy
- */
-public function onShutdown()
-{
-    //....
-}
-```
 ## Install
 
 モジュールは他のモジュールの束縛をインストールして使う事ができます。
 
- * 同一の束縛があれば先にされた方が優先されますが
- * `$this`を渡すとそれまでの束縛をインストール先のモジュールが利用することができます。そのモジュールでの束縛は現在の束縛より優先されます。
+ * 同一の束縛があれば先にされた方が優先されますが`overrindeInstall`でインストールすると後からのモジュールが優先されインストールされます。
 
 ```php
 protected function configure()
 {
     $this->install(new OtherModule);
-    $this->install(new CustomiseModule($this);
+    $this->overrideInstall(new CustomiseModule);
 }
 ```
 
@@ -248,7 +241,7 @@ Ray.Diは`toInstance()`や`toProvider()`がインスタンスを渡した時に�
 
 ## Aspect Oriented Programing
 
-Ray.Aopのアスペクト指向プログラミングが利用できます。インターセプターの束縛はより簡単になり、アスペクトの依存解決も行われます。
+Ray.Aopのアスペクト指向プログラミングが利用できます。
 
 ```php
 class TaxModule extends AbstractModule
@@ -280,7 +273,6 @@ class AopMatcherModule extends AbstractModule
 
 ```
 
-
 Best practice
 -------------
 
@@ -290,81 +282,35 @@ Best practice
 Performance boost
 =================
 
-インジェクト済みオブジェクトのキャッシュを行う**CacheInjector**、あるいはオブジェクトの生成を最適化する**DiCompiler**が利用可能です。
-
-Caching dependency-injected objects
------------------------------------
-
-インジェクト済みのキャッシュを保存して利用すればパフォーマンスは大きく向上します。
-**CacheInjector** はオブジェクトライフサイクルと自動生成されたアスペクトファイルのローディングも行います。
-`$initialization`クロージャにはアプリケーションがコンパイル時に一度しか行わない初期化処理を記述します。
+インジェクターオブジェクトをシリアライズすると、束縛の最適化が行われます。
+`unserialize`して利用したインジェクターではパフォーマンスが向上します。
 
 ```php
-$injector = function()  {
-    return Injector::create([new AppModule]);
-};
-$initialization = function() {
-    // initialize per system startup (not per each request)
-};
-$injector = new CacheInjector($injector, $initialization, 'cache-namespace', new ApcCache);
-$app = $injector->getInsntance('ApplicationInterface');
-$app->run();
-```
 
-Dependency-injection compiler
------------------------------
-**DiCompiler**はオブジェクト生成方法や依存関係を**インジェクションのログ**から取り出しオブジェクトの再生成（コンパイル）を最適化します。ランタイムではアノテーション利用のコストがないのはもちろん、インジェクションの設定（Module）やインジェクターも使用しません。速度やメモリ消費の点で優れます。
+// save
+$injector = new Injector(new ListerModule);
+$cachedInjector = serialize($injector);
 
-**制限**
- * インジェクションログからオブジェクトを生成するので全てのオブジェクトの生成をインジェクターで行う必要があります。[^1]
- * **@PreDestroy**は未サポートです。
+// load
+$injector = unserialize($cachedInjector);
+$lister = $injector->getInstance(ListerInterface::class);
 
-
-[^1]: 例えばインターセプターを**new**で生成して`bindInterceptor()`する事はできません。`requestInject($class)`でインスタンス化したものを束縛します。**new**でオブジェクトを生成すると生成がトラックできないためです。
-
-```php
-$cache = new ApcCache;
-$cacheKey = 'context-key';
-$tmpDir = '/tmp';
-$moduleProvider = function() {
-    return new DiaryAopModule;
-};
-$injector = DiCompiler::create($moduleProvider, $cache, $cacheKey, $tmpDir);
-$injector->getInstance('Ray\Di\DiaryInterface');
-
-```
-
-**Pro Tip**
-
-deploy前に出現クラスを事前に`compile()`する事ができます。ランタイムでコンパイルコストがかかりません。
-```php
-$injector = DiCompiler::create($moduleProvider, $cache, $cacheKey, $tmpDir);
-$injector->compile('Koriym\RayApp\Model\Author');
-$injector->compile('Koriym\RayApp\Model\Diary');
-...
 ```
 
 Requirement
 -----------
 
-* PHP 5.4+
-
-Documentation
--------------
-
-Google Codeには更に詳しいGuiceのドキュメントを翻訳したものがあります。
-
- [http://code.google.com/p/rayphp/wiki/Motivation?tm=6](http://code.google.com/p/rayphp/wiki/Motivation?tm=6)
+* PHP 5.5+
 
 
 Installation
 ------------
 
-Ray.Diをインストールにするには [Composer](http://getcomposer.org)を利用する事を勧めます。
+Ray.Diをインストールにするには [Composer](http://getcomposer.org)を利用します。
 
 ```bash
 # Add Ray.Di as a dependency
-$ composer require ray/di 1.*
+$ composer require ray/di 2.*
 ```
 
 Testing Ray.Di
@@ -373,8 +319,8 @@ Testing Ray.Di
 インストールしてテストを行うにはこのようにします。
 
 ```bash
-$ composer create-project ray/di Ray.Di 1.*
+$ composer create-project ray/di Ray.Di 2.*
 $ cd Ray.Di
 $ phpunit
-$ php docs/run_sample.php
+$ php tests/docs/sample.php
 ```

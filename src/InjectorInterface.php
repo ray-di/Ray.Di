@@ -6,66 +6,13 @@
  */
 namespace Ray\Di;
 
-/**
- * Defines the interface for dependency injector.
- */
-interface InjectorInterface extends InstanceInterface
+interface InjectorInterface
 {
     /**
-     * Return container
-     *
-     * @return Container
-     */
-    public function getContainer();
-
-    /**
-     * Return module
-     *
-     * @return AbstractModule
-     */
-    public function getModule();
-
-    /**
-     * Set module
-     *
-     * @param AbstractModule $module
-     *
-     * @return self
-     */
-    public function setModule(AbstractModule $module);
-
-    /**
-     * Return injection logger
-     *
-     * @return LoggerInterface
-     */
-    public function getLogger();
-
-    /**
-     * Set logger
-     *
-     * @param LoggerInterface $logger
-     *
-     * @return mixed
-     */
-    public function setLogger(LoggerInterface $logger);
-
-    /**
-     * Enable interceptor bind cache
-     *
-     * Interceptors must be cacheable (serializable)
-     *
-     * @return $this
-     */
-    public function enableBindCache();
-
-    /**
-     * Return named binding instance
-     *
-     * @param string $class
+     * @param string $interface
      * @param string $name
      *
      * @return mixed
      */
-    public function getNamedInstance($class, $name);
+    public function getInstance($interface, $name = Name::ANY);
 }

@@ -6,294 +6,51 @@
  */
 namespace Ray\Di;
 
-use Ray\Aop\Bind;
+use Doctrine\Common\Annotations\AnnotationReader;
 
-final class DependencyFactory implements ProviderInterface, \Serializable
+final class DependencyFactory
 {
     /**
-     * @var string
-     */
-    private $hash;
-
-    /**
-     * @var string
-     */
-    private $class;
-
-    /**
-     * @var array
-     */
-    private $args = [];
-
-    /**
-     * @var mixed
-     */
-    private $instance;
-
-    /**
-     * @var array
-     */
-    private $setters = [];
-
-    /**
-     * @var CompilationLogger
-     */
-    private $logger;
-
-    /**
-     * Method interceptors
+     * @param \ReflectionClass $class
      *
-     * [$method1 => MethodInterceptors[], $method2 =>  MethodInterceptors[] ... ]
+     * @return Dependency
+     */
+    public function newAnnotatedDependency(\ReflectionClass $class)
+    {
+        $newInstance = (new AnnotatedClass(new AnnotationReader))->__invoke($class);
+        $dependency = new Dependency($newInstance);
+
+        return $dependency;
+    }
+
+    /**
+     * @param \ReflectionClass  $class
+     * @param InjectionPoints   $injectionPoints
+     * @param \ReflectionMethod $postConstruct
      *
-     * @var array
+     * @return Dependency
      */
-    private $interceptors;
-
-    /**
-     * @var string
-     */
-    private $postConstruct;
-
-    /**
-     * @var bool
-     */
-    private $isSingleton;
-
-    /**
-     * @var string
-     */
-    private $singletonContainerKey;
-
-
-    /**
-     * @param object            $object
-     * @param array             $args
-     * @param array             $setter
-     * @param CompilationLogger $logger
-     * @param BoundDefinition   $definition
-     */
-    public function __construct(
-        $object,
-        array $args,
-        array $setter,
-        CompilationLogger $logger,
-        BoundDefinition $definition
+    public function newExplicit(
+        \ReflectionClass $class,
+        InjectionPoints $injectionPoints,
+        \ReflectionMethod $postConstruct
     ) {
-        $this->class = get_class($object);
-        $this->hash = $logger->getObjectIndex($object, $definition);
-        $this->args = $args;
-        $this->setters = $setter;
-        $this->logger = $logger;
-        $this->isSingleton = $definition->isSingleton;
-        $this->singletonContainerKey = $this->logger->getSingletonKey($definition);
+        $newInstance = new NewInstance($class, $injectionPoints($class->name), new Name(Name::ANY));
+        $dependency = new Dependency($newInstance, $postConstruct);
+
+        return $dependency;
     }
 
     /**
-     * @param array $interceptors
-     */
-    public function setInterceptors(array $interceptors)
-    {
-        $this->interceptors = $interceptors;
-    }
-
-    /**
-     * @param string $postConstruct
-     */
-    public function setPostConstruct($postConstruct)
-    {
-        $this->postConstruct = $postConstruct;
-    }
-
-    /**
-     * @return object|\Ray\Aop\Compiler
-     */
-    public function get()
-    {
-        // is singleton ?
-        $instance = ($this->isSingleton === true) ? $this->logger->getSingletonInstance($this->singletonContainerKey) : null;
-        if ($instance) {
-            return $instance;
-        }
-
-        // create object and inject dependencies
-        $instance = $this->newInstance();
-
-        $this->instance = $instance;
-
-        // @PostConstruct
-        if ($this->postConstruct) {
-            $instance->{$this->postConstruct}();
-        }
-        // interceptor ?
-        if ($this->interceptors) {
-            $this->bindInterceptor();
-        }
-
-        if ($this->isSingleton === true) {
-            $this->logger->setSingletonInstance($this->singletonContainerKey, $instance);
-        }
-
-        return $instance;
-    }
-
-    /**
-     * @return object
-     */
-    private function newInstance()
-    {
-        // constructor injection
-        $args = $this->args;
-        foreach ($args as &$arg) {
-            if ($arg instanceof DependencyReference) {
-                $arg = $arg->get();
-            }
-        }
-        $instance = (new \ReflectionClass($this->class))->newInstanceArgs($args);
-
-        // setter injection
-        $setters = $this->setters;
-        foreach ($setters as $method => &$args) {
-            foreach ($args as &$arg) {
-                if ($arg instanceof DependencyReference) {
-                    $arg = $arg->get();
-                }
-            }
-            call_user_func_array([$instance, $method], $args);
-        }
-
-        return $instance;
-    }
-
-    /**
-     * @return void
-     */
-    private function bindInterceptor()
-    {
-        $interceptors = $this->interceptors;
-        foreach ($interceptors as &$methodInterceptors) {
-            /** @var array $methodInterceptors */
-            foreach ($methodInterceptors as &$methodInterceptor) {
-                /** @var $methodInterceptor \Ray\Aop\MethodInterceptor|DependencyReference $methodInterceptor */
-                if ($methodInterceptor instanceof DependencyReference) {
-                    $methodInterceptor = $methodInterceptor->get();
-                }
-            }
-        }
-        $this->instance->rayAopBind = new Bind($interceptors);
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->hash;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return "{$this->class}#{$this->hash}";
-    }
-
-    /**
-     * @return string
-     */
-    public function getDependencyLog()
-    {
-        $constructorArgs = $this->getArgsLogText($this->args);
-        $setterArgs = '';
-        foreach ($this->setters as $method => $args) {
-            $setterArgs .= sprintf(
-                ' %s:%s',
-                $method,
-                $this->getArgsLogText($args)
-            );
-        }
-        if (! $constructorArgs . $setterArgs) {
-            return '';
-        }
-        return sprintf(
-            'ref:%s __construct:%s%s',
-            $this->hash,
-            $constructorArgs,
-            $setterArgs
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getInterceptorLog()
-    {
-        if (! is_array($this->interceptors)) {
-            return '';
-        }
-        $log = '';
-        foreach ($this->interceptors as $method => $interceptorReferences) {
-            $log = sprintf(
-                'ref:%s %s:%s',
-                $this->hash,
-                $method,
-                $this->getArgsLogText($interceptorReferences)
-            );
-        }
-
-        return $log;
-    }
-
-    /**
-     * @param mixed $args
+     * @param \ReflectionClass $provider
      *
-     * @return string
+     * @return Provider
      */
-    private function getArgsLogText($args)
+    public function newProvider(\ReflectionClass $provider)
     {
-        foreach ($args as &$item) {
-            $item =  is_array($item) ? 'array(' . count($item) . ')' : $item;
-            $item = is_scalar($item) ? gettype($item) : $item;
-            if ($item instanceof DependencyReference) {
-                $item = (string) $item;
-            }
-        }
-        $args = (is_array($args)) ? implode(',', $args) : getype($args);
+        $dependency = $this->newAnnotatedDependency($provider);
+        $dependency = new Provider($dependency);
 
-        return $args;
-    }
-
-    public function serialize()
-    {
-        $serialized = serialize(
-            [
-                $this->hash,
-                $this->class,
-                $this->args,
-                $this->setters,
-                $this->logger,
-                $this->interceptors,
-                $this->postConstruct,
-                $this->isSingleton,
-                $this->singletonContainerKey
-            ]
-        );
-
-        return $serialized;
-    }
-
-    public function unserialize($serialized)
-    {
-        list(
-            $this->hash,
-            $this->class,
-            $this->args,
-            $this->setters,
-            $this->logger,
-            $this->interceptors,
-            $this->postConstruct,
-            $this->isSingleton,
-            $this->singletonContainerKey
-        ) = unserialize($serialized);
+        return $dependency;
     }
 }

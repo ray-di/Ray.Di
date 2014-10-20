@@ -1,0 +1,50 @@
+<?php
+
+namespace Ray\Di;
+
+class ContainerTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * @var Container
+     */
+    private $container;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->container = new Container;
+        $bind = (new Bind($this->container, FakeEngineInterface::class))->toInstance(new FakeEngine);
+        $this->container->add($bind);
+    }
+
+    public function testGetDependency()
+    {
+        $dependencyIndex = FakeEngineInterface::class . '-' . Name::ANY;
+        $instance = $this->container->getDependency($dependencyIndex);
+        $this->assertInstanceOf(FakeEngine::class, $instance);
+    }
+
+    public function testGetInstance()
+    {
+        $instance = $this->container->getInstance(FakeEngineInterface::class, Name::ANY);
+        $this->assertInstanceOf(FakeEngine::class, $instance);
+    }
+
+    public function testGetContainer()
+    {
+        $array = $this->container->getContainer();
+        $dependencyIndex = FakeEngineInterface::class . '-' . Name::ANY;
+        $this->assertArrayHasKey($dependencyIndex, $array);
+    }
+
+    public function testMerge()
+    {
+        $extraContainer = new Container;
+        $bind = (new Bind($this->container, FakeRobotInterface::class))->to(FakeRobot::class);
+        $this->container->add($bind);
+        $this->container->merge($extraContainer);
+        $array = $this->container->getContainer();
+        $this->assertArrayHasKey(FakeEngineInterface::class . '-' . Name::ANY,  $array);
+        $this->assertArrayHasKey(FakeRobotInterface::class . '-' . Name::ANY,  $array);
+    }
+}

@@ -6,9 +6,6 @@
  */
 namespace Ray\Di\Di;
 
-/**
- * Annotation interface
- */
 interface Annotation
 {
 }

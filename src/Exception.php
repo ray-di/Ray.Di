@@ -6,9 +6,6 @@
  */
 namespace Ray\Di;
 
-/**
- * Generic package exception.
- */
 class Exception extends \Exception
 {
 }

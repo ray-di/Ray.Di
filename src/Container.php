@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Ray package.
  *
@@ -6,22 +7,64 @@
  */
 namespace Ray\Di;
 
-use Aura\Di\Container as AuraContainer;
-use Aura\Di\ContainerInterface;
-use Aura\Di\ForgeInterface;
+use Ray\Di\Exception\Unbound;
 
-/**
- * Dependency injection container.
- */
-class Container extends AuraContainer implements ContainerInterface
+final class Container
 {
     /**
-     * @param ForgeInterface $forge
-     *
-     * @Ray\Di\Di\Inject
+     * @var InjectInterface[]
      */
-    public function __construct(ForgeInterface $forge)
+    private $container = [];
+
+    /**
+     * @param Bind $bind
+     */
+    public function add(Bind $bind)
     {
-        parent::__construct($forge);
+        $this->container[(string) $bind] = $bind->getBound();
+    }
+
+    /**
+     * @param string $interface
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function getInstance($interface, $name)
+    {
+        return $this->getDependency($interface . '-' . $name);
+    }
+
+    /**
+     * @param string $index
+     *
+     * @return mixed
+     * @throws Unbound
+     */
+    public function getDependency($index)
+    {
+        if (! isset($this->container[$index])) {
+            throw new Unbound($index);
+        }
+        $dependency = $this->container[$index];
+        $instance = $dependency->inject($this);
+
+        return $instance;
+    }
+
+    /**
+     * @return InjectInterface[]
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @param Container $container
+     */
+    public function merge(Container $container)
+    {
+        $this->container = $this->container + $container->getContainer();
     }
 }
