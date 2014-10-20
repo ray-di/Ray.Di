@@ -70,7 +70,7 @@ This is an example of **Linked Bindings**. Linked bindings map a type to its imp
 [Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) map a type to its provider.
 
 ```php
-$this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvider');
+$this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider::class);
 ```
 The provider class implements Ray's Provider interface, which is a simple, general interface for supplying values:
 
@@ -162,7 +162,7 @@ public RealBillingService(CreditCardProcessorInterface $processor, CreditCardPro
 ```php
 protected function configure()
 {
-    $this->bind('UserInterface')->toInstance(new User);
+    $this->bind(UserInterface::class)->toInstance(new User);
 }
 ```
 You can bind a type to an instance of that type. This is usually only useful for objects that don't have dependencies of their own, such as value objects:
@@ -203,7 +203,7 @@ use Ray\Di\Scope;
 
 protected function configure()
 {
-    $this->bind('TransactionLogInterface')->to('InMemoryTransactionLog')->in(Scope::SINGLETON);
+    $this->bind(TransactionLogInterface::class)->to(InMemoryTransactionLog::class)->in(Scope::SINGLETON);
 }
 ```
 
@@ -336,7 +336,7 @@ class TaxModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->annotatedWith('Tax'),
             $this->matcher->any(),
-            [new TaxCharger]
+            [$this->requestInjection(TaxCharger::class)]
         );
     }
 }
@@ -353,7 +353,7 @@ class AopMatcherModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->any(),                 // In any class and
             $this->matcher->startWith('delete'), // ..the method start with "delete"
-            [new Logger]
+            [$this->requestInjection(Logger::class)]
         );
     }
 }
@@ -364,13 +364,13 @@ class AopMatcherModule extends AbstractModule
 A module can install other modules to configure more bindings.
 
  * Earlier bindings have priority even if the same binding is made later.
- * The module can use an existing bindings by passing in `$this`. The bindings in that module have priority.
+ * `overrideInstall` bindings in that module have priority.
 
 ```php
 protected function configure()
 {
     $this->install(new OtherModule);
-    $this->install(new CustomiseModule($this);
+    $this->overrideInstall(new CustomiseModule);
 }
 ```
 
@@ -381,8 +381,8 @@ You can use a built-in injector in the module which uses existing bindings.
 ```php
 protected function configure()
 {
-    $this->bind('DbInterface')->to('Db');
-    $dbLogger = $this->requestInjection('DbLogger');
+    $this->bind(DbInterface::class)->to(Db::class);
+    $dbLogger = $this->requestInjection(DbLogger::class);
 }
 ```
 
@@ -391,11 +391,8 @@ Best practice
 Your code should deal directly with the Injector as little as possible. Instead, you want to bootstrap your application by injecting one root object.
 The class of this object should use injection to obtain references to other objects on which it depends. The classes of those objects should do the same.
 
-Performance
-===========
-
 Performance boost
-=================
+-------------
 
 インジェクターオブジェクトをシリアライズすると、束縛の最適化が行われます。
 `unserialize`して利用したインジェクターではパフォーマンスが向上します。
@@ -409,7 +406,7 @@ $cachedInjector = serialize($injector);
 // load
 $injector = unserialize($cachedInjector);
 $lister = $injector->getInstance(ListerInterface::class);
-
+```
 
 Requirements
 ------------
