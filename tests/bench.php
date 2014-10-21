@@ -3,7 +3,7 @@
 namespace Ray\Di;
 
 require __DIR__ . '/bootstrap.php';
-$n = 1000;
+$n = 100;
 
 $injector = new Injector(new FakeCarModule);
 $serialize = serialize($injector);
@@ -15,7 +15,6 @@ foreach (range(1, $n) as $i) {
 }
 
 $timer1 = microtime(true) - $timer;
-var_dump($timer1);
 
 $timer = microtime(true);
 foreach (range(1, $n) as $i) {
@@ -23,7 +22,8 @@ foreach (range(1, $n) as $i) {
     $injector->getInstance(FakeCarInterface::class);
 }
 $timer2 = microtime(true) - $timer;
-var_dump($timer2);
-var_dump($timer1 / $timer2);
 
-var_dump(memory_get_peak_usage(true));
+printf("%f msec per inject\n", $timer2 / $n * 1000);
+printf("%f times faster in runtime\n", $timer1 / $timer2);
+printf("# Files: %d\n",  count(get_included_files()));
+printf("Memory usage: %d kb\n", memory_get_peak_usage()/1024);
