@@ -115,6 +115,30 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(FakeHardtop::class, $car->hardtop);
     }
 
+    public function testGetConcreteClass()
+    {
+        $injector = new Injector;
+        $robot = $injector->getInstance(FakeRobot::class);
+        $this->assertInstanceOf(FakeRobot::class, $robot);
+    }
+
+    public function testGetConcretHavingDependency()
+    {
+        $injector = new Injector;
+        $team = $injector->getInstance(FakeRobotTeam::class);
+        /** @var $team FakeRobotTeam */
+        $this->assertInstanceOf(FakeRobotTeam::class, $team);
+        $this->assertInstanceOf(FakeRobot::class, $team->robot1);
+        $this->assertInstanceOf(FakeRobot::class, $team->robot2);
+    }
+
+    public function testGetConcreteClassWithModule()
+    {
+        $injector = new Injector(new FakeCarModule);
+        $car = $injector->getInstance(FakeCar::class);
+        $this->assertInstanceOf(FakeCar::class, $car);
+    }
+
     public function testAnnotationBasedInjection()
     {
         $injector = new Injector(new FakeCarModule);

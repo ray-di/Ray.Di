@@ -36,6 +36,8 @@ final class Container
     }
 
     /**
+     * Return dependency injected instance
+     *
      * @param string $index
      *
      * @return mixed
@@ -44,12 +46,31 @@ final class Container
     public function getDependency($index)
     {
         if (! isset($this->container[$index])) {
-            throw new Unbound($index);
+            return $this->getOnDemandBoundDependency($index);
         }
         $dependency = $this->container[$index];
         $instance = $dependency->inject($this);
 
         return $instance;
+    }
+
+    /**
+     * @param string $index
+     *
+     * @return mixed
+     * @throws Exception\NotFound
+     * @throws Unbound
+     */
+    private function getOnDemandBoundDependency($index)
+    {
+        list($class, $name) = explode('-', $index);
+        if (! class_exists($class)) {
+            throw new Unbound("interface:{$class} name:{$name}");
+        }
+        // binding on demand
+        $this->add((new Bind($this, $class))->to($class));
+
+        return $this->getDependency($class . '-' . $name);
     }
 
     /**
