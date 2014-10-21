@@ -300,6 +300,7 @@ Requirement
 -----------
 
 * PHP 5.5+
+* hhvm
 
 
 Installation

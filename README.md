@@ -412,6 +412,7 @@ Requirements
 ------------
 
 * PHP 5.5+
+* hhvm
 
 Installation
 ------------

@@ -29,13 +29,27 @@ final class Parameter
      */
     public function __construct(\ReflectionParameter $parameter, $name)
     {
-        $typHint = $parameter->getClass();
-        $interface = isset($typHint->name) ?  $typHint->name : '';
+        $interface = $this->getTypeHint($parameter);
         $this->isDefaultAvailable = $parameter->isDefaultValueAvailable();
         if ($this->isDefaultAvailable) {
             $this->default = $parameter->getDefaultValue();
         }
         $this->index = $interface . '-' . $name;
+    }
+
+    /**
+     * @param \ReflectionParameter $parameter
+     *
+     * @return string
+     */
+    private function getTypeHint(\ReflectionParameter $parameter)
+    {
+        if (defined('HHVM_VERSION')) {
+            return $parameter->info['type_hint'];
+        }
+        $typHint = $parameter->getClass();
+
+        return $typHint instanceof \ReflectionClass ? $typHint->name : '';
     }
 
     /**
