@@ -22,9 +22,7 @@ final class Instance implements InjectInterface
     }
 
     /**
-     * @param Container $container
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function inject(Container $container)
     {

@@ -32,9 +32,7 @@ final class Provider implements InjectInterface
     }
 
     /**
-     * @param Container $container
-     *
-     * @return mixed|object
+     * {@inheritdoc}
      */
     public function inject(Container $container)
     {

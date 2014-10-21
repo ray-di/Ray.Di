@@ -8,5 +8,12 @@ namespace Ray\Di;
 
 interface InjectInterface
 {
+    /**
+     * Inject dependencies into dependent objects
+     *
+     * @param Container $container
+     *
+     * @return mixed
+     */
     public function inject(Container $container);
 }

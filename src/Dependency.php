@@ -41,9 +41,7 @@ final class Dependency implements InjectInterface
     }
 
     /**
-     * @param Container $container
-     *
-     * @return mixed|object
+     * {@inheritdoc}
      */
     public function inject(Container $container)
     {
