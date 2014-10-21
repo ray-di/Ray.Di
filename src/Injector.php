@@ -16,9 +16,9 @@ class Injector implements InjectorInterface
     /**
      * @param AbstractModule $module
      */
-    public function __construct(AbstractModule $module)
+    public function __construct(AbstractModule $module = null)
     {
-        $this->module = $module;
+        $this->module = $module ?: new NullModule;
     }
 
     /**
