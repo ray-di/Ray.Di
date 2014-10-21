@@ -7,6 +7,7 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
@@ -22,6 +23,7 @@ final class AnnotatedClass
      */
     public function __construct(AnnotationReader $reader)
     {
+        AnnotationRegistry::registerFile(__DIR__ . '/DoctrineAnnotations.php');
         $this->reader = $reader;
     }
 

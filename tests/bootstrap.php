@@ -5,5 +5,3 @@ $loader = require dirname(__DIR__) . '/vendor/autoload.php';
 $loader->addPsr4('Ray\Di\\', dirname(__DIR__) . '/src');
 $loader->addPsr4('Ray\Di\\', __DIR__ . '/Fake');
 $loader->addPsr4('Ray\Di\\', __DIR__);
-
-\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$loader, 'loadClass']);
