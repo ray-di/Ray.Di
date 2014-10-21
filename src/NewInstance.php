@@ -6,10 +6,10 @@
  */
 namespace Ray\Di;
 
-final class NewInstance implements \Serializable
+final class NewInstance
 {
     /**
-     * @var \ReflectionClass
+     * @var string
      */
     private $class;
 
@@ -34,7 +34,7 @@ final class NewInstance implements \Serializable
         Name $constructorName = null
     ) {
         $constructorName = $constructorName ?: new Name(Name::ANY);
-        $this->class = $class;
+        $this->class = $class->name;
         $constructor = $class->getConstructor();
         if ($constructor) {
             $this->parameters = new Parameters($constructor, $constructorName);
@@ -50,7 +50,7 @@ final class NewInstance implements \Serializable
     public function __invoke(Container $container)
     {
         // constructor injection
-        $instance = $this->parameters ? $this->class->newInstanceArgs($this->parameters->get($container)) : new $this->class->name;
+        $instance = $this->parameters ? (new \ReflectionClass($this->class))->newInstanceArgs($this->parameters->get($container)) : new $this->class;
 
         // setter injection
         if ($this->setterMethods) {
@@ -61,16 +61,5 @@ final class NewInstance implements \Serializable
             $instance = $instance->get();
         }
         return $instance;
-    }
-
-    public function serialize()
-    {
-        return serialize([$this->class->name, $this->setterMethods, $this->parameters]);
-    }
-
-    public function unserialize($serialized)
-    {
-        list($class, $this->setterMethods, $this->parameters) = unserialize($serialized);
-        $this->class = new \ReflectionClass($class);
     }
 }

@@ -8,10 +8,10 @@ namespace Ray\Di;
 
 use Ray\Di\Exception\Unbound;
 
-final class SetterMethod implements \Serializable
+final class SetterMethod
 {
     /**
-     * @var \ReflectionMethod
+     * @var string
      */
     private $method;
 
@@ -33,7 +33,7 @@ final class SetterMethod implements \Serializable
      */
     public function __construct(\ReflectionMethod $method, Name $name)
     {
-        $this->method = $method;
+        $this->method = $method->name;
         $this->parameters = new Parameters($method, $name);
     }
 
@@ -59,23 +59,6 @@ final class SetterMethod implements \Serializable
             }
             throw $e;
         }
-        $this->method->invokeArgs($instance, $parameters);
-    }
-
-    public function serialize()
-    {
-        return serialize(
-            [
-                [$this->method->class, $this->method->name],
-                $this->parameters,
-                $this->isOptional
-            ]
-        );
-    }
-
-    public function unserialize($serialized)
-    {
-        list($method, $this->parameters, $this->isOptional) = unserialize($serialized);
-        $this->method = new \ReflectionMethod($method[0], $method[1]);
+        call_user_func_array([$instance, $this->method], $parameters);
     }
 }
