@@ -33,4 +33,3 @@ class ListerModule extends AbstractModule
         $this->bind(MovieListerInterface::class)->to(MovieLister::class);
     }
 }
-

@@ -87,4 +87,3 @@ class DependencyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(spl_object_hash($car1), spl_object_hash($car2));
     }
 }
- 

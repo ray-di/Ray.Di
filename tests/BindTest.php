@@ -40,4 +40,3 @@ class BindTest extends \PHPUnit_Framework_TestCase
         $this->bind->toProvider('Invalid-class');
     }
 }
- 

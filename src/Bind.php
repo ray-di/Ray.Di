@@ -70,6 +70,13 @@ final class Bind
         return $this;
     }
 
+    /**
+     * @param string          $class
+     * @param InjectionPoints $injectionPoints
+     * @param string          $postConstruct
+     *
+     * @return $this
+     */
     public function toExplicit($class, InjectionPoints $injectionPoints, $postConstruct)
     {
         $this->bound = (new DependencyFactory)->newExplicit(
@@ -84,7 +91,7 @@ final class Bind
     }
 
     /**
-     * @param $provider
+     * @param string $provider
      *
      * @return $this
      * @throws NotFound
