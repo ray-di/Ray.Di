@@ -57,7 +57,7 @@ class ListerModule extends AbstractModule
 }
 
 $injector = new Injector(new ListerModule);
-$lister = $injector->getInstance('ListerInterface::class');
+$lister = $injector->getInstance(ListerInterface::class);
 $works = ($lister->finder instanceof Finder::class);
 echo(($works) ? 'It works!' : 'It DOES NOT work!');
 
@@ -352,7 +352,7 @@ class AopMatcherModule extends AbstractModule
     {
         $this->bindInterceptor(
             $this->matcher->any(),                 // In any class and
-            $this->matcher->startWith('delete'), // ..the method start with "delete"
+            $this->matcher->startWith('delete'),   // ..the method start with "delete"
             [$this->requestInjection(Logger::class)]
         );
     }

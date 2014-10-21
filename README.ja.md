@@ -65,7 +65,7 @@ class ListerModule extends AbstractModule
 }
 
 $injector = new Injector(new ListerModule);
-$lister = $injector->getInstance('ListerInterface::class');
+$lister = $injector->getInstance(ListerInterface::class);
 $works = ($lister->finder instanceof Finder::class);
 echo(($works) ? 'It works!' : 'It DOES NOT work!');
 
@@ -260,13 +260,12 @@ class TaxModule extends AbstractModule
 ```php
 class AopMatcherModule extends AbstractModule
 {
-    pro
     protected function configure()
     {
         $this->bindInterceptor(
             $this->matcher->any(),                 // In any class and
             $this->matcher->startWith('delete'),   // ..the method start with "delete"
-            [$this->requestInjection('Logger')]
+            [$this->requestInjection(Logger::class)]
         );
     }
 }
