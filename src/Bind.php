@@ -121,13 +121,17 @@ final class Bind
     }
 
     /**
-     * @param string $scope
+     * @param $scope
+     *
+     * @return $this
      */
     public function in($scope)
     {
         if ($this->bound instanceof Dependency || $this->bound instanceof Provider) {
             $this->bound->setScope($scope);
         }
+
+        return $this;
     }
 
     /**
