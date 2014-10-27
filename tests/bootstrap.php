@@ -5,3 +5,5 @@ $loader = require dirname(__DIR__) . '/vendor/autoload.php';
 $loader->addPsr4('Ray\Di\\', dirname(__DIR__) . '/src');
 $loader->addPsr4('Ray\Di\\', __DIR__ . '/Fake');
 $loader->addPsr4('Ray\Di\\', __DIR__);
+
+$_ENV['TMP_DIR'] = __DIR__ . '/tmp';
