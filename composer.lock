@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7b1794e1c8e4cab74e8b26bd1a868f87",
+    "hash": "73d286bcfdddea2d3b1ee381e8ebead2",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -173,16 +173,16 @@
         },
         {
             "name": "ray/aop",
-            "version": "1.3.1",
+            "version": "dev-develop-2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "35121ad280584391b03a048bceae93f27609823c"
+                "reference": "0852fafa631014c5bdefaeb61d64aa96596dfab5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/35121ad280584391b03a048bceae93f27609823c",
-                "reference": "35121ad280584391b03a048bceae93f27609823c",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/0852fafa631014c5bdefaeb61d64aa96596dfab5",
+                "reference": "0852fafa631014c5bdefaeb61d64aa96596dfab5",
                 "shasum": ""
             },
             "require": {
@@ -191,12 +191,12 @@
                 "php": ">=5.4.0"
             },
             "suggest": {
-                "ray/di": "DI framework supports Ray.Aop"
+                "ray/di": "Guice style annotation-driven dependency injection framework"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -217,17 +217,21 @@
             "description": "Aspect oriented framework",
             "homepage": "https://github.com/koriym/Ray.Aop",
             "keywords": [
-                "annotation",
+                "AOP Alliance",
+                "annotations",
                 "aop",
-                "aspect"
+                "code gen",
+                "method invocation"
             ],
-            "time": "2014-09-29 07:13:58"
+            "time": "2014-10-26 03:04:53"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "ray/aop": 20
+    },
     "prefer-stable": false,
     "platform": {
         "php": ">=5.5.0"
