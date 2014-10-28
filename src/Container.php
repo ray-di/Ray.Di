@@ -78,7 +78,7 @@ final class Container
     public function getDependency($index)
     {
         if (! isset($this->container[$index])) {
-            return $this->getOnDemandBoundDependency($index);
+            return $this->getConcreteClass($index);
         }
         $dependency = $this->container[$index];
         $instance = $dependency->inject($this);
@@ -93,7 +93,7 @@ final class Container
      * @throws Exception\NotFound
      * @throws Unbound
      */
-    private function getOnDemandBoundDependency($index)
+    private function getConcreteClass($index)
     {
         list($class, $name) = explode('-', $index);
         if (! class_exists($class)) {
