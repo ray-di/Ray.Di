@@ -121,7 +121,7 @@ final class Bind
     }
 
     /**
-     * @param $scope
+     * @param string $scope
      *
      * @return $this
      */

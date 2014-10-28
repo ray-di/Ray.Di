@@ -7,6 +7,7 @@
  */
 namespace Ray\Di;
 
+use Ray\Aop\Compiler;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
 
@@ -25,11 +26,11 @@ final class Container
     /**
      * @var \SplObjectStorage
      */
-    private $storage;
+    private $dependencyStorage;
 
     public function __construct()
     {
-        $this->storage = new \SplObjectStorage;
+        $this->dependencyStorage = new \SplObjectStorage;
     }
 
     /**
@@ -39,7 +40,7 @@ final class Container
     {
         $dependency = $bind->getBound();
         if ($dependency instanceof Dependency) {
-            $this->storage->attach($dependency);
+            $this->dependencyStorage->attach($dependency);
         }
         $this->container[(string) $bind] = $dependency;
     }
@@ -50,7 +51,7 @@ final class Container
     public function addPointcut(Pointcut $pointcut)
     {
         $this->pointcuts[] = $pointcut;
-        foreach ($pointcut->interceptors as $interceptor) {
+        foreach ($pointcut->interceptors as &$interceptor) {
             $bind = (new Bind($this, $interceptor))->to($interceptor)->in(Scope::SINGLETON);
             $this->add($bind);
         }
@@ -121,8 +122,14 @@ final class Container
         $this->container = $this->container + $container->getContainer();
     }
 
-    public function acceptWeaver(Weaver $weaver)
+    /**
+     * @param Compiler $compiler
+     */
+    public function weaveAspects(Compiler $compiler)
     {
-        $weaver->visit($this->storage, $this->pointcuts);
+        foreach ($this->dependencyStorage as $dependency) {
+            /** @var $dependency Dependency */
+            $dependency->weaveAspects($compiler, $this->pointcuts);
+        }
     }
 }

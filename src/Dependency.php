@@ -6,6 +6,11 @@
  */
 namespace Ray\Di;
 
+use Ray\Aop\Bind as AopBind;
+use Ray\Aop\Compiler as AopCompiler;
+use Ray\Aop\MethodInterceptor;
+use Ray\Aop\Pointcut;
+
 final class Dependency implements InjectInterface
 {
     /**
@@ -35,9 +40,7 @@ final class Dependency implements InjectInterface
     public function __construct(NewInstance $newInstance, \ReflectionMethod $postConstruct = null)
     {
         $this->newInstance = $newInstance;
-        if ($postConstruct) {
-            $this->postConstruct = $postConstruct->name;
-        }
+        $this->postConstruct = $postConstruct ? $postConstruct->name : null;
     }
 
     /**
@@ -70,6 +73,26 @@ final class Dependency implements InjectInterface
         if ($scope === Scope::SINGLETON) {
             $this->isSingleton = true;
         }
+    }
+
+    /**
+     * @param AopCompiler $compiler
+     * @param Pointcut[]  $pointcuts
+     */
+    public function weaveAspects(AopCompiler $compiler, array $pointcuts)
+    {
+        $class = (string) $this->newInstance;
+        $isInterceptor = (new \ReflectionClass($class))->implementsInterface(MethodInterceptor::class);
+        if ($isInterceptor) {
+            return;
+        }
+        $bind = new AopBind;
+        $bind->bind((string) $this->newInstance, $pointcuts);
+        if (! $bind->bindings) {
+            return ;
+        }
+        $class = $compiler->compile((string) $this->newInstance, $bind);
+        $this->newInstance->weaveAspects($class, $bind);
     }
 
     public function __sleep()

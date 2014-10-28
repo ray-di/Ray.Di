@@ -2,6 +2,12 @@
 
 namespace Ray\Di;
 
+use Ray\Aop\Bind as AopBind;
+use Ray\Aop\Compiler;
+use Ray\Aop\Matcher;
+use Ray\Aop\Pointcut;
+use Ray\Aop\WeavedInterface;
+
 class DependencyTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -86,4 +92,17 @@ class DependencyTest extends \PHPUnit_Framework_TestCase
         $car2 = $this->dependency->inject($container);
         $this->assertSame(spl_object_hash($car1), spl_object_hash($car2));
     }
+
+
+    public function testInjectInterceptor()
+    {
+        $dependency = new Dependency(new NewInstance(new \ReflectionClass(FakeAop::class)));
+        $pointcut = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [new Interceptor(FakeDoubleInterceptor::class)]);
+        $dependency->weaveAspects(new Compiler($_ENV['TMP_DIR']), [$pointcut]);
+        $instance = $dependency->inject(new Container);
+        $isWeave =(new \ReflectionClass($instance))->implementsInterface(WeavedInterface::class);
+        $this->assertTrue($isWeave);
+        $this->assertInstanceOf(AopBind::class, $instance->bind);
+    }
+
 }

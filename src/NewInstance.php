@@ -6,6 +6,8 @@
  */
 namespace Ray\Di;
 
+use Ray\Aop\Bind as AopBind;
+
 final class NewInstance
 {
     /**
@@ -22,6 +24,11 @@ final class NewInstance
      * @var Parameters
      */
     private $parameters;
+
+    /**
+     * @var AopBind
+     */
+    private $bind;
 
     /**
      * @param \ReflectionClass $class
@@ -43,6 +50,16 @@ final class NewInstance
     }
 
     /**
+     * @param string  $class
+     * @param AopBind $bind
+     */
+    public function weaveAspects($class, AopBind $bind)
+    {
+        $this->class = $class;
+        $this->bind = new AspectBind($bind);
+    }
+
+    /**
      * @param Container $container
      *
      * @return object
@@ -57,9 +74,23 @@ final class NewInstance
             $this->setterMethods->__invoke($instance, $container);
         }
 
+        // is provider ?
         if ($instance instanceof ProviderInterface) {
             $instance = $instance->get();
         }
+
+        // bind dependency injected interceptors
+        if ($this->bind instanceof AspectBind) {
+            $instance->bind = $this->bind->inject($container);
+        }
         return $instance;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->class;
     }
 }

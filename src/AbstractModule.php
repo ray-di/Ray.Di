@@ -24,16 +24,6 @@ abstract class AbstractModule
     private $container;
 
     /**
-     * @var Weaver
-     */
-    private $weaver;
-
-    /**
-     * @var DependencyFactory
-     */
-    private $dependencyFactory;
-
-    /**
      * @param AbstractModule $module
      */
     public function __construct(
@@ -47,7 +37,7 @@ abstract class AbstractModule
         if ($module) {
             $this->container->merge($module->getContainer());
         }
-        $this->container->acceptWeaver(new Weaver($this->container, new Compiler($_ENV['TMP_DIR'])));
+        $this->container->weaveAspects(new Compiler($_ENV['TMP_DIR']));
     }
 
     abstract protected function configure();
