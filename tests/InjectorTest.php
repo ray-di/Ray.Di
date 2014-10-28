@@ -169,7 +169,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testAop()
     {
-        $injector = new Injector(new FakeAopModule);
+        $injector = new Injector(new FakeAopModule, $_ENV['TMP_DIR']);
         $instance = $injector->getInstance(FakeAopInterface::class);
         /** @var $instance FakeAop */
         $result = $instance->returnSame(2);
