@@ -37,7 +37,7 @@ final class NewInstance
      */
     public function __construct(
         \ReflectionClass $class,
-        SetterMethods $setterMethods = null,
+        SetterMethods $setterMethods,
         Name $constructorName = null
     ) {
         $constructorName = $constructorName ?: new Name(Name::ANY);
@@ -70,9 +70,7 @@ final class NewInstance
         $instance = $this->parameters ? (new \ReflectionClass($this->class))->newInstanceArgs($this->parameters->get($container)) : new $this->class;
 
         // setter injection
-        if ($this->setterMethods) {
-            $this->setterMethods->__invoke($instance, $container);
-        }
+        $this->setterMethods->__invoke($instance, $container);
 
         // is provider ?
         if ($instance instanceof ProviderInterface) {

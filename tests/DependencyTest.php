@@ -96,8 +96,8 @@ class DependencyTest extends \PHPUnit_Framework_TestCase
 
     public function testInjectInterceptor()
     {
-        $dependency = new Dependency(new NewInstance(new \ReflectionClass(FakeAop::class)));
-        $pointcut = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [new Interceptor(FakeDoubleInterceptor::class)]);
+        $dependency = new Dependency(new NewInstance(new \ReflectionClass(FakeAop::class), new SetterMethods([])));
+        $pointcut = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [FakeDoubleInterceptor::class]);
         $dependency->weaveAspects(new Compiler($_ENV['TMP_DIR']), [$pointcut]);
         $instance = $dependency->inject(new Container);
         $isWeave =(new \ReflectionClass($instance))->implementsInterface(WeavedInterface::class);
