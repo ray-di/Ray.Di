@@ -6,6 +6,6 @@
  */
 namespace Ray\Di\Exception;
 
-class Unbound extends \LogicException implements ExceptionInterface
+interface ExceptionInterface
 {
 }
