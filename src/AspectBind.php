@@ -11,7 +11,7 @@ use Ray\Aop\Bind as AopBind;
 final class AspectBind
 {
     /**
-     * @var Bind
+     * @var AopBind
      */
     private $bind;
 
