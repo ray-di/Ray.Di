@@ -7,6 +7,7 @@
  */
 namespace Ray\Di;
 
+use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
 
 final class Container
@@ -17,11 +18,42 @@ final class Container
     private $container = [];
 
     /**
+     * @var Pointcut[]
+     */
+    private $pointcuts = [];
+
+    /**
+     * @var \SplObjectStorage
+     */
+    private $storage;
+
+    public function __construct()
+    {
+        $this->storage = new \SplObjectStorage;
+    }
+
+    /**
      * @param Bind $bind
      */
     public function add(Bind $bind)
     {
-        $this->container[(string) $bind] = $bind->getBound();
+        $dependency = $bind->getBound();
+        if ($dependency instanceof Dependency) {
+            $this->storage->attach($dependency);
+        }
+        $this->container[(string) $bind] = $dependency;
+    }
+
+    /**
+     * @param Pointcut $pointcut
+     */
+    public function addPointcut(Pointcut $pointcut)
+    {
+        $this->pointcuts[] = $pointcut;
+        foreach ($pointcut->interceptors as $interceptor) {
+            $bind = (new Bind($this, $interceptor))->to($interceptor)->in(Scope::SINGLETON);
+            $this->add($bind);
+        }
     }
 
     /**
@@ -87,5 +119,10 @@ final class Container
     public function merge(Container $container)
     {
         $this->container = $this->container + $container->getContainer();
+    }
+
+    public function acceptWeaver(Weaver $weaver)
+    {
+        $weaver->visit($this->storage, $this->pointcuts);
     }
 }

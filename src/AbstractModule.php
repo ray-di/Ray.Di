@@ -41,14 +41,13 @@ abstract class AbstractModule
     ) {
         if (! $this->container) {
             $this->container = new Container;
-            $this->weaver = new Weaver($this->container, new Compiler($_ENV['TMP_DIR']));
         }
         $this->matcher = new Matcher;
         $this->configure();
         if ($module) {
             $this->container->merge($module->getContainer());
         }
-        $this->weaver->visit($this->container);
+        $this->container->acceptWeaver(new Weaver($this->container, new Compiler($_ENV['TMP_DIR'])));
     }
 
     abstract protected function configure();
@@ -111,6 +110,6 @@ abstract class AbstractModule
     public function bindInterceptors(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
     {
         $pointcut = new Pointcut($classMatcher, $methodMatcher, $interceptors);
-        $this->weaver->add($pointcut);
+        $this->container->addPointcut($pointcut);
     }
 }
