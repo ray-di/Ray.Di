@@ -39,7 +39,7 @@ final class Container
     public function add(Bind $bind)
     {
         $dependency = $bind->getBound();
-        if ($dependency instanceof Dependency) {
+        if ($dependency instanceof Dependency && $this->dependencyStorage instanceof \SplObjectStorage) {
             $this->dependencyStorage->attach($dependency);
         }
         $this->container[(string) $bind] = $dependency;

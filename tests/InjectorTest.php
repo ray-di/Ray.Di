@@ -175,4 +175,17 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $result = $instance->returnSame(2);
         $this->assertSame(4, $result);
     }
+
+    public function testBuiltinBinding()
+    {
+        $instance = (new Injector)->getInstance(FakeBuiltin::class);
+        /** @var $instance FakeBuiltin */
+        $this->assertInstanceOf(Injector::class, $instance->injector);
+    }
+
+    public function testSerializeBuiltinBinding()
+    {
+        $instance = unserialize(serialize(new Injector))->getInstance(FakeBuiltin::class);
+        $this->assertInstanceOf(Injector::class, $instance->injector);
+    }
 }

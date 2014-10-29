@@ -19,6 +19,8 @@ class Injector implements InjectorInterface
     public function __construct(AbstractModule $module = null)
     {
         $this->container =  $module ? $module->getContainer() : new Container;
+        // builtin injection
+        (new Bind($this->container, InjectorInterface::class))->toInstance($this);
     }
 
     /**
