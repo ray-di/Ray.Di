@@ -74,19 +74,6 @@ abstract class AbstractModule
     }
 
     /**
-     * @param string $interface
-     * @param string $name
-     *
-     * @return mixed
-     */
-    public function requestInjection($interface, $name)
-    {
-        $instance = $this->container->getInstance($interface, $name);
-
-        return $instance;
-    }
-
-    /**
      * @return Container
      */
     public function getContainer()
