@@ -9,16 +9,16 @@ namespace Ray\Di;
 class Injector implements InjectorInterface
 {
     /**
-     * @var AbstractModule
+     * @var Container
      */
-    private $module;
+    private $container;
 
     /**
      * @param AbstractModule $module
      */
     public function __construct(AbstractModule $module = null)
     {
-        $this->module = $module ?: new NullModule;
+        $this->container =  $module ? $module->getContainer() : new Container;
     }
 
     /**
@@ -29,7 +29,7 @@ class Injector implements InjectorInterface
      */
     public function getInstance($interface, $name = Name::ANY)
     {
-        $instance = $this->module->requestInjection($interface, $name);
+        $instance = $this->container->getInstance($interface, $name);
 
         return $instance;
     }
