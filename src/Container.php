@@ -132,4 +132,9 @@ final class Container
             $dependency->weaveAspects($compiler, $this->pointcuts);
         }
     }
+
+    public function __sleep()
+    {
+        return ['container'];
+    }
 }
