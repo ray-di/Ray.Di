@@ -45,7 +45,7 @@ final class Parameter
     private function getTypeHint(\ReflectionParameter $parameter)
     {
         if (defined('HHVM_VERSION')) {
-            return $parameter->info['type_hint'];
+            return $parameter->info['type_hint']; // @codeCoverageIgnore
         }
         $typHint = $parameter->getClass();
 
