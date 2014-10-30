@@ -288,10 +288,10 @@ class BoundInstance implements BoundInstanceInterface
     private function getBoundClassByInfo($class, $definition, $bindings, $toType)
     {
         list($isSingleton, $interface) = $this->getBindingInfo($class, $definition, $bindings);
-
-        if ($isSingleton && $this->container->has($interface)) {
+        $singletonKey = $interface . $this->name;
+        if ($isSingleton && $this->container->has($singletonKey)) {
             $this->isSingleton = true;
-            $object = $this->container->get($interface);
+            $object = $this->container->get($singletonKey);
 
             return $object;
         }

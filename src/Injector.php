@@ -332,7 +332,8 @@ class Injector implements InjectorInterface, \Serializable
         if ($definition->isSingleton) {
             $key = $this->logger->getSingletonKey($definition);
             $this->logger->setSingletonInstance($key, $object);
-            $this->container->set($definition->interface, $object);
+            $singletonKey = $definition->interface . $definition->name;
+            $this->container->set($singletonKey, $object);
         }
     }
 

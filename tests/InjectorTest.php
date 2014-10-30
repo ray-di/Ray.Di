@@ -10,6 +10,7 @@ use Ray\Aop\Compiler;
 use Ray\Di\Modules\InstanceInstallModule;
 use Ray\Di\Modules\InstanceModule;
 use Ray\Di\Modules\NoAnnotationBindingModule;
+use Ray\Di\Modules\NamedBindSingletonScopeModule;
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -501,5 +502,14 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->injector->setModule(new Modules\SetterAopModule);
         $instance = $this->injector->getInstance('Ray\Di\Definition\Basic');
         $this->assertInstanceOf('\Ray\Di\Mock\UserDb', $instance->db);
+    }
+
+    public function testNamedBindSingletonScope()
+    {
+        $this->injector->setModule(new NamedBindSingletonScopeModule);
+        $instance = $this->injector->getInstance('\Ray\Di\Mock\NamedBindSingletonScope');
+        /** @var $instance \Ray\Di\Mock\NamedBindSingletonScope */
+        $this->assertInstanceOf('Ray\Di\Mock\Db', $instance->firstDb);
+        $this->assertNotSame(spl_object_hash($instance->firstDb), spl_object_hash($instance->secondDb));
     }
 }
