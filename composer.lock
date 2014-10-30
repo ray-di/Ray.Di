@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "73d286bcfdddea2d3b1ee381e8ebead2",
+    "hash": "75a967c1b061c8cb80981f1c8dd8da54",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -177,12 +177,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "0852fafa631014c5bdefaeb61d64aa96596dfab5"
+                "reference": "b7ba610bd3dac35f0fe1c92842042a3958bd4c22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/0852fafa631014c5bdefaeb61d64aa96596dfab5",
-                "reference": "0852fafa631014c5bdefaeb61d64aa96596dfab5",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/b7ba610bd3dac35f0fe1c92842042a3958bd4c22",
+                "reference": "b7ba610bd3dac35f0fe1c92842042a3958bd4c22",
                 "shasum": ""
             },
             "require": {
@@ -196,7 +196,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-develop-2": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -223,7 +223,7 @@
                 "code gen",
                 "method invocation"
             ],
-            "time": "2014-10-26 03:04:53"
+            "time": "2014-10-28 15:32:58"
         }
     ],
     "packages-dev": [],
