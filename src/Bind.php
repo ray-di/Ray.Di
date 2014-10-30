@@ -108,7 +108,7 @@ final class Bind
     }
 
     /**
-     * @param mixed $instance
+     * @param Injector $instance
      *
      * @return $this
      */
