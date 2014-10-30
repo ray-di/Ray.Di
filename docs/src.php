@@ -1,6 +1,8 @@
 <?php
 
-namespace Ray\Di\Test\Sample;
+namespace Ray\Di\Demo;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 use Ray\Di\Di\Inject;
 use Ray\Di\AbstractModule;
@@ -33,3 +35,4 @@ class ListerModule extends AbstractModule
         $this->bind(MovieListerInterface::class)->to(MovieLister::class);
     }
 }
+
