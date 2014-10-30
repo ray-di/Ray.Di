@@ -310,7 +310,7 @@ Ray.Diをインストールにするには [Composer](http://getcomposer.org)を
 
 ```bash
 # Add Ray.Di as a dependency
-$ composer require ray/di 2.*
+$ composer require ray/di ~2.0@dev
 ```
 
 Testing Ray.Di
@@ -319,8 +319,8 @@ Testing Ray.Di
 インストールしてテストを行うにはこのようにします。
 
 ```bash
-$ composer create-project ray/di Ray.Di 2.*
+$ composer create-project ray/di Ray.Di ~2.0@dev
 $ cd Ray.Di
 $ phpunit
-$ php tests/docs/sample.php
+$ php docs/demo/01-link-binding.php
 ```
