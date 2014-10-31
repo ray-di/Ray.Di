@@ -25,17 +25,18 @@ final class AspectBind
 
     /**
      * @param Container $container
+     *
+     * @return array
      */
     public function inject(Container $container)
     {
-        foreach ($this->bind as &$interceptors) {
-            foreach ($interceptors as &$method) {
-                foreach ($method as &$interceptor) {
-                    $interceptor = $container->getInstance($interceptor, Name::ANY);
-                }
+        $bindings = $this->bind->getBindings();
+        foreach ($bindings as &$interceptors) {
+            foreach ($interceptors as &$interceptor) {
+                $interceptor = $container->getInstance($interceptor, Name::ANY);
             }
         }
 
-        return $this->bind;
+        return $bindings;
     }
 }

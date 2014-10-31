@@ -102,7 +102,7 @@ class DependencyTest extends \PHPUnit_Framework_TestCase
         $instance = $dependency->inject(new Container);
         $isWeave =(new \ReflectionClass($instance))->implementsInterface(WeavedInterface::class);
         $this->assertTrue($isWeave);
-        $this->assertInstanceOf(AopBind::class, $instance->bind);
+        $this->assertArrayHasKey('returnSame', $instance->bindings);
     }
 
 }

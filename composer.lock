@@ -177,12 +177,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/koriym/Ray.Aop.git",
-                "reference": "b7ba610bd3dac35f0fe1c92842042a3958bd4c22"
+                "reference": "1f901a86f91c4b0cf6793aaf75aadf602b3e6677"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/b7ba610bd3dac35f0fe1c92842042a3958bd4c22",
-                "reference": "b7ba610bd3dac35f0fe1c92842042a3958bd4c22",
+                "url": "https://api.github.com/repos/koriym/Ray.Aop/zipball/1f901a86f91c4b0cf6793aaf75aadf602b3e6677",
+                "reference": "1f901a86f91c4b0cf6793aaf75aadf602b3e6677",
                 "shasum": ""
             },
             "require": {
@@ -223,7 +223,7 @@
                 "code gen",
                 "method invocation"
             ],
-            "time": "2014-10-28 15:32:58"
+            "time": "2014-10-31 06:21:54"
         }
     ],
     "packages-dev": [],

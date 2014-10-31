@@ -88,7 +88,7 @@ final class Dependency implements InjectInterface
         }
         $bind = new AopBind;
         $bind->bind((string) $this->newInstance, $pointcuts);
-        if (! $bind->bindings) {
+        if (! $bind->getBindings()) {
             return ;
         }
         $class = $compiler->compile((string) $this->newInstance, $bind);
