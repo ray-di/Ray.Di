@@ -38,17 +38,17 @@ final class Bind
      */
     public function __construct(Container $container, $interface)
     {
+        $this->container = $container;
+        $this->interface = $interface;
         if (class_exists($interface)) {
             $this->bound = (new DependencyFactory)->newAnnotatedDependency(new \ReflectionClass($interface));
             $container->add($this);
 
             return;
         }
-        if (! interface_exists($interface)) {
+        if ($interface && ! interface_exists($interface)) {
             throw new InvalidBind($interface);
         }
-        $this->container = $container;
-        $this->interface = $interface;
     }
 
     /**
