@@ -174,6 +174,21 @@ protected function configure()
 }
 ```
 
+### Untargeted Bindings
+
+You may create bindings without specifying a target. This is most useful for concrete classes. An untargetted binding informs the injector about a type, so it may prepare dependencies eagerly. Untargetted bindings have no _to_ clause, like so:
+
+```php
+
+protected function configure()
+{
+    $this->bind(MyConcreteClass::class);
+    $this->bind(AnotherConcreteClass::class)->in(Scope::SINGLETON);
+}
+```
+
+note: annotations is not supported Untargeted Bindings
+
 ### Explicit Binding
 
 Occasionally it's necessary to bind a type to an arbitrary constructor. This arises when the `@Inject` annotation cannot be applied to the target constructor. eg. when it is a third party class.

@@ -173,6 +173,22 @@ protected function configure()
 }
 ```
 
+### Untargeted Bindings
+
+ターゲットを指定しないで束縛をつくることがで、コンクリートクラスの束縛に便利です。事前にインジェクターに型の情報を伝えるので束縛を事前に行いエラー検知や最適化を行うことができます。
+Untargetted bindingsは以下のように`to()`が必要ありません。
+
+```php
+
+protected function configure()
+{
+    $this->bind(MyConcreteClass::class);
+    $this->bind(AnotherConcreteClass::class)->in(Scope::SINGLETON);
+}
+```
+
+note: annotations is not supported Untargeted Bindings
+
 ### Explicit Binding
 
 既存のクラスなどで`@Inject`アノテーションでインジェクトポイントが指定できない時に明示的にセッターや`@PostConstruct`を指定します。
