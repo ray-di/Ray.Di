@@ -7,6 +7,7 @@
  */
 namespace Ray\Di;
 
+use Ray\Di\Exception\InvalidBind;
 use Ray\Di\Exception\NotFound;
 
 final class Bind
@@ -37,6 +38,9 @@ final class Bind
      */
     public function __construct(Container $container, $interface)
     {
+        if (! interface_exists($interface) && ! class_exists($interface)) {
+            throw new InvalidBind($interface);
+        }
         $this->container = $container;
         $this->interface = $interface;
     }
