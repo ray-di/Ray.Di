@@ -33,12 +33,18 @@ final class Bind
     private $bound;
 
     /**
-     * @param Container $container
-     * @param string    $interface
+     * @param Container $container dependency container
+     * @param string    $interface interface or concrete class name
      */
     public function __construct(Container $container, $interface)
     {
-        if (! interface_exists($interface) && ! class_exists($interface)) {
+        if (class_exists($interface)) {
+            $this->bound = (new DependencyFactory)->newAnnotatedDependency(new \ReflectionClass($interface));
+            $container->add($this);
+
+            return;
+        }
+        if (! interface_exists($interface)) {
             throw new InvalidBind($interface);
         }
         $this->container = $container;

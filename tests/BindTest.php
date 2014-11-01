@@ -4,6 +4,7 @@ namespace Ray\Di;
 
 use Ray\Di\Exception\NotFound;
 use Ray\Di\Exception\InvalidBind;
+use Ray\Di\FakeEngine;
 
 class BindTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,5 +46,21 @@ class BindTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(InvalidBind::class);
         new Bind(new Container, 'invalid-interface');
+    }
+
+    public function testUntargetedBind()
+    {
+        $bind = new Bind(new Container, FakeEngine::class);
+        $dependency = $bind->getBound();
+        $this->assertInstanceOf(Dependency::class, $dependency);
+    }
+
+    public function testUntargetedBindSingleton()
+    {
+        $bind = (new Bind(new Container, FakeEngine::class))->in(Scope::SINGLETON);
+        $container = new Container;
+        $dependency1 = $bind->getBound()->inject($container);
+        $dependency2 = $bind->getBound()->inject($container);
+        $this->assertSame(spl_object_hash($dependency1), spl_object_hash($dependency2));
     }
 }
