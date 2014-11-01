@@ -47,7 +47,7 @@ final class Bind
             return;
         }
         if ($interface && ! interface_exists($interface)) {
-            throw new InvalidBind($interface);
+            throw new NotFound($interface);
         }
     }
 

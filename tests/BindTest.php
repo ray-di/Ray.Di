@@ -44,7 +44,7 @@ class BindTest extends \PHPUnit_Framework_TestCase
 
     public function testInValidInterfaceBinding()
     {
-        $this->setExpectedException(InvalidBind::class);
+        $this->setExpectedException(NotFound::class);
         new Bind(new Container, 'invalid-interface');
     }
 

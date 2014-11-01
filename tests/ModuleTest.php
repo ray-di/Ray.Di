@@ -3,6 +3,7 @@
 namespace Ray\Di;
 
 use Ray\Di\Exception\InvalidBind;
+use Ray\Di\Exception\NotFound;
 
 class ModuleTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +21,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
     public function testToInvalidClass()
     {
-        $this->setExpectedException(InvalidBind::class);
+        $this->setExpectedException(NotFound::class);
         new FakeToBindInvalidClassModule;
     }
 }
