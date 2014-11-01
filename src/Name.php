@@ -37,6 +37,12 @@ final class Name
      */
     private function setName($name)
     {
+        // annotation
+        if (class_exists($name, false)) {
+            $this->name = $name;
+
+            return;
+        }
         // single name
         // @Named(name)
         if ($name === Name::ANY || ctype_alnum($name)) {

@@ -10,6 +10,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use Ray\Di\Di\BindingAnnotation;
 
 final class AnnotatedClass
 {
@@ -60,7 +61,7 @@ final class AnnotatedClass
         if (! $inject) {
             return null;
         }
-        $named = $this->reader->getMethodAnnotation($method, Named::class);
+        $named = $this->getMethodAnnotation($method);
         /** @var $named \Ray\Di\Di\Named */
         $name = $named ? $named->value : '';
         $setterMethod = new SetterMethod($method, new Name($name));
@@ -88,5 +89,63 @@ final class AnnotatedClass
         }
         /** @var $named Named */
         return new Name($named->value);
+    }
+
+    /**
+     * @param \ReflectionMethod $method
+     *
+     * @return null|Named
+     */
+    private function getMethodAnnotation(\ReflectionMethod $method)
+    {
+        $bindAnnotation = $this->getBindAnnotation($method);
+        if ($bindAnnotation) {
+
+            return $bindAnnotation;
+        }
+        $namedAnnotation = $this->reader->getMethodAnnotation($method, Named::class);
+        if ($namedAnnotation) {
+
+            return $namedAnnotation;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param \ReflectionMethod $method
+     *
+     * @return null|Named
+     */
+    private function getBindAnnotation(\ReflectionMethod $method)
+    {
+        $annotations = $this->reader->getMethodAnnotations($method);
+        foreach ($annotations as $annotation) {
+            $bindAnnotation = $this->findBindAnnotation($annotation);
+            if ($bindAnnotation) {
+
+                return $bindAnnotation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param object $annotation
+     *
+     * @return null|Named
+     */
+    private function findBindAnnotation($annotation)
+    {
+        $bindingAnnotation = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), BindingAnnotation::class);
+        if (! $bindingAnnotation) {
+
+            return null;
+        }
+        $named = new Named;
+        $named->value = get_class($annotation);
+
+        return $named;
     }
 }
