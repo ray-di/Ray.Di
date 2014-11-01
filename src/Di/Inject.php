@@ -12,7 +12,7 @@ namespace Ray\Di\Di;
  * @Annotation
  * @Target("METHOD")
  */
-final class Inject implements Annotation
+final class Inject
 {
     /**
      * Optional ?

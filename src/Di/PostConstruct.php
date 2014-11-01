@@ -12,6 +12,6 @@ namespace Ray\Di\Di;
  * @Annotation
  * @Target("METHOD")
  */
-final class PostConstruct implements Annotation
+final class PostConstruct
 {
 }
