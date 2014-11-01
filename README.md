@@ -11,6 +11,8 @@ Dependency Injection framework for PHP
 Getting Stated
 --------------
 
+### Linked Bindings
+
 Here is a basic example of dependency injection using Ray.Di.
 
 ```php
@@ -63,7 +65,7 @@ echo(($works) ? 'It works!' : 'It DOES NOT work!');
 
 // It works!
 ```
-This is an example of **Linked Bindings**. Linked bindings map a type to its implementation.
+This is an example of **Linked Bindings**. Linked bindings map a type to its implementation, it can also be chained.
 
 ### Provider Bindings
 

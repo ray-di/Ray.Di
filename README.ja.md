@@ -19,6 +19,8 @@ Ray.Diは以下の特徴があります。
 Getting Started
 --------------
 
+### Linked Bindings
+
 Ray.Diを使ったディペンデンシーインジェクション（[依存性の注入](http://ja.wikipedia.org/wiki/%E4%BE%9D%E5%AD%98%E6%80%A7%E3%81%AE%E6%B3%A8%E5%85%A5)）の一般的な例です。
 
 ```php
@@ -71,7 +73,8 @@ echo(($works) ? 'It works!' : 'It DOES NOT work!');
 
 // It works!
 ```
-これは **Linked Bindings** です。. Linked bindings はインターフェイスとその実装クラスを束縛します。
+これは **Linked Bindings** です。 Linked bindings はインターフェイスとその実装クラスを束縛します。
+また束縛は再帰的にされ、依存に必要な依存は〜と順に辿って依存解決をします。
 
 ### Provider Bindings
 
