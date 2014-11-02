@@ -2,7 +2,9 @@ Dependency Injection framework for PHP
 ======================================
 
 [![Latest Stable Version](https://poser.pugx.org/ray/di/v/stable.png)](https://packagist.org/packages/ray/di)
-[![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=master)](http://travis-ci.org/koriym/Ray.Di)
+[![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=develop-2)](http://travis-ci.org/koriym/Ray.Di)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/b/koriym/ray.di/badges/quality-score.png?b=develop-2&s=38a2876fe3393f2d5307f3b4c6b5fb0b23812be1)](https://scrutinizer-ci.com/b/koriym/ray.di/?branch=develop-2)
+[![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/coverage.png?s=676589defaa2a762ac42ed97f2a7e64efc4617b9)](https://scrutinizer-ci.com/g/koriym/Ray.Di/)
 
 **Ray.Di**はGoogleのJava用DI framework [Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6)の主要な機能を持つアノテーションベースのDIフレームワークです。
 DIを効率よく使用すると以下のようなメリットがあります。
@@ -192,24 +194,34 @@ protected function configure()
 
 note: annotations is not supported Untargeted Bindings
 
-### Explicit Binding
+### Constructor Bindings
 
-既存のクラスなどで`@Inject`アノテーションでインジェクトポイントが指定できない時に明示的にセッターや`@PostConstruct`を指定します。
+`@Inject`アノテーションのないサードパーティーのクラスに特定の束縛を指定するのに`toConstructor`を使うことができます。クラス名と`Named Binding`を指定して束縛します。
 
 ```php
-use Ray\Di\InjectionPoints;
-
+<?php
+class Car
+{
+    public function __construct(EngineInterface $engine, $carName)
+    {
+        // ...
+```
+```php
+<?php
 protected function configure()
 {
+    $this->bind(EngineInterface::class)->annotatedWith('na')->to(NaturalAspirationEngine::class);
+    $this->bind()->annotatedWith('car_name')->toInstance('Eunos Roadster');
     $this
-        ->bind(FakeCarInterface::class)
-        ->toExplicit(
-            FakeCar::class,
-            (new InjectionPoints)->addMethod('setTires')->addMethod('setHardtop'),
-            'postConstruct'
+        ->bind(CarInterface::class)
+        ->toConstructor(
+            Car::class,
+            'engine=na,carName=car_name' // varName=BindName,...
         );
 }
 ```
+
+この例では`Car`クラスでは`EngineInterface $engine, $carName`と二つの引数が必要ですが、それぞれの変数名に`Named binding`束縛を行い依存解決をしています。
 
 ## Scopes
 

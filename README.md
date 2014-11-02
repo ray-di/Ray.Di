@@ -191,24 +191,36 @@ protected function configure()
 
 note: annotations is not supported Untargeted Bindings
 
-### Explicit Binding
+### Constructor Bindings
 
-Occasionally it's necessary to bind a type to an arbitrary constructor. This arises when the `@Inject` annotation cannot be applied to the target constructor. eg. when it is a third party class.
+Occasionally it's necessary to bind a type to an arbitrary constructor. This comes up when the @Inject annotation cannot be applied to the target constructor: either because it is a third party class, or because multiple constructors that participate in dependency injection. 
+`Provider Binding` provide the solution to this problem. By calling your target constructor explicitly, you don't need reflection and its associated pitfalls. But there are limitations of that approach: manually constructed instances do not participate in AOP.
+
+To address this, Ray.Di has `toConstructor` bindings.
 
 ```php
-use Ray\Di\InjectionPoints;
-
+<?php
+class Car
+{
+    public function __construct(EngineInterface $engine, $carName)
+    {
+        // ...
+```
+```php
+<?php
 protected function configure()
 {
+    $this->bind(EngineInterface::class)->annotatedWith('na')->to(NaturalAspirationEngine::class);
+    $this->bind()->annotatedWith('car_name')->toInstance('Eunos Roadster');
     $this
-        ->bind(FakeCarInterface::class)
-        ->toExplicit(
-            FakeCar::class,
-            (new InjectionPoints)->addMethod('setTires')->addMethod('setHardtop'),
-            'postConstruct'
+        ->bind(CarInterface::class)
+        ->toConstructor(
+            Car::class,
+            'engine=na,carName=car_name' // varName=BindName,...
         );
 }
 ```
+In this example, the `Car` have a constructor which name bound with `engine=na,carName=car_name`. That constructor does not need an @Inject annotation. Ray.Di will invoke that constructor to satisfy the binding.
 
 ## Scopes
 
