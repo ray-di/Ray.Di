@@ -82,10 +82,10 @@ final class Bind
     }
 
     /**
-     * @param string          $class
+     * @param string          $class           class name
      * @param string          $name            varName=bindName,...
-     * @param InjectionPoints $injectionPoints
-     * @param null            $postConstruct
+     * @param InjectionPoints $injectionPoints injection points
+     * @param null            $postConstruct   method name of initialization after all dependencies are injected
      *
      * @return $this
      */
