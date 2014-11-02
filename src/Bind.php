@@ -101,26 +101,6 @@ final class Bind
     }
 
     /**
-     * @param string          $class
-     * @param InjectionPoints $injectionPoints
-     * @param string          $postConstruct
-     *
-     * @return $this
-     */
-    public function toExplicit($class, InjectionPoints $injectionPoints, $postConstruct)
-    {
-        $this->bound = (new DependencyFactory)->newExplicit(
-            new \ReflectionClass($class),
-            $injectionPoints,
-            new \ReflectionMethod($class, $postConstruct)
-        );
-        $this->container->add($this);
-
-        return $this;
-
-    }
-
-    /**
      * @param string $provider
      *
      * @return $this

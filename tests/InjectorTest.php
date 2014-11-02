@@ -104,17 +104,6 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
-    public function testExplicitBindingInjection()
-    {
-        $injector = new Injector(new FakeExplicitCarModule);
-        $car = $injector->getInstance(FakeCarInterface::class);
-        /** @var $car FakeCar */
-        $this->assertInstanceOf(FakeCar::class, $car);
-        $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
-        $this->assertInstanceOf(FakeTyre::class, $car->rearTyre);
-        $this->assertInstanceOf(FakeHardtop::class, $car->hardtop);
-    }
-
     public function testGetConcreteClass()
     {
         $injector = new Injector;

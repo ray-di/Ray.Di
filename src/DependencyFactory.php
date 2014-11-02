@@ -24,24 +24,6 @@ final class DependencyFactory
     }
 
     /**
-     * @param \ReflectionClass  $class
-     * @param InjectionPoints   $injectionPoints
-     * @param \ReflectionMethod $postConstruct
-     *
-     * @return Dependency
-     */
-    public function newExplicit(
-        \ReflectionClass $class,
-        InjectionPoints $injectionPoints,
-        \ReflectionMethod $postConstruct
-    ) {
-        $newInstance = new NewInstance($class, $injectionPoints($class->name), new Name(Name::ANY));
-        $dependency = new Dependency($newInstance, $postConstruct);
-
-        return $dependency;
-    }
-
-    /**
      * @param \ReflectionClass $provider
      *
      * @return Provider
