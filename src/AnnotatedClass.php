@@ -8,9 +8,9 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Ray\Di\Di\Qualifier;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
-use Ray\Di\Di\BindingAnnotation;
 
 final class AnnotatedClass
 {
@@ -138,7 +138,7 @@ final class AnnotatedClass
      */
     private function findBindAnnotation($annotation)
     {
-        $bindingAnnotation = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), BindingAnnotation::class);
+        $bindingAnnotation = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), Qualifier::class);
         if (! $bindingAnnotation) {
 
             return null;

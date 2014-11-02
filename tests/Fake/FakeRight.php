@@ -2,12 +2,12 @@
 
 namespace Ray\Di;
 
-use Ray\Di\Di\BindingAnnotation;
+use Ray\Di\Di\Qualifier;
 
 /**
  * @Annotation
  * @Target("METHOD")
- * @BindingAnnotation
+ * @Qualifier
  */
 class FakeRight
 {

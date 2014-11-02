@@ -10,6 +10,6 @@ namespace Ray\Di\Di;
  * @Annotation
  * @Target("CLASS")
  */
-final class BindingAnnotation
+final class Qualifier
 {
 }
