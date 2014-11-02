@@ -7,6 +7,7 @@
  */
 namespace Ray\Di;
 
+use Ray\Di\Di\PostConstruct;
 use Ray\Di\Exception\InvalidBind;
 use Ray\Di\Exception\NotFound;
 
@@ -75,6 +76,25 @@ final class Bind
             throw new NotFound($class);
         }
         $this->bound = (new DependencyFactory)->newAnnotatedDependency(new \ReflectionClass($class));
+        $this->container->add($this);
+
+        return $this;
+    }
+
+    /**
+     * @param string          $class
+     * @param string          $name            varName=bindName,...
+     * @param InjectionPoints $injectionPoints
+     * @param null            $postConstruct
+     *
+     * @return $this
+     */
+    public function toConstructor($class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null)
+    {
+        $setterMethods = $injectionPoints ? $injectionPoints($class) : new SetterMethods([]);
+        $postConstruct = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
+        $newInstance = new NewInstance(new \ReflectionClass($class), $setterMethods, new Name($name));
+        $this->bound = new Dependency($newInstance, $postConstruct);
         $this->container->add($this);
 
         return $this;

@@ -63,4 +63,42 @@ class BindTest extends \PHPUnit_Framework_TestCase
         $dependency2 = $bind->getBound()->inject($container);
         $this->assertSame(spl_object_hash($dependency1), spl_object_hash($dependency2));
     }
+
+    public function testToConstructor()
+    {
+        $container = new Container;
+        $container->add((new Bind($container, ''))->annotatedWith('tmp_dir')->toInstance('/tmp'));
+        $container->add((new Bind($container, FakeLegInterface::class))->annotatedWith('left')->to(FakeLeftLeg::class));
+        $container->add((new Bind($container, FakeRobotInterface::class))->toConstructor(FakeToConstructorRobot::class, 'tmpDir=tmp_dir,leg=left'));
+        $instance = $container->getInstance(FakeRobotInterface::class, Name::ANY);
+        /** @var $instance FakeToConstructorRobot */
+        $this->assertInstanceOf(FakeLeftLeg::class, $instance->leg);
+        $this->assertSame('/tmp', $instance->tmpDir);
+    }
+
+    public function testToConstructorWithMethodInjection()
+    {
+        $container = new Container;
+        $container->add((new Bind($container, ''))->annotatedWith('tmp_dir')->toInstance('/tmp'));
+        $container->add((new Bind($container, FakeLegInterface::class))->annotatedWith('left')->to(FakeLeftLeg::class));
+        $container->add((new Bind($container, FakeEngineInterface::class))->to(FakeEngine::class));
+        $container->add(
+            (new Bind($container, FakeRobotInterface::class))->toConstructor(
+                FakeToConstructorRobot::class,
+                'tmpDir=tmp_dir,leg=left',
+                (new InjectionPoints)->addMethod('setEngine')
+            )
+        );
+        $instance = $container->getInstance(FakeRobotInterface::class, Name::ANY);
+        /** @var $instance FakeToConstructorRobot */
+        $this->assertInstanceOf(FakeEngine::class, $instance->engine);
+    }
+
+    /**
+     * @Inject
+     */
+    public function __construct()
+    {
+
+    }
 }
