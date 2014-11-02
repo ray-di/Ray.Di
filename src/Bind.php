@@ -91,10 +91,8 @@ final class Bind
      */
     public function toConstructor($class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null)
     {
-        $setterMethods = $injectionPoints ? $injectionPoints($class) : new SetterMethods([]);
         $postConstruct = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
-        $newInstance = new NewInstance(new \ReflectionClass($class), $setterMethods, new Name($name));
-        $this->bound = new Dependency($newInstance, $postConstruct);
+        $this->bound = (new DependencyFactory)->newToConstructor(new \ReflectionClass($class), $name, $injectionPoints, $postConstruct);
         $this->container->add($this);
 
         return $this;

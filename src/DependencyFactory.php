@@ -35,4 +35,27 @@ final class DependencyFactory
 
         return $dependency;
     }
+
+
+    /**
+     * @param \ReflectionClass  $class
+     * @param string            $name
+     * @param InjectionPoints   $injectionPoints
+     * @param \ReflectionMethod $postConstruct
+     *
+     * @return Dependency
+     */
+    public function newToConstructor(
+        \ReflectionClass $class,
+        $name,
+        InjectionPoints $injectionPoints = null,
+        \ReflectionMethod $postConstruct = null
+    ) {
+        $setterMethods = $injectionPoints ? $injectionPoints($class->getName()) : new SetterMethods([]);
+        $postConstruct = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
+        $newInstance = new NewInstance($class, $setterMethods, new Name($name));
+        $dependency = new Dependency($newInstance, $postConstruct);
+
+        return $dependency;
+    }
 }
