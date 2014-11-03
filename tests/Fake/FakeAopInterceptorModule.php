@@ -6,7 +6,7 @@ class FakeAopInterceptorModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bindInterceptors(
+        $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->any(),
             [FakeDoubleInterceptor::class]

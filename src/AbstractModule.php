@@ -83,7 +83,7 @@ abstract class AbstractModule
      * @param AbstractMatcher $methodMatcher
      * @param array           $interceptors
      */
-    public function bindInterceptors(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
+    public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
     {
         $pointcut = new Pointcut($classMatcher, $methodMatcher, $interceptors);
         $this->container->addPointcut($pointcut);
