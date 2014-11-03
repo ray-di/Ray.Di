@@ -11,6 +11,11 @@ use Ray\Aop\Compiler;
 class Injector implements InjectorInterface
 {
     /**
+     * @var string
+     */
+    private $classDir;
+
+    /**
      * @var Container
      */
     private $container;
@@ -21,9 +26,9 @@ class Injector implements InjectorInterface
      */
     public function __construct(AbstractModule $module = null, $classDir = null)
     {
-        $classDir = $classDir ?: sys_get_temp_dir();
+        $this->classDir = $classDir ?: sys_get_temp_dir();
         $this->container =  $module ? $module->getContainer() : new Container;
-        $this->container->weaveAspects(new Compiler($classDir));
+        $this->container->weaveAspects(new Compiler($this->classDir));
 
         // builtin injection
         (new Bind($this->container, InjectorInterface::class))->toInstance($this);
@@ -40,5 +45,19 @@ class Injector implements InjectorInterface
         $instance = $this->container->getInstance($interface, $name);
 
         return $instance;
+    }
+
+    public function __wakeup()
+    {
+        spl_autoload_register(
+            function ($class) {
+                $file = $this->classDir . DIRECTORY_SEPARATOR . $class . '.php';
+                if (file_exists($file)) {
+                    // @codeCoverageIgnoreStart
+                    include $file;
+                    // @@codeCoverageIgnoreEnd
+                }
+            }
+        );
     }
 }
