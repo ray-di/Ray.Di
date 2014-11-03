@@ -8,9 +8,9 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Ray\Di\Di\Qualifier;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use Ray\Di\Di\Qualifier;
 
 final class AnnotatedClass
 {

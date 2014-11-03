@@ -93,12 +93,4 @@ class BindTest extends \PHPUnit_Framework_TestCase
         /** @var $instance FakeToConstructorRobot */
         $this->assertInstanceOf(FakeEngine::class, $instance->engine);
     }
-
-    /**
-     * @Inject
-     */
-    public function __construct()
-    {
-
-    }
 }

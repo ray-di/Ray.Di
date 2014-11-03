@@ -7,7 +7,6 @@
  */
 namespace Ray\Di;
 
-use Ray\Di\Di\PostConstruct;
 use Ray\Di\Exception\InvalidBind;
 use Ray\Di\Exception\NotFound;
 
