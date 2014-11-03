@@ -177,4 +177,13 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $instance = unserialize(serialize(new Injector))->getInstance(FakeBuiltin::class);
         $this->assertInstanceOf(Injector::class, $instance->injector);
     }
+
+    public function testAopBoundInDifferentModule()
+    {
+        $injector = new Injector(new FakeAopInstallModule);
+        $instance = $injector->getInstance(FakeAopInterface::class);
+        /** @var $instance FakeAop */
+        $result = $instance->returnSame(2);
+        $this->assertSame(4, $result);
+    }
 }

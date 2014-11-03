@@ -27,8 +27,7 @@ abstract class AbstractModule
      * @param AbstractModule $module
      */
     public function __construct(
-        AbstractModule $module = null,
-        $tmpDir = null
+        AbstractModule $module = null
     ) {
         if (! $this->container) {
             $this->container = new Container;
@@ -38,8 +37,6 @@ abstract class AbstractModule
         if ($module) {
             $this->container->merge($module->getContainer());
         }
-        $tmpDir = $tmpDir ?: sys_get_temp_dir();
-        $this->container->weaveAspects(new Compiler($tmpDir));
     }
 
     abstract protected function configure();

@@ -24,24 +24,11 @@ final class Container
     private $pointcuts = [];
 
     /**
-     * @var \SplObjectStorage
-     */
-    private $dependencyStorage;
-
-    public function __construct()
-    {
-        $this->dependencyStorage = new \SplObjectStorage;
-    }
-
-    /**
      * @param Bind $bind
      */
     public function add(Bind $bind)
     {
         $dependency = $bind->getBound();
-        if ($dependency instanceof Dependency && $this->dependencyStorage instanceof \SplObjectStorage) {
-            $this->dependencyStorage->attach($dependency);
-        }
         $this->container[(string) $bind] = $dependency;
     }
 
@@ -114,12 +101,18 @@ final class Container
         return $this->container;
     }
 
+    public function getPointcuts()
+    {
+        return $this->pointcuts;
+    }
+
     /**
      * @param Container $container
      */
     public function merge(Container $container)
     {
         $this->container = $this->container + $container->getContainer();
+        $this->pointcuts = $this->pointcuts + $container->getPointcuts();
     }
 
     /**
@@ -127,7 +120,10 @@ final class Container
      */
     public function weaveAspects(Compiler $compiler)
     {
-        foreach ($this->dependencyStorage as $dependency) {
+        foreach ($this->container as $dependency) {
+            if (! $dependency instanceof Dependency) {
+                continue;
+            }
             /** @var $dependency Dependency */
             $dependency->weaveAspects($compiler, $this->pointcuts);
         }

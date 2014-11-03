@@ -6,6 +6,8 @@
  */
 namespace Ray\Di;
 
+use Ray\Aop\Compiler;
+
 class Injector implements InjectorInterface
 {
     /**
@@ -15,10 +17,14 @@ class Injector implements InjectorInterface
 
     /**
      * @param AbstractModule $module
+     * @param string         $classDir
      */
-    public function __construct(AbstractModule $module = null)
+    public function __construct(AbstractModule $module = null, $classDir = null)
     {
+        $classDir = $classDir ?: sys_get_temp_dir();
         $this->container =  $module ? $module->getContainer() : new Container;
+        $this->container->weaveAspects(new Compiler($classDir));
+
         // builtin injection
         (new Bind($this->container, InjectorInterface::class))->toInstance($this);
     }
