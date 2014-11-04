@@ -2,8 +2,8 @@
 
 namespace Ray\Di;
 
-use Ray\Di\Exception\InvalidBind;
 use Ray\Di\Exception\NotFound;
+use Ray\Di\Exception\InvalidType;
 
 class BindTest extends \PHPUnit_Framework_TestCase
 {
@@ -92,4 +92,11 @@ class BindTest extends \PHPUnit_Framework_TestCase
         /** @var $instance FakeToConstructorRobot */
         $this->assertInstanceOf(FakeEngine::class, $instance->engine);
     }
+
+    public function testToValidation()
+    {
+        $this->setExpectedException(InvalidType::class);
+        (new Bind(new Container, FakeHandleInterface::class))->to(FakeEngine::class);
+    }
+
 }

@@ -7,6 +7,7 @@
  */
 namespace Ray\Di;
 
+use Ray\Di\Exception\InvalidType;
 use Ray\Di\Exception\NotFound;
 
 final class Bind
@@ -66,17 +67,30 @@ final class Bind
      * @param string $class
      *
      * @return $this
-     * @throws NotFound
      */
     public function to($class)
     {
-        if (! class_exists($class)) {
-            throw new NotFound($class);
-        }
+        $this->toValidation($this->interface, $class);
         $this->bound = (new DependencyFactory)->newAnnotatedDependency(new \ReflectionClass($class));
         $this->container->add($this);
 
         return $this;
+    }
+
+    /**
+     * @param string $interface
+     * @param string $class
+     */
+    private function toValidation($interface, $class)
+    {
+        if (! class_exists($class)) {
+            throw new NotFound($class);
+        }
+        $notExistClass = ! class_exists($class);
+        $notImplementedClass = interface_exists($interface) && ! (new \ReflectionClass($class))->implementsInterface($interface);
+        if ($notExistClass || $notImplementedClass) {
+            throw new InvalidType($class);
+        }
     }
 
     /**
