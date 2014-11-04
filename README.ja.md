@@ -347,11 +347,11 @@ $ composer require ray/di ~2.0@dev
 Testing Ray.Di
 --------------
 
-インストールしてテストを行うにはこのようにします。
+インストールしてテストとデモプログラムを実行するにはこのようにします。
 
 ```bash
 $ composer create-project ray/di Ray.Di ~2.0@dev
 $ cd Ray.Di
 $ phpunit
-$ php docs/demo/01-link-binding.php
+$ php docs/demo/run.php
 ```

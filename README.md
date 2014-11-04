@@ -456,11 +456,11 @@ $ composer require ray/di ~2.0@dev
 Testing Ray.Di
 --------------
 
-Here's how to install Ray.Di from source and run the unit tests and samples.
+Here's how to install Ray.Di from source and run the unit tests and demos.
 
 ```bash
 $ composer create-project ray/di:~2.0@dev Ray.Di
 $ cd Ray.Di
 $ phpunit
-$ php docs/demo/01-link-binding.php
+$ php docs/demo/run.php
 ```
