@@ -2,7 +2,6 @@
 
 namespace Ray\Di;
 
-use Ray\Aop\Bind as AopBind;
 use Ray\Aop\Compiler;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;

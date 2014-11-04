@@ -6,7 +6,7 @@
  */
 namespace Ray\Di;
 
-final class Parameter
+final class Argument
 {
     /**
      * @var string

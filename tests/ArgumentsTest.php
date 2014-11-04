@@ -2,22 +2,22 @@
 
 namespace Ray\Di;
 
-class ParametersTest extends \PHPUnit_Framework_TestCase
+class ArgumentsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Parameters
+     * @var Arguments
      */
-    protected $parameters;
+    protected $arguments;
 
     public function setUp()
     {
-        $this->parameters = new Parameters(new \ReflectionMethod(FakeCar::class, 'setTires'), new Name(Name::ANY));
+        $this->arguments = new Arguments(new \ReflectionMethod(FakeCar::class, 'setTires'), new Name(Name::ANY));
     }
 
     public function testInject()
     {
         $container = (new FakeCarModule)->getContainer();
-        $parameters = $this->parameters->get($container);
+        $parameters = $this->arguments->get($container);
         $this->assertInstanceOf(FakeTyre::class, $parameters[0]);
         $this->assertInstanceOf(FakeTyre::class, $parameters[1]);
         $this->assertNotSame(spl_object_hash($parameters[0]), $parameters[1]);
@@ -27,7 +27,7 @@ class ParametersTest extends \PHPUnit_Framework_TestCase
     {
         $defaultValue = (new \ReflectionParameter([FakeHandleProvider::class, '__construct'], 'logo'))->getDefaultValue();
         $emptyContainer = new Container;
-        $parameters = new Parameters(new \ReflectionMethod(FakeHandleProvider::class, '__construct'), new Name(Name::ANY));
+        $parameters = new Arguments(new \ReflectionMethod(FakeHandleProvider::class, '__construct'), new Name(Name::ANY));
         $parametersValue = $parameters->get($emptyContainer);
         $this->assertSame($defaultValue, $parametersValue[0]);
     }

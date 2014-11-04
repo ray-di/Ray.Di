@@ -16,7 +16,7 @@ final class SetterMethod
     private $method;
 
     /**
-     * @var Parameters
+     * @var Arguments
      */
     private $parameters;
 
@@ -34,7 +34,7 @@ final class SetterMethod
     public function __construct(\ReflectionMethod $method, Name $name)
     {
         $this->method = $method->name;
-        $this->parameters = new Parameters($method, $name);
+        $this->parameters = new Arguments($method, $name);
     }
 
     public function setOptional()

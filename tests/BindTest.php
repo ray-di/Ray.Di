@@ -2,9 +2,8 @@
 
 namespace Ray\Di;
 
-use Ray\Di\Exception\NotFound;
 use Ray\Di\Exception\InvalidBind;
-use Ray\Di\FakeEngine;
+use Ray\Di\Exception\NotFound;
 
 class BindTest extends \PHPUnit_Framework_TestCase
 {

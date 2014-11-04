@@ -3,8 +3,6 @@
 namespace Ray\Di;
 
 use Ray\Di\Di\Inject;
-use Ray\Di\FakeRight;
-use Ray\Di\FakeLeft;
 
 class FakeHandleBar
 {

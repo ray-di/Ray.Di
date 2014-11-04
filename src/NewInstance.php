@@ -21,7 +21,7 @@ final class NewInstance
     private $setterMethods;
 
     /**
-     * @var Parameters
+     * @var Arguments
      */
     private $parameters;
 
@@ -44,7 +44,7 @@ final class NewInstance
         $this->class = $class->name;
         $constructor = $class->getConstructor();
         if ($constructor) {
-            $this->parameters = new Parameters($constructor, $constructorName);
+            $this->parameters = new Arguments($constructor, $constructorName);
         }
         $this->setterMethods = $setterMethods;
     }

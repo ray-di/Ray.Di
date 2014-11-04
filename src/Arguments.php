@@ -8,10 +8,10 @@ namespace Ray\Di;
 
 use Ray\Di\Exception\Unbound;
 
-final class Parameters
+final class Arguments
 {
     /**
-     * @var Parameter[]
+     * @var Argument[]
      */
     private $parameters = [];
 
@@ -23,14 +23,14 @@ final class Parameters
     {
         $parameters = $method->getParameters();
         foreach ($parameters as $parameter) {
-            $this->parameters[] = new Parameter($parameter, $name($parameter));
+            $this->parameters[] = new Argument($parameter, $name($parameter));
         }
     }
 
     /**
      * @param Container $container
      *
-     * @return Parameter[]
+     * @return Argument[]
      * @throws Exception\Unbound
      */
     public function get(Container $container)
@@ -45,12 +45,12 @@ final class Parameters
 
     /**
      * @param Container $container
-     * @param Parameter $parameter
+     * @param Argument $parameter
      *
      * @return mixed
      * @throws Unbound
      */
-    private function getParameter(Container $container, Parameter $parameter)
+    private function getParameter(Container $container, Argument $parameter)
     {
         list($class,) = explode('-', (string) $parameter);
         if (class_exists($class)) {
@@ -66,12 +66,12 @@ final class Parameters
 
     /**
      * @param Unbound   $e
-     * @param Parameter $parameter
+     * @param Argument $parameter
      *
      * @return mixed
      * @throws Unbound
      */
-    private function getDefaultValue(Unbound $e, Parameter $parameter)
+    private function getDefaultValue(Unbound $e, Argument $parameter)
     {
         if ($parameter->isDefaultAvailable()) {
             return $parameter->getDefaultValue();
