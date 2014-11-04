@@ -7,7 +7,6 @@
 namespace Ray\Di;
 
 use Ray\Aop\AbstractMatcher;
-use Ray\Aop\Compiler;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
 

@@ -7,7 +7,6 @@
  */
 namespace Ray\Di;
 
-use Ray\Di\Exception\InvalidBind;
 use Ray\Di\Exception\NotFound;
 
 final class Bind
