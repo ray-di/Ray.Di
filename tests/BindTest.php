@@ -4,6 +4,7 @@ namespace Ray\Di;
 
 use Ray\Di\Exception\NotFound;
 use Ray\Di\Exception\InvalidType;
+use Ray\Di\Exception\InvalidProvider;
 
 class BindTest extends \PHPUnit_Framework_TestCase
 {
@@ -99,4 +100,9 @@ class BindTest extends \PHPUnit_Framework_TestCase
         (new Bind(new Container, FakeHandleInterface::class))->to(FakeEngine::class);
     }
 
+    public function testToProvider()
+    {
+        $this->setExpectedException(InvalidProvider::class);
+        (new Bind(new Container, FakeHandleInterface::class))->toProvider(FakeEngine::class);
+    }
 }

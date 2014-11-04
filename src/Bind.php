@@ -9,6 +9,7 @@ namespace Ray\Di;
 
 use Ray\Di\Exception\InvalidType;
 use Ray\Di\Exception\NotFound;
+use Ray\Di\Exception\InvalidProvider;
 
 final class Bind
 {
@@ -120,6 +121,9 @@ final class Bind
     {
         if (! class_exists($provider)) {
             throw new NotFound($provider);
+        }
+        if (! (new \ReflectionClass($provider))->implementsInterface(ProviderInterface::class)) {
+            throw new InvalidProvider($provider);
         }
         $this->bound = (new DependencyFactory)->newProvider(new \ReflectionClass($provider));
         $this->container->add($this);
