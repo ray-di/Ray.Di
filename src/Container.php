@@ -76,26 +76,6 @@ final class Container
     }
 
     /**
-     * @param string $index
-     *
-     * @return mixed
-     * @throws Exception\NotFound
-     * @throws Unbound
-     */
-    private function getConcreteClass($index)
-    {
-        list($class, $name) = explode('-', $index);
-        if (! class_exists($class)) {
-            throw new Unbound("interface:{$class} name:{$name}");
-        }
-        // binding on demand
-        $dependency = (new Bind($this, $class))->to($class);
-        $this->add($dependency);
-
-        return $this->getDependency($class . '-' . $name);
-    }
-
-    /**
      * @return InjectInterface[]
      */
     public function getContainer()
@@ -103,6 +83,9 @@ final class Container
         return $this->container;
     }
 
+    /**
+     * @return \Ray\Aop\Pointcut[]
+     */
     public function getPointcuts()
     {
         return $this->pointcuts;
