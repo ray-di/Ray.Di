@@ -18,7 +18,7 @@ final class SetterMethod
     /**
      * @var Arguments
      */
-    private $parameters;
+    private $arguments;
 
     /**
      * Is optional binding ?
@@ -34,7 +34,7 @@ final class SetterMethod
     public function __construct(\ReflectionMethod $method, Name $name)
     {
         $this->method = $method->name;
-        $this->parameters = new Arguments($method, $name);
+        $this->arguments = new Arguments($method, $name);
     }
 
     public function setOptional()
@@ -52,7 +52,7 @@ final class SetterMethod
     public function __invoke($instance, Container $container)
     {
         try {
-            $parameters = $this->parameters->get($container);
+            $parameters = $this->arguments->get($container);
         } catch (Unbound $e) {
             if ($this->isOptional) {
                 return;

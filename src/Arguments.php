@@ -13,7 +13,7 @@ final class Arguments
     /**
      * @var Argument[]
      */
-    private $parameters = [];
+    private $arguments = [];
 
     /**
      * @param \ReflectionMethod $method
@@ -23,7 +23,7 @@ final class Arguments
     {
         $parameters = $method->getParameters();
         foreach ($parameters as $parameter) {
-            $this->parameters[] = new Argument($parameter, $name($parameter));
+            $this->arguments[] = new Argument($parameter, $name($parameter));
         }
     }
 
@@ -35,7 +35,7 @@ final class Arguments
      */
     public function get(Container $container)
     {
-        $parameters = $this->parameters;
+        $parameters = $this->arguments;
         foreach ($parameters as &$parameter) {
             $parameter = $this->getParameter($container, $parameter);
         }
@@ -45,36 +45,36 @@ final class Arguments
 
     /**
      * @param Container $container
-     * @param Argument $parameter
+     * @param Argument  $argument
      *
      * @return mixed
      * @throws Unbound
      */
-    private function getParameter(Container $container, Argument $parameter)
+    private function getParameter(Container $container, Argument $argument)
     {
-        list($class,) = explode('-', (string) $parameter);
+        list($class,) = explode('-', (string) $argument);
         if (class_exists($class)) {
             // for aop
             $container->add((new Bind($container, $class))->to($class));
         }
         try {
-            return $container->getDependency((string) $parameter);
+            return $container->getDependency((string) $argument);
         } catch (Unbound $e) {
-            return $this->getDefaultValue($e, $parameter);
+            return $this->getDefaultValue($e, $argument);
         }
     }
 
     /**
      * @param Unbound   $e
-     * @param Argument $parameter
+     * @param Argument  $argument
      *
      * @return mixed
      * @throws Unbound
      */
-    private function getDefaultValue(Unbound $e, Argument $parameter)
+    private function getDefaultValue(Unbound $e, Argument $argument)
     {
-        if ($parameter->isDefaultAvailable()) {
-            return $parameter->getDefaultValue();
+        if ($argument->isDefaultAvailable()) {
+            return $argument->getDefaultValue();
         }
         throw $e;
     }

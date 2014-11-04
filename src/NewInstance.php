@@ -23,7 +23,7 @@ final class NewInstance
     /**
      * @var Arguments
      */
-    private $parameters;
+    private $arguments;
 
     /**
      * @var AopBind
@@ -44,7 +44,7 @@ final class NewInstance
         $this->class = $class->name;
         $constructor = $class->getConstructor();
         if ($constructor) {
-            $this->parameters = new Arguments($constructor, $constructorName);
+            $this->arguments = new Arguments($constructor, $constructorName);
         }
         $this->setterMethods = $setterMethods;
     }
@@ -67,7 +67,7 @@ final class NewInstance
     public function __invoke(Container $container)
     {
         // constructor injection
-        $instance = $this->parameters ? (new \ReflectionClass($this->class))->newInstanceArgs($this->parameters->get($container)) : new $this->class;
+        $instance = $this->arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->get($container)) : new $this->class;
 
         // setter injection
         $this->setterMethods->__invoke($instance, $container);
