@@ -66,7 +66,8 @@ final class Container
     public function getDependency($index)
     {
         if (! isset($this->container[$index])) {
-            return $this->getConcreteClass($index);
+            list($class, $name) = explode('-', $index);
+            throw new Unbound("interface:{$class} name:{$name}");
         }
         $dependency = $this->container[$index];
         $instance = $dependency->inject($this);
@@ -88,7 +89,8 @@ final class Container
             throw new Unbound("interface:{$class} name:{$name}");
         }
         // binding on demand
-        $this->add((new Bind($this, $class))->to($class));
+        $dependency = (new Bind($this, $class))->to($class);
+        $this->add($dependency);
 
         return $this->getDependency($class . '-' . $name);
     }
@@ -127,6 +129,19 @@ final class Container
             /** @var $dependency Dependency */
             $dependency->weaveAspects($compiler, $this->pointcuts);
         }
+    }
+
+    /**
+     * @param Compiler   $compiler
+     * @param Dependency $dependency
+     *
+     * @return $this
+     */
+    public function weaveAspect(Compiler $compiler, Dependency $dependency)
+    {
+        $dependency->weaveAspects($compiler, $this->pointcuts);
+
+        return $this;
     }
 
     public function __sleep()

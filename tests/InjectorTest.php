@@ -197,4 +197,13 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $result = $instance->returnSame(2);
         $this->assertSame(4, $result);
     }
+
+    public function testAopOnDemandByUnboundConcreteClass()
+    {
+        $injector = new Injector(new FakeAopInterceptorModule);
+        $instance = $injector->getInstance(FakeAop::class);
+        /** @var $instance FakeAop */
+        $result = $instance->returnSame(2);
+        $this->assertSame(4, $result);
+    }
 }

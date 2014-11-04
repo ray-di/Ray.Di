@@ -7,6 +7,7 @@
 namespace Ray\Di;
 
 use Ray\Aop\Compiler;
+use Ray\Di\Exception\Unbound;
 
 class Injector implements InjectorInterface
 {
@@ -42,7 +43,29 @@ class Injector implements InjectorInterface
      */
     public function getInstance($interface, $name = Name::ANY)
     {
-        $instance = $this->container->getInstance($interface, $name);
+        try {
+            $instance = $this->container->getInstance($interface, $name);
+        } catch (Unbound $e) {
+            $instance = $this->getInstanceOnDemandBind($interface, $e);
+        }
+
+        return $instance;
+    }
+
+    /**
+     * @param string  $class
+     * @param Unbound $e
+     *
+     * @return mixed
+     */
+    private function getInstanceOnDemandBind($class, Unbound $e)
+    {
+        if (! class_exists($class)) {
+            throw $e;
+        }
+        $bind = (new Bind($this->container, $class))->to($class);
+        $this->container->add($bind);
+        $instance = $this->container->weaveAspect(new Compiler($this->classDir), $bind->getBound())->getInstance($class, Name::ANY);
 
         return $instance;
     }
