@@ -19,7 +19,7 @@ class AnnotatedClassTest extends \PHPUnit_Framework_TestCase
 
     public function testInvoke()
     {
-        $newInstance = $this->annotatedClass->__invoke(new \ReflectionClass(FakeCar::class));
+        $newInstance = $this->annotatedClass->getNewInstance(new \ReflectionClass(FakeCar::class));
         $this->assertInstanceOf(NewInstance::class, $newInstance);
         $container = new Container;
         (new Bind($container, FakeTyreInterface::class))->to(FakeTyre::class);
@@ -37,7 +37,7 @@ class AnnotatedClassTest extends \PHPUnit_Framework_TestCase
 
     public function testAnnotatedByAnnotation()
     {
-        $newInstance = $this->annotatedClass->__invoke(new \ReflectionClass(FakeHandleBar::class));
+        $newInstance = $this->annotatedClass->getNewInstance(new \ReflectionClass(FakeHandleBar::class));
         $container = new Container;
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeLeft::class)->to(FakeMirrorLeft::class);
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeRight::class)->to(FakeMirrorRight::class);

@@ -11,6 +11,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\Qualifier;
+use Ray\Di\Di\PostConstruct;
 
 final class AnnotatedClass
 {
@@ -33,7 +34,7 @@ final class AnnotatedClass
      *
      * @return NewInstance
      */
-    public function __invoke(\ReflectionClass $class)
+    public function getNewInstance(\ReflectionClass $class)
     {
         $setterMethods = new SetterMethods([]);
         $methods = $class->getMethods();
@@ -47,6 +48,24 @@ final class AnnotatedClass
         $newInstance = new NewInstance($class, $setterMethods, $name);
 
         return $newInstance;
+    }
+
+    /**
+     * @param \ReflectionClass $class
+     *
+     * @return null|\ReflectionMethod
+     */
+    public function getPostConstruct(\ReflectionClass $class)
+    {
+        $methods = $class->getMethods();
+        foreach ($methods as $method) {
+            $annotation = $this->reader->getMethodAnnotation($method, PostConstruct::class);
+            if ($annotation) {
+                return $method;
+            }
+        }
+
+        return null;
     }
 
     /**

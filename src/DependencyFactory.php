@@ -17,8 +17,10 @@ final class DependencyFactory
      */
     public function newAnnotatedDependency(\ReflectionClass $class)
     {
-        $newInstance = (new AnnotatedClass(new AnnotationReader))->__invoke($class);
-        $dependency = new Dependency($newInstance);
+        $annotateClass = new AnnotatedClass(new AnnotationReader);
+        $newInstance = $annotateClass->getNewInstance($class);
+        $postConstruct = $annotateClass->getPostConstruct($class);
+        $dependency = new Dependency($newInstance, $postConstruct);
 
         return $dependency;
     }
