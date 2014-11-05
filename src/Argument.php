@@ -6,8 +6,6 @@
  */
 namespace Ray\Di;
 
-use Ray\Di\Exception\Unnamed;
-
 final class Argument
 {
     /**
@@ -35,9 +33,6 @@ final class Argument
         $this->isDefaultAvailable = $parameter->isDefaultValueAvailable();
         if ($this->isDefaultAvailable) {
             $this->default = $parameter->getDefaultValue();
-        }
-        if ($interface . $name === NAME::ANY && ! $this->default) {
-            throw new Unnamed($parameter->name);
         }
         $this->index = $interface . '-' . $name;
     }

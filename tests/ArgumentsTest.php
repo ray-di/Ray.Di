@@ -2,8 +2,6 @@
 
 namespace Ray\Di;
 
-use Ray\Di\Exception\Unnamed;
-
 class ArgumentsTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -32,11 +30,5 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
         $parameters = new Arguments(new \ReflectionMethod(FakeHandleProvider::class, '__construct'), new Name(Name::ANY));
         $parametersValue = $parameters->get($emptyContainer);
         $this->assertSame($defaultValue, $parametersValue[0]);
-    }
-
-    public function testUnnamedArgument()
-    {
-        $this->setExpectedException(Unnamed::class);
-        new Argument(new \ReflectionParameter([FakeNoName::class, '__construct'], 'noTypehintNoName'), Name::ANY);
     }
 }
