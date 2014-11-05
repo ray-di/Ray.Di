@@ -45,7 +45,7 @@ final class Name
         }
         // single name
         // @Named(name)
-        if ($name === Name::ANY || ctype_alnum($name)) {
+        if ($name === Name::ANY || preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
             $this->name = $name;
             return;
         }
