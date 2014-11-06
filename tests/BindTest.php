@@ -113,4 +113,13 @@ class BindTest extends \PHPUnit_Framework_TestCase
         $instance = $container->getInstance(ProviderInterface::class, 'handle');
         $this->assertInstanceOf(FakeHandleProvider::class, $instance);
     }
+
+    public function testBindProviderAsProviderInSingleton()
+    {
+        $container = new Container;
+        (new Bind($container, ProviderInterface::class))->annotatedWith('handle')->to(FakeHandleProvider::class)->in(Scope::SINGLETON);
+        $instance1 = $container->getInstance(ProviderInterface::class, 'handle');
+        $instance2 = $container->getInstance(ProviderInterface::class, 'handle');
+        $this->assertSame(spl_object_hash($instance1), spl_object_hash($instance2));
+    }
 }
