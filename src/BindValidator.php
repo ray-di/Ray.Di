@@ -14,7 +14,7 @@ use Ray\Di\Exception\InvalidProvider;
 final class BindValidator
 {
     /**
-     * @param $interface
+     * @param string $interface
      */
     public function constructor($interface)
     {

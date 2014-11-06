@@ -91,7 +91,7 @@ abstract class AbstractModule
         }
     }
 
-    private  function activate()
+    private function activate()
     {
         $this->container = new Container;
         $this->matcher = new Matcher;

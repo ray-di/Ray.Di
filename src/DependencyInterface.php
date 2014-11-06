@@ -28,7 +28,7 @@ interface DependencyInterface
     /**
      * Set scope
      *
-     * @param $scope
+     * @param string $scope
      *
      * @return mixed
      */
