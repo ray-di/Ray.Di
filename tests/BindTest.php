@@ -105,4 +105,12 @@ class BindTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(InvalidProvider::class);
         (new Bind(new Container, FakeHandleInterface::class))->toProvider(FakeEngine::class);
     }
+
+    public function testBindProviderAsProvider()
+    {
+        $container = new Container;
+        (new Bind($container, ProviderInterface::class))->annotatedWith('handle')->to(FakeHandleProvider::class);
+        $instance = $container->getInstance(ProviderInterface::class, 'handle');
+        $this->assertInstanceOf(FakeHandleProvider::class, $instance);
+    }
 }

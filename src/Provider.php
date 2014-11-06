@@ -9,6 +9,8 @@ namespace Ray\Di;
 final class Provider implements InjectInterface
 {
     /**
+     * Provider dependency
+     *
      * @var Dependency
      */
     private $dependency;
@@ -40,7 +42,7 @@ final class Provider implements InjectInterface
 
             return $this->instance;
         }
-        $this->instance = $this->dependency->inject($container);
+        $this->instance = $this->dependency->inject($container)->get();
 
         return $this->instance;
     }

@@ -72,11 +72,6 @@ final class NewInstance
         // setter injection
         $this->setterMethods->__invoke($instance, $container);
 
-        // is provider ?
-        if ($instance instanceof ProviderInterface) {
-            $instance = $instance->get();
-        }
-
         // bind dependency injected interceptors
         if ($this->bind instanceof AspectBind) {
             $instance->bindings = $this->bind->inject($container);
