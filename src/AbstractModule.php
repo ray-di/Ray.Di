@@ -86,7 +86,7 @@ abstract class AbstractModule
         $pointcut = new Pointcut($classMatcher, $methodMatcher, $interceptors);
         $this->container->addPointcut($pointcut);
         foreach ($interceptors as $interceptor) {
-            $bind = (new Bind($this->container, $interceptor))->to($interceptor);
+            $bind = (new Bind($this->container, $interceptor))->to($interceptor)->in(Scope::SINGLETON);
             $this->container->add($bind);
         }
     }
