@@ -93,9 +93,6 @@ abstract class AbstractModule
 
     private  function activate()
     {
-        if ($this->container) {
-            return;
-        }
         $this->container = new Container;
         $this->matcher = new Matcher;
         $this->configure();
