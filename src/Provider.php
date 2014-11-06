@@ -6,7 +6,7 @@
  */
 namespace Ray\Di;
 
-final class Provider implements InjectInterface
+final class Provider implements DependencyInterface
 {
     /**
      * Provider dependency
@@ -36,6 +36,14 @@ final class Provider implements InjectInterface
     /**
      * {@inheritdoc}
      */
+    public function register(array &$container, Bind $bind)
+    {
+        $container[(string) $bind] = $bind->getBound();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function inject(Container $container)
     {
         if ($this->isSingleton && $this->instance) {
@@ -48,7 +56,7 @@ final class Provider implements InjectInterface
     }
 
     /**
-     * @param string $scope
+     * {@inheritdoc}
      */
     public function setScope($scope)
     {

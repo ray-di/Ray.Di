@@ -6,7 +6,7 @@
  */
 namespace Ray\Di;
 
-final class Instance implements InjectInterface
+final class Instance implements DependencyInterface
 {
     /**
      * @var mixed
@@ -21,12 +21,30 @@ final class Instance implements InjectInterface
         $this->value = $value;
     }
 
+    public function register(array &$container, Bind $bind)
+    {
+        $index = (string) $bind;
+        if (! isset($container[$index])) {
+            $container[$index] = $bind->getBound();
+
+            return;
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
     public function inject(Container $container)
     {
         unset($container);
+
         return $this->value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setScope($scope)
+    {
     }
 }

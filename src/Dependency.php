@@ -11,7 +11,7 @@ use Ray\Aop\Compiler as AopCompiler;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\Pointcut;
 
-final class Dependency implements InjectInterface
+final class Dependency implements DependencyInterface
 {
     /**
      * @var NewInstance
@@ -46,6 +46,18 @@ final class Dependency implements InjectInterface
     /**
      * {@inheritdoc}
      */
+    public function register(array &$container, Bind $bind)
+    {
+        $index = (string) $bind;
+        if (isset($container[$index])) {
+            return;
+        }
+        $container[$index] = $bind->getBound();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function inject(Container $container)
     {
         // singleton ?
@@ -66,7 +78,7 @@ final class Dependency implements InjectInterface
     }
 
     /**
-     * @param string $scope
+     * {@inheritdoc}
      */
     public function setScope($scope)
     {
