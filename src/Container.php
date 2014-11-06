@@ -14,7 +14,7 @@ use Ray\Di\Exception\Unbound;
 final class Container
 {
     /**
-     * @var InjectInterface[]
+     * @var DependencyInterface[]
      */
     private $container = [];
 
@@ -29,7 +29,7 @@ final class Container
     public function add(Bind $bind)
     {
         $dependency = $bind->getBound();
-        $this->container[(string) $bind] = $dependency;
+        $dependency->register($this->container, $bind);
     }
 
     /**
@@ -38,10 +38,6 @@ final class Container
     public function addPointcut(Pointcut $pointcut)
     {
         $this->pointcuts[] = $pointcut;
-        foreach ($pointcut->interceptors as &$interceptor) {
-            $bind = (new Bind($this, $interceptor))->to($interceptor)->in(Scope::SINGLETON);
-            $this->add($bind);
-        }
     }
 
     /**
@@ -76,7 +72,7 @@ final class Container
     }
 
     /**
-     * @return InjectInterface[]
+     * @return DependencyInterface[]
      */
     public function getContainer()
     {
