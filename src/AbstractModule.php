@@ -28,11 +28,7 @@ abstract class AbstractModule
     public function __construct(
         AbstractModule $module = null
     ) {
-        if (! $this->container) {
-            $this->container = new Container;
-        }
-        $this->matcher = new Matcher;
-        $this->configure();
+        $this->activate();
         if ($module) {
             $this->container->merge($module->getContainer());
         }
@@ -47,7 +43,7 @@ abstract class AbstractModule
      */
     protected function bind($interface = '')
     {
-        $bind = new Bind($this->container, $interface);
+        $bind = new Bind($this->getContainer(), $interface);
 
         return $bind;
     }
@@ -57,7 +53,7 @@ abstract class AbstractModule
      */
     public function install(AbstractModule $module)
     {
-        $this->container->merge($module->getContainer());
+        $this->getContainer()->merge($module->getContainer());
     }
 
     /**
@@ -74,6 +70,9 @@ abstract class AbstractModule
      */
     public function getContainer()
     {
+        if (! $this->container) {
+            $this->activate();
+        }
         return $this->container;
     }
 
@@ -90,5 +89,15 @@ abstract class AbstractModule
             $bind = (new Bind($this->container, $interceptor))->to($interceptor);
             $this->container->add($bind);
         }
+    }
+
+    private  function activate()
+    {
+        if ($this->container) {
+            return;
+        }
+        $this->container = new Container;
+        $this->matcher = new Matcher;
+        $this->configure();
     }
 }
