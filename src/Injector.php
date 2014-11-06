@@ -63,7 +63,7 @@ class Injector implements InjectorInterface
         if (! class_exists($class)) {
             throw $e;
         }
-        $bind = (new Bind($this->container, $class))->to($class);
+        $bind = new Bind($this->container, $class);
         $this->container->add($bind);
         $instance = $this->container->weaveAspect(new Compiler($this->classDir), $bind->getBound())->getInstance($class, Name::ANY);
 

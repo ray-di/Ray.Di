@@ -29,7 +29,7 @@ final class Bind
     private $name = Name::ANY;
 
     /**
-     * @var InjectInterface
+     * @var DependencyInterface
      */
     private $bound;
 
@@ -49,7 +49,6 @@ final class Bind
         $this->validate = new BindValidator;
         if (class_exists($interface)) {
             $this->bound = (new DependencyFactory)->newAnnotatedDependency(new \ReflectionClass($interface));
-            $container->add($this);
 
             return;
         }
@@ -150,7 +149,7 @@ final class Bind
     }
 
     /**
-     * @return InjectInterface
+     * @return DependencyInterface
      */
     public function getBound()
     {
