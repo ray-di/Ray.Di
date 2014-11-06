@@ -34,6 +34,11 @@ final class Bind
     private $bound;
 
     /**
+     * @var BindValidator
+     */
+    private $validate;
+
+    /**
      * @param Container $container dependency container
      * @param string    $interface interface or concrete class name
      */
@@ -41,15 +46,14 @@ final class Bind
     {
         $this->container = $container;
         $this->interface = $interface;
+        $this->validate = new BindValidator;
         if (class_exists($interface)) {
             $this->bound = (new DependencyFactory)->newAnnotatedDependency(new \ReflectionClass($interface));
             $container->add($this);
 
             return;
         }
-        if ($interface && ! interface_exists($interface)) {
-            throw new NotFound($interface);
-        }
+        $this->validate->constructor($interface);
     }
 
     /**
@@ -71,27 +75,11 @@ final class Bind
      */
     public function to($class)
     {
-        $this->toValidation($this->interface, $class);
+        $this->validate->to($this->interface, $class);
         $this->bound = (new DependencyFactory)->newAnnotatedDependency(new \ReflectionClass($class));
         $this->container->add($this);
 
         return $this;
-    }
-
-    /**
-     * @param string $interface
-     * @param string $class
-     */
-    private function toValidation($interface, $class)
-    {
-        if (! class_exists($class)) {
-            throw new NotFound($class);
-        }
-        $notExistClass = ! class_exists($class);
-        $notImplementedClass = interface_exists($interface) && ! (new \ReflectionClass($class))->implementsInterface($interface);
-        if ($notExistClass || $notImplementedClass) {
-            throw new InvalidType($class);
-        }
     }
 
     /**
@@ -119,12 +107,7 @@ final class Bind
      */
     public function toProvider($provider)
     {
-        if (! class_exists($provider)) {
-            throw new NotFound($provider);
-        }
-        if (! (new \ReflectionClass($provider))->implementsInterface(ProviderInterface::class)) {
-            throw new InvalidProvider($provider);
-        }
+        $this->validate->toProvider($provider);
         $this->bound = (new DependencyFactory)->newProvider(new \ReflectionClass($provider));
         $this->container->add($this);
 
