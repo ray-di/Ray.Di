@@ -43,6 +43,7 @@ final class Instance implements DependencyInterface
 
     /**
      * {@inheritdoc}
+     * @codeCoverageIgnore
      */
     public function setScope($scope)
     {
