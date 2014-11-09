@@ -48,11 +48,25 @@ final class Bind
         $this->interface = $interface;
         $this->validate = new BindValidator;
         if (class_exists($interface)) {
-            $this->bound = (new DependencyFactory)->newAnnotatedDependency(new \ReflectionClass($interface));
+            $this->untargettedBindings($container, new \ReflectionClass($interface));
 
             return;
         }
         $this->validate->constructor($interface);
+    }
+
+    /**
+     * @param Container        $container
+     * @param \ReflectionClass $class
+     */
+    private function untargettedBindings(Container $container, \ReflectionClass $class)
+    {
+        $this->bound = (new DependencyFactory)->newAnnotatedDependency($class);
+        $container->add($this);
+        $constructor = $class->getConstructor();
+        if ($constructor) {
+            (new UntargetedBind)->__invoke($container, $constructor);
+        }
     }
 
     /**

@@ -52,11 +52,6 @@ final class Arguments
      */
     private function getParameter(Container $container, Argument $argument)
     {
-        list($class,) = explode('-', (string) $argument);
-        if (class_exists($class)) {
-            // for aop
-            $container->add((new Bind($container, $class))->to($class));
-        }
         try {
             return $container->getDependency((string) $argument);
         } catch (Unbound $e) {
