@@ -260,7 +260,7 @@ public function onInit()
 protected function configure()
 {
     $this->install(new OtherModule);
-    $this->overrideInstall(new CustomiseModule);
+    $this->override(new CustomiseModule);
 }
 ```
 

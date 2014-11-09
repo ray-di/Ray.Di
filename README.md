@@ -399,7 +399,7 @@ A module can install other modules to configure more bindings.
 protected function configure()
 {
     $this->install(new OtherModule);
-    $this->overrideInstall(new CustomiseModule);
+    $this->override(new CustomiseModule);
 }
 ```
 

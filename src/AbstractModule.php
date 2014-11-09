@@ -59,7 +59,7 @@ abstract class AbstractModule
     /**
      * @param AbstractModule $module
      */
-    public function overrideInstall(AbstractModule $module)
+    public function override(AbstractModule $module)
     {
         $module->getContainer()->merge($this->container);
         $this->container = $module->getContainer();

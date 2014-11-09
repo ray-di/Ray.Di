@@ -7,6 +7,6 @@ class FakeToBindingWithoutConstructorModule extends AbstractModule
     protected function configure()
     {
         $this->install(new ToModule);
-        $this->overrideInstall(new InstanceBindModuleOneTo3);
+        $this->override(new InstanceBindModuleOneTo3);
     }
 }
