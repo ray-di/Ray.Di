@@ -6,8 +6,6 @@
  */
 namespace Ray\Di;
 
-use Ray\Di\Exception\Unbound;
-
 final class UntargetedBind
 {
     /**

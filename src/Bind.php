@@ -7,9 +7,7 @@
  */
 namespace Ray\Di;
 
-use Ray\Di\Exception\InvalidType;
 use Ray\Di\Exception\NotFound;
-use Ray\Di\Exception\InvalidProvider;
 
 final class Bind
 {
