@@ -10,6 +10,7 @@ namespace Ray\Di;
 use Ray\Aop\Compiler;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
+use Ray\Di\Exception\Untargetted;
 
 final class Container
 {
@@ -62,13 +63,25 @@ final class Container
     public function getDependency($index)
     {
         if (! isset($this->container[$index])) {
-            list($class, $name) = explode('-', $index);
-            throw new Unbound("interface:{$class} name:{$name}");
+            $this->unbound($index);
         }
         $dependency = $this->container[$index];
         $instance = $dependency->inject($this);
 
         return $instance;
+    }
+
+    /**
+     * @param string $index {interface}-{bind name}
+     */
+    public function unbound($index)
+    {
+        list($class, $name) = explode('-', $index);
+        if (class_exists($class)) {
+            throw new Untargetted($class);
+        }
+
+        throw new Unbound("interface:{$class} name:{$name}");
     }
 
     /**

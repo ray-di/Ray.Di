@@ -3,6 +3,7 @@
 namespace Ray\Di;
 
 use Ray\Di\Exception\Unbound;
+use Ray\Di\Exception\Untargetted;
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -107,7 +108,12 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testGetConcreteClass()
     {
         $injector = new Injector;
-        $robot = $injector->getInstance(FakeRobot::class);
+        try {
+            $robot = $injector->getInstance(FakeRobot::class);
+        } catch (Untargetted $e) {
+            $injector->bind(FakeRobot::class);
+            $robot = $injector->getInstance(FakeRobot::class);
+        }
         $this->assertInstanceOf(FakeRobot::class, $robot);
     }
 
