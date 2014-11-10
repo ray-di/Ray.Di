@@ -14,7 +14,7 @@ final class Instance implements DependencyInterface
     public $value;
 
     /**
-     * @param mixed $value
+     * @param Injector $value
      */
     public function __construct($value)
     {

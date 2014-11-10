@@ -7,7 +7,6 @@
 namespace Ray\Di;
 
 use Ray\Aop\Compiler;
-use Ray\Di\Exception\Unbound;
 use Ray\Di\Exception\Untargetted;
 
 class Injector implements InjectorInterface
