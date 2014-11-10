@@ -32,9 +32,7 @@ final class BindValidator
         if (! class_exists($class)) {
             throw new NotFound($class);
         }
-        $notExistClass = ! class_exists($class);
-        $notImplementedClass = interface_exists($interface) && ! (new \ReflectionClass($class))->implementsInterface($interface);
-        if ($notExistClass || $notImplementedClass) {
+        if (interface_exists($interface) && ! (new \ReflectionClass($class))->implementsInterface($interface)) {
             throw new InvalidType($class);
         }
     }
