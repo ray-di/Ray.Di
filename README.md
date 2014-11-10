@@ -117,7 +117,7 @@ class DatabaseTransactionLogProvider implements ProviderInterface
 Finally we bind to the provider using the `toProvider()` method:
 
 ```php
-$this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvider');
+$this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider::class);
 ```
 
 ### Named Binding
@@ -141,7 +141,7 @@ To bind a specific name, pass that string using the `annotatedWith()` method.
 ```php
 protected function configure()
 {
-    $this->bind('CreditCardProcessorInterface')->annotatedWith('checkout')->to('CheckoutCreditCardProcessor');
+    $this->bind(CreditCardProcessorInterface::class)->annotatedWith('checkout')->to(CheckoutCreditCardProcessor::class);
 }
 ```
 
@@ -325,7 +325,7 @@ class WeekendModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith('NotOnWeekends'),
-            [$this->requestInjection(WeekendBlocker::class)]
+            [WeekendBlocker::class]
         );
     }
 }
@@ -365,7 +365,7 @@ class TaxModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->annotatedWith('Tax'),
             $this->matcher->any(),
-            [$this->requestInjection(TaxCharger::class)]
+            [TaxCharger::class]
         );
     }
 }
@@ -382,7 +382,7 @@ class AopMatcherModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->any(),                 // In any class and
             $this->matcher->startWith('delete'),   // ..the method start with "delete"
-            [$this->requestInjection(Logger::class)]
+            [Logger::class]
         );
     }
 }
@@ -393,7 +393,7 @@ class AopMatcherModule extends AbstractModule
 A module can install other modules to configure more bindings.
 
  * Earlier bindings have priority even if the same binding is made later.
- * `overrideInstall` bindings in that module have priority.
+ * `override` bindings in that module have priority.
 
 ```php
 protected function configure()
@@ -440,7 +440,7 @@ $lister = $injector->getInstance(ListerInterface::class);
 Requirements
 ------------
 
-* PHP 5.5+
+* PHP 5.4+
 * hhvm
 
 Installation

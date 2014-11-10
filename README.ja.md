@@ -118,7 +118,7 @@ class DatabaseTransactionLogProvider implements Provider
 このように依存が必要であったり、生成が複雑なインスタンスは **Provider Bindings**を使います。
 
 ```php
-$this->bind('TransactionLogInterface')->toProvider('DatabaseTransactionLogProvider');
+$this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider:class);
 ```
 
 
@@ -154,7 +154,7 @@ public RealBillingService(CreditCardProcessorInterface $processor, CreditCardPro
 ```php
 protected function configure()
 {
-    $this->bind('CreditCardProcessorInterface')->annotatedWith('checkout')->to('CheckoutCreditCardProcessor')    $this->bind('CreditCardProcessorInterface')->annotatedWith('backup')->to('CheckoutBackupCreditCardProcessor');
+    $this->bind(CreditCardProcessorInterface::class)->annotatedWith('checkout')->to(CheckoutCreditCardProcessor::class)
 }
 ```
 
@@ -165,7 +165,7 @@ protected function configure()
 ```php
 protected function configure()
 {
-    $this->bind('UserInterface')->toInstance(new User);
+    $this->bind(UserInterface::class)->toInstance(new User);
 }
 ```
 
@@ -230,7 +230,7 @@ protected function configure()
 ```php
 protected function configure()
 {
-    $this->bind('TransactionLog')->to('InMemoryTransactionLog')->in(Scope::SINGLETON);
+    $this->bind(TransactionLog::class)->to(InMemoryTransactionLog::class)->in(Scope::SINGLETON);
 }
 ```
 
@@ -254,7 +254,7 @@ public function onInit()
 
 モジュールは他のモジュールの束縛をインストールして使う事ができます。
 
- * 同一の束縛があれば先にされた方が優先されますが`overrindeInstall`でインストールすると後からのモジュールが優先されインストールされます。
+ * 同一の束縛があれば先にされた方が優先されますが`overrinde`でインストールすると後からのモジュールが優先されインストールされます。
 
 ```php
 protected function configure()
@@ -280,9 +280,9 @@ class TaxModule extends AbstractModule
     protected function configure()
     {
         $this->bindInterceptor(
-            $this->matcher->subclassesOf('Ray\Di\Aop\RealBillingService'),
+            $this->matcher->subclassesOf(RealBillingService::class),
             $this->matcher->annotatedWith('Tax'),
-            [$this->requestInjection('TaxCharger')]
+            [TaxCharger::class]
         );
     }
 }
@@ -296,7 +296,7 @@ class AopMatcherModule extends AbstractModule
         $this->bindInterceptor(
             $this->matcher->any(),                 // In any class and
             $this->matcher->startWith('delete'),   // ..the method start with "delete"
-            [$this->requestInjection(Logger::class)]
+            [Logger::class]
         );
     }
 }
@@ -330,7 +330,7 @@ $lister = $injector->getInstance(ListerInterface::class);
 Requirement
 -----------
 
-* PHP 5.5+
+* PHP 5.4+
 * hhvm
 
 
