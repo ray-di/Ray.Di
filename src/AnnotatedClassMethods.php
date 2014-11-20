@@ -7,9 +7,7 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
-use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
-use Ray\Di\Di\Qualifier;
 
 final class AnnotatedClassMethods
 {
@@ -37,7 +35,7 @@ final class AnnotatedClassMethods
         if (! $constructor) {
             return new Name(Name::ANY);
         }
-        $named = $this->reader->getMethodAnnotation($constructor, Named::class);
+        $named = $this->reader->getMethodAnnotation($constructor, 'Ray\Di\Di\Named');
         if (! $named) {
             return new Name(Name::ANY);
         }
@@ -52,7 +50,7 @@ final class AnnotatedClassMethods
      */
     public function getSetterMethod(\ReflectionMethod $method)
     {
-        $inject = $this->reader->getMethodAnnotation($method, Inject::class);
+        $inject = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Inject');
         /** @var $inject \Ray\Di\Di\Inject */
         if (! $inject) {
             return null;
@@ -80,7 +78,7 @@ final class AnnotatedClassMethods
 
             return $bindAnnotation;
         }
-        $namedAnnotation = $this->reader->getMethodAnnotation($method, Named::class);
+        $namedAnnotation = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Named');
         if ($namedAnnotation) {
 
             return $namedAnnotation;
@@ -115,7 +113,7 @@ final class AnnotatedClassMethods
      */
     private function findBindAnnotation($annotation)
     {
-        $bindingAnnotation = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), Qualifier::class);
+        $bindingAnnotation = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), 'Ray\Di\Di\Qualifier');
         if (! $bindingAnnotation) {
 
             return null;
