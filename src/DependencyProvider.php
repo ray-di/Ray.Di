@@ -6,7 +6,7 @@
  */
 namespace Ray\Di;
 
-final class Provider implements DependencyInterface
+final class DependencyProvider implements DependencyInterface
 {
     /**
      * Provider dependency

@@ -145,7 +145,7 @@ final class Bind
      */
     public function in($scope)
     {
-        if ($this->bound instanceof Dependency || $this->bound instanceof Provider) {
+        if ($this->bound instanceof Dependency || $this->bound instanceof DependencyProvider) {
             $this->bound->setScope($scope);
         }
 
