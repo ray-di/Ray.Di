@@ -32,7 +32,7 @@ class Injector implements InjectorInterface
         $this->container->weaveAspects(new Compiler($this->classDir));
 
         // builtin injection
-        (new Bind($this->container, InjectorInterface::class))->toInstance($this);
+        (new Bind($this->container, 'Ray\Di\InjectorInterface'))->toInstance($this);
     }
 
     /**

@@ -48,7 +48,7 @@ final class BindValidator
         if (! class_exists($provider)) {
             throw new NotFound($provider);
         }
-        if (! (new \ReflectionClass($provider))->implementsInterface(ProviderInterface::class)) {
+        if (! (new \ReflectionClass($provider))->implementsInterface('Ray\Di\ProviderInterface')) {
             throw new InvalidProvider($provider);
         }
     }
