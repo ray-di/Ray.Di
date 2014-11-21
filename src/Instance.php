@@ -24,11 +24,7 @@ final class Instance implements DependencyInterface
     public function register(array &$container, Bind $bind)
     {
         $index = (string) $bind;
-        if (! isset($container[$index])) {
-            $container[$index] = $bind->getBound();
-
-            return;
-        }
+        $container[$index] = $bind->getBound();
     }
 
     /**

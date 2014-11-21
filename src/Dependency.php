@@ -48,9 +48,6 @@ final class Dependency implements DependencyInterface
     public function register(array &$container, Bind $bind)
     {
         $index = (string) $bind;
-        if (isset($container[$index])) {
-            return;
-        }
         $container[$index] = $bind->getBound();
     }
 
