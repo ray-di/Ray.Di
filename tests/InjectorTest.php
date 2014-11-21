@@ -20,6 +20,12 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, $instance);
     }
 
+    public function testToInstance() {
+        $engine = new FakeEngine;
+        $injector = new Injector(new FakeClassInstanceBindModule($engine));
+        $this->assertSame($engine, $injector->getInstance(FakeEngine::class));
+    }
+
     public function testUnbound()
     {
         $this->setExpectedException(Unbound::class);
@@ -73,6 +79,12 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(FakeRobot::class, $instance);
     }
 
+    public function testClassToClassBinding() {
+        $injector = new Injector(new FakeCarEngineModule);
+        $instance = $injector->getInstance(FakeEngine::class);
+        $this->assertInstanceOf(FakeCarEngine::class, $instance);
+    }
+
     public function testToBindingPrototype()
     {
         $injector = new Injector(new FakeToBindModule);
@@ -95,6 +107,13 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
         $this->assertNotEquals(spl_object_hash($instance1), spl_object_hash($instance2));
+    }
+
+    public function testClassToProviderBinding()
+    {
+        $injector = new Injector(new FakeEngineToProviderModule);
+        $instance = $injector->getInstance(FakeEngine::class);
+        $this->assertInstanceOf(FakeEngine::class, $instance);
     }
 
     public function testToProviderBindingSingleton()
