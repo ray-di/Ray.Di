@@ -3,8 +3,8 @@ Dependency Injection framework for PHP
 
 [![Latest Stable Version](https://poser.pugx.org/ray/di/v/stable.png)](https://packagist.org/packages/ray/di)
 [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=develop-2)](http://travis-ci.org/koriym/Ray.Di)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/b/koriym/ray.di/badges/quality-score.png?b=develop-2&s=38a2876fe3393f2d5307f3b4c6b5fb0b23812be1)](https://scrutinizer-ci.com/b/koriym/ray.di/?branch=develop-2)
-[![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/coverage.png?s=676589defaa2a762ac42ed97f2a7e64efc4617b9)](https://scrutinizer-ci.com/g/koriym/Ray.Di/)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/Koriym.Psr4List/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/koriym/Koriym.Psr4List/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Di/?branch=develop-2)
 
 **Ray.Di**はGoogleのJava用DI framework [Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6)の主要な機能を持つアノテーションベースのDIフレームワークです。
 DIを効率よく使用すると以下のようなメリットがあります。
