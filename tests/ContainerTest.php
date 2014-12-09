@@ -2,6 +2,8 @@
 
 namespace Ray\Di;
 
+use Ray\Di\Exception\Unbound;
+
 class ContainerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -84,5 +86,20 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $array = $this->container->getContainer();
         $this->assertArrayHasKey(FakeEngineInterface::class . '-' . Name::ANY,  $array);
         $this->assertArrayHasKey(FakeRobotInterface::class . '-' . Name::ANY,  $array);
+    }
+
+    public function testMove()
+    {
+        $newName = 'new';
+        $this->container->move(FakeEngineInterface::class, Name::ANY, FakeEngineInterface::class, $newName);
+        $dependencyIndex = FakeEngineInterface::class . '-' . $newName;
+        $instance = $this->container->getDependency($dependencyIndex);
+        $this->assertInstanceOf(FakeEngine::class, $instance);
+    }
+
+    public function testMoveUnbound()
+    {
+        $this->setExpectedException(Unbound::class);
+        $this->container->move(FakeEngineInterface::class, 'invalid', FakeEngineInterface::class, 'new');
     }
 }

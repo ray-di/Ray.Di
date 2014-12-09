@@ -47,7 +47,6 @@ final class DependencyProvider implements DependencyInterface
     public function inject(Container $container)
     {
         if ($this->isSingleton && $this->instance) {
-
             return $this->instance;
         }
         $this->instance = $this->dependency->inject($container)->get();

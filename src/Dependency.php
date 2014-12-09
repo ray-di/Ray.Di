@@ -58,7 +58,6 @@ final class Dependency implements DependencyInterface
     {
         // singleton ?
         if ($this->isSingleton === true && $this->instance) {
-
             return $this->instance;
         }
 
