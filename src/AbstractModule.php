@@ -23,11 +23,17 @@ abstract class AbstractModule
     private $container;
 
     /**
+     * @var AbstractModule
+     */
+    protected $lastModule;
+
+    /**
      * @param AbstractModule $module
      */
     public function __construct(
         AbstractModule $module = null
     ) {
+        $this->lastModule = $module;
         $this->activate();
         if ($module) {
             $this->container->merge($module->getContainer());
@@ -96,5 +102,17 @@ abstract class AbstractModule
         $this->container = new Container;
         $this->matcher = new Matcher;
         $this->configure();
+    }
+
+    /**
+     * @param string $interface
+     * @param string $newName
+     * @param string $sourceName
+     * @param string $targetInterface
+     */
+    public function rename($interface, $newName, $sourceName = Name::ANY, $targetInterface = '')
+    {
+        $targetInterface = $targetInterface ?: $interface;
+        $this->lastModule->getContainer()->move($interface, $sourceName, $targetInterface, $newName);
     }
 }

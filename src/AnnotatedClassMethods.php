@@ -75,12 +75,10 @@ final class AnnotatedClassMethods
     {
         $bindAnnotation = $this->getBindAnnotation($method);
         if ($bindAnnotation) {
-
             return $bindAnnotation;
         }
         $namedAnnotation = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Named');
         if ($namedAnnotation) {
-
             return $namedAnnotation;
         }
 
@@ -98,7 +96,6 @@ final class AnnotatedClassMethods
         foreach ($annotations as $annotation) {
             $bindAnnotation = $this->findBindAnnotation($annotation);
             if ($bindAnnotation) {
-
                 return $bindAnnotation;
             }
         }
@@ -115,7 +112,6 @@ final class AnnotatedClassMethods
     {
         $bindingAnnotation = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), 'Ray\Di\Di\Qualifier');
         if (! $bindingAnnotation) {
-
             return null;
         }
         $named = new Named;

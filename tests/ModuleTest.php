@@ -24,4 +24,11 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(NotFound::class);
         new FakeToBindInvalidClassModule;
     }
+
+    public function testRename()
+    {
+        $module = new FakeRenameModule(new FakeToBindModule);
+        $instance = $module->getContainer()->getInstance(FakeRobotInterface::class, 'original');
+        $this->assertInstanceOf(FakeRobotInterface::class, $instance);
+    }
 }

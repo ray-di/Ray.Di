@@ -72,6 +72,23 @@ final class Container
     }
 
     /**
+     * @param string $sourceInterface
+     * @param string $sourceName
+     * @param string $targetInterface
+     * @param string $targetName
+     */
+    public function move($sourceInterface, $sourceName, $targetInterface, $targetName)
+    {
+        $sourceIndex = $sourceInterface . '-' . $sourceName;
+        if (! isset($this->container[$sourceIndex])) {
+            $this->unbound($sourceIndex);
+        }
+        $targetIndex = $targetInterface . '-' . $targetName;
+        $this->container[$targetIndex] = $this->container[$sourceIndex];
+        unset($this->container[$sourceIndex]);
+    }
+
+    /**
      * @param string $index {interface}-{bind name}
      */
     public function unbound($index)
