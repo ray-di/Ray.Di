@@ -1,10 +1,12 @@
-Dependency Injection framework for PHP
-======================================
+# Ray.Di
+
+## Dependency Injection framework for PHP
 
 [![Latest Stable Version](https://poser.pugx.org/ray/di/v/stable.png)](https://packagist.org/packages/ray/di)
-[![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=develop-2)](http://travis-ci.org/koriym/Ray.Di)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/Koriym.Psr4List/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/koriym/Koriym.Psr4List/?branch=master)
+[![Latest Unstable Version](http://img.shields.io/badge/unstable-~2.0%40dev-green.svg)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/Koriym.Psr4List/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/koriym/Koriym.Psr4List/?branch=master) 
 [![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Di/?branch=develop-2)
+[![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=develop-2)](http://travis-ci.org/koriym/Ray.Di)
 
 **Ray.Di** was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google.
 
