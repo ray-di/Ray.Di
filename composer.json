@@ -24,6 +24,19 @@
             "Ray\\Di\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Ray\\Di\\": [
+                "tests/",
+                "tests/Fake/"
+            ],
+            "FakeVendor\\Sandbox\\": "tests/Fake/FakeVendor/Sandbox/"
+        },
+        "files": [
+            "tests/Fake/FakeLeft.php",
+            "tests/Fake/FakeRight.php"
+        ]
+    },
     "extra": {
         "branch-alias": {
             "dev-develop-2": "2.0.x-dev"
