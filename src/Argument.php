@@ -30,6 +30,7 @@ final class Argument
     public function __construct(\ReflectionParameter $parameter, $name)
     {
         $interface = $this->getTypeHint($parameter);
+        $interface = ($interface === 'array') ? '' : $interface; // hhvm
         $this->isDefaultAvailable = $parameter->isDefaultValueAvailable();
         if ($this->isDefaultAvailable) {
             $this->default = $parameter->getDefaultValue();
