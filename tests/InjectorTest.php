@@ -212,6 +212,24 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(4, $result);
     }
 
+    public function testAopBoundInDifferentModuleAfterAnotherBinding()
+    {
+        $injector = new Injector(new FakeAopInstallModule(new FakeAopModule));
+        $instance = $injector->getInstance(FakeAopInterface::class);
+        /** @var $instance FakeAop */
+        $result = $instance->returnSame(2);
+        $this->assertSame(8, $result);
+    }
+
+    public function testAopBoundDoublyInDifferentModule()
+    {
+        $injector = new Injector(new FakeAopDoublyInstallModule);
+        $instance = $injector->getInstance(FakeAopInterface::class);
+        /** @var $instance FakeAop */
+        $result = $instance->returnSame(2);
+        $this->assertSame(8, $result);
+    }
+
     public function testAopClassAutoloader()
     {
         passthru('php ' . __DIR__ . '/script/aop.php');
