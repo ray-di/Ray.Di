@@ -16,13 +16,26 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.4.0",
         "ray/aop": "~2.0@dev"
     },
     "autoload": {
         "psr-4": {
             "Ray\\Di\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ray\\Di\\": [
+                "tests/",
+                "tests/Fake/"
+            ],
+            "FakeVendor\\Sandbox\\": "tests/Fake/FakeVendor/Sandbox/"
+        },
+        "files": [
+            "tests/Fake/FakeLeft.php",
+            "tests/Fake/FakeRight.php"
+        ]
     },
     "extra": {
         "branch-alias": {

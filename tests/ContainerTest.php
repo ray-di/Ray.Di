@@ -2,6 +2,8 @@
 
 namespace Ray\Di;
 
+use Ray\Aop\Matcher;
+use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
 
 class ContainerTest extends \PHPUnit_Framework_TestCase
@@ -86,6 +88,22 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $array = $this->container->getContainer();
         $this->assertArrayHasKey(FakeEngineInterface::class . '-' . Name::ANY,  $array);
         $this->assertArrayHasKey(FakeRobotInterface::class . '-' . Name::ANY,  $array);
+    }
+
+    public function testMergePointcuts()
+    {
+        $extraContainer = new Container;
+        $pointcut1 = new Pointcut((new Matcher)->any(), (new Matcher)->any(), ['Interceptor1']);
+        $pointcut2 = new Pointcut((new Matcher)->any(), (new Matcher)->any(), ['Interceptor2']);
+        $this->container->addPointcut($pointcut1);
+        $extraContainer->addPointcut($pointcut2);
+        $this->container->merge($extraContainer);
+        $array = [];
+        foreach ($this->container->getPointcuts() as $pointcut) {
+            $array[] = $pointcut->interceptors[0];
+        }
+        $this->assertContains('Interceptor1', $array);
+        $this->assertContains('Interceptor2', $array);
     }
 
     public function testMove()
