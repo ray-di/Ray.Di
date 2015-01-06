@@ -6,7 +6,6 @@
  */
 namespace Ray\Di\Exception;
 
-use Ray\Di\Exception;
 
 class InvalidType extends \InvalidArgumentException implements ExceptionInterface
 {

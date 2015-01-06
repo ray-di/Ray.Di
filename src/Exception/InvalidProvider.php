@@ -6,7 +6,6 @@
  */
 namespace Ray\Di\Exception;
 
-use Ray\Di\Exception;
 
 class InvalidProvider extends \InvalidArgumentException implements ExceptionInterface
 {

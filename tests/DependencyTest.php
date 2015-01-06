@@ -105,5 +105,4 @@ class DependencyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($isWeave);
         $this->assertArrayHasKey('returnSame', $instance->bindings);
     }
-
 }
