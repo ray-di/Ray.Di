@@ -30,7 +30,8 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->engine, $instance);
     }
 
-    public function testClassGetDependency() {
+    public function testClassGetDependency()
+    {
         (new Bind($this->container, FakeEngine::class))->toInstance($this->engine);
         $dependencyIndex = FakeEngine::class . '-' . Name::ANY;
         $instance = $this->container->getDependency($dependencyIndex);
@@ -38,7 +39,8 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->engine, $instance);
     }
 
-    public function testProviderGetDependency() {
+    public function testProviderGetDependency()
+    {
         (new Bind($this->container, FakeEngine::class))->toProvider(FakeEngineProvider::class);
         $dependencyIndex = FakeEngine::class . '-' . Name::ANY;
         $instance = $this->container->getDependency($dependencyIndex);
@@ -52,14 +54,16 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->engine, $instance);
     }
 
-    public function testClassGetInstance() {
+    public function testClassGetInstance()
+    {
         (new Bind($this->container, FakeEngine::class))->toInstance($this->engine);
         $instance = $this->container->getInstance(FakeEngine::class, Name::ANY);
         $this->assertInstanceOf(FakeEngine::class, $instance);
         $this->assertSame($this->engine, $instance);
     }
 
-    public function testProviderGetInstance() {
+    public function testProviderGetInstance()
+    {
         (new Bind($this->container, FakeEngine::class))->toProvider(FakeEngineProvider::class);
         $instance = $this->container->getInstance(FakeEngine::class, Name::ANY);
         $this->assertInstanceOf(FakeEngine::class, $instance);
@@ -72,7 +76,8 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey($dependencyIndex, $array);
     }
 
-    public function testClassGetContainer() {
+    public function testClassGetContainer()
+    {
         (new Bind($this->container, FakeEngine::class))->toInstance($this->engine);
         $array = $this->container->getContainer();
         $dependencyIndex = FakeEngine::class . '-' . Name::ANY;

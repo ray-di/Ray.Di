@@ -20,7 +20,8 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, $instance);
     }
 
-    public function testToInstance() {
+    public function testToInstance()
+    {
         $engine = new FakeEngine;
         $injector = new Injector(new FakeClassInstanceBindModule($engine));
         $this->assertSame($engine, $injector->getInstance(FakeEngine::class));
@@ -79,7 +80,8 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(FakeRobot::class, $instance);
     }
 
-    public function testClassToClassBinding() {
+    public function testClassToClassBinding()
+    {
         $injector = new Injector(new FakeCarEngineModule);
         $instance = $injector->getInstance(FakeEngine::class);
         $this->assertInstanceOf(FakeCarEngine::class, $instance);
