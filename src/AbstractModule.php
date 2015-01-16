@@ -9,6 +9,7 @@ namespace Ray\Di;
 use Ray\Aop\AbstractMatcher;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
+use Ray\Aop\PriorityPointcut;
 
 abstract class AbstractModule
 {
@@ -90,6 +91,20 @@ abstract class AbstractModule
     public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
     {
         $pointcut = new Pointcut($classMatcher, $methodMatcher, $interceptors);
+        $this->container->addPointcut($pointcut);
+        foreach ($interceptors as $interceptor) {
+            (new Bind($this->container, $interceptor))->to($interceptor)->in(Scope::SINGLETON);
+        }
+    }
+
+    /**
+     * @param AbstractMatcher $classMatcher
+     * @param AbstractMatcher $methodMatcher
+     * @param array           $interceptors
+     */
+    public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
+    {
+        $pointcut = new PriorityPointcut($classMatcher, $methodMatcher, $interceptors);
         $this->container->addPointcut($pointcut);
         foreach ($interceptors as $interceptor) {
             (new Bind($this->container, $interceptor))->to($interceptor)->in(Scope::SINGLETON);

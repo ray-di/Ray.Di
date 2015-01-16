@@ -251,4 +251,14 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $result = $instance->returnSame(2);
         $this->assertSame(4, $result);
     }
+
+    public function testBindOrder()
+    {
+        $injector = new Injector(new FakeAnnoModule, $_ENV['TMP_DIR']);
+        /** @var $instance FakeAnnoOrderClass */
+        $instance = $injector->getInstance(FakeAnnoOrderClass::class);
+        $instance->get();
+        $expect = [FakeAnnoInterceptor4::class, FakeAnnoInterceptor1::class, FakeAnnoInterceptor2::class, FakeAnnoInterceptor3::class, FakeAnnoInterceptor5::class];
+        $this->assertSame($expect, FakeAnnoClass::$order);
+    }
 }
