@@ -94,7 +94,7 @@ final class Container
     public function unbound($index)
     {
         list($class, $name) = explode('-', $index);
-        if (class_exists($class)) {
+        if (class_exists($class) && ! (new \ReflectionClass($class))->isAbstract()) {
             throw new Untargetted($class);
         }
 
