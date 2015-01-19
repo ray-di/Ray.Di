@@ -2,6 +2,7 @@
 
 namespace Ray\Di;
 
+use Aura\Cli\Exception;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
@@ -124,5 +125,14 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(Unbound::class);
         $this->container->move(FakeEngineInterface::class, 'invalid', FakeEngineInterface::class, 'new');
+    }
+
+    public function testAbstractClassUnbound()
+    {
+        try {
+            $this->container->getInstance(FakeAbstract::class, Name::ANY);
+        } catch (\Exception $e) {
+            $this->assertSame(Unbound::class, get_class($e));
+        }
     }
 }
