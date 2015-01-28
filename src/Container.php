@@ -98,7 +98,7 @@ final class Container
             throw new Untargetted($class);
         }
 
-        throw new Unbound("interface:{$class} name:{$name}");
+        throw new Unbound("{$class}:{$name}");
     }
 
     /**
@@ -138,19 +138,6 @@ final class Container
             /** @var $dependency Dependency */
             $dependency->weaveAspects($compiler, $this->pointcuts);
         }
-    }
-
-    /**
-     * @param Compiler   $compiler
-     * @param Dependency $dependency
-     *
-     * @return $this
-     */
-    public function weaveAspect(Compiler $compiler, Dependency $dependency)
-    {
-        $dependency->weaveAspects($compiler, $this->pointcuts);
-
-        return $this;
     }
 
     public function __sleep()

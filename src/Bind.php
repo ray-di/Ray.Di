@@ -61,10 +61,6 @@ final class Bind
     {
         $this->bound = (new DependencyFactory)->newAnnotatedDependency($class);
         $container->add($this);
-        $constructor = $class->getConstructor();
-        if ($constructor) {
-            (new UntargetedBind)->__invoke($container, $constructor);
-        }
     }
 
     /**

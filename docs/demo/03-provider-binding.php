@@ -13,6 +13,7 @@ class ProviderBindingModule extends AbstractModule
     {
         $this->bind(LangInterface::class)->toProvider(PhpProvider::class);
         $this->bind()->annotatedWith('php_version')->toInstance('7.0');
+        $this->bind(Computer::class);
     }
 }
 

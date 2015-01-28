@@ -55,22 +55,21 @@ final class Arguments
         try {
             return $container->getDependency((string) $argument);
         } catch (Unbound $e) {
-            return $this->getDefaultValue($e, $argument);
+            return $this->getDefaultValue($argument);
         }
     }
 
     /**
-     * @param Unbound   $e
-     * @param Argument  $argument
+     * @param Argument $argument
      *
      * @return mixed
-     * @throws Unbound
      */
-    private function getDefaultValue(Unbound $e, Argument $argument)
+    private function getDefaultValue(Argument $argument)
     {
         if ($argument->isDefaultAvailable()) {
             return $argument->getDefaultValue();
         }
-        throw $e;
+        $message = sprintf("%s (%s)", $argument->getDebugInfo(), $argument);
+        throw new Unbound($message);
     }
 }
