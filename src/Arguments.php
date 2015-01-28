@@ -71,6 +71,7 @@ final class Arguments
         if ($argument->isDefaultAvailable()) {
             return $argument->getDefaultValue();
         }
-        throw $e;
+        $message = sprintf("%s (%s)", $argument->getDebugInfo(), $argument);
+        throw new Unbound($message  );
     }
 }
