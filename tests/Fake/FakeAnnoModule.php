@@ -31,5 +31,6 @@ class FakeAnnoModule extends AbstractModule
             $this->matcher->any(),
             [FakeAnnoInterceptor5::class]
         );
+        $this->bind(FakeAnnoOrderClass::class);
     }
 }

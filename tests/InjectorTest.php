@@ -128,24 +128,10 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetConcreteClass()
     {
+        $this->setExpectedException(Untargetted::class);
         $injector = new Injector;
-        try {
-            $robot = $injector->getInstance(FakeRobot::class);
-        } catch (Untargetted $e) {
-            $injector->bind(FakeRobot::class);
-            $robot = $injector->getInstance(FakeRobot::class);
-        }
+        $robot = $injector->getInstance(FakeRobot::class);
         $this->assertInstanceOf(FakeRobot::class, $robot);
-    }
-
-    public function testGetConcretHavingDependency()
-    {
-        $injector = new Injector;
-        $team = $injector->getInstance(FakeRobotTeam::class);
-        /** @var $team FakeRobotTeam */
-        $this->assertInstanceOf(FakeRobotTeam::class, $team);
-        $this->assertInstanceOf(FakeRobot::class, $team->robot1);
-        $this->assertInstanceOf(FakeRobot::class, $team->robot2);
     }
 
     public function testGetConcreteClassWithModule()
@@ -194,14 +180,14 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testBuiltinBinding()
     {
-        $instance = (new Injector)->getInstance(FakeBuiltin::class);
+        $instance = (new Injector(new FakeBuiltinModule))->getInstance(FakeBuiltin::class);
         /** @var $instance FakeBuiltin */
         $this->assertInstanceOf(Injector::class, $instance->injector);
     }
 
     public function testSerializeBuiltinBinding()
     {
-        $instance = unserialize(serialize(new Injector))->getInstance(FakeBuiltin::class);
+        $instance = unserialize(serialize(new Injector(new FakeBuiltinModule)))->getInstance(FakeBuiltin::class);
         $this->assertInstanceOf(Injector::class, $instance->injector);
     }
 

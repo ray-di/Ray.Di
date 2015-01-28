@@ -11,5 +11,6 @@ class FakeAopInterceptorModule extends AbstractModule
             $this->matcher->any(),
             [FakeDoubleInterceptor::class]
         );
+        $this->bind(FakeAop::class);
     }
 }

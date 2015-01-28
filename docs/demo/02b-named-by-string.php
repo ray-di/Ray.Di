@@ -13,6 +13,7 @@ class BindingAnnotationNamedModule extends AbstractModule
     {
         $this->bind(LegInterface::class)->annotatedWith('left')->to(LeftLeg::class);
         $this->bind(LegInterface::class)->annotatedWith('right')->to(RightLeg::class);
+        $this->bind(NamedRobot::class);
     }
 }
 

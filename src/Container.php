@@ -140,19 +140,6 @@ final class Container
         }
     }
 
-    /**
-     * @param Compiler   $compiler
-     * @param Dependency $dependency
-     *
-     * @return $this
-     */
-    public function weaveAspect(Compiler $compiler, Dependency $dependency)
-    {
-        $dependency->weaveAspects($compiler, $this->pointcuts);
-
-        return $this;
-    }
-
     public function __sleep()
     {
         return ['container'];

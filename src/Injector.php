@@ -43,27 +43,10 @@ class Injector implements InjectorInterface
      */
     public function getInstance($interface, $name = Name::ANY)
     {
-        try {
-            $instance = $this->container->getInstance($interface, $name);
-        } catch (Untargetted $e) {
-            $this->bind($interface);
-            $instance = $this->getInstance($interface, $name);
-        }
+        $instance = $this->container->getInstance($interface, $name);
 
         return $instance;
     }
-
-    /**
-     * @param string  $class
-     *
-     * @return mixed
-     */
-    private function bind($class)
-    {
-        $bind = new Bind($this->container, $class);
-        $this->container->weaveAspect(new Compiler($this->classDir), $bind->getBound())->getInstance($class, Name::ANY);
-    }
-
 
     public function __wakeup()
     {
