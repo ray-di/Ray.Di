@@ -98,7 +98,7 @@ final class Container
             throw new Untargetted($class);
         }
 
-        throw new Unbound("interface:{$class} name:{$name}");
+        throw new Unbound("{$class}:{$name}");
     }
 
     /**

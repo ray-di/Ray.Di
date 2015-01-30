@@ -24,6 +24,11 @@ final class Argument
     private $default;
 
     /**
+     * @var \ReflectionParameter
+     */
+    private $reflection;
+
+    /**
      * @param \ReflectionParameter $parameter
      * @param string               $name
      */
@@ -36,6 +41,7 @@ final class Argument
             $this->default = $parameter->getDefaultValue();
         }
         $this->index = $interface . '-' . $name;
+        $this->reflection = $parameter;
     }
 
     /**
@@ -75,5 +81,18 @@ final class Argument
     public function getDefaultValue()
     {
         return $this->default;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDebugInfo()
+    {
+        return sprintf(
+            "$%s in %s::%s()",
+            $this->reflection->getName(),
+            $this->reflection->getDeclaringClass()->getName(),
+            $this->reflection->getDeclaringFunction()->getName()
+        );
     }
 }
