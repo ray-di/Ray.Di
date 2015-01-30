@@ -261,4 +261,12 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $expect = [FakeAnnoInterceptor4::class, FakeAnnoInterceptor1::class, FakeAnnoInterceptor2::class, FakeAnnoInterceptor3::class, FakeAnnoInterceptor5::class];
         $this->assertSame($expect, FakeAnnoClass::$order);
     }
+
+    public function testAnnotateConstant()
+    {
+        /** @var $instance FakeConstantConsumer */
+        $instance = (new Injector(new FakeConstantModule, $_ENV['TMP_DIR']))->getInstance(FakeConstantConsumer::class);
+        $this->assertSame('kuma', $instance->constant);
+
+    }
 }

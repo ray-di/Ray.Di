@@ -36,11 +36,15 @@ final class AnnotatedClassMethods
             return new Name(Name::ANY);
         }
         $named = $this->reader->getMethodAnnotation($constructor, 'Ray\Di\Di\Named');
-        if (! $named) {
-            return new Name(Name::ANY);
+        if ($named) {
+            /** @var $named Named */
+            return new Name($named->value);
         }
-        /** @var $named Named */
-        return new Name($named->value);
+        $qualifierAnnotation = $this->getMethodAnnotation($constructor);
+        if ($qualifierAnnotation) {
+            return new Name($qualifierAnnotation->value);
+        }
+        return new Name(Name::ANY);
     }
 
     /**
