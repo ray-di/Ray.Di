@@ -33,8 +33,7 @@
             "FakeVendor\\Sandbox\\": "tests/Fake/FakeVendor/Sandbox/"
         },
         "files": [
-            "tests/Fake/FakeLeft.php",
-            "tests/Fake/FakeRight.php"
+            "tests/annotations.php"
         ]
     },
     "extra": {

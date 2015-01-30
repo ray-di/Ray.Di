@@ -135,4 +135,16 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
             $this->assertSame(Unbound::class, get_class($e));
         }
     }
+
+    public function testAnnotateConstant()
+    {
+        $container = new Container;
+        //FakeConstantInterface
+        $container->add((new Bind($container, ''))->annotatedWith(FakeConstant::class)->toInstance('kuma'));
+        $container->add((new Bind($container, FakeConstantConsumer::class)));
+        /** @var $instance FakeConstantConsumer */
+        $instance = $container->getInstance(FakeConstantConsumer::class, Name::ANY);
+        $this->assertSame('kuma', $instance->constant);
+    }
+
 }
