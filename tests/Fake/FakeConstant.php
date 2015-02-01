@@ -11,4 +11,5 @@ use Ray\Di\Di\Qualifier;
  */
 final class FakeConstant
 {
+    public $value;
 }
