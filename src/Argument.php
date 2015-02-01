@@ -28,10 +28,6 @@ final class Argument
      */
     private $reflection;
 
-    /**
-     * @param \ReflectionParameter $parameter
-     * @param string               $name
-     */
     public function __construct(\ReflectionParameter $parameter, $name)
     {
         $interface = $this->getTypeHint($parameter);
@@ -45,8 +41,6 @@ final class Argument
     }
 
     /**
-     * @param \ReflectionParameter $parameter
-     *
      * @return string
      */
     private function getTypeHint(\ReflectionParameter $parameter)

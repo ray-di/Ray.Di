@@ -13,14 +13,14 @@ final class Instance implements DependencyInterface
      */
     public $value;
 
-    /**
-     * @param Injector $value
-     */
     public function __construct($value)
     {
         $this->value = $value;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function register(array &$container, Bind $bind)
     {
         $index = (string) $bind;

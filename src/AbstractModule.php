@@ -28,9 +28,6 @@ abstract class AbstractModule
      */
     protected $lastModule;
 
-    /**
-     * @param AbstractModule $module
-     */
     public function __construct(
         AbstractModule $module = null
     ) {
@@ -41,9 +38,14 @@ abstract class AbstractModule
         }
     }
 
+    /**
+     * Configure binding
+     */
     abstract protected function configure();
 
     /**
+     * Bind interface
+     *
      * @param string $interface
      *
      * @return Bind
@@ -56,6 +58,8 @@ abstract class AbstractModule
     }
 
     /**
+     * Install module
+     *
      * @param AbstractModule $module
      */
     public function install(AbstractModule $module)
@@ -64,6 +68,8 @@ abstract class AbstractModule
     }
 
     /**
+     * Override module
+     *
      * @param AbstractModule $module
      */
     public function override(AbstractModule $module)
@@ -73,6 +79,8 @@ abstract class AbstractModule
     }
 
     /**
+     * Return container
+     *
      * @return Container
      */
     public function getContainer()
@@ -84,6 +92,8 @@ abstract class AbstractModule
     }
 
     /**
+     * Bind interceptor
+     *
      * @param AbstractMatcher $classMatcher
      * @param AbstractMatcher $methodMatcher
      * @param array           $interceptors
@@ -98,6 +108,8 @@ abstract class AbstractModule
     }
 
     /**
+     * Bind interceptor early
+     *
      * @param AbstractMatcher $classMatcher
      * @param AbstractMatcher $methodMatcher
      * @param array           $interceptors
@@ -119,10 +131,12 @@ abstract class AbstractModule
     }
 
     /**
-     * @param string $interface
-     * @param string $newName
-     * @param string $sourceName
-     * @param string $targetInterface
+     * Rename binding name
+     *
+     * @param string $interface       Interface
+     * @param string $newName         New binding name
+     * @param string $sourceName      Original binding name
+     * @param string $targetInterface Original interface
      */
     public function rename($interface, $newName, $sourceName = Name::ANY, $targetInterface = '')
     {

@@ -7,6 +7,8 @@
 namespace Ray\Di\Di;
 
 /**
+ * Qualifier
+ *
  * @Annotation
  * @Target("CLASS")
  */

@@ -24,6 +24,8 @@ final class BindValidator
     }
 
     /**
+     * To validator
+     *
      * @param string $interface
      * @param string $class
      */
@@ -39,6 +41,8 @@ final class BindValidator
     }
 
     /**
+     * toProvider validator
+     *
      * @param string $provider
      *
      * @return $this

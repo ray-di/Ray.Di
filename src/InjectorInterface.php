@@ -9,6 +9,8 @@ namespace Ray\Di;
 interface InjectorInterface
 {
     /**
+     * Return instance by interface + name (interface namespace)
+     *
      * @param string $interface
      * @param string $name
      *

@@ -27,10 +27,6 @@ final class SetterMethod
      */
     private $isOptional = false;
 
-    /**
-     * @param \ReflectionMethod $method
-     * @param Name              $name
-     */
     public function __construct(\ReflectionMethod $method, Name $name)
     {
         $this->method = $method->name;

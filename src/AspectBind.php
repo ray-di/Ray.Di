@@ -15,9 +15,6 @@ final class AspectBind
      */
     private $bind;
 
-    /**
-     * @param AopBind $bind
-     */
     public function __construct(AopBind $bind)
     {
         $this->bind = $bind;

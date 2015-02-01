@@ -30,11 +30,6 @@ final class NewInstance
      */
     private $bind;
 
-    /**
-     * @param \ReflectionClass $class
-     * @param SetterMethods    $setterMethods
-     * @param Name             $constructorName
-     */
     public function __construct(
         \ReflectionClass $class,
         SetterMethods $setterMethods,
@@ -60,8 +55,6 @@ final class NewInstance
     }
 
     /**
-     * @param Container $container
-     *
      * @return object
      */
     public function __invoke(Container $container)
