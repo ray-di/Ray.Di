@@ -119,7 +119,7 @@ final class AnnotatedClassMethods
             return null;
         }
         $named = new Named;
-        $named->value = get_class($annotation);
+        $named->value = isset($annotation->value) ? sprintf("%s=%s", $annotation->value, get_class($annotation)) : get_class($annotation);
 
         return $named;
     }

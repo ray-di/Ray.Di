@@ -266,7 +266,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         /** @var $instance FakeConstantConsumer */
         $instance = (new Injector(new FakeConstantModule, $_ENV['TMP_DIR']))->getInstance(FakeConstantConsumer::class);
-        $this->assertSame('kuma', $instance->constant);
+        $this->assertSame('default_construct', $instance->defaultByConstruct);
 
     }
 }

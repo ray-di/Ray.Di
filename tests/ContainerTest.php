@@ -144,7 +144,11 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $container->add((new Bind($container, FakeConstantConsumer::class)));
         /** @var $instance FakeConstantConsumer */
         $instance = $container->getInstance(FakeConstantConsumer::class, Name::ANY);
-        $this->assertSame('kuma', $instance->constant);
+        $this->assertSame('kuma', $instance->constantByConstruct);
+        $this->assertSame('kuma', $instance->constantBySetter);
+        $this->assertSame('kuma', $instance->setterConstantWithoutVarName);
+        $this->assertSame('default_construct', $instance->defaultByConstruct);
+        $this->assertSame('default_setter', $instance->defaultBySetter);
     }
 
 }
