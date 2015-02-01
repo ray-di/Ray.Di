@@ -25,6 +25,8 @@ final class Container
     private $pointcuts = [];
 
     /**
+     * Add binding to container
+     *
      * @param Bind $bind
      */
     public function add(Bind $bind)
@@ -34,6 +36,8 @@ final class Container
     }
 
     /**
+     * Add Pointcut to container
+     *
      * @param Pointcut $pointcut
      */
     public function addPointcut(Pointcut $pointcut)
@@ -42,6 +46,8 @@ final class Container
     }
 
     /**
+     * Return instance by interface + name(interface namespace)
+     *
      * @param string $interface
      * @param string $name
      *
@@ -72,6 +78,8 @@ final class Container
     }
 
     /**
+     * Rename existing dependency interface + name
+     *
      * @param string $sourceInterface
      * @param string $sourceName
      * @param string $targetInterface
@@ -127,6 +135,8 @@ final class Container
     }
 
     /**
+     * Weave aspects to all dependency in container
+     *
      * @param Compiler $compiler
      */
     public function weaveAspects(Compiler $compiler)
@@ -141,6 +151,8 @@ final class Container
     }
 
     /**
+     * Weave aspect to single dependency
+     *
      * @param Compiler   $compiler
      * @param Dependency $dependency
      *

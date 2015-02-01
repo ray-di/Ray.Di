@@ -64,7 +64,6 @@ class Injector implements InjectorInterface
         $this->container->weaveAspect(new Compiler($this->classDir), $bind->getBound())->getInstance($class, Name::ANY);
     }
 
-
     public function __wakeup()
     {
         spl_autoload_register(

@@ -6,7 +6,6 @@
  */
 namespace Ray\Di\Exception;
 
-
 class NotFound extends \LogicException implements ExceptionInterface
 {
 }

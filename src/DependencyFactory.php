@@ -11,6 +11,8 @@ use Doctrine\Common\Annotations\AnnotationReader;
 final class DependencyFactory
 {
     /**
+     * Create dependency object
+     *
      * @param \ReflectionClass $class
      *
      * @return Dependency
@@ -26,6 +28,8 @@ final class DependencyFactory
     }
 
     /**
+     * Create Provider binding
+     *
      * @param \ReflectionClass $provider
      *
      * @return DependencyProvider
@@ -40,6 +44,8 @@ final class DependencyFactory
 
 
     /**
+     * Create ToConstructor binding
+     *
      * @param \ReflectionClass  $class
      * @param string            $name
      * @param InjectionPoints   $injectionPoints

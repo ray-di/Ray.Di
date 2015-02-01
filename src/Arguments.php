@@ -15,10 +15,6 @@ final class Arguments
      */
     private $arguments = [];
 
-    /**
-     * @param \ReflectionMethod $method
-     * @param Name              $name
-     */
     public function __construct(\ReflectionMethod $method, Name $name)
     {
         $parameters = $method->getParameters();
@@ -28,6 +24,8 @@ final class Arguments
     }
 
     /**
+     * Return arguments
+     *
      * @param Container $container
      *
      * @return Argument[]

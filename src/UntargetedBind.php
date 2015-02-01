@@ -8,10 +8,6 @@ namespace Ray\Di;
 
 final class UntargetedBind
 {
-    /**
-     * @param Container         $container
-     * @param \ReflectionMethod $method
-     */
     public function __invoke(Container $container, \ReflectionMethod $method)
     {
         $parameters = $method->getParameters();
@@ -20,10 +16,6 @@ final class UntargetedBind
         }
     }
 
-    /**
-     * @param Container            $container
-     * @param \ReflectionParameter $parameter
-     */
     private function addConcreteClass(Container $container, \ReflectionParameter $parameter)
     {
         $class = $this->getTypeHint($parameter);
@@ -33,8 +25,6 @@ final class UntargetedBind
     }
 
     /**
-     * @param \ReflectionParameter $parameter
-     *
      * @return string
      */
     private function getTypeHint(\ReflectionParameter $parameter)

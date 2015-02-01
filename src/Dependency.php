@@ -8,7 +8,6 @@ namespace Ray\Di;
 
 use Ray\Aop\Bind as AopBind;
 use Ray\Aop\Compiler as AopCompiler;
-use Ray\Aop\Pointcut;
 
 final class Dependency implements DependencyInterface
 {
@@ -82,10 +81,6 @@ final class Dependency implements DependencyInterface
         }
     }
 
-    /**
-     * @param AopCompiler $compiler
-     * @param Pointcut[]  $pointcuts
-     */
     public function weaveAspects(AopCompiler $compiler, array $pointcuts)
     {
         $class = (string) $this->newInstance;

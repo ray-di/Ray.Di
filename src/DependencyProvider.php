@@ -25,9 +25,6 @@ final class DependencyProvider implements DependencyInterface
      */
     private $instance;
 
-    /**
-     * @param Dependency $dependency
-     */
     public function __construct(Dependency $dependency)
     {
         $this->dependency = $dependency;

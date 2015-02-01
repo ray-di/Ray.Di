@@ -21,9 +21,6 @@ final class AnnotatedClass
      */
     private $injectionMethod;
 
-    /**
-     * @param AnnotationReader $reader
-     */
     public function __construct(AnnotationReader $reader)
     {
         AnnotationRegistry::registerFile(__DIR__ . '/DoctrineAnnotations.php');
@@ -32,7 +29,9 @@ final class AnnotatedClass
     }
 
     /**
-     * @param \ReflectionClass $class
+     * Return factory instance
+     *
+     * @param \ReflectionClass $class Target class reflection
      *
      * @return NewInstance
      */
@@ -53,6 +52,8 @@ final class AnnotatedClass
     }
 
     /**
+     * Return @-PostConstruct method reflection
+     *
      * @param \ReflectionClass $class
      *
      * @return null|\ReflectionMethod
@@ -61,6 +62,7 @@ final class AnnotatedClass
     {
         $methods = $class->getMethods();
         foreach ($methods as $method) {
+            /** @var $annotation \Ray\Di\Di\PostConstruct|null */
             $annotation = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\PostConstruct');
             if ($annotation) {
                 return $method;

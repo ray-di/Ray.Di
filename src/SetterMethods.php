@@ -13,9 +13,6 @@ final class SetterMethods
      */
     private $setterMethods;
 
-    /**
-     * @param array $setterMethods
-     */
     public function __construct(array $setterMethods)
     {
         $this->setterMethods = $setterMethods;
