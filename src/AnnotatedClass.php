@@ -62,6 +62,7 @@ final class AnnotatedClass
     {
         $methods = $class->getMethods();
         foreach ($methods as $method) {
+            /** @var $annotation \Ray\Di\Di\PostConstruct|null */
             $annotation = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\PostConstruct');
             if ($annotation) {
                 return $method;

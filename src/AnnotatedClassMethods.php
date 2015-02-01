@@ -95,6 +95,7 @@ final class AnnotatedClassMethods
     {
         $annotations = $this->reader->getMethodAnnotations($method);
         foreach ($annotations as $annotation) {
+            /** @var $bindAnnotation object|null */
             $bindAnnotation = $this->findBindAnnotation($annotation);
             if ($bindAnnotation) {
                 return $bindAnnotation;
