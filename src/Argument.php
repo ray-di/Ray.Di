@@ -41,6 +41,16 @@ final class Argument
     }
 
     /**
+     * Return reflection
+     *
+     * @return \ReflectionParameter
+     */
+    public function get()
+    {
+        return $this->reflection;
+    }
+
+    /**
      * @return string
      */
     private function getTypeHint(\ReflectionParameter $parameter)
