@@ -17,7 +17,8 @@ class FakeWalkRobot
     public $rightLeg;
 
     /**
-     * @FakeConstant(10)
+     * @FakeConstant(10)  // qualifier
+     * @FakeAnnoMethod1   // non-qualifier
      */
     public function __construct(FakeLegInterface $rightLeg, FakeLegInterface $leftLeg)
     {
