@@ -30,20 +30,11 @@ interface InjectionPointInterface
     public function getClass();
 
     /**
-     * Return method annotation
+     * Return Qualifier annotations
      *
      * @param object $annotation
      *
      * @return mixed
      */
-    public function getMethodAnnotation($annotation = null);
-
-    /**
-     * Return class annotation
-     *
-     * @param object $annotation
-     *
-     * @return mixed
-     */
-    public function getClassAnnotation($annotation = null);
+    public function getQualifiers();
 }

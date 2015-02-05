@@ -53,24 +53,20 @@ final class InjectionPoint implements InjectionPointInterface
     /**
      * {@inheritdoc}
      */
-    public function getMethodAnnotation($annotation = null)
+    public function getQualifiers()
     {
-        if ($annotation) {
-            return $this->reader->getMethodAnnotation($this->getMethod(), $annotation);
+        $qualifiers = [];
+        $annotations = $this->reader->getMethodAnnotations($this->getMethod());
+        foreach ($annotations as $annotation) {
+            $qualifier = $this->reader->getClassAnnotation(
+                new \ReflectionClass($annotation),
+                'Ray\Di\Di\Qualifier'
+            );
+            if ($qualifier) {
+                $qualifiers[] = $annotation;
+            }
         }
 
-        return $this->reader->getMethodAnnotations($this->getMethod());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getClassAnnotation($annotation = null)
-    {
-        if ($annotation) {
-            return $this->reader->getClassAnnotation($this->getClass(), $annotation);
-        }
-
-        return $this->reader->getClassAnnotations($this->getClass());
+        return $qualifiers;
     }
 }

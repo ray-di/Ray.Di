@@ -41,33 +41,10 @@ class InjectionPointTest extends \PHPUnit_Framework_TestCase
         $this->assertSame((string) $this->parameter->getDeclaringClass(), (string) $actual);
     }
 
-    public function testMethodAnnotation()
+    public function testGetQualifiers()
     {
         /** @var $constant FakeConstant */
-        $constant = $this->ip->getMethodAnnotation(FakeConstant::class);
-        $this->assertInstanceOf(FakeConstant::class, $constant);
-        $this->assertSame(10, $constant->value);
-    }
-
-    public function testMethodAnnotations()
-    {
-        /** @var $constant FakeConstant */
-        $annotations = $this->ip->getMethodAnnotation();
-        $this->assertInstanceOf(FakeConstant::class, $annotations[0]);
-    }
-
-    public function testClassAnnotation()
-    {
-        /** @var $constant FakeConstant */
-        $constant = $this->ip->getClassAnnotation(FakeConstant::class);
-        $this->assertInstanceOf(FakeConstant::class, $constant);
-        $this->assertSame('class_constant_val', $constant->value);
-    }
-
-    public function testClassAnnotations()
-    {
-        /** @var $constant FakeConstant */
-        $annotations = $this->ip->getClassAnnotation();
+        $annotations = $this->ip->getQualifiers();
         $this->assertInstanceOf(FakeConstant::class, $annotations[0]);
     }
 }
