@@ -254,6 +254,35 @@ public function init()
     //....
 }
 ```
+## Injection Point
+
+An **InjectionPoint** is a class that has information about an injection point. 
+It provides access to metadata via `\ReflectionParameter` or an annotation in `Provider`.
+
+For example, the following get method of `Psr3LoggerProvider` class creates injectable Loggers. The log category of a Logger depends upon the class of the object into which it is injected.
+
+```php
+class Psr3LoggerProvider implements ProviderInterface
+{
+    /**
+     * @var InjectionPoint
+     */
+    private $ip;
+
+    public function __construct(InjectionPointInterface $ip)
+    {
+        $this->ip = $ip;
+    }
+
+    public function get()
+    {
+        $logger = new \Monolog\Logger($this->ip->getClass->getName());
+        $logger->pushHandler(new StreamHandler('path/to/your.log', Logger::WARNING));
+
+        return logger;
+    }
+}
+```
 
 ## Automatic Injection
 
