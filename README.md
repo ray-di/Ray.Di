@@ -337,7 +337,10 @@ class Psr3LoggerProvider implements ProviderInterface
     }
 }
 ```
-
+Obtains the qualifiers
+```php
+$annotations =  $this->ip->getQualifiers();
+```
 ## Automatic Injection
 
 Ray.Di automatically injects all of the following:
