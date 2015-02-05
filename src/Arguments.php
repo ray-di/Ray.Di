@@ -6,6 +6,7 @@
  */
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Ray\Di\Exception\Unbound;
 
 final class Arguments
@@ -50,11 +51,21 @@ final class Arguments
      */
     private function getParameter(Container $container, Argument $argument)
     {
+        $this->bindInjectionPoint($container, $argument);
         try {
             return $container->getDependency((string) $argument);
         } catch (Unbound $e) {
             return $this->getDefaultValue($argument);
         }
+    }
+
+    private function bindInjectionPoint(Container $container, Argument $argument)
+    {
+        $isSelf = (string) $argument === 'Ray\Di\InjectionPointInterface-*';
+        if ($isSelf) {
+            return;
+        }
+        (new Bind($container, 'Ray\Di\InjectionPointInterface'))->toInstance(new InjectionPoint($argument->get(), new AnnotationReader));
     }
 
     /**
