@@ -122,7 +122,57 @@ Finally we bind to the provider using the `toProvider()` method:
 $this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider::class);
 ```
 
-### Named Binding
+### Binding Annotations
+
+Occasionally you'll want multiple bindings for a same type. For example, you might want both a PayPal credit card processor and a Google Checkout processor.
+To enable this, bindings support an optional binding annotation. The annotation and type together uniquely identify a binding. This pair is called a key.
+
+Define qualifier annotation first. It needs to be annotated with `@Qualifier` annotation.
+
+```php
+
+use Ray\Di\Di\Qualifier;
+
+/**
+ * @Annotation
+ * @Target("METHOD")
+ * @Qualifier
+ */
+final class PayPal
+{
+}
+```
+
+To depend on the annotated binding, apply the annotation to the injected parameter:
+
+```php
+/**
+ * @PayPal
+ */
+public __construct(CreditCardProcessorInterface $processor, TransactionLogInterface $transactionLog){
+{
+}
+```
+You can specify parameter name with qualifier. Qualifier applied all parameters without it.
+
+```php
+/**
+ * @PayPal("processor")
+ */
+public __construct(CreditCardProcessorInterface $processor, TransactionLogInterface $transactionLog){
+{
+ ....
+}
+```
+Lastly we create a binding that uses the annotation. This uses the optional annotatedWith clause in the bind() statement:
+```php
+protected function configure()
+{
+    $this->bind(CreditCardProcessorInterface::class)
+        ->annotatedWith(PayPal::class)
+        ->to(PayPalCreditCardProcessor::class);
+```
+### @Named
 
 Ray comes with a built-in binding annotation `@Named` that takes a string.
 
@@ -134,7 +184,7 @@ use Ray\Di\Di\Named;
  *  @Inject
  *  @Named("processor=checkout")
  */
-public RealBillingService(CreditCardProcessorInterface $processor)
+public __construct(CreditCardProcessorInterface $processor)
 {
 ...
 ```
@@ -143,7 +193,9 @@ To bind a specific name, pass that string using the `annotatedWith()` method.
 ```php
 protected function configure()
 {
-    $this->bind(CreditCardProcessorInterface::class)->annotatedWith('checkout')->to(CheckoutCreditCardProcessor::class);
+    $this->bind(CreditCardProcessorInterface::class)
+        ->annotatedWith('checkout')
+        ->to(CheckoutCreditCardProcessor::class);
 }
 ```
 
@@ -154,9 +206,9 @@ use Ray\Di\Di\Named;
 
 /**
  *  @Inject
- *  @Named("processor=checkout,backup=subProcessor")
+ *  @Named("processor=checkout,subProcessor=backUp")
  */
-public RealBillingService(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)
+public __construct(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)
 {
 ...
 ```
@@ -174,7 +226,9 @@ You can bind a type to an instance of that type. This is usually only useful for
 ```php
 protected function configure()
 {
-    $this->bind()->annotatedWith("login_id")->toInstance('bear');
+    $this->bind()
+        ->annotatedWith("login_id")
+        ->toInstance('bear');
 }
 ```
 
