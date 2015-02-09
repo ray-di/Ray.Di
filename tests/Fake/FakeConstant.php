@@ -6,7 +6,7 @@ use Ray\Di\Di\Qualifier;
 
 /**
  * @Annotation
- * @Target("METHOD")
+ * @Target({"CLASS","METHOD"})
  * @Qualifier
  */
 final class FakeConstant

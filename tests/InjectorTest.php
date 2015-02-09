@@ -267,6 +267,14 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         /** @var $instance FakeConstantConsumer */
         $instance = (new Injector(new FakeConstantModule, $_ENV['TMP_DIR']))->getInstance(FakeConstantConsumer::class);
         $this->assertSame('default_construct', $instance->defaultByConstruct);
+    }
 
+    public function testContextualDependencyInjection()
+    {
+        $injector = new Injector(new FakeWalkRobotModule);
+        /** @var $robot FakeWalkRobot */
+        $robot = $injector->getInstance(FakeWalkRobot::class);
+        $this->assertInstanceOf(FakeLeftLeg::class, $robot->leftLeg);
+        $this->assertInstanceOf(FakeRightLeg::class, $robot->rightLeg);
     }
 }
