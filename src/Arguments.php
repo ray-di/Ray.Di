@@ -55,8 +55,26 @@ final class Arguments
         try {
             return $container->getDependency((string) $argument);
         } catch (Unbound $e) {
-            return $this->getDefaultValue($argument);
+            list($hasDefaultValue, $defaultValue) = $this->getDefaultValue($argument);
+            if ($hasDefaultValue) {
+                return $defaultValue;
+            }
+            $message = sprintf("%s (%s)", $argument->getDebugInfo(), $argument);
+            throw new Unbound($message, 0, $e);
         }
+    }
+
+    /**
+     * @param Argument $argument
+     *
+     * @return array [$hasDefaultValue, $defaultValue]
+     */
+    private function getDefaultValue(Argument $argument)
+    {
+        if ($argument->isDefaultAvailable()) {
+            return [true, $argument->getDefaultValue()];
+        }
+        return [false, null];
     }
 
     private function bindInjectionPoint(Container $container, Argument $argument)
@@ -66,20 +84,5 @@ final class Arguments
             return;
         }
         (new Bind($container, 'Ray\Di\InjectionPointInterface'))->toInstance(new InjectionPoint($argument->get(), new AnnotationReader));
-    }
-
-    /**
-     * @param Argument $argument
-     *
-     * @return mixed
-     * @internal param Unbound $e
-     */
-    private function getDefaultValue(Argument $argument)
-    {
-        if ($argument->isDefaultAvailable()) {
-            return $argument->getDefaultValue();
-        }
-        $message = sprintf("%s (%s)", $argument->getDebugInfo(), $argument);
-        throw new Unbound($message);
     }
 }
