@@ -32,9 +32,7 @@ interface InjectionPointInterface
     /**
      * Return Qualifier annotations
      *
-     * @param object $annotation
-     *
-     * @return mixed
+     * @return array
      */
     public function getQualifiers();
 }
