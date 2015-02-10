@@ -69,7 +69,7 @@ final class Container
     public function getDependency($index)
     {
         if (! isset($this->container[$index])) {
-            $this->unbound($index);
+            throw $this->unbound($index);
         }
         $dependency = $this->container[$index];
         $instance = $dependency->inject($this);
@@ -89,7 +89,7 @@ final class Container
     {
         $sourceIndex = $sourceInterface . '-' . $sourceName;
         if (! isset($this->container[$sourceIndex])) {
-            $this->unbound($sourceIndex);
+            throw $this->unbound($sourceIndex);
         }
         $targetIndex = $targetInterface . '-' . $targetName;
         $this->container[$targetIndex] = $this->container[$sourceIndex];
@@ -103,10 +103,10 @@ final class Container
     {
         list($class, $name) = explode('-', $index);
         if (class_exists($class) && ! (new \ReflectionClass($class))->isAbstract()) {
-            throw new Untargetted($class);
+            return new Untargetted($class);
         }
 
-        throw new Unbound("{$class}:{$name}");
+        return new Unbound("{$class}:{$name}");
     }
 
     /**
