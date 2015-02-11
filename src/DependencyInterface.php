@@ -20,7 +20,7 @@ interface DependencyInterface
     /**
      * Register dependency to container
      *
-     * @param DependencyInterface[] &$container
+     * @param DependencyInterface[] $container
      * @param Bind                  $bind
      */
     public function register(array &$container, Bind $bind);
