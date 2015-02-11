@@ -1,19 +1,16 @@
 # Ray.Di
 
-## Dependency Injection framework for PHP
+## Dependency Injection framework #
 
-[![Latest Stable Version](https://poser.pugx.org/ray/di/v/stable.png)](https://packagist.org/packages/ray/di)
-[![Latest Unstable Version](http://img.shields.io/badge/unstable-~2.0%40dev-green.svg)](https://packagist.org/packages/ray/di)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Di/?branch=develop-2)
 [![Code Coverage](https://scrutinizer-ci.com/g/koriym/Ray.Di/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/koriym/Ray.Di/?branch=develop-2)
 [![Build Status](https://secure.travis-ci.org/koriym/Ray.Di.png?branch=develop-2)](http://travis-ci.org/koriym/Ray.Di)
 
 **Ray.Di** was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google.
 
-Getting Stated
---------------
+## Getting Stated #
 
-### Linked Bindings
+### Linked Bindings ##
 
 Here is a basic example of dependency injection using Ray.Di.
 
@@ -69,7 +66,7 @@ echo(($works) ? 'It works!' : 'It DOES NOT work!');
 ```
 This is an example of **Linked Bindings**. Linked bindings map a type to its implementation, it can also be chained.
 
-### Provider Bindings
+### Provider Bindings ##
 
 [Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) map a type to its provider.
 
@@ -122,7 +119,7 @@ Finally we bind to the provider using the `toProvider()` method:
 $this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider::class);
 ```
 
-### Binding Annotations
+### Binding Annotations ##
 
 Occasionally you'll want multiple bindings for a same type. For example, you might want both a PayPal credit card processor and a Google Checkout processor.
 To enable this, bindings support an optional binding annotation. The annotation and type together uniquely identify a binding. This pair is called a key.
@@ -172,7 +169,7 @@ protected function configure()
         ->annotatedWith(PayPal::class)
         ->to(PayPalCreditCardProcessor::class);
 ```
-### @Named
+### @Named ##
 
 Ray comes with a built-in binding annotation `@Named` that takes a string.
 
@@ -213,7 +210,7 @@ public __construct(CreditCardProcessorInterface $processor, CreditCardProcessorI
 ...
 ```
 
-### Instance Bindings
+### Instance Bindings ##
 
 ```php
 protected function configure()
@@ -247,7 +244,7 @@ protected function configure()
 
 note: annotations is not supported Untargeted Bindings
 
-### Constructor Bindings
+### Constructor Bindings ##
 
 Occasionally it's necessary to bind a type to an arbitrary constructor. This comes up when the @Inject annotation cannot be applied to the target constructor: either because it is a third party class, or because multiple constructors that participate in dependency injection. 
 `Provider Binding` provide the solution to this problem. By calling your target constructor explicitly, you don't need reflection and its associated pitfalls. But there are limitations of that approach: manually constructed instances do not participate in AOP.
@@ -278,7 +275,7 @@ protected function configure()
 ```
 In this example, the `Car` have a constructor which name bound with `engine=na,carName=car_name`. That constructor does not need an @Inject annotation. Ray.Di will invoke that constructor to satisfy the binding.
 
-## Scopes
+## Scopes ##
 
 By default, Ray returns a new instance each time it supplies a value. This behaviour is configurable via scopes.
 You can also configure scopes with the `@Scope` annotation.
@@ -341,7 +338,7 @@ Obtains the qualifiers
 ```php
 $annotations =  $this->ip->getQualifiers();
 ```
-## Automatic Injection
+## Automatic Injection ##
 
 Ray.Di automatically injects all of the following:
 
@@ -350,7 +347,9 @@ Ray.Di automatically injects all of the following:
 
 The objects will be injected while the injector itself is being created. If they're needed to satisfy other startup injections, Ray.Di will inject them before they're used.
 
-## Aspect Oriented Programing
+## Aspect Oriented Programing ##
+
+To compliment dependency injection, Ray.Di supports method interception. This feature enables you to write code that is executed each time a matching method is invoked. It's suited for cross cutting concerns ("aspects"), such as transactions, security and logging. Because interceptors divide a problem into aspects rather than objects, their use is called Aspect Oriented Programming (AOP).
 
 To mark select methods as weekdays-only, we define an annotation .
 
@@ -411,9 +410,9 @@ class WeekendModule extends AbstractModule
     protected function configure()
     {
         $this->bindInterceptor(
-            $this->matcher->any(),
-            $this->matcher->annotatedWith('NotOnWeekends'),
-            [WeekendBlocker::class]
+            $this->matcher->any(),                           // any class
+            $this->matcher->annotatedWith('NotOnWeekends'),  // @NotOnWeekends method
+            [WeekendBlocker::class]                          // apply WeekendBlocker interceptor
         );
     }
 }
@@ -476,7 +475,7 @@ class AopMatcherModule extends AbstractModule
 }
 ```
 
-## Installation
+## Installation ##
 
 A module can install other modules to configure more bindings.
 
@@ -491,28 +490,15 @@ protected function configure()
 }
 ```
 
-## Injection in the module
+## Best practice ##
 
-You can use a built-in injector in the module which uses existing bindings.
-
-```php
-protected function configure()
-{
-    $this->bind(DbInterface::class)->to(Db::class);
-    $dbLogger = $this->requestInjection(DbLogger::class);
-}
-```
-
-Best practice
--------------
 Your code should deal directly with the Injector as little as possible. Instead, you want to bootstrap your application by injecting one root object.
 The class of this object should use injection to obtain references to other objects on which it depends. The classes of those objects should do the same.
 
-Performance boost
--------------
+## Performance boost ##
 
-インジェクターオブジェクトをシリアライズすると、束縛の最適化が行われます。
-`unserialize`して利用したインジェクターではパフォーマンスが向上します。
+An dependency injector has compiled entire dependency graph which is serializable.  It has huge performance boosts.
+Unserialized injector can invoke injection without reflection or annotation in runtime. Recommended in production use. 
 
 ```php
 
@@ -524,15 +510,17 @@ $cachedInjector = serialize($injector);
 $injector = unserialize($cachedInjector);
 $lister = $injector->getInstance(ListerInterface::class);
 ```
+## Frameworks integration ##
 
-Requirements
-------------
+ * [lorenzo/piping-bag](https://github.com/lorenzo/piping-bag) for CakePHP3
+ * [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday)
+
+## Requirements ##
 
 * PHP 5.4+
 * hhvm
 
-Installation
-------------
+## Installation ##
 
 The recommended way to install Ray.Di is through [Composer](https://github.com/composer/composer).
 
@@ -541,8 +529,7 @@ The recommended way to install Ray.Di is through [Composer](https://github.com/c
 $ composer require ray/di ~2.0@dev
 ```
 
-Testing Ray.Di
---------------
+## Testing Ray.Di ##
 
 Here's how to install Ray.Di from source and run the unit tests and demos.
 
