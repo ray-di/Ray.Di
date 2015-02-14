@@ -71,6 +71,11 @@ final class Name
             return $this->names[$parameter->name];
         }
 
+        // ANY match
+        if (is_array($this->names) && isset($this->names[Name::ANY])) {
+            return $this->names[Name::ANY];
+        }
+
         // not matched
         return Name::ANY;
     }
