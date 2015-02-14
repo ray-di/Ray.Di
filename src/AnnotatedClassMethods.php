@@ -37,9 +37,9 @@ final class AnnotatedClassMethods
             /** @var $named Named */
             return new Name($named->value);
         }
-        $qualifierAnnotation = $this->getMethodAnnotation($constructor);
-        if ($qualifierAnnotation) {
-            return new Name($qualifierAnnotation->value);
+        $name = $this->getNamedKeyVarString($constructor);
+        if ($name) {
+            return new Name($name);
         }
         return new Name(Name::ANY);
     }
@@ -56,10 +56,8 @@ final class AnnotatedClassMethods
         if (! $inject) {
             return null;
         }
-        $named = $this->getMethodAnnotation($method);
-        /** @var $named \Ray\Di\Di\Named */
-        $name = $named ? $named->value : '';
-        $setterMethod = new SetterMethod($method, new Name($name));
+        $nameValue = $this->getNamedKeyVarString($method);
+        $setterMethod = new SetterMethod($method, new Name($nameValue));
         if ($inject->optional) {
             $setterMethod->setOptional();
         }
@@ -70,17 +68,22 @@ final class AnnotatedClassMethods
     /**
      * @param \ReflectionMethod $method
      *
-     * @return null|Named
+     * @return string
      */
-    private function getMethodAnnotation(\ReflectionMethod $method)
+    private function getNamedKeyVarString(\ReflectionMethod $method)
     {
-        $bindAnnotation = $this->getBindAnnotation($method);
-        if ($bindAnnotation) {
-            return $bindAnnotation;
+        $keyVal = [];
+        /** @var $named Named */
+        $named = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Named');
+        if ($named) {
+            $keyVal[] = $named->value;
         }
-        $namedAnnotation = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Named');
-        if ($namedAnnotation) {
-            return $namedAnnotation;
+        $qualifierNamed = $this->getQualifierKeyVarString($method);
+        if ($qualifierNamed) {
+            $keyVal[] = $qualifierNamed;
+        }
+        if ($keyVal) {
+            return implode(',', $keyVal); // var1=qualifier1,va2=qualifier2
         }
 
         return null;
@@ -89,36 +92,21 @@ final class AnnotatedClassMethods
     /**
      * @param \ReflectionMethod $method
      *
-     * @return null|Named
+     * @return string
      */
-    private function getBindAnnotation(\ReflectionMethod $method)
+    private function getQualifierKeyVarString(\ReflectionMethod $method)
     {
         $annotations = $this->reader->getMethodAnnotations($method);
+        $names = [];
         foreach ($annotations as $annotation) {
             /** @var $bindAnnotation object|null */
-            $bindAnnotation = $this->findBindAnnotation($annotation);
-            if ($bindAnnotation) {
-                return $bindAnnotation;
+            $qualifier = $this->reader->getClassAnnotation(new \ReflectionClass($annotation) ,'Ray\Di\Di\Qualifier');
+            if ($qualifier) {
+                $value = isset($annotation->value) ? $annotation->value : Name::ANY;
+                $names[] = sprintf('%s=%s' ,$value ,get_class($annotation));
             }
         }
 
-        return null;
-    }
-
-    /**
-     * @param object $annotation
-     *
-     * @return null|Named
-     */
-    private function findBindAnnotation($annotation)
-    {
-        $bindingAnnotation = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), 'Ray\Di\Di\Qualifier');
-        if (! $bindingAnnotation) {
-            return null;
-        }
-        $named = new Named;
-        $named->value = isset($annotation->value) ? sprintf("%s=%s", $annotation->value, get_class($annotation)) : get_class($annotation);
-
-        return $named;
+        return implode(',' ,$names);
     }
 }

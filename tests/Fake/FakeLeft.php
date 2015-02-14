@@ -11,4 +11,5 @@ use Ray\Di\Di\Qualifier;
  */
 class FakeLeft
 {
+    public $value;
 }
