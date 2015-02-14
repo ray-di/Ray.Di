@@ -66,13 +66,14 @@ final class Name
         if ($this->name) {
             return $this->name;
         }
+
         // multiple variable named binding
-        if (is_array($this->names) && isset($this->names[$parameter->name])) {
+        if (isset($this->names[$parameter->name])) {
             return $this->names[$parameter->name];
         }
 
         // ANY match
-        if (is_array($this->names) && isset($this->names[Name::ANY])) {
+        if (isset($this->names[Name::ANY])) {
             return $this->names[Name::ANY];
         }
 

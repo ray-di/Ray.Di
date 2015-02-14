@@ -106,9 +106,6 @@ final class AnnotatedClassMethods
                 $names[] = sprintf('%s=%s' ,$value ,get_class($annotation));
             }
         }
-        if (! $names) {
-            return '';
-        }
 
         return implode(',' ,$names);
     }
