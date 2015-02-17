@@ -330,7 +330,7 @@ class Psr3LoggerProvider implements ProviderInterface
         $logger = new \Monolog\Logger($this->ip->getClass->getName());
         $logger->pushHandler(new StreamHandler('path/to/your.log', Logger::WARNING));
 
-        return logger;
+        return $logger;
     }
 }
 ```
