@@ -515,6 +515,10 @@ $lister = $injector->getInstance(ListerInterface::class);
  * [lorenzo/piping-bag](https://github.com/lorenzo/piping-bag) for CakePHP3
  * [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday)
 
+## Modules ##
+
+Various modules for `Ray.Di` are available at https://github.com/Ray-Di.
+
 ## Requirements ##
 
 * PHP 5.4+
