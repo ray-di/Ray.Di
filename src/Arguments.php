@@ -32,7 +32,7 @@ final class Arguments
      * @return Argument[]
      * @throws Exception\Unbound
      */
-    public function get(Container $container)
+    public function inject(Container $container)
     {
         $parameters = $this->arguments;
         foreach ($parameters as &$parameter) {

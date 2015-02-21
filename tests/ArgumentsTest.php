@@ -17,7 +17,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
     public function testInject()
     {
         $container = (new FakeCarModule)->getContainer();
-        $parameters = $this->arguments->get($container);
+        $parameters = $this->arguments->inject($container);
         $this->assertInstanceOf(FakeTyre::class, $parameters[0]);
         $this->assertInstanceOf(FakeTyre::class, $parameters[1]);
         $this->assertNotSame(spl_object_hash($parameters[0]), $parameters[1]);
@@ -28,7 +28,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
         $defaultValue = (new \ReflectionParameter([FakeHandleProvider::class, '__construct'], 'logo'))->getDefaultValue();
         $emptyContainer = new Container;
         $parameters = new Arguments(new \ReflectionMethod(FakeHandleProvider::class, '__construct'), new Name(Name::ANY));
-        $parametersValue = $parameters->get($emptyContainer);
+        $parametersValue = $parameters->inject($emptyContainer);
         $this->assertSame($defaultValue, $parametersValue[0]);
     }
 }

@@ -48,7 +48,7 @@ final class SetterMethod
     public function __invoke($instance, Container $container)
     {
         try {
-            $parameters = $this->arguments->get($container);
+            $parameters = $this->arguments->inject($container);
         } catch (Unbound $e) {
             if ($this->isOptional) {
                 return;
