@@ -60,7 +60,7 @@ class Injector implements InjectorInterface
     private function bind($class)
     {
         $bind = new Bind($this->container, $class);
-
+        /** @var $bound Dependency */
         $bound = $bind->getBound();
         $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
     }
@@ -72,6 +72,7 @@ class Injector implements InjectorInterface
                 $file = $this->classDir . DIRECTORY_SEPARATOR . $class . '.php';
                 if (file_exists($file)) {
                     // @codeCoverageIgnoreStart
+                    /** @noinspection PhpIncludeInspection */
                     include $file;
                     // @@codeCoverageIgnoreEnd
                 }

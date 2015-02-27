@@ -11,8 +11,8 @@ final class UntargetedBind
     public function __invoke(Container $container, \ReflectionMethod $method)
     {
         $parameters = $method->getParameters();
-        foreach ($parameters as &$parameter) {
-            $parameter = $this->addConcreteClass($container, $parameter);
+        foreach ($parameters as $parameter) {
+            $this->addConcreteClass($container, $parameter);
         }
     }
 
@@ -25,11 +25,14 @@ final class UntargetedBind
     }
 
     /**
+     * @param \ReflectionParameter $parameter
+     *
      * @return string
      */
     private function getTypeHint(\ReflectionParameter $parameter)
     {
         if (defined('HHVM_VERSION')) {
+            /** @noinspection PhpUndefinedFieldInspection */
             return $parameter->info['type_hint']; // @codeCoverageIgnore
         }
         $typeHintClass = $parameter->getClass();
