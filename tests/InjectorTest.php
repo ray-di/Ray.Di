@@ -142,7 +142,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = new Injector;
         $team = $injector->getInstance(FakeRobotTeam::class);
-        /** @var $team FakeRobotTeam */
+        /* @var $team FakeRobotTeam */
         $this->assertInstanceOf(FakeRobotTeam::class, $team);
         $this->assertInstanceOf(FakeRobot::class, $team->robot1);
         $this->assertInstanceOf(FakeRobot::class, $team->robot2);
@@ -159,7 +159,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = new Injector(new FakeCarModule);
         $car = $injector->getInstance(FakeCarInterface::class);
-        /** @var $car FakeCar */
+        /* @var $car FakeCar */
         $this->assertInstanceOf(FakeCar::class, $car);
         $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
         $this->assertInstanceOf(FakeTyre::class, $car->rearTyre);
@@ -187,7 +187,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = new Injector(new FakeAopModule, $_ENV['TMP_DIR']);
         $instance = $injector->getInstance(FakeAopInterface::class);
-        /** @var $instance FakeAop */
+        /* @var $instance FakeAop */
         $result = $instance->returnSame(2);
         $this->assertSame(4, $result);
     }
@@ -195,7 +195,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testBuiltinBinding()
     {
         $instance = (new Injector)->getInstance(FakeBuiltin::class);
-        /** @var $instance FakeBuiltin */
+        /* @var $instance FakeBuiltin */
         $this->assertInstanceOf(Injector::class, $instance->injector);
     }
 
@@ -209,7 +209,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = new Injector(new FakeAopInstallModule);
         $instance = $injector->getInstance(FakeAopInterface::class);
-        /** @var $instance FakeAop */
+        /* @var $instance FakeAop */
         $result = $instance->returnSame(2);
         $this->assertSame(4, $result);
     }
@@ -218,7 +218,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = new Injector(new FakeAopInstallModule(new FakeAopModule));
         $instance = $injector->getInstance(FakeAopInterface::class);
-        /** @var $instance FakeAop */
+        /* @var $instance FakeAop */
         $result = $instance->returnSame(2);
         $this->assertSame(8, $result);
     }
@@ -227,7 +227,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = new Injector(new FakeAopDoublyInstallModule);
         $instance = $injector->getInstance(FakeAopInterface::class);
-        /** @var $instance FakeAop */
+        /* @var $instance FakeAop */
         $result = $instance->returnSame(2);
         $this->assertSame(8, $result);
     }
@@ -236,9 +236,9 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         passthru('php ' . __DIR__ . '/script/aop.php');
         $injector = unserialize(file_get_contents(__DIR__ . '/script/aop.php.cache'));
-        /** @var $injector Injector */
+        /* @var $injector Injector */
         $instance = $injector->getInstance(FakeAopInterface::class);
-        /** @var $instance FakeAop */
+        /* @var $instance FakeAop */
         $result = $instance->returnSame(2);
         $this->assertSame(4, $result);
     }
@@ -247,7 +247,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $injector = new Injector(new FakeAopInterceptorModule);
         $instance = $injector->getInstance(FakeAop::class);
-        /** @var $instance FakeAop */
+        /* @var $instance FakeAop */
         $result = $instance->returnSame(2);
         $this->assertSame(4, $result);
     }

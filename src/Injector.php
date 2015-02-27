@@ -54,8 +54,7 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * @param string  $class
-     *
+     * @param string $class
      */
     private function bind($class)
     {

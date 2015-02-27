@@ -4,12 +4,10 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-
 namespace Ray\Di\Demo;
 
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
-
 use Ray\Di\ProviderInterface;
 
 class PhpProvider implements ProviderInterface

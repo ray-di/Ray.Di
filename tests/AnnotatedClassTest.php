@@ -28,7 +28,7 @@ class AnnotatedClassTest extends \PHPUnit_Framework_TestCase
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith('right')->to(FakeMirrorRight::class);
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith('left')->to(FakeMirrorRight::class);
         $car = $newInstance($container);
-        /** @var $car FakeCar */
+        /* @var $car FakeCar */
         $this->assertInstanceOf(FakeCar::class, $car);
         $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
         $this->assertInstanceOf(FakeTyre::class, $car->rearTyre);
@@ -45,7 +45,7 @@ class AnnotatedClassTest extends \PHPUnit_Framework_TestCase
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeLeft::class)->to(FakeMirrorLeft::class);
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeRight::class)->to(FakeMirrorRight::class);
         $handleBar = $newInstance($container);
-        /** @var $handleBar FakeHandleBar */
+        /* @var $handleBar FakeHandleBar */
         $this->assertInstanceOf(FakeMirrorLeft::class, $handleBar->leftMirror);
         $this->assertInstanceOf(FakeMirrorRight::class, $handleBar->rightMirror);
     }

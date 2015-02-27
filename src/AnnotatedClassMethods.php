@@ -34,13 +34,14 @@ final class AnnotatedClassMethods
         }
         $named = $this->reader->getMethodAnnotation($constructor, 'Ray\Di\Di\Named');
         if ($named) {
-            /** @var $named Named */
+            /* @var $named Named */
             return new Name($named->value);
         }
         $name = $this->getNamedKeyVarString($constructor);
         if ($name) {
             return new Name($name);
         }
+
         return new Name(Name::ANY);
     }
 
@@ -52,7 +53,7 @@ final class AnnotatedClassMethods
     public function getSetterMethod(\ReflectionMethod $method)
     {
         $inject = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Inject');
-        /** @var $inject \Ray\Di\Di\Inject */
+        /* @var $inject \Ray\Di\Di\Inject */
         if (! $inject) {
             return null;
         }
@@ -99,14 +100,14 @@ final class AnnotatedClassMethods
         $annotations = $this->reader->getMethodAnnotations($method);
         $names = [];
         foreach ($annotations as $annotation) {
-            /** @var $bindAnnotation object|null */
-            $qualifier = $this->reader->getClassAnnotation(new \ReflectionClass($annotation) ,'Ray\Di\Di\Qualifier');
+            /* @var $bindAnnotation object|null */
+            $qualifier = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), 'Ray\Di\Di\Qualifier');
             if ($qualifier) {
                 $value = isset($annotation->value) ? $annotation->value : Name::ANY;
-                $names[] = sprintf('%s=%s' ,$value ,get_class($annotation));
+                $names[] = sprintf('%s=%s', $value, get_class($annotation));
             }
         }
 
-        return implode(',' ,$names);
+        return implode(',', $names);
     }
 }

@@ -30,6 +30,7 @@ final class Arguments
      * @param Container $container
      *
      * @return Argument[]
+     *
      * @throws Exception\Unbound
      */
     public function inject(Container $container)
@@ -47,6 +48,7 @@ final class Arguments
      * @param Argument  $argument
      *
      * @return mixed
+     *
      * @throws Unbound
      */
     private function getParameter(Container $container, Argument $argument)
@@ -74,6 +76,7 @@ final class Arguments
         if ($argument->isDefaultAvailable()) {
             return [true, $argument->getDefaultValue()];
         }
+
         return [false, null];
     }
 

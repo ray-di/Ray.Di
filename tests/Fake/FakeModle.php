@@ -2,7 +2,7 @@
 
 namespace Ray\Di;
 
-class FakeModel
+class FakeModle
 {
     /**
      * @

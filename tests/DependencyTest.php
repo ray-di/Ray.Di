@@ -45,7 +45,7 @@ class DependencyTest extends \PHPUnit_Framework_TestCase
     public function testInject(Container $container)
     {
         $car = $this->dependency->inject($container);
-        /** @var $car FakeCar */
+        /* @var $car FakeCar */
         $this->assertInstanceOf(FakeCar::class, $car);
     }
 
@@ -55,7 +55,7 @@ class DependencyTest extends \PHPUnit_Framework_TestCase
     public function testSetterInjection(Container $container)
     {
         $car = $this->dependency->inject($container);
-        /** @var $car FakeCar */
+        /* @var $car FakeCar */
         $this->assertInstanceOf(FakeCar::class, $car);
         $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
     }
@@ -66,7 +66,7 @@ class DependencyTest extends \PHPUnit_Framework_TestCase
     public function testPostConstruct(Container $container)
     {
         $car = $this->dependency->inject($container);
-        /** @var $car FakeCar */
+        /* @var $car FakeCar */
         $this->assertTrue($car->isConstructed);
     }
 
@@ -92,7 +92,6 @@ class DependencyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(spl_object_hash($car1), spl_object_hash($car2));
     }
 
-
     public function testInjectInterceptor()
     {
         $dependency = new Dependency(new NewInstance(new \ReflectionClass(FakeAop::class), new SetterMethods([])));
@@ -101,7 +100,7 @@ class DependencyTest extends \PHPUnit_Framework_TestCase
         $container = new Container;
         $container->add((new Bind($container, FakeDoubleInterceptor::class))->to(FakeDoubleInterceptor::class));
         $instance = $dependency->inject($container);
-        $isWeave =(new \ReflectionClass($instance))->implementsInterface(WeavedInterface::class);
+        $isWeave = (new \ReflectionClass($instance))->implementsInterface(WeavedInterface::class);
         $this->assertTrue($isWeave);
         $this->assertArrayHasKey('returnSame', $instance->bindings);
     }

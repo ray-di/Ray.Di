@@ -20,7 +20,8 @@ class FakeInjectionPoint implements ProviderInterface
 
     public function get()
     {
-        if ($this->ip->getName())
-        return $this->ip;
+        if ($this->ip->getName()) {
+            return $this->ip;
+        }
     }
 }

@@ -4,7 +4,6 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  */
-
 namespace Ray\Di;
 
 require dirname(__DIR__) . '/bootstrap.php';

@@ -69,6 +69,7 @@ final class NewInstance
         if ($this->bind instanceof AspectBind) {
             $instance->bindings = $this->bind->inject($container);
         }
+
         return $instance;
     }
 

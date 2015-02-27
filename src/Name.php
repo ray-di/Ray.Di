@@ -47,6 +47,7 @@ final class Name
         // @Named(name)
         if ($name === Name::ANY || preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
             $this->name = $name;
+
             return;
         }
         // key=value name

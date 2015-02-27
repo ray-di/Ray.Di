@@ -43,7 +43,7 @@ class InjectionPointTest extends \PHPUnit_Framework_TestCase
 
     public function testGetQualifiers()
     {
-        /** @var $constant FakeConstant */
+        /* @var $constant FakeConstant */
         $annotations = $this->ip->getQualifiers();
         $this->assertSame(1, count($annotations));
         $this->assertInstanceOf(FakeConstant::class, $annotations[0]);

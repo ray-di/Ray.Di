@@ -64,6 +64,7 @@ final class Container
      * @param string $index
      *
      * @return mixed
+     *
      * @throws Unbound
      */
     public function getDependency($index)
@@ -145,7 +146,7 @@ final class Container
             if (! $dependency instanceof Dependency) {
                 continue;
             }
-            /** @var $dependency Dependency */
+            /* @var $dependency Dependency */
             $dependency->weaveAspects($compiler, $this->pointcuts);
         }
     }

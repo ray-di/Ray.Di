@@ -91,7 +91,7 @@ final class Dependency implements DependencyInterface
         $bind = new AopBind;
         $bind->bind((string) $this->newInstance, $pointcuts);
         if (! $bind->getBindings()) {
-            return ;
+            return;
         }
         $class = $compiler->compile((string) $this->newInstance, $bind);
         $this->newInstance->weaveAspects($class, $bind);
