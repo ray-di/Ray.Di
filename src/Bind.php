@@ -8,6 +8,7 @@
 namespace Ray\Di;
 
 use Ray\Di\Exception\NotFound;
+use Ray\Di\Exception\Unbound;
 
 final class Bind
 {
@@ -45,7 +46,7 @@ final class Bind
         $this->container = $container;
         $this->interface = $interface;
         $this->validate = new BindValidator;
-        if (class_exists($interface)) {
+        if (class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract()) {
             $this->untargettedBindings($container, new \ReflectionClass($interface));
 
             return;
@@ -165,6 +166,9 @@ final class Bind
      */
     public function getBound()
     {
+        if (! $this->bound) {
+            throw new Unbound($this->interface);
+        }
         return $this->bound;
     }
 }
