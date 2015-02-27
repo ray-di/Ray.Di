@@ -48,4 +48,13 @@ class NameTest extends \PHPUnit_Framework_TestCase
         $boundName = $name($parameter);
         $this->assertSame(Name::ANY, $boundName);
     }
+
+    public function testSetName()
+    {
+        $name = new Name(FakeMirrorRight::class);
+        $parameter = new \ReflectionParameter([FakeHandleBar::class, 'setMirrors'], 'rightMirror');
+        $boundName = $name($parameter);
+        $expected = FakeMirrorRight::class;
+        $this->assertSame($expected, $boundName);
+    }
 }
