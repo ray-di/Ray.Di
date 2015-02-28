@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "ray/aop": "~2.0@dev"
+        "ray/aop": "~2.0"
     },
     "autoload": {
         "psr-4": {
