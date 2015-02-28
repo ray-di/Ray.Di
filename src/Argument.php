@@ -51,11 +51,14 @@ final class Argument
     }
 
     /**
+     * @param \ReflectionParameter $parameter
+     *
      * @return string
      */
     private function getTypeHint(\ReflectionParameter $parameter)
     {
         if (defined('HHVM_VERSION')) {
+            /** @noinspection PhpUndefinedFieldInspection */
             return $parameter->info['type_hint']; // @codeCoverageIgnore
         }
         $typHint = $parameter->getClass();

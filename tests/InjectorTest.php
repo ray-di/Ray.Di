@@ -138,7 +138,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(FakeRobot::class, $robot);
     }
 
-    public function testGetConcretHavingDependency()
+    public function testGetConcreteHavingDependency()
     {
         $injector = new Injector;
         $team = $injector->getInstance(FakeRobotTeam::class);
@@ -276,5 +276,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $robot = $injector->getInstance(FakeWalkRobot::class);
         $this->assertInstanceOf(FakeLeftLeg::class, $robot->leftLeg);
         $this->assertInstanceOf(FakeRightLeg::class, $robot->rightLeg);
+    }
+
+    public function testNewAbstract()
+    {
+        $this->setExpectedException(Unbound::class, FakeAbstractClass::class);
+        (new Injector)->getInstance(FakeConcreteClass::class);
     }
 }

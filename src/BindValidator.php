@@ -18,7 +18,7 @@ final class BindValidator
      */
     public function constructor($interface)
     {
-        if ($interface && ! interface_exists($interface)) {
+        if ($interface && ! interface_exists($interface) && ! class_exists($interface)) {
             throw new NotFound($interface);
         }
     }

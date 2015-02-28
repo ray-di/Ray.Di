@@ -55,6 +55,8 @@ final class NewInstance
     }
 
     /**
+     * @param Container $container
+     *
      * @return object
      */
     public function __invoke(Container $container)
