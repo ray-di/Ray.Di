@@ -71,7 +71,7 @@ class BindTest extends \PHPUnit_Framework_TestCase
         $container->add((new Bind($container, FakeLegInterface::class))->annotatedWith('left')->to(FakeLeftLeg::class));
         $container->add((new Bind($container, FakeRobotInterface::class))->toConstructor(FakeToConstructorRobot::class, 'tmpDir=tmp_dir,leg=left'));
         $instance = $container->getInstance(FakeRobotInterface::class, Name::ANY);
-        /** @var $instance FakeToConstructorRobot */
+        /* @var $instance FakeToConstructorRobot */
         $this->assertInstanceOf(FakeLeftLeg::class, $instance->leg);
         $this->assertSame('/tmp', $instance->tmpDir);
     }
@@ -90,7 +90,7 @@ class BindTest extends \PHPUnit_Framework_TestCase
             )
         );
         $instance = $container->getInstance(FakeRobotInterface::class, Name::ANY);
-        /** @var $instance FakeToConstructorRobot */
+        /* @var $instance FakeToConstructorRobot */
         $this->assertInstanceOf(FakeEngine::class, $instance->engine);
     }
 

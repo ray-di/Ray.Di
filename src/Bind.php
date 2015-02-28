@@ -115,6 +115,7 @@ final class Bind
      * @param string $provider
      *
      * @return $this
+     *
      * @throws NotFound
      */
     public function toProvider($provider)
@@ -169,6 +170,7 @@ final class Bind
         if (! $this->bound) {
             throw new Unbound($this->interface);
         }
+
         return $this->bound;
     }
 }

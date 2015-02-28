@@ -42,7 +42,6 @@ final class DependencyFactory
         return $dependency;
     }
 
-
     /**
      * Create ToConstructor binding
      *

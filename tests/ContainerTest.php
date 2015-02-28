@@ -150,5 +150,4 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('default_construct', $instance->defaultByConstruct);
         $this->assertSame('default_setter', $instance->defaultBySetter);
     }
-
 }

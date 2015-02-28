@@ -530,7 +530,7 @@ The recommended way to install Ray.Di is through [Composer](https://github.com/c
 
 ```bash
 # Add Ray.Di as a dependency
-$ composer require ray/di ~2.0@dev
+$ composer require ray/di ~2.0
 ```
 
 ## Testing Ray.Di ##
@@ -538,7 +538,7 @@ $ composer require ray/di ~2.0@dev
 Here's how to install Ray.Di from source and run the unit tests and demos.
 
 ```bash
-$ composer create-project ray/di:~2.0@dev Ray.Di
+$ composer create-project ray/di:~2.0 Ray.Di
 $ cd Ray.Di
 $ phpunit
 $ php docs/demo/run.php

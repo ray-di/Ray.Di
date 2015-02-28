@@ -27,7 +27,7 @@ class NewInstanceTest extends \PHPUnit_Framework_TestCase
         (new Bind($container, FakeEngineInterface::class))->to(FakeEngine::class);
         (new Bind($container, FakeHardtopInterface::class))->to(FakeHardtop::class);
         $car = $this->newInstance->__invoke($container);
-        /** @var $car FakeCar */
+        /* @var $car FakeCar */
         $this->assertInstanceOf(FakeCar::class, $car);
         $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
         $this->assertInstanceOf(FakeTyre::class, $car->rearTyre);

@@ -5,7 +5,7 @@ namespace Ray\Di\Demo;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-class Robot
+class RobotNamed
 {
     public $rightLeg;
 

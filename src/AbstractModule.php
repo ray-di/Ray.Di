@@ -88,6 +88,7 @@ abstract class AbstractModule
         if (! $this->container) {
             $this->activate();
         }
+
         return $this->container;
     }
 

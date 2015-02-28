@@ -2,12 +2,12 @@
 
 namespace Ray\Di\Demo;
 
-use Ray\Di\Di\Inject;
-use Ray\Di\Demo\Right;
 use Ray\Di\Demo\Left;
+use Ray\Di\Demo\Right;
+use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-class NamedRobot
+class InstallRobot
 {
     public $rightLeg;
 

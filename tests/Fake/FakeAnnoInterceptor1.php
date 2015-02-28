@@ -10,6 +10,7 @@ class FakeAnnoInterceptor1 implements MethodInterceptor
     public function invoke(MethodInvocation $invocation)
     {
         FakeAnnoClass::$order[] = __CLASS__;
+
         return $invocation->proceed();
     }
 }

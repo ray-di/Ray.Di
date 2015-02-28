@@ -38,7 +38,7 @@ final class SetterMethods
     public function __invoke($instance, Container $container)
     {
         foreach ($this->setterMethods as $setterMethod) {
-            /** @var SetterMethod $setterMethod */
+            /* @var SetterMethod $setterMethod */
             $setterMethod->__invoke($instance, $container);
         }
     }
