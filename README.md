@@ -501,14 +501,14 @@ An dependency injector has compiled entire dependency graph which is serializabl
 Unserialized injector can invoke injection without reflection or annotation in runtime. Recommended in production use. 
 
 ```php
+// load injector
+$injector = file_exists($file) ? unserialize(file_get_contents($file)) : new Injector(new RobotModule);
+$robot = $injector->getInstance(Robot::class);
 
-// save
-$injector = new Injector(new ListerModule);
-$cachedInjector = serialize($injector);
-
-// load
-$injector = unserialize($cachedInjector);
-$lister = $injector->getInstance(ListerInterface::class);
+// save injector
+if ($injector->isUpdated()) {
+    file_put_contents($file ,serialize($injector));
+}
 ```
 ## Frameworks integration ##
 

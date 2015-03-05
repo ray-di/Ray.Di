@@ -7,3 +7,5 @@ passthru('php ' . __DIR__ . '/03-provider-binding.php');
 passthru('php ' . __DIR__ . '/04-untarget-bindings.php');
 passthru('php ' . __DIR__ . '/06-install.php');
 passthru('php ' . __DIR__ . '/10-cache.php');
+passthru('php ' . __DIR__ . '/11-cache-save.php');
+passthru('php ' . __DIR__ . '/11-cache-save.php');

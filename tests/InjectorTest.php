@@ -129,12 +129,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testGetConcreteClass()
     {
         $injector = new Injector;
-        try {
-            $robot = $injector->getInstance(FakeRobot::class);
-        } catch (Untargetted $e) {
-            $injector->bind(FakeRobot::class);
-            $robot = $injector->getInstance(FakeRobot::class);
-        }
+        $robot = $injector->getInstance(FakeRobot::class);
         $this->assertInstanceOf(FakeRobot::class, $robot);
     }
 
@@ -282,5 +277,20 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(Unbound::class, FakeAbstractClass::class);
         (new Injector)->getInstance(FakeConcreteClass::class);
+    }
+
+    public function testIsUpdate()
+    {
+        $injector = new Injector;
+        $this->assertFalse($injector->isUpdated());
+
+        $injector = unserialize(serialize($injector));
+        $this->assertFalse($injector->isUpdated());
+
+        $robot = $injector->getInstance(FakeRobot::class);
+        $this->assertTrue($injector->isUpdated());
+
+        $injector = unserialize(serialize($injector));
+        $this->assertFalse($injector->isUpdated());
     }
 }

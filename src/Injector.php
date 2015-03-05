@@ -22,6 +22,11 @@ class Injector implements InjectorInterface
     private $container;
 
     /**
+     * @var bool
+     */
+    private $isUpdated = false;
+
+    /**
      * @param AbstractModule $module
      * @param string         $classDir
      */
@@ -46,6 +51,7 @@ class Injector implements InjectorInterface
         try {
             $instance = $this->container->getInstance($interface, $name);
         } catch (Untargetted $e) {
+            $this->isUpdated = true;
             $this->bind($interface);
             $instance = $this->getInstance($interface, $name);
         }
@@ -64,8 +70,19 @@ class Injector implements InjectorInterface
         $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
     }
 
+    /**
+     * Return object graph updated
+     *
+     * @return bool
+     */
+    public function isUpdated()
+    {
+        return $this->isUpdated;
+    }
+
     public function __wakeup()
     {
+        $this->isUpdated = false;
         spl_autoload_register(
             function ($class) {
                 $file = $this->classDir . DIRECTORY_SEPARATOR . $class . '.php';
