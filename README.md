@@ -506,10 +506,15 @@ $injector = file_exists($file) ? unserialize(file_get_contents($file)) : new Inj
 $robot = $injector->getInstance(Robot::class);
 
 // save injector
-if ($injector->isUpdated()) {
-    file_put_contents($file ,serialize($injector));
-}
+register_shutdown_function(
+    function() use ($injector, $file) {
+        if ($injector->isUpdated()) {
+            file_put_contents($file ,serialize($injector));
+        }
+    }
+);
 ```
+
 ## Frameworks integration ##
 
  * [lorenzo/piping-bag](https://github.com/lorenzo/piping-bag) for CakePHP3

@@ -2,6 +2,7 @@
 
 namespace Ray\Di\Demo;
 
+use Ray\Di\FakeHandle;
 use Ray\Di\Injector;
 use Ray\Di\AbstractModule;
 
@@ -20,14 +21,21 @@ class InstallModule extends AbstractModule
 }
 
 $file = __FILE__ . '.cache';
+
+// prepare injector (load cache | new instance)
 $injector = file_exists($file) ? unserialize(file_get_contents($file)) : new Injector(new InstallModule);
+
 $robot1 = $injector->getInstance(Robot::class);
 
-// save file cache
-if ($injector->isUpdated()) {
-    echo 'save' . PHP_EOL;
-    file_put_contents($file ,serialize($injector));
-}
+// save cache if updated
+register_shutdown_function(
+    function() use ($injector, $file) {
+        if ($injector->isUpdated()) {
+            echo 'save' . PHP_EOL;
+            file_put_contents($file ,serialize($injector));
+        }
+    }
+);
 
 $works = $robot1->isReady === true;
 echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
