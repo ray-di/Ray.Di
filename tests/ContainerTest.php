@@ -161,5 +161,4 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $robotTeam = $container->getInstance(FakeRobotTeam::class, Name::ANY);
         $this->assertInstanceOf(FakeRobot::class, $robotTeam->robot1);
     }
-
 }

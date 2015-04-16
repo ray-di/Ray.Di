@@ -3,7 +3,6 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Ray\Di\Di\Qualifier;
 
 class InjectionPointTest extends \PHPUnit_Framework_TestCase
 {

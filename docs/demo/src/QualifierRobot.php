@@ -2,8 +2,6 @@
 
 namespace Ray\Di\Demo;
 
-use Ray\Di\Demo\Left;
-use Ray\Di\Demo\Right;
 use Ray\Di\Di\Inject;
 
 class QualifierRobot

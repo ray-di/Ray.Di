@@ -6,9 +6,7 @@
  */
 namespace Ray\Di;
 
-use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
 use Ray\Aop\Compiler;
 use Ray\Di\Exception\Untargetted;

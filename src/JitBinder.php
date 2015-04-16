@@ -42,7 +42,7 @@ class JitBinder
 
     public function bind($class)
     {
-        $classId = str_replace('\\' ,'_', $class);
+        $classId = str_replace('\\', '_', $class);
         $untargetCache = $this->cache->fetch($classId);
         $index = "{$class}-*";
         if ($untargetCache) {
@@ -63,7 +63,6 @@ class JitBinder
         $bind = new Bind($this->container, $class);
         /** @var $bound Dependency */
         $bound = $bind->getBound();
-        $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class ,Name::ANY);
+        $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
     }
-
 }
