@@ -289,17 +289,15 @@ class AopMatcherModule extends AbstractModule
 インジェクターオブジェクトは全ての依存情報を保持していてシリアライズすることができます。
 `unserialize`したインジェクターではリフレクションやアノテーションを使用しないで、高速にインジェクションを行うことができます。
 
-
 ```php
-
-// save
-$injector = new Injector(new ListerModule);
-$cachedInjector = serialize($injector);
-
-// load
-$injector = unserialize($cachedInjector);
-$lister = $injector->getInstance(ListerInterface::class);
-
+$cache = new \Doctrine\Common\Cache\Cache\ApcCache;
+$cache->setNamespace('your-app');
+$injector = $cache->fetch('injector');
+if (! $injector) {
+    $injector = new Injector(new YourModule, $tmpDir, $cache);
+    $cache->save('injector', $injector);
+}
+$instance = $injector->getInstance(Foo::class);
 ```
 
 ## Requirement ##

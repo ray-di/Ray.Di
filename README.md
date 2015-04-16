@@ -500,16 +500,18 @@ The class of this object should use injection to obtain references to other obje
 An dependency injector has compiled entire dependency graph which is serializable.  It has huge performance boosts.
 Unserialized injector can invoke injection without reflection or annotation in runtime. Recommended in production use. 
 
+
 ```php
-
-// save
-$injector = new Injector(new ListerModule);
-$cachedInjector = serialize($injector);
-
-// load
-$injector = unserialize($cachedInjector);
-$lister = $injector->getInstance(ListerInterface::class);
+$cache = new \Doctrine\Common\Cache\Cache\ApcCache;
+$cache->setNamespace('your-app');
+$injector = $cache->fetch('injector');
+if (! $injector) {
+    $injector = new Injector(new YourModule, $tmpDir, $cache);
+    $cache->save('injector', $injector);
+}
+$instance = $injector->getInstance(Foo::class);
 ```
+
 ## Frameworks integration ##
 
  * [lorenzo/piping-bag](https://github.com/lorenzo/piping-bag) for CakePHP3
