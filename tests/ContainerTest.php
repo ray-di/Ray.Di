@@ -3,6 +3,7 @@
 namespace Ray\Di;
 
 use Aura\Cli\Exception;
+use Doctrine\Common\Cache\ArrayCache;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
@@ -150,4 +151,15 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('default_construct', $instance->defaultByConstruct);
         $this->assertSame('default_setter', $instance->defaultBySetter);
     }
+
+    public function testUntargetedBinding()
+    {
+        $container = new Container;
+        $container->setDependencies(new ArrayCache, $_ENV['TMP_DIR']);
+        $container->bind(FakeRobotTeam::class);
+        /** @var $robotTeam FakeRobotTeam */
+        $robotTeam = $container->getInstance(FakeRobotTeam::class, Name::ANY);
+        $this->assertInstanceOf(FakeRobot::class, $robotTeam->robot1);
+    }
+
 }

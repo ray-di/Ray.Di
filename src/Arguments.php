@@ -8,6 +8,7 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ray\Di\Exception\Unbound;
+use Ray\Di\Exception\Untargetted;
 
 final class Arguments
 {
@@ -56,6 +57,11 @@ final class Arguments
         $this->bindInjectionPoint($container, $argument);
         try {
             return $container->getDependency((string) $argument);
+        } catch (Untargetted $e) {
+            $container->bind($e->getMessage());
+            $dependency = $container->getDependency((string) $argument);
+
+            return $dependency;
         } catch (Unbound $e) {
             list($hasDefaultValue, $defaultValue) = $this->getDefaultValue($argument);
             if ($hasDefaultValue) {

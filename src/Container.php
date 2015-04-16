@@ -7,12 +7,13 @@
  */
 namespace Ray\Di;
 
+use Doctrine\Common\Cache\Cache;
 use Ray\Aop\Compiler;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Exception\Untargetted;
 
-final class Container
+final class Container implements \ArrayAccess
 {
     /**
      * @var DependencyInterface[]
@@ -23,6 +24,26 @@ final class Container
      * @var Pointcut[]
      */
     private $pointcuts = [];
+
+    /**
+     * @var Cache
+     */
+    private $cache;
+
+    /**
+     * @var string
+     */
+    private $classDir;
+
+    /**
+     * @param Cache  $cache
+     * @param string $classDir
+     */
+    public function setDependencies(Cache $cache, $classDir)
+    {
+        $this->cache = $cache;
+        $this->classDir = $classDir;
+    }
 
     /**
      * Add binding to container
@@ -45,6 +66,10 @@ final class Container
         $this->pointcuts[] = $pointcut;
     }
 
+    public function bind($class)
+    {
+        (new JitBinder($this, $this->cache, $this->classDir))->bind($class);
+    }
     /**
      * Return instance by interface + name(interface namespace)
      *
@@ -170,6 +195,36 @@ final class Container
 
     public function __sleep()
     {
-        return ['container'];
+        return ['container', 'cache', 'classDir'];
+    }
+
+    /**
+     * @return Dependency
+     */
+    public function offsetGet($offset)
+    {
+        return $this->container[$offset];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->container[$offset] = $value;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function offsetExists($offset)
+    {
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function offsetUnset($offset)
+    {
     }
 }
