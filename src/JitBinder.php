@@ -50,7 +50,7 @@ class JitBinder
 
             return;
         }
-        $this->JitBind($class);
+        $this->jitBind($class);
         //error_log("ray.di jit:{$class}");
         $this->cache->save($classId, $this->container[$index]);
     }
@@ -58,7 +58,7 @@ class JitBinder
     /**
      * @param string $class
      */
-    private function JitBind($class)
+    private function jitBind($class)
     {
         $bind = new Bind($this->container, $class);
         /** @var $bound Dependency */
