@@ -1,6 +1,6 @@
 # Ray.Di
 
-## Dependency Injection framework #
+## Dependency Injection framework ##
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/?branch=develop-2)
 [![Code Coverage](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/?branch=develop-2)
@@ -8,9 +8,9 @@
 
 **Ray.Di** was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google.
 
-## Getting Stated #
+## Getting Stated ##
 
-### Linked Bindings ##
+### Linked Bindings ###
 
 Here is a basic example of dependency injection using Ray.Di.
 
@@ -64,15 +64,17 @@ echo(($works) ? 'It works!' : 'It DOES NOT work!');
 
 // It works!
 ```
+
 This is an example of **Linked Bindings**. Linked bindings map a type to its implementation, it can also be chained.
 
-### Provider Bindings ##
+### Provider Bindings ###
 
 [Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) map a type to its provider.
 
 ```php
 $this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider::class);
 ```
+
 The provider class implements Ray's Provider interface, which is a simple, general interface for supplying values:
 
 ```php
@@ -83,11 +85,11 @@ interface ProviderInterface
     public function get();
 }
 ```
+
 Our provider implementation class has dependencies of its own, which it receives via a contructor annotated with `@Inject`.
 It implements the Provider interface to define what's returned with complete type safety:
 
 ```php
-
 use Ray\Di\Di\Inject;
 use Ray\Di\ProviderInterface;
 
@@ -119,7 +121,7 @@ Finally we bind to the provider using the `toProvider()` method:
 $this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider::class);
 ```
 
-### Binding Annotations ##
+### Binding Annotations ###
 
 Occasionally you'll want multiple bindings for a same type. For example, you might want both a PayPal credit card processor and a Google Checkout processor.
 To enable this, bindings support an optional binding annotation. The annotation and type together uniquely identify a binding. This pair is called a key.
@@ -127,7 +129,6 @@ To enable this, bindings support an optional binding annotation. The annotation 
 Define qualifier annotation first. It needs to be annotated with `@Qualifier` annotation.
 
 ```php
-
 use Ray\Di\Di\Qualifier;
 
 /**
@@ -150,6 +151,7 @@ public __construct(CreditCardProcessorInterface $processor, TransactionLogInterf
 {
 }
 ```
+
 You can specify parameter name with qualifier. Qualifier applied all parameters without it.
 
 ```php
@@ -161,7 +163,9 @@ public __construct(CreditCardProcessorInterface $processor, TransactionLogInterf
  ....
 }
 ```
+
 Lastly we create a binding that uses the annotation. This uses the optional annotatedWith clause in the bind() statement:
+
 ```php
 protected function configure()
 {
@@ -169,7 +173,8 @@ protected function configure()
         ->annotatedWith(PayPal::class)
         ->to(PayPalCreditCardProcessor::class);
 ```
-### @Named ##
+
+### @Named ###
 
 Ray comes with a built-in binding annotation `@Named` that takes a string.
 
@@ -187,6 +192,7 @@ public __construct(CreditCardProcessorInterface $processor)
 ```
 
 To bind a specific name, pass that string using the `annotatedWith()` method.
+
 ```php
 protected function configure()
 {
@@ -197,6 +203,7 @@ protected function configure()
 ```
 
 You need to specify in case of multiple parameter.
+
 ```php
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
@@ -210,7 +217,7 @@ public __construct(CreditCardProcessorInterface $processor, CreditCardProcessorI
 ...
 ```
 
-### Instance Bindings ##
+### Instance Bindings ###
 
 ```php
 protected function configure()
@@ -218,6 +225,7 @@ protected function configure()
     $this->bind(UserInterface::class)->toInstance(new User);
 }
 ```
+
 You can bind a type to an instance of that type. This is usually only useful for objects that don't have dependencies of their own, such as value objects:
 
 ```php
@@ -229,12 +237,11 @@ protected function configure()
 }
 ```
 
-### Untargeted Bindings
+### Untargeted Bindings ###
 
 You may create bindings without specifying a target. This is most useful for concrete classes. An untargetted binding informs the injector about a type, so it may prepare dependencies eagerly. Untargetted bindings have no _to_ clause, like so:
 
 ```php
-
 protected function configure()
 {
     $this->bind(MyConcreteClass::class);
@@ -244,7 +251,7 @@ protected function configure()
 
 note: annotations is not supported Untargeted Bindings
 
-### Constructor Bindings ##
+### Constructor Bindings ###
 
 Occasionally it's necessary to bind a type to an arbitrary constructor. This comes up when the @Inject annotation cannot be applied to the target constructor: either because it is a third party class, or because multiple constructors that participate in dependency injection. 
 `Provider Binding` provide the solution to this problem. By calling your target constructor explicitly, you don't need reflection and its associated pitfalls. But there are limitations of that approach: manually constructed instances do not participate in AOP.
@@ -273,6 +280,7 @@ protected function configure()
         );
 }
 ```
+
 In this example, the `Car` have a constructor which name bound with `engine=na,carName=car_name`. That constructor does not need an @Inject annotation. Ray.Di will invoke that constructor to satisfy the binding.
 
 ## Scopes ##
@@ -289,12 +297,11 @@ protected function configure()
 }
 ```
 
-## Object life cycle
+## Object Life Cycle ##
 
 `@PostConstruct` is used on methods that need to get executed after dependency injection has finalized to perform any extra initialization.
 
 ```php
-
 use Ray\Di\Di\PostConstruct;
 
 /**
@@ -305,7 +312,8 @@ public function init()
     //....
 }
 ```
-## Injection Point
+
+## Injection Point ##
 
 An **InjectionPoint** is a class that has information about an injection point. 
 It provides access to metadata via `\ReflectionParameter` or an annotation in `Provider`.
@@ -335,9 +343,11 @@ class Psr3LoggerProvider implements ProviderInterface
 }
 ```
 Obtains the qualifiers
+
 ```php
 $annotations =  $this->ip->getQualifiers();
 ```
+
 ## Automatic Injection ##
 
 Ray.Di automatically injects all of the following:
@@ -380,7 +390,6 @@ class BillingService
 Next, we define the interceptor by implementing the org.aopalliance.intercept.MethodInterceptor interface. When we need to call through to the underlying method, we do so by calling `$invocation->proceed()`:
 
 ```php
-
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
@@ -402,7 +411,6 @@ class WeekendBlocker implements MethodInterceptor
 Finally, we configure everything. In this case we match any class, but only the methods with our `@NotOnWeekends` annotation:
 
 ```php
-
 use Ray\Di\AbstractModule;
 
 class WeekendModule extends AbstractModule
@@ -442,7 +450,6 @@ Call Stack:
 You can bind interceptors in variouas ways as follows.
 
 ```php
-
 use Ray\Di\AbstractModule;
 
 class TaxModule extends AbstractModule
@@ -459,7 +466,6 @@ class TaxModule extends AbstractModule
 ```
 
 ```php
-
 use Ray\Di\AbstractModule;
 
 class AopMatcherModule extends AbstractModule
@@ -501,7 +507,6 @@ An dependency injector has compiled entire dependency graph which is serializabl
 Unserialized injector can invoke injection without reflection or annotation in runtime. Recommended in production use. 
 
 ```php
-
 // save
 $injector = new Injector(new ListerModule);
 $cachedInjector = serialize($injector);
@@ -510,6 +515,7 @@ $cachedInjector = serialize($injector);
 $injector = unserialize($cachedInjector);
 $lister = $injector->getInstance(ListerInterface::class);
 ```
+
 ## Frameworks integration ##
 
  * [lorenzo/piping-bag](https://github.com/lorenzo/piping-bag) for CakePHP3
