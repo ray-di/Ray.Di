@@ -116,11 +116,18 @@ final class DependencyCompiler
         return $node;
     }
 
+    /**
+     * @param $class
+     * @param array $arguments
+     *
+     * @return Expr\New_
+     */
     private function constructorInjection($class, array $arguments = [])
     {
-        /** @var $args Argument[] */
+        /* @var $arguments Argument[] */
         $args = [];
         foreach ($arguments as $argument) {
+            //            $argument = $argument->isDefaultAvailable() ? $argument->getDefaultValue() : $argument;
             $args[] = $this->getArgStmt($argument);
         }
         $constructor = new Expr\New_(new FullyQualified($class), $args);
@@ -158,6 +165,13 @@ final class DependencyCompiler
     private function getArgStmt(Argument $argument)
     {
         $dependencyIndex = (string) $argument;
+        $hasDependency = isset($this->container->getContainer()[$dependencyIndex]);
+        if (! $hasDependency && $argument->isDefaultAvailable()) {
+            $default = $argument->getDefaultValue();
+            $node = $this->normalizeValue($default);
+
+            return $node;
+        }
         $dependency = $this->container->getContainer()[$dependencyIndex];
         if ($dependency instanceof Instance) {
             return $this->normalizeValue($dependency->value);
@@ -199,11 +213,11 @@ final class DependencyCompiler
             return $value;
         } elseif (is_null($value)) {
             return new Expr\ConstFetch(
-                new Name('null')
+                new Node\Name('null')
             );
         } elseif (is_bool($value)) {
             return new Expr\ConstFetch(
-                new Name($value ? 'true' : 'false')
+                new Node\Name($value ? 'true' : 'false')
             );
         } elseif (is_int($value)) {
             return new Scalar\LNumber($value);
