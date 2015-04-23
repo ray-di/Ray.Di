@@ -20,19 +20,19 @@ class DependencyCompilerTest extends \PHPUnit_Framework_TestCase
 
 return 'bear';
 EOT;
-        $this->assertSame($expected, (string)$code);
+        $this->assertSame($expected, (string) $code);
     }
 
     public function testInstanceCompileInt()
     {
-        $dependencyInstance = new Instance((int)1);
+        $dependencyInstance = new Instance((int) 1);
         $code = (new DependencyCompiler(new Container))->compile($dependencyInstance);
         $expected = <<<'EOT'
 <?php
 
 return 1;
 EOT;
-        $this->assertSame($expected, (string)$code);
+        $this->assertSame($expected, (string) $code);
     }
 
     public function testInstanceCompileArray()
@@ -44,7 +44,7 @@ EOT;
 
 return array(1, 2, 3);
 EOT;
-        $this->assertSame($expected, (string)$code);
+        $this->assertSame($expected, (string) $code);
     }
 
     public function testDependencyCompile()
@@ -66,7 +66,7 @@ $instance->setHandle($prototype('Ray\\Di\\FakeHandleInterface-*'));
 $instance->postConstruct();
 return $instance;
 EOT;
-        $this->assertSame($expected, (string)$code);
+        $this->assertSame($expected, (string) $code);
     }
 
     public function testDependencyProviderCompile()
@@ -82,7 +82,7 @@ namespace Ray\Di\Compiler;
 $instance = new \Ray\Di\FakeHandleProvider('momo');
 return $instance->get();
 EOT;
-        $this->assertSame($expected, (string)$code);
+        $this->assertSame($expected, (string) $code);
     }
 
     public function testDependencyInstanceCompile()
@@ -95,7 +95,7 @@ EOT;
 
 return 'momo';
 EOT;
-        $this->assertSame($expected, (string)$code);
+        $this->assertSame($expected, (string) $code);
     }
 
     public function testDependencyObjectInstanceCompile()
@@ -108,10 +108,8 @@ EOT;
 
 return unserialize('O:17:"Ray\\Di\\FakeEngine":0:{}');
 EOT;
-        $this->assertSame($expected, (string)$code);
+        $this->assertSame($expected, (string) $code);
     }
-
-
 
     public function testDomainException()
     {

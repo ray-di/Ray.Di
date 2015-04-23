@@ -59,11 +59,11 @@ final class DiCompiler implements InjectorInterface
     public function compile()
     {
         $container = $this->container->getContainer();
-        foreach($container as $dependencyIndex => $dependency) {
+        foreach ($container as $dependencyIndex => $dependency) {
             $file = sprintf('%s/%s.php', $this->classDir, str_replace('\\', '_', $dependencyIndex));
             if (! file_exists($file)) {
                 $code = $this->dependencyCompiler->compile($dependency);
-                file_put_contents($file, (string)$code, LOCK_EX);
+                file_put_contents($file, (string) $code, LOCK_EX);
             }
         }
     }

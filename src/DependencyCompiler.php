@@ -54,6 +54,7 @@ final class DependencyCompiler
     private function compileInstance(Instance $instance)
     {
         $node = $this->normalizeValue($instance->value);
+
         return new DependencyCompile(new Return_($node));
     }
 
@@ -113,7 +114,6 @@ final class DependencyCompiler
         }
 
         return $node;
-
     }
 
     private function constructorInjection($class, array $arguments = [])
@@ -131,7 +131,7 @@ final class DependencyCompiler
     private function setterInjection(Expr\Variable $instance, array $setterMethods)
     {
         $setters = [];
-        foreach($setterMethods as $setterMethod) {
+        foreach ($setterMethods as $setterMethod) {
             $method = $this->getPrivateProperty($setterMethod, 'method');
             $argumentsObject = $this->getPrivateProperty($setterMethod, 'arguments');
             $argumentsArray = $this->getPrivateProperty($argumentsObject, 'arguments');
@@ -192,9 +192,9 @@ final class DependencyCompiler
      *
      * @codeCoverageIgnore
      * (taken from BuilderAbstract::PhpParser())
-     *
      */
-    protected function normalizeValue($value) {
+    protected function normalizeValue($value)
+    {
         if ($value instanceof Node) {
             return $value;
         } elseif (is_null($value)) {
@@ -212,7 +212,7 @@ final class DependencyCompiler
         } elseif (is_string($value)) {
             return new Scalar\String_($value);
         } elseif (is_array($value)) {
-            $items = array();
+            $items = [];
             $lastKey = -1;
             foreach ($value as $itemKey => $itemValue) {
                 // for consecutive, numeric keys don't generate keys
@@ -251,5 +251,4 @@ final class DependencyCompiler
 
         return $node;
     }
-
 }
