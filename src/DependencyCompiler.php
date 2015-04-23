@@ -34,25 +34,6 @@ final class DependencyCompiler
     }
 
     /**
-     * @param $dependencyIndex
-     *
-     * @return DependencyCompile
-     */
-    public function compileIndex($dependencyIndex)
-    {
-        $dependency = $this->container->getContainer()[$dependencyIndex];
-        if ($dependency instanceof Dependency) {
-            return $this->compileDependency($dependency);
-        } elseif ($dependency instanceof Instance) {
-            return $this->compileInstance($dependency);
-        } elseif ($dependency instanceof DependencyProvider) {
-            return $this->compileDependencyProvider($dependency);
-        }
-
-        throw new \LogicException($dependencyIndex);
-    }
-
-    /**
      * @param DependencyInterface $dependency
      *
      * @return DependencyCompile
@@ -63,7 +44,11 @@ final class DependencyCompiler
             return $this->compileDependency($dependency);
         } elseif ($dependency instanceof Instance) {
             return $this->compileInstance($dependency);
+        } elseif ($dependency instanceof DependencyProvider) {
+            return $this->compileDependencyProvider($dependency);
         }
+
+        throw new \DomainException(get_class($dependency));
     }
 
     private function compileInstance(Instance $instance)
@@ -90,25 +75,6 @@ final class DependencyCompiler
 
         return new DependencyCompile($node);
     }
-
-//    private function getProviderNode($dependencyIndex, DependencyInterface $dependency)
-//    {
-//        $dependencyName = str_replace('-', '_', $dependencyIndex);
-//        $providerName = "{$dependencyName}_Provider";
-//
-//        $node = $this->factory->namespace('Ray\Di\DependencyProvider')
-//            ->addStmt($this->factory->class($providerName)
-//            ->implement('Ray\Di\Provider')
-//            ->makeFinal()
-//                ->addStmt($this->factory->method('get')
-//                    ->makePublic()
-//                    ->addStmt($this->getFactory($dependency))
-//                )
-//            )
-//            ->getNode();
-//
-//        return $node;
-//    }
 
     private function getFactoryNode(DependencyInterface $dependency)
     {
@@ -198,7 +164,7 @@ final class DependencyCompiler
         }
         $isSingleton = $this->getPrivateProperty($dependency, 'isSingleton');
         $func = $isSingleton ? 'singleton' : 'prototype';
-        $node = new Expr\FuncCall(new Expr\Variable($func), [new Arg(new Scalar\String((string) $argument))]);
+        $node = new Expr\FuncCall(new Expr\Variable($func), [new Arg(new Scalar\String_((string) $argument))]);
 
         return $node;
     }
@@ -220,11 +186,13 @@ final class DependencyCompiler
      * Normalizes a value: Converts nulls, booleans, integers,
      * floats, strings and arrays into their respective nodes
      *
-     * (taken from BuilderAbstract::PhpParser())
-     *
      * @param mixed $value The value to normalize
      *
      * @return Expr The normalized value
+     *
+     * @codeCoverageIgnore
+     * (taken from BuilderAbstract::PhpParser())
+     *
      */
     protected function normalizeValue($value) {
         if ($value instanceof Node) {
@@ -262,8 +230,26 @@ final class DependencyCompiler
             }
 
             return new Expr\Array_($items);
+        } elseif (is_object($value)) {
+            return $this->normalizeObject($value);
         } else {
             throw new \LogicException('Invalid value');
         }
     }
+
+    /**
+     * Return "unserialize($object)" node
+     *
+     * @param object $object
+     *
+     * @return Expr\FuncCall
+     */
+    private function normalizeObject($object)
+    {
+        $serialize = new Scalar\String_(serialize($object));
+        $node = new Expr\FuncCall(new Node\Name('unserialize'), [new Arg($serialize)]);
+
+        return $node;
+    }
+
 }

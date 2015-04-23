@@ -50,7 +50,8 @@ EOT;
     public function testDependencyCompile()
     {
         $container = (new FakeCarModule)->getContainer();
-        $code = (new DependencyCompiler($container))->compileIndex('Ray\Di\FakeCarInterface-*');
+        $dependency = $container->getContainer()['Ray\Di\FakeCarInterface-*'];
+        $code = (new DependencyCompiler($container))->compile($dependency);
         $expected = <<<'EOT'
 <?php
 
@@ -68,10 +69,11 @@ EOT;
         $this->assertSame($expected, (string)$code);
     }
 
-    public function testDependencyInstanceCompile()
+    public function testDependencyProviderCompile()
     {
         $container = (new FakeCarModule)->getContainer();
-        $code = (new DependencyCompiler($container))->compileIndex('Ray\Di\FakeHandleInterface-*');
+        $dependency = $container->getContainer()['Ray\Di\FakeHandleInterface-*'];
+        $code = (new DependencyCompiler($container))->compile($dependency);
         $expected = <<<'EOT'
 <?php
 
@@ -81,5 +83,39 @@ $instance = new \Ray\Di\FakeHandleProvider('momo');
 return $instance->get();
 EOT;
         $this->assertSame($expected, (string)$code);
+    }
+
+    public function testDependencyInstanceCompile()
+    {
+        $container = (new FakeCarModule)->getContainer();
+        $dependency = $container->getContainer()['-logo'];
+        $code = (new DependencyCompiler($container))->compile($dependency);
+        $expected = <<<'EOT'
+<?php
+
+return 'momo';
+EOT;
+        $this->assertSame($expected, (string)$code);
+    }
+
+    public function testDependencyObjectInstanceCompile()
+    {
+        $container = (new FakeCarModule)->getContainer();
+        $dependency = new Instance(new FakeEngine());
+        $code = (new DependencyCompiler($container))->compile($dependency);
+        $expected = <<<'EOT'
+<?php
+
+return unserialize('O:17:"Ray\\Di\\FakeEngine":0:{}');
+EOT;
+        $this->assertSame($expected, (string)$code);
+    }
+
+
+
+    public function testDomainException()
+    {
+        $this->setExpectedException(\DomainException::class);
+        $code = (new DependencyCompiler(new Container))->compile(new FakeInvalidDependency);
     }
 }
