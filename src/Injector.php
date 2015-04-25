@@ -70,10 +70,7 @@ class Injector implements InjectorInterface
             function ($class) {
                 $file = $this->classDir . DIRECTORY_SEPARATOR . $class . '.php';
                 if (file_exists($file)) {
-                    // @codeCoverageIgnoreStart
-                    /** @noinspection PhpIncludeInspection */
                     include $file;
-                    // @@codeCoverageIgnoreEnd
                 }
             }
         );

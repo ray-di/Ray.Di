@@ -59,7 +59,7 @@ namespace Ray\Di\Compiler;
 
 $is_singleton = false;
 $instance = new \Ray\Di\FakeCar($prototype('Ray\\Di\\FakeEngineInterface-*'));
-$instance->setTires($prototype('Ray\\Di\\FakeTyreInterface-*'), $prototype('Ray\\Di\\FakeTyreInterface-*'));
+$instance->setTires($prototype('Ray\\Di\\FakeTyreInterface-*'), $prototype('Ray\\Di\\FakeTyreInterface-*'), null);
 $instance->setHardtop($prototype('Ray\\Di\\FakeHardtopInterface-*'));
 $instance->setMirrors($singleton('Ray\\Di\\FakeMirrorInterface-right'), $singleton('Ray\\Di\\FakeMirrorInterface-left'));
 $instance->setSpareMirror($singleton('Ray\\Di\\FakeMirrorInterface-right'));

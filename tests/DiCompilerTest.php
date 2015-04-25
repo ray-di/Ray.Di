@@ -3,9 +3,17 @@
 namespace Ray\Di;
 
 use Ray\Aop\WeavedInterface;
+use Ray\Di\Exception\NotCompiled;
 
 class DiCompilerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testNotCompiled()
+    {
+        $this->setExpectedException(NotCompiled::class);
+        $injector = new ScriptInjector($_ENV['TMP_DIR']);
+        $car = $injector->getInstance(FakeCarInterface::class);
+
+    }
     public function testCompile()
     {
         $compiler = new DiCompiler(new FakeCarModule, $_ENV['TMP_DIR']);
@@ -22,8 +30,8 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         foreach ($files as $file) {
             $this->assertTrue(file_exists($_ENV['TMP_DIR'] . '/'. $file));
         }
-        $script = new ScriptInjector($_ENV['TMP_DIR']);
-        $car = $script->getInstance(FakeCarInterface::class);
+        $injector = new ScriptInjector($_ENV['TMP_DIR']);
+        $car = $injector->getInstance(FakeCarInterface::class);
         $this->assertInstanceOf(FakeCar::class, $car);
     }
 

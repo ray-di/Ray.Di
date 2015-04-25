@@ -111,7 +111,9 @@ class ScriptInjector implements InjectorInterface
         spl_autoload_register(function ($class) {
             $file = sprintf('%s/%s.php', $this->scriptDir, $class);
             if (file_exists($file)) {
+                // @codeCoverageIgnoreStart
                 require $file;
+                // @codeCoverageIgnoreEnd
             }
         });
     }

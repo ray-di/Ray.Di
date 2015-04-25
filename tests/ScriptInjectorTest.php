@@ -23,6 +23,16 @@ class ScriptInjectorTest extends \PHPUnit_Framework_TestCase
     {
         $car = $this->injector->getInstance(FakeCarInterface::class);
         $this->assertInstanceOf(FakeCar::class, $car);
+
+        return $car;
+    }
+
+    /**
+     * @depends testGetInstance
+     */
+    public function testDefaultValueInjected($car)
+    {
+        $this->assertNull($car->null);
     }
 
     public function testCompileException()
@@ -38,5 +48,11 @@ class ScriptInjectorTest extends \PHPUnit_Framework_TestCase
         $instance1 = $this->injector->getInstance(FakeRobotInterface::class);
         $instance2 = $this->injector->getInstance(FakeRobotInterface::class);
         $this->assertSame(spl_object_hash($instance1), spl_object_hash($instance2));
+    }
+
+    public function testSerializable()
+    {
+        $injector = unserialize(serialize($this->injector));
+        $this->assertInstanceOf(ScriptInjector::class, $injector);
     }
 }

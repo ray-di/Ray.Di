@@ -29,13 +29,16 @@ class FakeCar implements FakeCarInterface
      */
     public $handle;
 
+    public $null = false;
+
     /**
      * @Inject
      */
-    public function setTires(FakeTyreInterface $frontTyre, FakeTyreInterface $rearTyre)
+    public function setTires(FakeTyreInterface $frontTyre, FakeTyreInterface $rearTyre, $null = null)
     {
         $this->frontTyre = $frontTyre;
         $this->rearTyre = $rearTyre;
+        $this->null = $null;
     }
 
     /**
