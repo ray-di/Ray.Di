@@ -283,4 +283,11 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(Unbound::class, FakeAbstractClass::class);
         (new Injector)->getInstance(FakeConcreteClass::class);
     }
+
+    public function testInjectionPoint()
+    {
+        /** @var $loggerConsumer FakeLoggerConsumer */
+        $loggerConsumer = (new Injector(new FakeLoggerModule))->getInstance(FakeLoggerConsumer::class);
+        $this->assertSame('Ray\Di\FakeLoggerConsumer', $loggerConsumer->logger->name);
+    }
 }
