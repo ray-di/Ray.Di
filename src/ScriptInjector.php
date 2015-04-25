@@ -75,9 +75,6 @@ class ScriptInjector implements InjectorInterface
         if (! file_exists($file)) {
             return $this->onDemandCompile($dependencyIndex);
         }
-        if ($dependencyIndex === 'Ray_Di_InjectorInterface-*') {
-            return $this;
-        }
         $prototype = function ($dependencyIndex, array $injectionPoint = []) {
             $this->ip = $injectionPoint;
 
