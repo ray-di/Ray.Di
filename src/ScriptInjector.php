@@ -72,7 +72,7 @@ class ScriptInjector implements InjectorInterface
     {
         $file = sprintf('%s/%s.php', $this->scriptDir, str_replace('\\', '_', $dependencyIndex));
         if (! file_exists($file)) {
-            throw new NotCompiled($file);
+            return $this->onDemandCompile($dependencyIndex);
         }
         if ($dependencyIndex === 'Ray_Di_InjectorInterface-*') {
             return $this;
@@ -116,6 +116,25 @@ class ScriptInjector implements InjectorInterface
                 require $file;
             }
         });
+    }
+
+    /**
+     * Return instance with compile on demand
+     *
+     * @param string $dependencyIndex
+     * @return mixed
+     */
+    private function onDemandCompile($dependencyIndex)
+    {
+        list($class,) = explode('-', $dependencyIndex);
+        $moduleFile = $this->scriptDir . '/module.php';
+        if (! file_exists($moduleFile)) {
+            throw new NotCompiled($class);
+        }
+        $module = require $moduleFile;
+        $compiler = new DiCompiler($module, $this->scriptDir);
+
+        return $compiler->getInstance($class);
     }
 
     public function __wakeup()

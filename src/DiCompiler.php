@@ -32,6 +32,11 @@ final class DiCompiler implements InjectorInterface
     private $injector;
 
     /**
+     * @var
+     */
+    private $module;
+
+    /**
      * @param AbstractModule $module
      * @param string         $classDir
      */
@@ -41,6 +46,7 @@ final class DiCompiler implements InjectorInterface
         $this->container =  $module ? $module->getContainer() : new Container;
         $this->injector = new Injector($module, $classDir);
         $this->dependencyCompiler = new DependencyCompiler($this->container);
+        $this->module = $module;
     }
 
     /**
@@ -67,5 +73,8 @@ final class DiCompiler implements InjectorInterface
                 file_put_contents($file, (string) $code, LOCK_EX);
             }
         }
+        $file = $this->classDir . '/module.php';
+        $module = sprintf('<?php return unserialize(\'%s\');', serialize($this->module));
+        file_put_contents($file, $module);
     }
 }
