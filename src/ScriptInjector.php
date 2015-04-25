@@ -31,12 +31,12 @@ class ScriptInjector implements InjectorInterface
     public function __construct($scriptDir)
     {
         $this->scriptDir = $scriptDir;
-        $this->prototype = function ($dependencyIndex, array $injectionPoint) {
+        $this->prototype = function ($dependencyIndex, array $injectionPoint = []) {
             $this->ip = $injectionPoint;
 
             return $this->getScriptInstance($dependencyIndex);
         };
-        $this->singleton = function ($dependencyIndex, array $injectionPoint) {
+        $this->singleton = function ($dependencyIndex, array $injectionPoint = []) {
             if (isset($singletons[$dependencyIndex])) {
                 return $singletons[$dependencyIndex];
             }

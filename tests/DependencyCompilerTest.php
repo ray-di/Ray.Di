@@ -62,7 +62,7 @@ $instance->setTires($prototype('Ray\\Di\\FakeTyreInterface-*'), $prototype('Ray\
 $instance->setHardtop($prototype('Ray\\Di\\FakeHardtopInterface-*'));
 $instance->setMirrors($singleton('Ray\\Di\\FakeMirrorInterface-right'), $singleton('Ray\\Di\\FakeMirrorInterface-left'));
 $instance->setSpareMirror($singleton('Ray\\Di\\FakeMirrorInterface-right'));
-$instance->setHandle($prototype('Ray\\Di\\FakeHandleInterface-*'));
+$instance->setHandle($prototype('Ray\\Di\\FakeHandleInterface-*', array('Ray\\Di\\FakeCar', 'setHandle', 'handle')));
 $instance->postConstruct();
 return $instance;
 EOT;

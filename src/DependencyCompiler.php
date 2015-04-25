@@ -213,7 +213,7 @@ final class DependencyCompiler
         }
         $isSingleton = $this->getPrivateProperty($dependency, 'isSingleton');
         $func = $isSingleton ? 'singleton' : 'prototype';
-        $args = $this->getCurrentParam($argument);
+        $args = $this->getInjectionFuncParams($argument);
 
         $node = new Expr\FuncCall(new Expr\Variable($func), $args);
 
@@ -225,7 +225,17 @@ final class DependencyCompiler
         return new Expr\FuncCall(new Expr\Variable('injection_point'));
     }
 
-    private function getCurrentParam(Argument $argument)
+    private function getInjectionFuncParams(Argument $argument)
+    {
+        $dependencyIndex = (string)$argument;
+        $isProviderDependency = $this->container->getContainer()[$dependencyIndex] instanceof DependencyProvider;
+        if ($isProviderDependency) {
+            return $this->getInjectionProviderParams($argument);
+        }
+        return [new Arg(new Scalar\String_((string)$argument))];
+    }
+
+    private function getInjectionProviderParams(Argument $argument)
     {
         $param = $argument->get();
         return [
