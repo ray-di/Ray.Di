@@ -72,5 +72,4 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $loggerConsumer = $injector->getInstance(FakeLoggerConsumer::class);
         $this->assertSame('Ray\Di\FakeLoggerConsumer', $loggerConsumer->logger->name);
     }
-
 }

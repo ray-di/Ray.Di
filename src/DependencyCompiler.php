@@ -86,8 +86,9 @@ final class DependencyCompiler
         $setterMethods = (array) $this->getPrivateProperty($this->getPrivateProperty($newInstance, 'setterMethods'), 'setterMethods');
         $arguments = (array) $this->getPrivateProperty($this->getPrivateProperty($newInstance, 'arguments'), 'arguments');
         $postConstruct = $this->getPrivateProperty($dependency, 'postConstruct');
+        $isSingleton = $this->getPrivateProperty($dependency, 'isSingleton');
 
-        return $this->getFactoryCode($class, $arguments, $setterMethods, $postConstruct);
+        return $this->getFactoryCode($class, $arguments, $setterMethods, $postConstruct, $isSingleton);
     }
 
     /**
@@ -98,12 +99,13 @@ final class DependencyCompiler
      *
      * @return Node[]
      */
-    private function getFactoryCode($class, array $arguments, array $setterMethods, $postConstruct)
+    private function getFactoryCode($class, array $arguments, array $setterMethods, $postConstruct, $isSingleton)
     {
         $node = [];
         $instance = new Expr\Variable('instance');
         // constructor injection
         $constructorInjection =  $this->constructorInjection($class, $arguments, $setterMethods);
+        $node[] = new Expr\Assign(new Expr\Variable('is_singleton'), $this->normalizeValue($isSingleton));
         $node[] = new Expr\Assign($instance, $constructorInjection);
         $setters = $this->setterInjection($instance, $setterMethods);
         foreach ($setters as $setter) {

@@ -57,6 +57,7 @@ EOT;
 
 namespace Ray\Di\Compiler;
 
+$is_singleton = false;
 $instance = new \Ray\Di\FakeCar($prototype('Ray\\Di\\FakeEngineInterface-*'));
 $instance->setTires($prototype('Ray\\Di\\FakeTyreInterface-*'), $prototype('Ray\\Di\\FakeTyreInterface-*'));
 $instance->setHardtop($prototype('Ray\\Di\\FakeHardtopInterface-*'));
@@ -79,6 +80,7 @@ EOT;
 
 namespace Ray\Di\Compiler;
 
+$is_singleton = false;
 $instance = new \Ray\Di\FakeHandleProvider('momo');
 return $instance->get();
 EOT;

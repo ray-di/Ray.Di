@@ -26,6 +26,18 @@ class ScriptInjector implements InjectorInterface
     private $ip;
 
     /**
+     * @var bool
+     */
+    private $isSingleton;
+
+    /**
+     * Singleton instance container
+     *
+     * @var array
+     */
+    private $singletons = [];
+
+    /**
      * @param string $scriptDir generated instance script folder path
      */
     public function __construct($scriptDir)
@@ -37,12 +49,12 @@ class ScriptInjector implements InjectorInterface
             return $this->getScriptInstance($dependencyIndex);
         };
         $this->singleton = function ($dependencyIndex, array $injectionPoint = []) {
-            if (isset($singletons[$dependencyIndex])) {
-                return $singletons[$dependencyIndex];
+            if (isset($this->singletons[$dependencyIndex])) {
+                return $this->singletons[$dependencyIndex];
             }
             $this->ip = $injectionPoint;
             $instance = $this->getScriptInstance($dependencyIndex);
-            $singletons[$dependencyIndex] = $instance;
+            $this->singletons[$dependencyIndex] = $instance;
 
             return $instance;
         };
@@ -59,7 +71,16 @@ class ScriptInjector implements InjectorInterface
      */
     public function getInstance($interface, $name = Name::ANY)
     {
-        return $this->getScriptInstance($interface . '-' . $name);
+        $dependencyIndex =  $interface . '-' . $name;
+        if (isset($this->singletons[$dependencyIndex])) {
+            return $this->singletons[$dependencyIndex];
+        }
+        $instance = $this->getScriptInstance($dependencyIndex);
+        if ($this->isSingleton === true) {
+            $this->singletons[$dependencyIndex] = $instance;
+        }
+
+        return $instance;
     }
 
     /**
@@ -69,7 +90,6 @@ class ScriptInjector implements InjectorInterface
      */
     private function getScriptInstance($dependencyIndex)
     {
-
         $file = sprintf('%s/%s.php', $this->scriptDir, str_replace('\\', '_', $dependencyIndex));
         if (! file_exists($file)) {
             throw new NotCompiled($file);
@@ -79,6 +99,7 @@ class ScriptInjector implements InjectorInterface
         $injection_point = $this->injectionPoint;
 
         $instance = require $file;
+        $this->isSingleton = $is_singleton;
 
         return $instance;
     }
