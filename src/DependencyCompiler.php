@@ -61,7 +61,8 @@ final class DependencyCompiler
     private function compileDependency(Dependency $dependency)
     {
         $node = $this->getFactoryNode($dependency);
-        $node[] =  new Return_(new Expr\Variable('instance'));
+        $this->getAopCode($dependency, $node);
+        $node[] = new Return_(new Expr\Variable('instance'));
         $node = $this->factory->namespace('Ray\Di\Compiler')->addStmts($node)->getNode();
 
         return new DependencyCompile($node);
@@ -85,7 +86,6 @@ final class DependencyCompiler
         $setterMethods = (array) $this->getPrivateProperty($this->getPrivateProperty($newInstance, 'setterMethods'), 'setterMethods');
         $arguments = (array) $this->getPrivateProperty($this->getPrivateProperty($newInstance, 'arguments'), 'arguments');
         $postConstruct = $this->getPrivateProperty($dependency, 'postConstruct');
-        $bind = $this->getPrivateProperty($newInstance, 'bind');
 
         return $this->getFactoryCode($class, $arguments, $setterMethods, $postConstruct);
     }
@@ -160,6 +160,38 @@ final class DependencyCompiler
     private function postConstruct(Expr\Variable $instance, $postConstruct)
     {
         return new Expr\MethodCall($instance, $postConstruct);
+    }
+
+    /**
+     * Add aop factory code if bindings are given
+     *
+     * @param Dependency $dependency
+     * @param Node[]     &$node
+     */
+    private function getAopCode(Dependency $dependency, array &$node)
+    {
+        $newInstance = $this->getPrivateProperty($dependency, 'newInstance');
+        $bind = $this->getPrivateProperty($newInstance, 'bind');
+        $bind = $this->getPrivateProperty($bind, 'bind');
+        $bindings = $this->getPrivateProperty($bind, 'bindings', null);
+        if (is_null($bindings)) {
+            return;
+        }
+        $methodBinding = [];
+        foreach ($bindings as $method => $interceptors) {
+            $items = [];
+            foreach ($interceptors as $interceptor) {
+                // $singleton('FakeAopInterface-*');
+                $dependencyIndex = "{$interceptor}-*";
+                $singleton = new Expr\FuncCall(new Expr\Variable('singleton'), [new Arg(new Scalar\String_($dependencyIndex))]);
+                // [$singleton('FakeAopInterface-*'), $singleton('FakeAopInterface-*');]
+                $items[] = new Expr\ArrayItem($singleton);
+            }
+            $arr = new Expr\Array_($items);
+            $methodBinding[] = new Expr\ArrayItem($arr, new Scalar\String_($method));
+        }
+        $bindingsProp = new Expr\PropertyFetch(new Expr\Variable('instance'), 'bindings');
+        $node[] = new Expr\Assign($bindingsProp, new Expr\Array_($methodBinding));
     }
 
     private function getArgStmt(Argument $argument)
