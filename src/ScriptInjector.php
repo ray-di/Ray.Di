@@ -43,27 +43,7 @@ class ScriptInjector implements InjectorInterface
     public function __construct($scriptDir)
     {
         $this->scriptDir = $scriptDir;
-        $this->prototype = function ($dependencyIndex, array $injectionPoint = []) {
-            $this->ip = $injectionPoint;
-
-            return $this->getScriptInstance($dependencyIndex);
-        };
-        $this->singleton = function ($dependencyIndex, array $injectionPoint = []) {
-            if (isset($this->singletons[$dependencyIndex])) {
-                return $this->singletons[$dependencyIndex];
-            }
-            $this->ip = $injectionPoint;
-            $instance = $this->getScriptInstance($dependencyIndex);
-            $this->singletons[$dependencyIndex] = $instance;
-
-            return $instance;
-        };
-        $this->injectionPoint = function () {
-            return new InjectionPoint(
-                new \ReflectionParameter([$this->ip[0], $this->ip[1]], $this->ip[2]),
-                new AnnotationReader
-            );
-        };
+        $this->registerLoader();
     }
 
     /**
@@ -94,13 +74,52 @@ class ScriptInjector implements InjectorInterface
         if (! file_exists($file)) {
             throw new NotCompiled($file);
         }
-        $prototype = $this->prototype;
-        $singleton = $this->singleton;
-        $injection_point = $this->injectionPoint;
+        if ($dependencyIndex === 'Ray_Di_InjectorInterface-*') {
+            return $this;
+        }
+        $prototype = function ($dependencyIndex, array $injectionPoint = []) {
+            $this->ip = $injectionPoint;
+
+            return $this->getScriptInstance($dependencyIndex);
+        };
+        $singleton = function ($dependencyIndex, array $injectionPoint = []) {
+            if (isset($this->singletons[$dependencyIndex])) {
+                return $this->singletons[$dependencyIndex];
+            }
+            $this->ip = $injectionPoint;
+            $instance = $this->getScriptInstance($dependencyIndex);
+            $this->singletons[$dependencyIndex] = $instance;
+
+            return $instance;
+        };
+        $injectionPoint = function () {
+            return new InjectionPoint(
+                new \ReflectionParameter([$this->ip[0], $this->ip[1]], $this->ip[2]),
+                new AnnotationReader
+            );
+        };
+        $injector = function () {
+            return $this;
+        };
 
         $instance = require $file;
         $this->isSingleton = $is_singleton;
 
         return $instance;
+    }
+
+    private function registerLoader()
+    {
+        spl_autoload_register(function ($class) {
+            $file = sprintf('%s/%s.php', $this->scriptDir, $class);
+            if (file_exists($file)) {
+                require $file;
+            }
+        });
+    }
+
+    public function __wakeup()
+    {
+        $this->registerLoader();
     }
 }

@@ -211,7 +211,7 @@ final class DependencyCompiler
         }
         $dependency = $this->container->getContainer()[$dependencyIndex];
         if ($dependency instanceof Instance) {
-            return $this->normalizeValue($dependency->value);
+            return $this->normalizeObject($dependency->value);
         }
         $isSingleton = $this->getPrivateProperty($dependency, 'isSingleton');
         $func = $isSingleton ? 'singleton' : 'prototype';
@@ -327,9 +327,10 @@ final class DependencyCompiler
      */
     private function normalizeObject($object)
     {
+        if ($object instanceof InjectorInterface) {
+            return new Expr\FuncCall(new Expr\Variable('injector'));
+        }
         $serialize = new Scalar\String_(serialize($object));
-        $node = new Expr\FuncCall(new Node\Name('unserialize'), [new Arg($serialize)]);
-
-        return $node;
+        return new Expr\FuncCall(new Node\Name('unserialize'), [new Arg($serialize)]);
     }
 }
