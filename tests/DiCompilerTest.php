@@ -63,4 +63,14 @@ class DiCompilerTest extends \PHPUnit_Framework_TestCase
         $expected = 2;
         $this->assertSame($expected, $result);
     }
+
+    public function testInjectionPoint()
+    {
+        $compiler = new DiCompiler(new FakeLoggerModule, $_ENV['TMP_DIR']);
+        $compiler->compile();
+        $injector = new ScriptInjector($_ENV['TMP_DIR']);
+        $loggerConsumer = $injector->getInstance(FakeLoggerConsumer::class);
+        $this->assertSame('Ray\Di\FakeLoggerConsumer', $loggerConsumer->logger->name);
+    }
+
 }

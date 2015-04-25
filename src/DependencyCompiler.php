@@ -197,6 +197,9 @@ final class DependencyCompiler
     private function getArgStmt(Argument $argument)
     {
         $dependencyIndex = (string) $argument;
+        if ($dependencyIndex === 'Ray\Di\InjectionPointInterface-*') {
+            return $this->getInjectionPoint();
+        }
         $hasDependency = isset($this->container->getContainer()[$dependencyIndex]);
         if (! $hasDependency && $argument->isDefaultAvailable()) {
             $default = $argument->getDefaultValue();
@@ -210,9 +213,29 @@ final class DependencyCompiler
         }
         $isSingleton = $this->getPrivateProperty($dependency, 'isSingleton');
         $func = $isSingleton ? 'singleton' : 'prototype';
-        $node = new Expr\FuncCall(new Expr\Variable($func), [new Arg(new Scalar\String_((string) $argument))]);
+        $args = $this->getCurrentParam($argument);
+
+        $node = new Expr\FuncCall(new Expr\Variable($func), $args);
 
         return $node;
+    }
+
+    private function getInjectionPoint()
+    {
+        return new Expr\FuncCall(new Expr\Variable('injection_point'));
+    }
+
+    private function getCurrentParam(Argument $argument)
+    {
+        $param = $argument->get();
+        return [
+            new Arg(new Scalar\String_((string) $argument)),
+            new Expr\Array_([
+                new Arg(new Scalar\String_($param->getDeclaringClass()->getName())),
+                new Arg(new Scalar\String_($param->getDeclaringFunction()->getName())),
+                new Arg(new Scalar\String_($param->getName()))
+            ])
+        ];
     }
 
     private function getPrivateProperty($object, $prop, $default = null)
