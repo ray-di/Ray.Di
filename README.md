@@ -313,6 +313,10 @@ It provides access to metadata via `\ReflectionParameter` or an annotation in `P
 For example, the following get method of `Psr3LoggerProvider` class creates injectable Loggers. The log category of a Logger depends upon the class of the object into which it is injected.
 
 ```php
+
+use Ray\Di\ProviderInterface
+use Ray\Di\InjectionPointInterface
+
 class Psr3LoggerProvider implements ProviderInterface
 {
     /**
@@ -497,8 +501,31 @@ The class of this object should use injection to obtain references to other obje
 
 ## Performance boost ##
 
-An dependency injector has compiled entire dependency graph which is serializable.  It has huge performance boosts.
-Unserialized injector can invoke injection without reflection or annotation in runtime. Recommended in production use. 
+### Script injector
+
+`ScriptInjector` generates raw factory code for better performance and to clarify how the instance is created.
+ 
+```php
+
+use Ray\Di\ScriptInjector;
+use Ray\Di\DiCompiler;
+use Ray\Di\Exception\NotCompiled;
+
+try {
+    $injector = new ScriptInjector($tmpDir);
+    $instance = $injector->getInstance(ListerInterface::class);
+} catch (NotCompiled $e) {
+    $compiler = new DiCompiler(new ListerModule, $tmpDir);
+    $compiler->compile();
+    $instance = $compiler->getInstance(ListerInterface::class);
+}
+```
+Once an instance has been created, You can view the generated factory files in `$tmpDir`
+
+### Cache injector
+
+The injector is serializable.
+It also boosts the performance.
 
 ```php
 
@@ -509,6 +536,8 @@ $cachedInjector = serialize($injector);
 // load
 $injector = unserialize($cachedInjector);
 $lister = $injector->getInstance(ListerInterface::class);
+
+### method 1: Cache injector
 ```
 ## Frameworks integration ##
 
