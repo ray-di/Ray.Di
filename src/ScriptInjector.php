@@ -8,6 +8,7 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ray\Di\Exception\NotCompiled;
+use Ray\Di\Exception\Unbound;
 
 class ScriptInjector implements InjectorInterface
 {
@@ -92,7 +93,7 @@ class ScriptInjector implements InjectorInterface
 
             return $instance;
         };
-        $injectionPoint = function () {
+        $injection_point = function () {
             return new InjectionPoint(
                 new \ReflectionParameter([$this->ip[0], $this->ip[1]], $this->ip[2]),
                 new AnnotationReader
@@ -133,8 +134,11 @@ class ScriptInjector implements InjectorInterface
         }
         $module = require $moduleFile;
         $compiler = new DiCompiler($module, $this->scriptDir);
-
-        return $compiler->getInstance($class);
+        try {
+            return $compiler->getInstance($class);
+        } catch (Unbound $e) {
+            throw new NotCompiled($class, 500, $e);
+        }
     }
 
     public function __wakeup()

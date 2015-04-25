@@ -211,7 +211,7 @@ final class DependencyCompiler
         }
         $dependency = $this->container->getContainer()[$dependencyIndex];
         if ($dependency instanceof Instance) {
-            return $this->normalizeObject($dependency->value);
+            return $this->normalizeValue($dependency->value);
         }
         $isSingleton = $this->getPrivateProperty($dependency, 'isSingleton');
         $func = $isSingleton ? 'singleton' : 'prototype';
