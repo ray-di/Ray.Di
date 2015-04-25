@@ -6,7 +6,6 @@
  */
 namespace Ray\Di;
 
-use Ray\Aop\Compiler as AopCompiler;
 use Ray\Di\Exception\Compile;
 
 final class DiCompiler implements InjectorInterface
@@ -32,7 +31,7 @@ final class DiCompiler implements InjectorInterface
     private $injector;
 
     /**
-     * @var
+     * @var AbstractModule
      */
     private $module;
 

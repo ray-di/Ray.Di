@@ -123,11 +123,12 @@ class ScriptInjector implements InjectorInterface
      * Return instance with compile on demand
      *
      * @param string $dependencyIndex
+     *
      * @return mixed
      */
     private function onDemandCompile($dependencyIndex)
     {
-        list($class,) = explode('-', $dependencyIndex);
+        list($class, ) = explode('-', $dependencyIndex);
         $moduleFile = $this->scriptDir . '/module.php';
         if (! file_exists($moduleFile)) {
             throw new NotCompiled($class);

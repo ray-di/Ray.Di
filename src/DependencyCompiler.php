@@ -229,17 +229,19 @@ final class DependencyCompiler
 
     private function getInjectionFuncParams(Argument $argument)
     {
-        $dependencyIndex = (string)$argument;
+        $dependencyIndex = (string) $argument;
         $isProviderDependency = $this->container->getContainer()[$dependencyIndex] instanceof DependencyProvider;
         if ($isProviderDependency) {
             return $this->getInjectionProviderParams($argument);
         }
-        return [new Arg(new Scalar\String_((string)$argument))];
+
+        return [new Arg(new Scalar\String_((string) $argument))];
     }
 
     private function getInjectionProviderParams(Argument $argument)
     {
         $param = $argument->get();
+
         return [
             new Arg(new Scalar\String_((string) $argument)),
             new Expr\Array_([
@@ -331,6 +333,7 @@ final class DependencyCompiler
             return new Expr\FuncCall(new Expr\Variable('injector'));
         }
         $serialize = new Scalar\String_(serialize($object));
+
         return new Expr\FuncCall(new Node\Name('unserialize'), [new Arg($serialize)]);
     }
 }

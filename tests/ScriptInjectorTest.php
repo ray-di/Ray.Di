@@ -2,7 +2,6 @@
 
 namespace Ray\Di;
 
-use Ray\Di\Exception\NotCompiled;
 use Ray\Di\Exception\Unbound;
 
 class ScriptInjectorTest extends \PHPUnit_Framework_TestCase

@@ -3,7 +3,6 @@
 namespace Ray\Di;
 
 use Ray\Di\Di\Inject;
-use Ray\Di\FakeConstant;
 
 class FakeConstantConsumer
 {
