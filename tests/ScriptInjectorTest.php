@@ -3,6 +3,7 @@
 namespace Ray\Di;
 
 use Ray\Di\Exception\NotCompiled;
+use Ray\Di\Exception\Unbound;
 
 class ScriptInjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,7 +28,7 @@ class ScriptInjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testCompileException()
     {
-        $this->setExpectedException(NotCompiled::class);
+        $this->setExpectedException(Unbound::class);
         $script = new ScriptInjector($_ENV['TMP_DIR']);
         $script->getInstance('invalid-class');
     }

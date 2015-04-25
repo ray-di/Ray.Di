@@ -6,6 +6,6 @@
  */
 namespace Ray\Di\Exception;
 
-class NotCompiled extends \LogicException implements ExceptionInterface
+class NotCompiled extends Unbound implements ExceptionInterface
 {
 }
