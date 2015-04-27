@@ -2,13 +2,14 @@
     "name": "ray/di",
     "description": "Guice style annotation-driven dependency injection framework",
     "keywords": [
+        "ray",
         "di",
         "aop",
         "annotations",
         "guice"
     ],
-    "homepage": "https://github.com/koriym/Ray.Di",
-    "license": "BSD-2-Clause",
+    "homepage": "https://github.com/ray-di/Ray.Di",
+    "license": "MIT",
     "authors": [
         {
             "name": "Akihito Koriyama",
@@ -35,10 +36,5 @@
         "files": [
             "tests/annotations.php"
         ]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-develop-2": "2.0.x-dev"
-        }
     }
 }

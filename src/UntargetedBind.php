@@ -1,8 +1,8 @@
 <?php
 /**
- * This file is part of the Ray package.
+ * This file is part of the Ray.Di package.
  *
- * @license http://opensource.org/licenses/bsd-license.php BSD
+ * @license http://opensource.org/licenses/MIT MIT
  */
 namespace Ray\Di;
 
@@ -32,7 +32,7 @@ final class UntargetedBind
     private function getTypeHint(\ReflectionParameter $parameter)
     {
         if (defined('HHVM_VERSION')) {
-            /** @noinspection PhpUndefinedFieldInspection */
+            /* @noinspection PhpUndefinedFieldInspection */
             return $parameter->info['type_hint']; // @codeCoverageIgnore
         }
         $typeHintClass = $parameter->getClass();

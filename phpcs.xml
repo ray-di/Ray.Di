@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="BEAR">
-    <description>The BEAR coding standard.</description>
+<ruleset>
     <!-- 2. General -->
     <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
     <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>

@@ -1,8 +1,8 @@
 <?php
 /**
- * This file is part of the Ray package.
+ * This file is part of the Ray.Di package.
  *
- * @license http://opensource.org/licenses/bsd-license.php BSD
+ * @license http://opensource.org/licenses/MIT MIT
  */
 namespace Ray\Di;
 
