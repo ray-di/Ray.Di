@@ -74,7 +74,7 @@ final class AnnotatedClassMethods
     private function getNamedKeyVarString(\ReflectionMethod $method)
     {
         $keyVal = [];
-        /** @var $named Named */
+        /* @var $named Named */
         $named = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Named');
         if ($named) {
             $keyVal[] = $named->value;

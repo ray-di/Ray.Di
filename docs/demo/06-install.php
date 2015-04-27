@@ -22,7 +22,7 @@ class InstallModule extends AbstractModule
 
 $injector = new Injector(new InstallModule);
 $robot = $injector->getInstance(RobotInterface::class);
-/** @var $robot Robot */
+/* @var $robot Robot */
 $works = $robot->isReady === true;
 
 echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

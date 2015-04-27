@@ -18,7 +18,7 @@ class ProviderBindingModule extends AbstractModule
 
 $injector = new Injector(new ProviderBindingModule);
 $computer = $injector->getInstance(Computer::class);
-/** @var $computer Computer */
+/* @var $computer Computer */
 $works = ($computer->lang instanceof Php) && $computer->lang->version === '7.0';
 
 echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

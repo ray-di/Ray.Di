@@ -18,7 +18,7 @@ class BindingAnnotationNamedModule extends AbstractModule
 
 $injector = new Injector(new BindingAnnotationNamedModule);
 $robot = $injector->getInstance(NamedRobot::class);
-/** @var $robot NamedRobot */
+/* @var $robot NamedRobot */
 $works = ($robot->leftLeg instanceof LeftLeg);
 
 echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

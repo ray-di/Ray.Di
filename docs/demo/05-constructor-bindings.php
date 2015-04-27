@@ -18,7 +18,7 @@ class ConstructorBindingModule extends AbstractModule
 
 $injector = new Injector(new ConstructorBindingModule);
 $php = $injector->getInstance(LangInterface::class);
-/** @var $php Php */
+/* @var $php Php */
 $works = $php->version === '4.4';
 
 echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

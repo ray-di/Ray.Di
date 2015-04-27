@@ -18,7 +18,7 @@ class LinkedBindingModule extends AbstractModule
 
 $injector = new Injector(new LinkedBindingModule);
 $computer = $injector->getInstance(ComputerInterface::class);
-/** @var $computer Computer */
+/* @var $computer Computer */
 $works = ($computer->lang instanceof Php);
 
 echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

@@ -255,7 +255,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testBindOrder()
     {
         $injector = new Injector(new FakeAnnoModule, $_ENV['TMP_DIR']);
-        /** @var $instance FakeAnnoOrderClass */
+        /* @var $instance FakeAnnoOrderClass */
         $instance = $injector->getInstance(FakeAnnoOrderClass::class);
         $instance->get();
         $expect = [FakeAnnoInterceptor4::class, FakeAnnoInterceptor1::class, FakeAnnoInterceptor2::class, FakeAnnoInterceptor3::class, FakeAnnoInterceptor5::class];
@@ -264,7 +264,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testAnnotateConstant()
     {
-        /** @var $instance FakeConstantConsumer */
+        /* @var $instance FakeConstantConsumer */
         $instance = (new Injector(new FakeConstantModule, $_ENV['TMP_DIR']))->getInstance(FakeConstantConsumer::class);
         $this->assertSame('default_construct', $instance->defaultByConstruct);
     }
@@ -272,7 +272,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testContextualDependencyInjection()
     {
         $injector = new Injector(new FakeWalkRobotModule);
-        /** @var $robot FakeWalkRobot */
+        /* @var $robot FakeWalkRobot */
         $robot = $injector->getInstance(FakeWalkRobot::class);
         $this->assertInstanceOf(FakeLeftLeg::class, $robot->leftLeg);
         $this->assertInstanceOf(FakeRightLeg::class, $robot->rightLeg);
