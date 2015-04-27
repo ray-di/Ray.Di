@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the Ray package.
+ * This file is part of the Ray.Di package.
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
