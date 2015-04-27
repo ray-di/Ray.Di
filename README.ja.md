@@ -286,9 +286,28 @@ class AopMatcherModule extends AbstractModule
 
 ## Performance boost ##
 
-インジェクターオブジェクトは全ての依存情報を保持していてシリアライズすることができます。
-`unserialize`したインジェクターではリフレクションやアノテーションを使用しないで、高速にインジェクションを行うことができます。
+### Script injector
 
+`ScriptInjector` generates raw factory code for better performance and to clarify how the instance is created.
+ 
+```php
+
+use Ray\Di\ScriptInjector;
+use Ray\Compiler\DiCompiler;
+use Ray\Compiler\Exception\NotCompiled;
+
+try {
+    $injector = new ScriptInjector($tmpDir);
+    $instance = $injector->getInstance(ListerInterface::class);
+} catch (NotCompiled $e) {
+    $compiler = new DiCompiler(new ListerModule, $tmpDir);
+    $compiler->compile();
+    $instance = $compiler->getInstance(ListerInterface::class);
+}
+```
+Once an instance has been created, You can view the generated factory files in `$tmpDir`
+
+シリアライズをして高速にインジェクションを行うようにすることもできます。
 
 ```php
 
