@@ -2,8 +2,11 @@
 
 namespace Ray\Di;
 
+use Ray\Compiler\DiCompiler;
+use Ray\Compiler\ScriptInjector;
+
 require __DIR__ . '/bootstrap.php';
-$n = 100;
+$n = 20;
 
 $injector = new Injector(new FakeCarModule);
 $serialize = serialize($injector);
@@ -17,13 +20,21 @@ foreach (range(1, $n) as $i) {
 $timer1 = microtime(true) - $timer;
 
 $timer = microtime(true);
+$injector = unserialize($serialize);
 foreach (range(1, $n) as $i) {
-    $injector = unserialize($serialize);
     $injector->getInstance(FakeCarInterface::class);
 }
 $timer2 = microtime(true) - $timer;
 
-printf("%f msec per inject\n", $timer2 / $n * 1000);
-printf("%f times faster in runtime\n", $timer1 / $timer2);
-printf("# Files: %d\n",  count(get_included_files()));
-printf("Memory usage: %d kb\n", memory_get_peak_usage()/1024);
+$compiler = new DiCompiler(new FakeCarModule, $_ENV['TMP_DIR']);
+$compiler->compile();
+$timer = microtime(true);
+$injector = new ScriptInjector($_ENV['TMP_DIR']);
+foreach (range(1, $n) as $i) {
+    $injector->getInstance(FakeCarInterface::class);
+}
+$timer3 = microtime(true) - $timer;
+
+// Microsecond per inject
+printf("micro second per inject (MPI):%f speed:x%d\n", $timer2 / $n, $timer1 / $timer2);
+printf("micro second per inject (MPI):%f speed:x%d\n", $timer3 / $n, $timer1 / $timer3);

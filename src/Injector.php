@@ -59,7 +59,7 @@ class Injector implements InjectorInterface
     private function bind($class)
     {
         $bind = new Bind($this->container, $class);
-        /** @var $bound Dependency */
+        /* @var $bound Dependency */
         $bound = $bind->getBound();
         $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
     }
