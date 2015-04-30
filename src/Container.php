@@ -170,6 +170,6 @@ final class Container
 
     public function __sleep()
     {
-        return ['container'];
+        return ['container', 'pointcuts'];
     }
 }
