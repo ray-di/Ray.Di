@@ -26,6 +26,8 @@
             "Ray\\Di\\": "src/"
         }
     },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
     "autoload-dev": {
         "psr-4": {
             "Ray\\Di\\": [

@@ -60,4 +60,9 @@ final class DependencyProvider implements DependencyInterface
             $this->isSingleton = true;
         }
     }
+
+    public function __sleep()
+    {
+        return ['dependency', 'isSingleton'];
+    }
 }
