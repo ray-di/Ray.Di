@@ -27,7 +27,7 @@ class BindTest extends \PHPUnit_Framework_TestCase
 
     public function testToString()
     {
-        $this->assertSame('Ray\Di\FakeTyreInterface-*', (string) $this->bind);
+        $this->assertSame('Ray\Di\FakeTyreInterface-' . NAME::ANY, (string) $this->bind);
     }
 
     public function testInvalidToTest()
