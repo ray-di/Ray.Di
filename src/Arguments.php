@@ -82,7 +82,7 @@ final class Arguments
 
     private function bindInjectionPoint(Container $container, Argument $argument)
     {
-        $isSelf = (string) $argument === 'Ray\Di\InjectionPointInterface-*';
+        $isSelf = (string) $argument === 'Ray\Di\InjectionPointInterface-' . Name::ANY;
         if ($isSelf) {
             return;
         }

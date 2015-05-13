@@ -12,7 +12,7 @@ final class Name
     /**
      * 'Unnamed' name
      */
-    const ANY = '*';
+    const ANY = '';
 
     /**
      * @var string
@@ -20,6 +20,10 @@ final class Name
     private $name;
 
     /**
+     * Named database
+     *
+     * [named => varName][]
+     *
      * @var string[]
      */
     private $names;
@@ -29,7 +33,9 @@ final class Name
      */
     public function __construct($name)
     {
-        $this->setName($name);
+        if (! is_null($name)) {
+            $this->setName($name);
+        }
     }
 
     /**
@@ -50,11 +56,26 @@ final class Name
 
             return;
         }
-        // key=value name
-        // @Named(varName1=name1,varName2=name2)
-        parse_str(str_replace(',', '&', $name), $match);
-        $this->names = $match;
+        // name list
+        // @Named(varName1=name1, varName2=name2)]
+        $this->parseName($name);
     }
+
+    /**
+     * @param string $name
+     */
+    private function parseName($name)
+    {
+        $keyValues  = explode(',', $name);
+        foreach ($keyValues as $keyValue) {
+            $exploded = explode('=', $keyValue);
+            if (isset($exploded[1])) {
+                list($key, $value) = $exploded;
+                $this->names[trim($key)] = trim($value);
+            }
+        }
+    }
+
 
     /**
      * @param \ReflectionParameter $parameter

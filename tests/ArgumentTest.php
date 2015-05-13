@@ -16,6 +16,6 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
 
     public function testToString()
     {
-        $this->assertSame('Ray\Di\FakeEngineInterface-*', (string) $this->argument);
+        $this->assertSame('Ray\Di\FakeEngineInterface-' . NAME::ANY, (string) $this->argument);
     }
 }
