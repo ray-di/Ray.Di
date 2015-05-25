@@ -50,7 +50,8 @@ final class Bind
         $this->container = $container;
         $this->interface = $interface;
         $this->validate = new BindValidator;
-        if (class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract()) {
+        $bindUntarget = class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract() && $this->hasNotRegistered($interface);
+        if ($bindUntarget) {
             $this->untarget = new Untarget($interface);
 
             return;
@@ -181,5 +182,17 @@ final class Bind
     public function setBound(DependencyInterface $bound)
     {
         $this->bound = $bound;
+    }
+
+    /**
+     * @param string $interface
+     *
+     * @return bool
+     */
+    private function hasNotRegistered($interface)
+    {
+        $hasNotRegistered = ! isset($this->container->getContainer()[$interface . '-' . Name::ANY]);
+
+        return $hasNotRegistered;
     }
 }

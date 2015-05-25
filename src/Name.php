@@ -76,7 +76,6 @@ final class Name
         }
     }
 
-
     /**
      * @param \ReflectionParameter $parameter
      *
