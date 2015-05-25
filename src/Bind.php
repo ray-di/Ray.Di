@@ -8,7 +8,6 @@
 namespace Ray\Di;
 
 use Ray\Di\Exception\NotFound;
-use Ray\Di\Exception\Unbound;
 
 final class Bind
 {
@@ -38,6 +37,11 @@ final class Bind
     private $validate;
 
     /**
+     * @var Untarget
+     */
+    private $untarget;
+
+    /**
      * @param Container $container dependency container
      * @param string    $interface interface or concrete class name
      */
@@ -47,24 +51,18 @@ final class Bind
         $this->interface = $interface;
         $this->validate = new BindValidator;
         if (class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract()) {
-            $this->untargettedBindings($container, new \ReflectionClass($interface));
+            $this->untarget = new Untarget($interface);
 
             return;
         }
         $this->validate->constructor($interface);
     }
 
-    /**
-     * @param Container        $container
-     * @param \ReflectionClass $class
-     */
-    private function untargettedBindings(Container $container, \ReflectionClass $class)
+    public function __destruct()
     {
-        $this->bound = (new DependencyFactory)->newAnnotatedDependency($class);
-        $container->add($this);
-        $constructor = $class->getConstructor();
-        if ($constructor) {
-            (new UntargetedBind)->__invoke($container, $constructor);
+        if ($this->untarget) {
+            $this->untarget->__invoke($this->container, $this);
+            $this->untarget = null;
         }
     }
 
@@ -87,6 +85,7 @@ final class Bind
      */
     public function to($class)
     {
+        $this->untarget = null;
         $this->validate->to($this->interface, $class);
         $this->bound = (new DependencyFactory)->newAnnotatedDependency(new \ReflectionClass($class));
         $this->container->add($this);
@@ -104,6 +103,7 @@ final class Bind
      */
     public function toConstructor($class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null)
     {
+        $this->untarget = null;
         $postConstruct = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
         $this->bound = (new DependencyFactory)->newToConstructor(new \ReflectionClass($class), $name, $injectionPoints, $postConstruct);
         $this->container->add($this);
@@ -120,6 +120,7 @@ final class Bind
      */
     public function toProvider($provider)
     {
+        $this->untarget = null;
         $this->validate->toProvider($provider);
         $this->bound = (new DependencyFactory)->newProvider(new \ReflectionClass($provider));
         $this->container->add($this);
@@ -134,6 +135,7 @@ final class Bind
      */
     public function toInstance($instance)
     {
+        $this->untarget = null;
         $this->bound = new Instance($instance);
         $this->container->add($this);
 
@@ -149,6 +151,9 @@ final class Bind
     {
         if ($this->bound instanceof Dependency || $this->bound instanceof DependencyProvider) {
             $this->bound->setScope($scope);
+        }
+        if ($this->untarget) {
+            $this->untarget->setScope($scope);
         }
 
         return $this;
@@ -167,10 +172,14 @@ final class Bind
      */
     public function getBound()
     {
-        if (! $this->bound) {
-            throw new Unbound($this->interface);
-        }
-
         return $this->bound;
+    }
+
+    /**
+     * @param DependencyInterface $bound
+     */
+    public function setBound(DependencyInterface $bound)
+    {
+        $this->bound = $bound;
     }
 }
