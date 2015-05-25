@@ -50,17 +50,20 @@ class BindTest extends \PHPUnit_Framework_TestCase
 
     public function testUntargetedBind()
     {
-        $bind = new Bind(new Container, FakeEngine::class);
-        $dependency = $bind->getBound();
-        $this->assertInstanceOf(Dependency::class, $dependency);
+        $container = new Container;
+        $bind = new Bind($container, FakeEngine::class);
+        unset($bind);
+        $container = $container->getContainer();
+        $this->assertArrayHasKey(FakeEngine::class . '-' . Name::ANY, $container);
     }
 
     public function testUntargetedBindSingleton()
     {
-        $bind = (new Bind(new Container, FakeEngine::class))->in(Scope::SINGLETON);
         $container = new Container;
-        $dependency1 = $bind->getBound()->inject($container);
-        $dependency2 = $bind->getBound()->inject($container);
+        $bind = (new Bind($container, FakeEngine::class))->in(Scope::SINGLETON);
+        unset($bind);
+        $dependency1 = $container->getInstance(FakeEngine::class, Name::ANY);
+        $dependency2 = $container->getInstance(FakeEngine::class, Name::ANY);
         $this->assertSame(spl_object_hash($dependency1), spl_object_hash($dependency2));
     }
 

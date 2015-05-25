@@ -20,7 +20,7 @@ final class UntargetedBind
     {
         $class = $this->getTypeHint($parameter);
         if (class_exists($class)) {
-            $container->add(new Bind($container, $class));
+            new Bind($container, $class);
         }
     }
 
