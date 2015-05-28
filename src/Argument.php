@@ -95,11 +95,6 @@ final class Argument
      */
     public function getDebugInfo()
     {
-        return sprintf(
-            "$%s in %s::%s()",
-            $this->reflection->getName(),
-            $this->reflection->getDeclaringClass()->getName(),
-            $this->reflection->getDeclaringFunction()->getName()
-        );
+        return $this->reflection->getName();
     }
 }
