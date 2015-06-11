@@ -12,7 +12,7 @@ namespace Ray\Di\Di;
  * @Annotation
  * @Target("METHOD")
  */
-final class Inject
+final class Inject implements InjectInterface
 {
     /**
      * Optional ?
@@ -20,4 +20,12 @@ final class Inject
      * @var bool
      */
     public $optional = false;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isOptional()
+    {
+        return $this->optional;
+    }
 }

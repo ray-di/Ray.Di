@@ -27,11 +27,13 @@ class AnnotatedClassTest extends \PHPUnit_Framework_TestCase
         (new Bind($container, FakeHandleInterface::class))->toProvider(FakeHandleProvider::class);
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith('right')->to(FakeMirrorRight::class);
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith('left')->to(FakeMirrorRight::class);
+        (new Bind($container, FakeGearStickInterface::class))->toProvider(FakeGearStickProvider::class);
         $car = $newInstance($container);
         /* @var $car FakeCar */
         $this->assertInstanceOf(FakeCar::class, $car);
         $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
         $this->assertInstanceOf(FakeTyre::class, $car->rearTyre);
+        $this->assertInstanceOf(FakeLeatherGearStick::class, $car->gearStick);
         $this->assertNull($car->hardtop);
     }
 

@@ -5,6 +5,7 @@ namespace Ray\Di;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
+use Ray\Di\FakeGearStickInject;
 
 class FakeCar implements FakeCarInterface
 {
@@ -28,6 +29,8 @@ class FakeCar implements FakeCarInterface
      * @var FakeHandle
      */
     public $handle;
+
+    public $gearStick;
 
     /**
      * @Inject
@@ -71,6 +74,14 @@ class FakeCar implements FakeCarInterface
     public function setHandle(FakeHandleInterface $handle)
     {
         $this->handle = $handle;
+    }
+
+    /**
+     * @FakeGearStickInject("leather")
+     */
+    public function setGearStick(FakeGearStickInterface $stick)
+    {
+        $this->gearStick = $stick;
     }
 
     /**

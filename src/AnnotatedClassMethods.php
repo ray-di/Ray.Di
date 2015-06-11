@@ -52,14 +52,15 @@ final class AnnotatedClassMethods
      */
     public function getSetterMethod(\ReflectionMethod $method)
     {
-        $inject = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Inject');
+        $inject = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\InjectInterface');
+
         /* @var $inject \Ray\Di\Di\Inject */
         if (! $inject) {
             return null;
         }
         $nameValue = $this->getNamedKeyVarString($method);
         $setterMethod = new SetterMethod($method, new Name($nameValue));
-        if ($inject->optional) {
+        if ($inject->isOptional()) {
             $setterMethod->setOptional();
         }
 
