@@ -24,6 +24,12 @@ final class Container
      */
     private $pointcuts = [];
 
+
+    /**
+     * @var Dependency[]
+     */
+    private $dependencyStack = [];
+
     /**
      * Add binding to container
      *
@@ -55,6 +61,7 @@ final class Container
      */
     public function getInstance($interface, $name)
     {
+        $this->dependencyStack = [];
         return $this->getDependency($interface . '-' . $name);
     }
 
@@ -73,6 +80,7 @@ final class Container
             throw $this->unbound($index);
         }
         $dependency = $this->container[$index];
+        $this->dependencyStack[] = $dependency;
         $instance = $dependency->inject($this);
 
         return $instance;
@@ -105,11 +113,23 @@ final class Container
     public function unbound($index)
     {
         list($class, $name) = explode('-', $index);
-        if (class_exists($class) && ! (new \ReflectionClass($class))->isAbstract()) {
-            return new Untargetted($class);
+
+        $dependencyChain = [];
+        foreach (array_reverse($this->dependencyStack) as $dependency) {
+            $dependencyChain[] = ' - required by '.$dependency->__tostring();
         }
 
-        return new Unbound("{$class}:{$name}");
+        if (!empty($dependencyChain)) {
+            $dependencyHelperTrace = "\n" . implode("\n", $dependencyChain) . "\n";
+        } else {
+            $dependencyHelperTrace = '';
+        }
+
+        if (class_exists($class) && ! (new \ReflectionClass($class))->isAbstract()) {
+            return new Untargetted("{$class}{$dependencyHelperTrace}");
+        }
+
+        return new Unbound("{$class} (bind namespace: \"{$name}\"):{$dependencyHelperTrace}");
     }
 
     /**

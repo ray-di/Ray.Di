@@ -32,6 +32,11 @@ final class Dependency implements DependencyInterface
     private $instance;
 
     /**
+     * @var string
+     */
+    private $index;
+
+    /**
      * @param NewInstance       $newInstance
      * @param \ReflectionMethod $postConstruct
      */
@@ -46,7 +51,7 @@ final class Dependency implements DependencyInterface
      */
     public function register(array &$container, Bind $bind)
     {
-        $index = (string) $bind;
+        $this->index = $index = (string) $bind;
         $container[$index] = $bind->getBound();
     }
 
@@ -100,5 +105,20 @@ final class Dependency implements DependencyInterface
     public function __sleep()
     {
         return ['newInstance', 'postConstruct', 'isSingleton'];
+    }
+
+    public function __tostring()
+    {
+        $class = (string) $this->newInstance;
+        $refl = new \ReflectionClass($class);
+        $fileAndLineMessage = sprintf('%s:%d', $refl->getFileName(), $refl->getStartLine());
+        list($interface, $bindNamespace) = explode('-', $this->index);
+        return sprintf(
+            '"%s" (bound to "%s" with name "%s" - %s)',
+            $class,
+            $interface,
+            $bindNamespace,
+            $fileAndLineMessage
+        );
     }
 }
