@@ -161,7 +161,7 @@ public __construct(CreditCardProcessorInterface $processor, TransactionLogInterf
  ....
 }
 ```
-Lastly we create a binding that uses the annotation. This uses the optional annotatedWith clause in the bind() statement:
+Lastly we create a binding that uses the annotation. This uses the optional `annotatedWith` clause in the bind() statement:
 ```php
 protected function configure()
 {
@@ -169,9 +169,72 @@ protected function configure()
         ->annotatedWith(PayPal::class)
         ->to(PayPalCreditCardProcessor::class);
 ```
+
+By default your custom `@Qualifier` annotations will only help injecting dependencies in constructors on when
+you annotate you also annotate your methods with `@Inject`.
+
+### Binding Annotations in Setters ###
+
+In order to make your custom `@Qualifier` annotations inject dependencies by default in any method the
+annotation is added, you need to implement the `Ray\Di\Di\InjectInterface`:
+
+```php
+
+use Ray\Di\Di\InjectInterface;
+use Ray\Di\Di\Qualifier;
+
+/**
+ * @Annotation
+ * @Target("METHOD")
+ * @Qualifier
+ */
+final class PaymentProcessorInject implements InjectInterface
+{
+
+    public $optional = true;
+
+    public $type;
+
+    public function isOptional()
+    {
+        return $this->optional;
+    }
+}
+```
+
+The interface requires that you implement the `isOptional()` method. It will be used to determine whether
+or not the injection should be performed based on whether there is a known binding for it.
+
+Now that you have created your custom injector annotation, you can use it on any method.
+
+```php
+/**
+ * @PaymentProcessorInject("type=paypal")
+ */
+public setPaymentProcessor(CreditCardProcessorInterface $processor){
+{
+ ....
+}
+```
+
+Finally, you can bind the interface to an implementation by using your new annotated information:
+
+```php
+protected function configure()
+{
+    $this->bind(CreditCardProcessorInterface::class)
+        ->annotatedWith(PaymentProcessorInject::class)
+        ->toProvider(PaymentProcessorProvider::class);
+```
+
+The provider can now use the information supplied in the qualifier annotation in order to instantiate
+the most appropriate class.
+
 ### @Named ##
 
-Ray comes with a built-in binding annotation `@Named` that takes a string.
+The most common use of a Qualifier annotation is tagging arguments in a function with a certain label,
+the label can be used in the bindings in order to select the right class to be instantiated. For those
+cases, Ray comes with a built-in binding annotation `@Named` that takes a string.
 
 ```php
 use Ray\Di\Di\Inject;
@@ -246,7 +309,7 @@ note: annotations is not supported Untargeted Bindings
 
 ### Constructor Bindings ##
 
-Occasionally it's necessary to bind a type to an arbitrary constructor. This comes up when the @Inject annotation cannot be applied to the target constructor: either because it is a third party class, or because multiple constructors that participate in dependency injection. 
+Occasionally it's necessary to bind a type to an arbitrary constructor. This comes up when the @Inject annotation cannot be applied to the target constructor: either because it is a third party class, or because multiple constructors that participate in dependency injection.
 `Provider Binding` provide the solution to this problem. By calling your target constructor explicitly, you don't need reflection and its associated pitfalls. But there are limitations of that approach: manually constructed instances do not participate in AOP.
 
 To address this, Ray.Di has `toConstructor` bindings.
@@ -307,7 +370,7 @@ public function init()
 ```
 ## Injection Point
 
-An **InjectionPoint** is a class that has information about an injection point. 
+An **InjectionPoint** is a class that has information about an injection point.
 It provides access to metadata via `\ReflectionParameter` or an annotation in `Provider`.
 
 For example, the following get method of `Psr3LoggerProvider` class creates injectable Loggers. The log category of a Logger depends upon the class of the object into which it is injected.
@@ -495,7 +558,7 @@ protected function configure()
 ### Script injector
 
 `ScriptInjector` generates raw factory code for better performance and to clarify how the instance is created.
- 
+
 ```php
 
 use Ray\Di\ScriptInjector;
