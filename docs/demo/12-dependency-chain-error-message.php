@@ -7,7 +7,16 @@ use Ray\Di\AbstractModule;
 
 require __DIR__ . '/bootstrap.php';
 
-class DeepLinkedBindingModule extends AbstractModule
+// returns first exception in exception trace
+function helperGrabPrevExc($e)
+{
+    do {
+        $current = $e;
+    } while ($e = $e->getPrevious());
+    return $current;
+}
+
+class DeepLinkedClassBindingModule extends AbstractModule
 {
     protected function configure()
     {
@@ -22,7 +31,14 @@ class DeepLinkedBindingModule extends AbstractModule
     }
 }
 
-$injector = new Injector(new DeepLinkedBindingModule);
 
+
+
+$injector = new Injector(new DeepLinkedClassBindingModule);
 // this will fail with an exception as E is not bound
-$injector->getInstance(A::class);
+try {
+    $injector->getInstance(A::class);
+} catch (\Exception $e) {
+    print helperGrabPrevExc($e)->getMessage();
+}
+

@@ -33,4 +33,11 @@ interface DependencyInterface
      * @return mixed
      */
     public function setScope($scope);
+
+    /**
+     * Get information about this dependency.
+     * Used to list the chain of depdendencies leading to an error.
+     * @return string
+     */
+    public function getDebugInfo();
 }

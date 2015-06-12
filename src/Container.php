@@ -116,7 +116,7 @@ final class Container
 
         $dependencyChain = [];
         foreach (array_reverse($this->dependencyStack) as $dependency) {
-            $dependencyChain[] = ' - required by '.$dependency->__tostring();
+            $dependencyChain[] = ' - required by: '.$dependency->getDebugInfo();
         }
 
         if (!empty($dependencyChain)) {

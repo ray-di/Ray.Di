@@ -107,17 +107,26 @@ final class Dependency implements DependencyInterface
         return ['newInstance', 'postConstruct', 'isSingleton'];
     }
 
-    public function __tostring()
+    public function getDebugInfo()
     {
         $class = (string) $this->newInstance;
         $refl = new \ReflectionClass($class);
         $fileAndLineMessage = sprintf('%s:%d', $refl->getFileName(), $refl->getStartLine());
-        list($interface, $bindNamespace) = explode('-', $this->index);
+
+        if ($this->index) {
+            list($interface, $bindNamespace) = explode('-', $this->index);
+            $bindingInformation = sprintf(
+                'bound to "%s" with name "%s"',
+                $interface,
+                $bindNamespace
+            );
+        } else {
+            $bindingInformation = 'unregistered dependency';
+        }
         return sprintf(
-            '"%s" (bound to "%s" with name "%s" - %s)',
+            '<Dependency "%s" (%s) : %s>',
             $class,
-            $interface,
-            $bindNamespace,
+            $bindingInformation,
             $fileAndLineMessage
         );
     }
