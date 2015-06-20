@@ -24,12 +24,6 @@ final class Container
      */
     private $pointcuts = [];
 
-
-    /**
-     * @var Dependency[]
-     */
-    private $dependencyStack = [];
-
     /**
      * Add binding to container
      *
@@ -61,7 +55,6 @@ final class Container
      */
     public function getInstance($interface, $name)
     {
-        $this->dependencyStack = [];
         return $this->getDependency($interface . '-' . $name);
     }
 
@@ -80,7 +73,6 @@ final class Container
             throw $this->unbound($index);
         }
         $dependency = $this->container[$index];
-        $this->dependencyStack[] = $dependency;
         $instance = $dependency->inject($this);
 
         return $instance;
@@ -114,11 +106,15 @@ final class Container
     {
         list($class, $name) = explode('-', $index);
 
+        $depStack = $this->getDepStack();
+        array_shift($depStack); // we skip the first item, as that is the dep that is missing
+        
         $dependencyChain = [];
-        foreach (array_reverse($this->dependencyStack) as $dependency) {
+        foreach ($depStack as list($depIndex, $dependency)) {
             $dependencyChain[] = ' - required by: '.$dependency->getDebugInfo();
         }
 
+        // formatting:
         if (!empty($dependencyChain)) {
             $dependencyHelperTrace = "\n" . implode("\n", $dependencyChain) . "\n";
         } else {
@@ -128,8 +124,30 @@ final class Container
         if (class_exists($class) && ! (new \ReflectionClass($class))->isAbstract()) {
             return new Untargetted("{$class}{$dependencyHelperTrace}");
         }
-
         return new Unbound("{$class} (bind namespace: \"{$name}\"):{$dependencyHelperTrace}");
+    }
+
+    /**
+     * @return array[] An array of 2-element arrays where first element is the
+     * dependency index and the second is the actual dependency object (or null if not found)
+     */
+    protected function getDepStack()
+    {
+        $depStack = [];
+        foreach (debug_backtrace() as $item) {
+            if ($item['function'] === 'getDependency' && $item['class'] === Container::class) {
+                $index = $item['args'][0];
+                $containerObj = $item['object'];
+
+                $containerArray = $containerObj->getContainer();
+                if (isset($containerArray[$index])) {
+                    $depStack[] = [$index, $containerArray[$index]];
+                } else {
+                    $depStack[] = [$index, null];
+                }
+            }
+        }
+        return $depStack;
     }
 
     /**
