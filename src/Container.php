@@ -105,49 +105,10 @@ final class Container
     public function unbound($index)
     {
         list($class, $name) = explode('-', $index);
-
-        $depStack = $this->getDepStack();
-        array_shift($depStack); // we skip the first item, as that is the dep that is missing
-        
-        $dependencyChain = [];
-        foreach ($depStack as list($depIndex, $dependency)) {
-            $dependencyChain[] = ' - required by: '.$dependency->getDebugInfo();
-        }
-
-        // formatting:
-        if (!empty($dependencyChain)) {
-            $dependencyHelperTrace = "\n" . implode("\n", $dependencyChain) . "\n";
-        } else {
-            $dependencyHelperTrace = '';
-        }
-
         if (class_exists($class) && ! (new \ReflectionClass($class))->isAbstract()) {
-            return new Untargetted("{$class}{$dependencyHelperTrace}");
+            return new Untargetted($class);
         }
-        return new Unbound("{$class} (bind namespace: \"{$name}\"):{$dependencyHelperTrace}");
-    }
-
-    /**
-     * @return array[] An array of 2-element arrays where first element is the
-     * dependency index and the second is the actual dependency object (or null if not found)
-     */
-    protected function getDepStack()
-    {
-        $depStack = [];
-        foreach (debug_backtrace() as $item) {
-            if ($item['function'] === 'getDependency' && $item['class'] === Container::class) {
-                $index = $item['args'][0];
-                $containerObj = $item['object'];
-
-                $containerArray = $containerObj->getContainer();
-                if (isset($containerArray[$index])) {
-                    $depStack[] = [$index, $containerArray[$index]];
-                } else {
-                    $depStack[] = [$index, null];
-                }
-            }
-        }
-        return $depStack;
+        return new Unbound("{$class}-{$name}");
     }
 
     /**

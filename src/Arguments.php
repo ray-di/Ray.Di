@@ -61,8 +61,7 @@ final class Arguments
             if ($hasDefaultValue) {
                 return $defaultValue;
             }
-            $message = sprintf("%s (%s)", $argument->getDebugInfo(), $argument);
-            throw new Unbound($message, 0, $e);
+            throw new Unbound($argument->getMeta(), 0, $e);
         }
     }
 
