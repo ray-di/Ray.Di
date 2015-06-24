@@ -32,6 +32,7 @@ class Unbound extends \LogicException implements ExceptionInterface
             $e = $e->getPrevious();
         }
         array_pop($msg);
+        $msg = array_reverse($msg);
 
         return $this->getMainMessage($lastE) . implode('', $msg);
     }
@@ -39,11 +40,9 @@ class Unbound extends \LogicException implements ExceptionInterface
     private function getMainMessage(Unbound $e)
     {
         return sprintf(
-            "exception '%s' with message '%s' in %s\n",
+            "exception '%s' with message '%s'\n",
             get_class($e),
             $e->getMessage(),
-            $e->getFile(),
-            $e->getLine()
         );
     }
 }
