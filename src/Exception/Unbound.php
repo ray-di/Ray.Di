@@ -42,7 +42,7 @@ class Unbound extends \LogicException implements ExceptionInterface
         return sprintf(
             "exception '%s' with message '%s'\n",
             get_class($e),
-            $e->getMessage(),
+            $e->getMessage()
         );
     }
 }
