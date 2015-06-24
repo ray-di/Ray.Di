@@ -6,36 +6,44 @@
  */
 namespace Ray\Di\Exception;
 
+use Ray\Di\Exception;
 
 class Unbound extends \LogicException implements ExceptionInterface
 {
 
     public function __toString()
     {
-        $msg = sprintf("-%s\n", $this->getMessage());
+        $messages = [sprintf("- %s\n", $this->getMessage())];
         $e = $this->getPrevious();
-        $msg = $this->buildMessage($e, $msg);
-
-        return $msg;
+        return $this->buildMessage($e, $messages);
     }
 
     /**
      * @param Unbound $e
-     * @param string  $msg
+     * @param array   $msg
      *
      * @return string
      */
-    private function buildMessage(Unbound $e, $msg)
+    private function buildMessage(Unbound $e, array $msg)
     {
         while ($e instanceof Unbound) {
-            if ($e instanceof Untargetted) {
-                $msg = $e->getMessage() . PHP_EOL . $msg;
-                break;
-            }
-            $msg .= sprintf("-%s\n", $e->getMessage());
+            $msg[] = sprintf("- %s\n", $e->getMessage());
+            $lastE = $e;
             $e = $e->getPrevious();
         }
+        array_pop($msg);
 
-        return $msg;
+        return $this->getMainMessage($lastE) . implode('', $msg);
+    }
+
+    private function getMainMessage(Unbound $e)
+    {
+        return sprintf(
+            "exception '%s' with message '%s' in %s\n",
+            get_class($e),
+            $e->getMessage(),
+            $e->getFile(),
+            $e->getLine()
+        );
     }
 }

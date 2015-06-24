@@ -33,11 +33,11 @@ try {
     $injector->getInstance(A::class);
 } catch (Unbound $e) {
     echo $e;
-//    Ray\Di\Demo\E
-//    -required by Ray\Di\Demo\B with name "" in Ray.Di/docs/demo/src/A.php:7
-//    -required by Ray\Di\Demo\C with name "" in Ray.Di/docs/demo/src/B.php:7
-//    -required by Ray\Di\Demo\D with name "" in Ray.Di/docs/demo/src/C.php:7
-//    -required by Ray\Di\Demo\E with name "" in Ray.Di/docs/demo/src/D.php:7
+//    exception 'Ray\Di\Exception\Untargetted' with message 'Ray\Di\Demo\E' in /src/Container.php
+//    - required by Ray\Di\Demo\B with name "" in Ray.Di/docs/demo/src/A.php:7
+//    - required by Ray\Di\Demo\C with name "" in Ray.Di/docs/demo/src/B.php:7
+//    - required by Ray\Di\Demo\D with name "" in Ray.Di/docs/demo/src/C.php:7
+//    - required by Ray\Di\Demo\E with name "" in Ray.Di/docs/demo/src/D.php:7
 
 //    do {
 //        echo get_class($e) . ':' . $e->getMessage() . PHP_EOL;
