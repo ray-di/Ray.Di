@@ -45,13 +45,4 @@ final class Instance implements DependencyInterface
     public function setScope($scope)
     {
     }
-
-    public function getDebugInfo()
-    {
-        return sprintf(
-            '<Instance %s (of type %s)>',
-            (string)$this->value,
-             is_object($this->value) ? get_class($this->value) : gettype($this->value)
-        );
-    }
 }

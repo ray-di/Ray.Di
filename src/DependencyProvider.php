@@ -65,12 +65,4 @@ final class DependencyProvider implements DependencyInterface
     {
         return ['dependency', 'isSingleton'];
     }
-
-    public function getDebugInfo()
-    {
-        return sprintf(
-            '<DepdendencyProvider %s>',
-            $this->dependency->getDebugInfo()
-        );
-    }
 }
