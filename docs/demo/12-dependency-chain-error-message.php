@@ -3,7 +3,6 @@
 namespace Ray\Di\Demo;
 
 use Ray\Di\Exception\Unbound;
-use Ray\Di\Exception\Untargetted;
 use Ray\Di\Injector;
 use Ray\Di\AbstractModule;
 
@@ -34,19 +33,20 @@ try {
 } catch (Unbound $e) {
     echo $e;
 //    exception 'Ray\Di\Exception\Untargetted' with message 'Ray\Di\Demo\E' in /src/Container.php
-//    - required by Ray\Di\Demo\B with name "" in Ray.Di/docs/demo/src/A.php:7
-//    - required by Ray\Di\Demo\C with name "" in Ray.Di/docs/demo/src/B.php:7
-//    - required by Ray\Di\Demo\D with name "" in Ray.Di/docs/demo/src/C.php:7
-//    - required by Ray\Di\Demo\E with name "" in Ray.Di/docs/demo/src/D.php:7
+//    - dependency 'Ray\Di\Demo\E' with name '' used in /Users/akihito/git/Ray.Di/docs/demo/src/D.php:7
+//    - dependency 'Ray\Di\Demo\D' with name '' used in /Users/akihito/git/Ray.Di/docs/demo/src/C.php:7
+//    - dependency 'Ray\Di\Demo\C' with name '' used in /Users/akihito/git/Ray.Di/docs/demo/src/B.php:7
+//    - dependency 'Ray\Di\Demo\B' with name '' used in /Users/akihito/git/Ray.Di/docs/demo/src/A.php:7
+// ...
 
 //    do {
 //        echo get_class($e) . ':' . $e->getMessage() . PHP_EOL;
 //    } while ($e = $e->getPrevious());
 
-//    Ray\Di\Exception\Unbound:required by Ray\Di\Demo\B with name "" in Ray.Di/docs/demo/src/A.php:7
-//    Ray\Di\Exception\Unbound:required by Ray\Di\Demo\C with name "" in Ray.Di/docs/demo/src/B.php:7
-//    Ray\Di\Exception\Unbound:required by Ray\Di\Demo\D with name "" in Ray.Di/docs/demo/src/C.php:7
-//    Ray\Di\Exception\Unbound:required by Ray\Di\Demo\E with name "" in Ray.Di/docs/demo/src/D.php:7
+//    Ray\Di\Exception\Unbound:dependency 'Ray\Di\Demo\B' with name '' used in /Users/akihito/git/Ray.Di/docs/demo/src/A.php:7
+//    Ray\Di\Exception\Unbound:dependency 'Ray\Di\Demo\C' with name '' used in /Users/akihito/git/Ray.Di/docs/demo/src/B.php:7
+//    Ray\Di\Exception\Unbound:dependency 'Ray\Di\Demo\D' with name '' used in /Users/akihito/git/Ray.Di/docs/demo/src/C.php:7
+//    Ray\Di\Exception\Unbound:dependency 'Ray\Di\Demo\E' with name '' used in /Users/akihito/git/Ray.Di/docs/demo/src/D.php:7
 //    Ray\Di\Exception\Untargetted:Ray\Di\Demo\E
 }
 
