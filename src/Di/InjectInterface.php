@@ -8,7 +8,6 @@ namespace Ray\Di\Di;
 
 interface InjectInterface
 {
-
     /**
      * Whether or not to use optional injection
      *

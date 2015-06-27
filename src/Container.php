@@ -108,6 +108,7 @@ final class Container
         if (class_exists($class) && ! (new \ReflectionClass($class))->isAbstract()) {
             return new Untargetted($class);
         }
+
         return new Unbound("{$class}-{$name}");
     }
 

@@ -7,7 +7,6 @@ $config = Symfony\CS\Config\Config::create()
 ->finder($finder)
 ->fixers(
     [
-        'blankline_after_open_tag',
         'extra_empty_lines',
         'no_blank_lines_after_class_opening',
         'no_empty_lines_after_phpdocs',

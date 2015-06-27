@@ -10,11 +10,11 @@ use Ray\Di\Exception;
 
 class Unbound extends \LogicException implements ExceptionInterface
 {
-
     public function __toString()
     {
         $messages = [sprintf("- %s\n", $this->getMessage())];
         $e = $this->getPrevious();
+
         return $this->buildMessage($e, $messages) . "\n" . $e->getTraceAsString();
     }
 
