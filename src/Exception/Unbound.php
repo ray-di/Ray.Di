@@ -14,6 +14,9 @@ class Unbound extends \LogicException implements ExceptionInterface
     {
         $messages = [sprintf("- %s\n", $this->getMessage())];
         $e = $this->getPrevious();
+        if (! $e instanceof \Exception) {
+            return $this->getMainMessage($this);
+        }
 
         return $this->buildMessage($e, $messages) . "\n" . $e->getTraceAsString();
     }
