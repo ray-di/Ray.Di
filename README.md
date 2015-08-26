@@ -8,7 +8,7 @@
 
 **Ray.Di** was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google.
 
-## Getting Stated #
+## Getting Started #
 
 ### Linked Bindings ##
 
@@ -83,7 +83,7 @@ interface ProviderInterface
     public function get();
 }
 ```
-Our provider implementation class has dependencies of its own, which it receives via a contructor annotated with `@Inject`.
+Our provider implementation class has dependencies of its own, which it receives via a constructor annotated with `@Inject`.
 It implements the Provider interface to define what's returned with complete type safety:
 
 ```php
@@ -294,7 +294,7 @@ protected function configure()
 
 ### Untargeted Bindings
 
-You may create bindings without specifying a target. This is most useful for concrete classes. An untargetted binding informs the injector about a type, so it may prepare dependencies eagerly. Untargetted bindings have no _to_ clause, like so:
+You may create bindings without specifying a target. This is most useful for concrete classes. An untargeted binding informs the injector about a type, so it may prepare dependencies eagerly. Untargeted bindings have no _to_ clause, like so:
 
 ```php
 
