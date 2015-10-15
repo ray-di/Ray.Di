@@ -574,6 +574,7 @@ try {
     $instance = $compiler->getInstance(ListerInterface::class);
 }
 ```
+
 Once an instance has been created, You can view the generated factory files in `$tmpDir`
 
 ### Cache injector
@@ -590,9 +591,8 @@ $cachedInjector = serialize($injector);
 // load
 $injector = unserialize($cachedInjector);
 $lister = $injector->getInstance(ListerInterface::class);
-
-### method 1: Cache injector
 ```
+
 ## Frameworks integration ##
 
  * [lorenzo/piping-bag](https://github.com/lorenzo/piping-bag) for CakePHP3
