@@ -9,7 +9,7 @@
 
 ## Linked Bindings ##
 
-**Linked bindings** はインターフェイスとその実装クラスを束縛します。
+**Linked Bindings** はインターフェイスとその実装クラスを束縛します。
 
 ```php
 namespace MovieApp;
@@ -62,9 +62,13 @@ echo(($works) ? 'It works!' : 'It DOES NOT work!');
 // It works!
 ```
 
+Linked Bindings はチェーンさせることができます。
+
 ## Provider Bindings ##
 
-[Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) はインターフェイスと実装クラスの**プロバイダー**を束縛します。プロバイダーは依存にのインスタンスを`get`メソッドで返します。
+[Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) はインターフェイスと実装クラスの**プロバイダー**を束縛します。
+
+プロバイダーは依存のインスタンスを`get`メソッドで返します。
 
 ```php
 use Ray\Di\ProviderInterface;
@@ -101,10 +105,11 @@ class DatabaseTransactionLogProvider implements Provider
 }
 ```
 
+このようにして `toProvider()` メソッドを使ってプロバイダに束縛します。
+
 ```php
 $this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider:class);
 ```
-
 
 
 ## Named Binding ##
@@ -164,7 +169,7 @@ protected function configure()
 
 ## Untargeted Bindings ##
 
-ターゲットを指定しないで束縛をつくることがで、コンクリートクラスの束縛に便利です。事前にインジェクターに型の情報を伝えるので束縛を事前に行いエラー検知や最適化を行うことができます。
+ターゲットを指定しないで束縛をつくることができ、コンクリートクラスの束縛に便利です。事前にインジェクターに型の情報を伝えるので束縛を事前に行いエラー検知や最適化を行うことができます。
 Untargetted bindingsは以下のように`to()`が必要ありません。
 
 ```php
@@ -276,7 +281,6 @@ class AopMatcherModule extends AbstractModule
         );
     }
 }
-
 ```
 
 # Best practice
@@ -288,7 +292,7 @@ class AopMatcherModule extends AbstractModule
 
 ### Script injector
 
-`ScriptInjector` generates raw factory code for better performance and to clarify how the instance is created.
+`ScriptInjector` はパフォーマンス改善のためにファクトリーコードそれ自体を生成し、インスタンス生成の方法を分かりやすくします。
  
 ```php
 
@@ -305,7 +309,10 @@ try {
     $instance = $compiler->getInstance(ListerInterface::class);
 }
 ```
-Once an instance has been created, You can view the generated factory files in `$tmpDir`
+
+インスタンスが生成されれば、生成されたファクトリーファイルを `$tmpDir` で見ることができるようになります。
+
+### Cache injector
 
 シリアライズをして高速にインジェクションを行うようにすることもできます。
 
@@ -318,8 +325,16 @@ $cachedInjector = serialize($injector);
 // load
 $injector = unserialize($cachedInjector);
 $lister = $injector->getInstance(ListerInterface::class);
-
 ```
+
+## Frameworks integration ##
+
+ * [lorenzo/piping-bag](https://github.com/lorenzo/piping-bag) for CakePHP3
+ * [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday)
+
+## Modules ##
+
+`Ray.Di` のためのさまざまなモジュールが利用可能となっています。 https://github.com/Ray-Di
 
 ## Requirement ##
 
