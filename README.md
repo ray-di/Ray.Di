@@ -596,7 +596,7 @@ $lister = $injector->getInstance(ListerInterface::class);
 ## Frameworks integration ##
 
  * [lorenzo/piping-bag](https://github.com/lorenzo/piping-bag) for CakePHP3
- * [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday)
+ * [BEAR.Sunday](https://github.com/bearsunday/BEAR.Sunday)
 
 ## Modules ##
 
