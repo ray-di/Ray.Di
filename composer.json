@@ -26,8 +26,8 @@
             "Ray\\Di\\": "src/"
         }
     },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload-dev": {
         "psr-4": {
             "Ray\\Di\\": [
@@ -35,9 +35,6 @@
                 "tests/Fake/"
             ],
             "FakeVendor\\Sandbox\\": "tests/Fake/FakeVendor/Sandbox/"
-        },
-        "files": [
-            "tests/annotations.php"
-        ]
+        }
     }
 }
