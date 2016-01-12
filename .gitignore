@@ -1,5 +1,5 @@
 .idea
 build
-tmp
 vendor
 *.cache
+composer.lock
