@@ -95,9 +95,6 @@ class DatabaseTransactionLogProvider implements ProviderInterface
 {
     private $connection;
 
-    /**
-     * @Inject
-     */
     public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection;
@@ -241,7 +238,6 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
 /**
- *  @Inject
  *  @Named("processor=checkout")
  */
 public __construct(CreditCardProcessorInterface $processor)
@@ -265,7 +261,6 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
 /**
- *  @Inject
  *  @Named("processor=checkout,subProcessor=backUp")
  */
 public __construct(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)

@@ -87,9 +87,6 @@ class DatabaseTransactionLogProvider implements Provider
 {
     private $connection;
 
-    /**
-     * @Inject
-     */
     public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection;
