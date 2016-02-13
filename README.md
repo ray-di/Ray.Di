@@ -312,7 +312,7 @@ By default your custom `@Qualifier` annotations will only help injecting depende
 you annotate you also annotate your methods with `@Inject`.
 
 
-### @Named annotation ###
+### @Named ###
 
 The most common use of a Qualifier annotation is tagging arguments in a function with a certain label,
 the label can be used in the bindings in order to select the right class to be instantiated. For those
@@ -629,7 +629,6 @@ $cachedInjector = serialize($injector);
 $injector = unserialize($cachedInjector);
 $lister = $injector->getInstance(ListerInterface::class);
 
-### method 1: Cache injector
 ```
 ## Frameworks integration ##
 
