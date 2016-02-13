@@ -142,7 +142,7 @@ class BillingModule extends AbstractModule
 
 ## Provider Bindings ##
 
-[Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) map a type to its provider.
+Provider bindings map a type-hint to its provider.
 
 ```php
 $this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider::class);
@@ -157,7 +157,7 @@ interface ProviderInterface
     public function get();
 }
 ```
-Our provider implementation class has dependencies of its own, which it receives via a contructor annotated with `@Inject`.
+Our provider implementation class has dependencies of its own, which it receives via a contructor.
 It implements the Provider interface to define what's returned with complete type safety:
 
 ```php
