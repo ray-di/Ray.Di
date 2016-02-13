@@ -41,7 +41,7 @@ Building object graphs by hand is labour intensive, error prone, and makes testi
 
 To illustrate, we'll start the MovieLisetr class that accepts its dependent interfaces MovierFinderInterface in its constructor.
 
-```
+```php
 class BillingService
 {
     private $processor;
@@ -69,7 +69,7 @@ class BillingModule extends AbstractModule
 
 The modules are the building blocks of an injector, which is Ray.Di's object-graph builder. First we create the injector, and then we can use that to build the BillingService:
 
-```
+```php
 $injector = new Injector(new BillingModule);
 $billingService = $injector->getInstance(BillingService::class);
 ```
