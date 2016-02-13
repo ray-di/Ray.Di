@@ -450,7 +450,7 @@ public function init()
 
 ## Aspect Oriented Programing ##
 
-To compliment dependency injection, Ray.Di supports method interception. This feature enables you to write code that is executed each time when a matching method is invoked. It's suited for cross cutting concerns ("aspects"), such as transactions, security and logging. Because interceptors divide a problem into aspects rather than objects, their use is called Aspect Oriented Programming (AOP).
+To compliment dependency injection, Ray.Di supports method interception. This feature enables you to write code that is executed each time a matching method is invoked. It's suited for cross cutting concerns ("aspects"), such as transactions, security and logging. Because interceptors divide a problem into aspects rather than objects, their use is called Aspect Oriented Programming (AOP).
 
 To mark select methods as weekdays-only, we define an annotation .
 
