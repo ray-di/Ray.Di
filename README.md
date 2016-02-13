@@ -91,7 +91,7 @@ Ray.Di can inject methods that have the `@Inject` annotation. Dependencies take 
 
 Ray.Di does not support property injection.
 
-## Static Injections
+## Static Injection
 
 Ray.Di does not support static injection.
 
@@ -410,7 +410,7 @@ protected function configure()
             (new InjectionPoints)                            
                 ->addMethod('setWheel', "right")             // setter injection
                 ->addOptionalMethod('setTurboCharger'),      // optional setter injection
-            'init'                                           // @PostCosntruct
+            'initialize'                                     // @PostCosntruct
         );
 }
 ```
