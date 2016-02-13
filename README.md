@@ -91,18 +91,6 @@ Ray.Di can inject methods that have the `@Inject` annotation. Dependencies take 
 
 Ray.Di does not support property injection.
 
-## Static Injection
-
-Ray.Di does not support static injection.
-
-## Automatic Injection ##
-
-Ray.Di automatically injects all of the following:
-
- * instances passed to `toInstance()` in a bind statement
- * provider instances passed to `toProvider()` in a bind statement
-
-The objects will be injected while the injector itself is being created. If they're needed to satisfy other startup injections, Ray.Di will inject them before they're used.
 # Bindings
 
 The injector's job is to assemble graphs of objects. You request an instance of a given type, and it figures out what to build, resolves dependencies, and wires everything together. To specify how dependencies are resolved, configure your injector with bindings.
