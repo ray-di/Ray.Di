@@ -39,7 +39,7 @@ With dependency injection, objects accept dependencies in their constructors. To
 
 Building object graphs by hand is labour intensive, error prone, and makes testing difficult. Instead, Ray.Di can build the object graph for you. But first, Ray.Di needs to be configured to build the graph exactly as you want it.
 
-To illustrate, we'll start the MovieLisetr class that accepts its dependent interfaces MovierFinderInterface in its constructor.
+To illustrate, we'll start the BillingService class that accepts its dependent interfaces in its constructor: ProcessorInterface and LoggerInterface.
 
 ```php
 class BillingService
@@ -195,7 +195,7 @@ $this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogPr
 An **InjectionPoint** is a class that has information about an injection point. 
 It provides access to metadata via `\ReflectionParameter` or an annotation in `Provider`.
 
-For example, the following get method of `Psr3LoggerProvider` class creates injectable Loggers. The log category of a Logger depends upon the class of the object into which it is injected.
+For example, the following `get()` method of `Psr3LoggerProvider` class creates injectable Loggers. The log category of a Logger depends upon the class of the object into which it is injected.
 
 ```php
 class Psr3LoggerProvider implements ProviderInterface
@@ -254,7 +254,7 @@ protected function configure()
 }
 ```
 
-note: annotations is not supported Untargeted Bindings
+note: annotations are not supported for Untargeted Bindings
 
 ## Binding Annotations ##
 
@@ -341,7 +341,7 @@ protected function configure()
 }
 ```
 
-You need to specify in case of multiple parameter.
+You need to specify in case of multiple parameters.
 
 ```php
 use Ray\Di\Di\Inject;
@@ -414,7 +414,7 @@ protected function configure()
         );
 }
 ```
-Ray.Di will invoke that constructor and setter method to satisfy the binding and invoke in `initialize ` method after all dependencies are injected.
+Ray.Di will invoke that constructor and setter method to satisfy the binding and invoke in `initialize` method after all dependencies are injected.
 
 ## Scopes ##
 
@@ -450,7 +450,7 @@ public function init()
 
 ## Aspect Oriented Programing ##
 
-To compliment dependency injection, Ray.Di supports method interception. This feature enables you to write code that is executed each time a matching method is invoked. It's suited for cross cutting concerns ("aspects"), such as transactions, security and logging. Because interceptors divide a problem into aspects rather than objects, their use is called Aspect Oriented Programming (AOP).
+To compliment dependency injection, Ray.Di supports method interception. This feature enables you to write code that is executed each time when a matching method is invoked. It's suited for cross cutting concerns ("aspects"), such as transactions, security and logging. Because interceptors divide a problem into aspects rather than objects, their use is called Aspect Oriented Programming (AOP).
 
 To mark select methods as weekdays-only, we define an annotation .
 
