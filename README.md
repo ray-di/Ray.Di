@@ -207,9 +207,13 @@ class Psr3LoggerProvider implements ProviderInterface
     }
 }
 ```
-Obtains the qualifiers
+`InjectionPointInterface` provides following methods. 
+
 ```php
-$annotations =  $this->ip->getQualifiers();
+$ip->getClass();      // \ReflectionClass
+$ip->getMethod();     // \ReflectionMethod
+$ip->getParameter();  // \ReflectionParameter
+$ip->getQualifiers(); // (array) $qualifierAnnotations
 ```
 
 ## Instance Bindings
