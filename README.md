@@ -451,7 +451,7 @@ All annotation in dependent above can be removed by following `toConstructor ` b
 protected function configure()
 {
     $this
-        ->bind(CarInerface::class)
+        ->bind(CarInterface::class)
         ->toConstructor(
             Car::class,
             'na',                                            // constructor injection
