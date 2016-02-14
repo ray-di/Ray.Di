@@ -303,6 +303,62 @@ protected function configure()
 By default your custom `@Qualifier` annotations will only help injecting dependencies in constructors on when
 you annotate you also annotate your methods with `@Inject`.
 
+### Binding Annotations in Setters ###
+
+In order to make your custom `@Qualifier` annotations inject dependencies by default in any method the
+annotation is added, you need to implement the `Ray\Di\Di\InjectInterface`:
+
+```php
+
+use Ray\Di\Di\InjectInterface;
+use Ray\Di\Di\Qualifier;
+
+/**
+ * @Annotation
+ * @Target("METHOD")
+ * @Qualifier
+ */
+final class PaymentProcessorInject implements InjectInterface
+{
+
+    public $optional = true;
+
+    public $type;
+
+    public function isOptional()
+    {
+        return $this->optional;
+    }
+}
+```
+
+The interface requires that you implement the `isOptional()` method. It will be used to determine whether
+or not the injection should be performed based on whether there is a known binding for it.
+
+Now that you have created your custom injector annotation, you can use it on any method.
+
+```php
+/**
+ * @PaymentProcessorInject("type=paypal")
+ */
+public setPaymentProcessor(CreditCardProcessorInterface $processor){
+{
+ ....
+}
+```
+
+Finally, you can bind the interface to an implementation by using your new annotated information:
+
+```php
+protected function configure()
+{
+    $this->bind(CreditCardProcessorInterface::class)
+        ->annotatedWith(PaymentProcessorInject::class)
+        ->toProvider(PaymentProcessorProvider::class);
+```
+
+The provider can now use the information supplied in the qualifier annotation in order to instantiate
+the most appropriate class.
 
 ### @Named ###
 
@@ -395,7 +451,7 @@ All annotation in dependent above can be removed by following `toConstructor ` b
 protected function configure()
 {
     $this
-        ->bind(CarInerface::class)
+        ->bind(CarInterface::class)
         ->toConstructor(
             Car::class,
             'na',                                            // constructor injection
