@@ -91,6 +91,10 @@ Ray.Di can inject methods that have the `@Inject` annotation. Dependencies take 
 
 Ray.Di does not support property injection.
 
+## Assisted Injection
+
+It is also possible to inject dependencies directly in the invoke method parameter(s). When doing this, add the dependency to the end of the arguments and set the default value to null, it is also required to annotate the method using `@Assisted`.
+
 # Bindings
 
 The injector's job is to assemble graphs of objects. You request an instance of a given type, and it figures out what to build, resolves dependencies, and wires everything together. To specify how dependencies are resolved, configure your injector with bindings.
