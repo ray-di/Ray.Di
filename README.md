@@ -229,7 +229,7 @@ You can bind a type to an instance of that type. This is usually only useful for
 ```php
 protected function configure()
 {
-    $this->bind()>annotatedWith("login_id")->toInstance('bear');
+    $this->bind()->annotatedWith("login_id")->toInstance('bear');
 }
 ```
 
