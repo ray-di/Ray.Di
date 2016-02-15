@@ -275,7 +275,7 @@ To depend on the annotated binding, apply the annotation to the injected paramet
 /**
  * @PayPal
  */
-public __construct(CreditCardProcessorInterface $processor){
+public function __construct(CreditCardProcessorInterface $processor){
 {
 }
 ```
@@ -285,7 +285,7 @@ You can specify parameter name with qualifier. Qualifier applied all parameters 
 /**
  * @PayPal("processor")
  */
-public __construct(CreditCardProcessorInterface $processor){
+public function __construct(CreditCardProcessorInterface $processor){
 {
  ....
 }
@@ -373,7 +373,7 @@ use Ray\Di\Di\Named;
 /**
  *  @Named("checkout")
  */
-public __construct(CreditCardProcessorInterface $processor)
+public function __construct(CreditCardProcessorInterface $processor)
 {
 ...
 ```
@@ -398,7 +398,7 @@ use Ray\Di\Di\Named;
 /**
  *  @Named("processor=checkout,subProcessor=backUp")
  */
-public __construct(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)
+public function __construct(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)
 {
 ...
 ```
