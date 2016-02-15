@@ -47,7 +47,7 @@ class BillingService
     private $processor;
     private $logger
     
-    public function(ProcessorInterface $processor, LoggerInterface $logger)
+    public function __construct(ProcessorInterface $processor, LoggerInterface $logger)
     {
         $this->processor = $processor;
         $this->logger = $logger;
