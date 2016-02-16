@@ -14,18 +14,18 @@ use Ray\Di\Di\Named;
 class FakeAssistedConsumer
 {
     /**
-     * @Assisted
+     * @Assisted({"robot"})
      */
-    public function assistOne($a, $b, FakeRobotInterface $robot = null)
+    public function assistOne($a, $b, FakeRobotInterface $robot)
     {
         return $robot;
     }
 
     /**
-     * @Assisted
+     * @Assisted({"var1"})
      * @Named("var1=one")
      */
-    public function assistWithName($a, $var1 = null)
+    public function assistWithName($a, $var1)
     {
         return $var1;
     }

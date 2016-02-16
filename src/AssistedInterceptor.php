@@ -7,12 +7,20 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
+use Ray\Aop\Annotation\AbstractAssisted;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
 final class AssistedInterceptor implements MethodInterceptor
 {
+    /**
+     * @var InjectorInterface
+     */
     private $injector;
+
+    /**
+     * @var Reader
+     */
     private $reader;
 
     public function __construct(InjectorInterface $injector, Reader $reader)
@@ -28,13 +36,13 @@ final class AssistedInterceptor implements MethodInterceptor
     public function invoke(MethodInvocation $invocation)
     {
         $method = $invocation->getMethod();
+        $assisted = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Assisted');
+        /* @var \Ray\Di\Di\Assisted $assisted */
         $parameters = $method->getParameters();
         $arguments = $invocation->getArguments()->getArrayCopy();
         $cntArgs = count($arguments);
-        $assisted = [];
-
         foreach ($parameters as $pos => $parameter) {
-            if ($pos < $cntArgs) {
+            if ($pos < $cntArgs || ! $assisted || ! in_array($parameter->getName(), $assisted->values)) {
                 continue;
             }
             $hint = $parameter->getClass();

@@ -5,11 +5,12 @@
  * @license http://opensource.org/licenses/MIT MIT
  */
 namespace Ray\Di\Di;
+use Ray\Aop\Annotation\AbstractAssisted;
 
 /**
  * @Annotation
  * @Target("METHOD")
  */
-final class Assisted
+final class Assisted extends AbstractAssisted
 {
 }
