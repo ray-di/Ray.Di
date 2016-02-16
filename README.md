@@ -93,7 +93,7 @@ Ray.Di does not support property injection.
 
 ## Assisted Injection
 
-It is also possible to inject dependencies directly in the invoke method parameter(s). When doing this, add the dependency to the end of the arguments and set the default value to null, it is also required to annotate the method using `@Assisted`.
+It is also possible to inject dependencies directly in the invoke method parameter(s). When doing this, add the dependency to the end of the arguments and set the default value to null and annotate the method with `@Assisted`.
 
 # Bindings
 
