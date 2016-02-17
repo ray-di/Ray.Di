@@ -27,8 +27,12 @@ class Injector implements InjectorInterface
      */
     public function __construct(AbstractModule $module = null, $classDir = null)
     {
+        if (is_null($module)) {
+            $module = new NullModule;
+        }
+        $module->install(new AssistedModule);
+        $this->container = $module->getContainer();
         $this->classDir = $classDir ?: sys_get_temp_dir();
-        $this->container =  $module ? $module->getContainer() : new Container;
         $this->container->weaveAspects(new Compiler($this->classDir));
 
         // builtin injection

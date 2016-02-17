@@ -15,7 +15,7 @@ class AssistedTest extends \PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->injector = new Injector(new FakeToBindModule(new AssistedModule));
+        $this->injector = new Injector(new FakeToBindModule);
     }
 
     public function tearDown()
@@ -37,7 +37,7 @@ class AssistedTest extends \PHPUnit_Framework_TestCase
 
     public function testAssistedWithName()
     {
-        $this->injector = new Injector(new FakeInstanceBindModule(new AssistedModule));
+        $this->injector = new Injector(new FakeInstanceBindModule);
         $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
         /* @var $consumer FakeAssistedConsumer */
         $assistedDependency = $consumer->assistWithName('a7');
