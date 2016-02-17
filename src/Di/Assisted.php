@@ -5,6 +5,7 @@
  * @license http://opensource.org/licenses/MIT MIT
  */
 namespace Ray\Di\Di;
+
 use Ray\Aop\Annotation\AbstractAssisted;
 
 /**

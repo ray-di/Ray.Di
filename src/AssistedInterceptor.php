@@ -70,8 +70,8 @@ final class AssistedInterceptor implements MethodInterceptor
      * @param array                  $arguments
      *
      * @return array
-     * @internal param int $cntArgs
      *
+     * @internal param int $cntArgs
      */
     public function injectAssistedParameters(ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments)
     {

@@ -31,6 +31,5 @@ class FakeAssistedConsumer
     public function assistAny($var2, FakeRobotInterface $robot)
     {
         return [$var2, $robot];
-
     }
 }
