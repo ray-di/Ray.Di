@@ -35,7 +35,9 @@ final class AssistedInterceptor implements MethodInterceptor
         $parameters = $method->getParameters();
         $arguments = $invocation->getArguments()->getArrayCopy();
         $cntArgs = count($arguments);
-        $arguments = $this->injectAssistedParameters($method, $assisted, $parameters, $arguments, $cntArgs);
+        if ($assisted instanceof Assisted) {
+            $arguments = $this->injectAssistedParameters($method, $assisted, $parameters, $arguments, $cntArgs);
+        }
         $invocation->getArguments()->exchangeArray($arguments);
 
         return $invocation->proceed();
@@ -68,7 +70,7 @@ final class AssistedInterceptor implements MethodInterceptor
     public function injectAssistedParameters(\ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments, $cntArgs)
     {
         foreach ($parameters as $pos => $parameter) {
-            if ($pos < $cntArgs || ! $assisted || ! in_array($parameter->getName(), $assisted->values)) {
+            if (! in_array($parameter->getName(), $assisted->values)) {
                 continue;
             }
             $hint = $parameter->getClass();
