@@ -8,6 +8,7 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Di\Named;
+use Ray\Di\Di\Qualifier;
 
 final class AnnotatedClassMethods
 {
@@ -38,7 +39,7 @@ final class AnnotatedClassMethods
             return new Name($named->value);
         }
         $name = $this->getNamedKeyVarString($constructor);
-        if ($name) {
+        if ($name !== null) {
             return new Name($name);
         }
 
@@ -70,7 +71,7 @@ final class AnnotatedClassMethods
     /**
      * @param \ReflectionMethod $method
      *
-     * @return string
+     * @return string|null
      */
     private function getNamedKeyVarString(\ReflectionMethod $method)
     {
@@ -103,7 +104,7 @@ final class AnnotatedClassMethods
         foreach ($annotations as $annotation) {
             /* @var $bindAnnotation object|null */
             $qualifier = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), 'Ray\Di\Di\Qualifier');
-            if ($qualifier) {
+            if ($qualifier instanceof Qualifier) {
                 $value = isset($annotation->value) ? $annotation->value : Name::ANY;
                 $names[] = sprintf('%s=%s', $value, get_class($annotation));
             }
