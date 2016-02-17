@@ -44,4 +44,15 @@ class AssistedTest extends \PHPUnit_Framework_TestCase
         $expecetd = 1;
         $this->assertSame($expecetd, $assistedDependency);
     }
+
+    public function testAssistedAnyWithName()
+    {
+        $injector = new Injector(new FakeToBindModule(new FakeInstanceBindModule));
+        $consumer = $injector->getInstance(FakeAssistedConsumer::class);
+        /* @var $consumer FakeAssistedConsumer */
+        list($assistedDependency1, $assistedDependency2) = $consumer->assistAny();
+        $expected1 = 1;
+        $this->assertSame($expected1, $assistedDependency1);
+        $this->assertInstanceOf(FakeRobot::class, $assistedDependency2);
+    }
 }

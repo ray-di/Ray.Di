@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: akihito
- * Date: 2016/02/14
- * Time: 8:41
- */
 
 namespace Ray\Di;
 
@@ -28,5 +22,15 @@ class FakeAssistedConsumer
     public function assistWithName($a, $var1)
     {
         return $var1;
+    }
+
+    /**
+     * @Assisted({"var2", "robot"})
+     * @Named("var2=one")
+     */
+    public function assistAny($var2, FakeRobotInterface $robot)
+    {
+        return [$var2, $robot];
+
     }
 }
