@@ -22,8 +22,8 @@ class Unbound extends \LogicException implements ExceptionInterface
     }
 
     /**
-     * @param Unbound $e
-     * @param array   $msg
+     * @param Unbound  $e
+     * @param string[] $msg
      *
      * @return string
      */

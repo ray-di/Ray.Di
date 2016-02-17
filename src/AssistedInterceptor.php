@@ -34,15 +34,20 @@ final class AssistedInterceptor implements MethodInterceptor
         /* @var \Ray\Di\Di\Assisted $assisted */
         $parameters = $method->getParameters();
         $arguments = $invocation->getArguments()->getArrayCopy();
-        $cntArgs = count($arguments);
-        if ($assisted instanceof Assisted) {
-            $arguments = $this->injectAssistedParameters($method, $assisted, $parameters, $arguments, $cntArgs);
+        if ($assisted instanceof Assisted && $method instanceof ReflectionMethod) {
+            $arguments = $this->injectAssistedParameters($method, $assisted, $parameters, $arguments);
         }
         $invocation->getArguments()->exchangeArray($arguments);
 
         return $invocation->proceed();
     }
 
+    /**
+     * @param ReflectionMethod     $method
+     * @param \ReflectionParameter $parameter
+     *
+     * @return string
+     */
     private function getName(ReflectionMethod $method, \ReflectionParameter $parameter)
     {
         $named = $method->getAnnotation('Ray\Di\Di\Named');
@@ -59,15 +64,16 @@ final class AssistedInterceptor implements MethodInterceptor
     }
 
     /**
-     * @param \ReflectionMethod      $method
+     * @param ReflectionMethod       $method
      * @param Assisted               $assisted
      * @param \ReflectionParameter[] $parameters
      * @param array                  $arguments
-     * @param int                    $cntArgs
      *
      * @return array
+     * @internal param int $cntArgs
+     *
      */
-    public function injectAssistedParameters(\ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments, $cntArgs)
+    public function injectAssistedParameters(ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments)
     {
         foreach ($parameters as $pos => $parameter) {
             if (! in_array($parameter->getName(), $assisted->values)) {
