@@ -7,6 +7,7 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
+use Ray\Di\Di\Qualifier;
 
 final class InjectionPoint implements InjectionPointInterface
 {
@@ -62,7 +63,7 @@ final class InjectionPoint implements InjectionPointInterface
                 new \ReflectionClass($annotation),
                 'Ray\Di\Di\Qualifier'
             );
-            if ($qualifier) {
+            if ($qualifier instanceof Qualifier) {
                 $qualifiers[] = $annotation;
             }
         }
