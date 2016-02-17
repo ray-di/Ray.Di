@@ -6,11 +6,10 @@
  */
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\Reader;
-use Ray\Aop\Annotation\AbstractAssisted;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Aop\ReflectionMethod;
+use Ray\Di\Di\Assisted;
 
 final class AssistedInterceptor implements MethodInterceptor
 {
@@ -36,15 +35,7 @@ final class AssistedInterceptor implements MethodInterceptor
         $parameters = $method->getParameters();
         $arguments = $invocation->getArguments()->getArrayCopy();
         $cntArgs = count($arguments);
-        foreach ($parameters as $pos => $parameter) {
-            if ($pos < $cntArgs || ! $assisted || ! in_array($parameter->getName(), $assisted->values)) {
-                continue;
-            }
-            $hint = $parameter->getClass();
-            $interface = $hint ? $hint->getName() : '';
-            $name = $this->getName($method, $parameter);
-            $arguments[] = $this->injector->getInstance($interface, $name);
-        }
+        $arguments = $this->injectAssistedParameters($method, $assisted, $parameters, $arguments, $cntArgs);
         $invocation->getArguments()->exchangeArray($arguments);
 
         return $invocation->proceed();
@@ -63,5 +54,29 @@ final class AssistedInterceptor implements MethodInterceptor
         }
 
         return Name::ANY;
+    }
+
+    /**
+     * @param \ReflectionMethod      $method
+     * @param Assisted               $assisted
+     * @param \ReflectionParameter[] $parameters
+     * @param array                  $arguments
+     * @param int                    $cntArgs
+     *
+     * @return array
+     */
+    public function injectAssistedParameters(\ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments, $cntArgs)
+    {
+        foreach ($parameters as $pos => $parameter) {
+            if ($pos < $cntArgs || ! $assisted || ! in_array($parameter->getName(), $assisted->values)) {
+                continue;
+            }
+            $hint = $parameter->getClass();
+            $interface = $hint ? $hint->getName() : '';
+            $name = $this->getName($method, $parameter);
+            $arguments[] = $this->injector->getInstance($interface, $name);
+        }
+
+        return $arguments;
     }
 }
