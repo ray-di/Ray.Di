@@ -10,6 +10,7 @@ use Doctrine\Common\Annotations\Reader;
 use Ray\Aop\Annotation\AbstractAssisted;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
+use Ray\Aop\ReflectionMethod;
 
 final class AssistedInterceptor implements MethodInterceptor
 {
@@ -18,15 +19,9 @@ final class AssistedInterceptor implements MethodInterceptor
      */
     private $injector;
 
-    /**
-     * @var Reader
-     */
-    private $reader;
-
-    public function __construct(InjectorInterface $injector, Reader $reader)
+    public function __construct(InjectorInterface $injector)
     {
         $this->injector = $injector;
-        $this->reader = $reader;
     }
 
     /**
@@ -36,7 +31,7 @@ final class AssistedInterceptor implements MethodInterceptor
     public function invoke(MethodInvocation $invocation)
     {
         $method = $invocation->getMethod();
-        $assisted = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Assisted');
+        $assisted = $method->getAnnotation('Ray\Di\Di\Assisted');
         /* @var \Ray\Di\Di\Assisted $assisted */
         $parameters = $method->getParameters();
         $arguments = $invocation->getArguments()->getArrayCopy();
@@ -55,9 +50,9 @@ final class AssistedInterceptor implements MethodInterceptor
         return $invocation->proceed();
     }
 
-    private function getName(\ReflectionMethod $method, \ReflectionParameter $parameter)
+    private function getName(ReflectionMethod $method, \ReflectionParameter $parameter)
     {
-        $named = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Named');
+        $named = $method->getAnnotation('Ray\Di\Di\Named');
         if (! $named) {
             return Name::ANY;
         }
