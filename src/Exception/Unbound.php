@@ -17,8 +17,11 @@ class Unbound extends \LogicException implements ExceptionInterface
         if (! $e instanceof \Exception) {
             return $this->getMainMessage($this);
         }
+        if ($e instanceof Unbound) {
+            return $this->buildMessage($e, $messages) . "\n" . $e->getTraceAsString();
+        }
 
-        return $this->buildMessage($e, $messages) . "\n" . $e->getTraceAsString();
+        return parent::__toString();
     }
 
     /**

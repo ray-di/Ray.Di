@@ -22,4 +22,11 @@ class UnboundTest extends \PHPUnit_Framework_TestCase
         $string = (string) $e;
         $this->assertContains("Ray\Di\Exception\Unbound", $string);
     }
+
+    public function testNonUnboundPrevious()
+    {
+        $string = (string) new Unbound('', 0, new \LogicException);
+        $expected = 'LogicException in';
+        $this->assertStringStartsWith($expected, $string);
+    }
 }
