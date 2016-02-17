@@ -34,7 +34,7 @@ final class AnnotatedClassMethods
             return new Name(Name::ANY);
         }
         $named = $this->reader->getMethodAnnotation($constructor, 'Ray\Di\Di\Named');
-        if ($named) {
+        if ($named instanceof Named) {
             /* @var $named Named */
             return new Name($named->value);
         }
@@ -85,7 +85,7 @@ final class AnnotatedClassMethods
         if ($qualifierNamed) {
             $keyVal[] = $qualifierNamed;
         }
-        if ($keyVal) {
+        if ($keyVal !== []) {
             return implode(',', $keyVal); // var1=qualifier1,va2=qualifier2
         }
 

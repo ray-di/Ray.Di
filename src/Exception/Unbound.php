@@ -29,6 +29,7 @@ class Unbound extends \LogicException implements ExceptionInterface
      */
     private function buildMessage(Unbound $e, array $msg)
     {
+        $lastE = $e;
         while ($e instanceof Unbound) {
             $msg[] = sprintf("- %s\n", $e->getMessage());
             $lastE = $e;
