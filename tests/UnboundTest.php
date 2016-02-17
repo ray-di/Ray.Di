@@ -26,7 +26,7 @@ class UnboundTest extends \PHPUnit_Framework_TestCase
     public function testNonUnboundPrevious()
     {
         $string = (string) new Unbound('', 0, new \LogicException);
-        $expected = 'LogicException in';
-        $this->assertStringStartsWith($expected, $string);
+        $expected = 'LogicException';
+        $this->assertContains($expected, $string);
     }
 }
