@@ -7,7 +7,7 @@
 namespace Ray\Di\Di;
 
 /**
- * Named
+ * Annotates named things
  *
  * @Annotation
  * @Target("METHOD")

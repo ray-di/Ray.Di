@@ -7,7 +7,7 @@
 namespace Ray\Di\Di;
 
 /**
- * Inject
+ * Annotates your class methods into which the Injector should inject values
  *
  * @Annotation
  * @Target("METHOD")
@@ -15,7 +15,7 @@ namespace Ray\Di\Di;
 final class Inject implements InjectInterface
 {
     /**
-     * Optional ?
+     * If true, and the appropriate binding is not found, the Injector will skip injection of this method or field rather than produce an error.
      *
      * @var bool
      */
