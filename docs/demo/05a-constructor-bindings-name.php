@@ -4,8 +4,8 @@ namespace Ray\Di\Demo;
 
 require __DIR__ . '/bootstrap.php';
 
-use Ray\Di\Injector;
 use Ray\Di\AbstractModule;
+use Ray\Di\Injector;
 
 class ConstructorBindingModule extends AbstractModule
 {
@@ -21,4 +21,4 @@ $php = $injector->getInstance(LangInterface::class);
 /* @var $php Php */
 $works = $php->version === '4.4';
 
-echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
+echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

@@ -2,8 +2,8 @@
 
 namespace Ray\Di\Demo;
 
-use Ray\Di\Injector;
 use Ray\Di\AbstractModule;
+use Ray\Di\Injector;
 
 require __DIR__ . '/bootstrap.php';
 
@@ -21,4 +21,4 @@ $computer = $injector->getInstance(ComputerInterface::class);
 /* @var $computer Computer */
 $works = ($computer->lang instanceof Php);
 
-echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
+echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

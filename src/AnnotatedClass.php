@@ -8,6 +8,7 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Ray\Di\Di\PostConstruct;
 
 final class AnnotatedClass
 {
@@ -62,9 +63,9 @@ final class AnnotatedClass
     {
         $methods = $class->getMethods();
         foreach ($methods as $method) {
-            /* @var $annotation \Ray\Di\Di\PostConstruct|null */
+            /* @var $annotation PostConstruct|null */
             $annotation = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\PostConstruct');
-            if ($annotation) {
+            if ($annotation instanceof PostConstruct) {
                 return $method;
             }
         }

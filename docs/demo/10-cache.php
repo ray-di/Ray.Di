@@ -2,8 +2,8 @@
 
 namespace Ray\Di\Demo;
 
-use Ray\Di\Injector;
 use Ray\Di\AbstractModule;
+use Ray\Di\Injector;
 
 require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/src/modules.php';
@@ -34,5 +34,5 @@ $robot2 = $injector->getInstance(RobotInterface::class);
 $time2 = microtime(true) - $start;
 
 $works = $robot1->isReady === true && $robot2->isReady === true;
-echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
+echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
 echo 'x' . round($time1 / $time2) . ' times faster.' . PHP_EOL;

@@ -17,18 +17,22 @@ class Unbound extends \LogicException implements ExceptionInterface
         if (! $e instanceof \Exception) {
             return $this->getMainMessage($this);
         }
+        if ($e instanceof Unbound) {
+            return $this->buildMessage($e, $messages) . "\n" . $e->getTraceAsString();
+        }
 
-        return $this->buildMessage($e, $messages) . "\n" . $e->getTraceAsString();
+        return parent::__toString();
     }
 
     /**
-     * @param Unbound $e
-     * @param array   $msg
+     * @param Unbound  $e
+     * @param string[] $msg
      *
      * @return string
      */
     private function buildMessage(Unbound $e, array $msg)
     {
+        $lastE = $e;
         while ($e instanceof Unbound) {
             $msg[] = sprintf("- %s\n", $e->getMessage());
             $lastE = $e;

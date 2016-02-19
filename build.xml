@@ -161,7 +161,7 @@
     </target>
 
     <target name="apigen" description="Generate API documentation using ApiGen">
-        <exec executable="apigen.php">
+        <exec executable="apigen">
             <arg line="--source src --destination ${basedir}/build/api" />
         </exec>
     </target>

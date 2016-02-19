@@ -211,7 +211,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testAopBoundInDifferentModule()
     {
-        $injector = new Injector(new FakeAopInstallModule);
+        $injector = new Injector(new FakeAopInstallModule, $_ENV['TMP_DIR']);
         $instance = $injector->getInstance(FakeAopInterface::class);
         /* @var $instance FakeAop */
         $result = $instance->returnSame(2);
@@ -220,7 +220,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testAopBoundInDifferentModuleAfterAnotherBinding()
     {
-        $injector = new Injector(new FakeAopInstallModule(new FakeAopModule));
+        $injector = new Injector(new FakeAopInstallModule(new FakeAopModule), $_ENV['TMP_DIR']);
         $instance = $injector->getInstance(FakeAopInterface::class);
         /* @var $instance FakeAop */
         $result = $instance->returnSame(2);
@@ -229,7 +229,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testAopBoundDoublyInDifferentModule()
     {
-        $injector = new Injector(new FakeAopDoublyInstallModule);
+        $injector = new Injector(new FakeAopDoublyInstallModule, $_ENV['TMP_DIR']);
         $instance = $injector->getInstance(FakeAopInterface::class);
         /* @var $instance FakeAop */
         $result = $instance->returnSame(2);
@@ -249,7 +249,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testAopOnDemandByUnboundConcreteClass()
     {
-        $injector = new Injector(new FakeAopInterceptorModule);
+        $injector = new Injector(new FakeAopInterceptorModule, $_ENV['TMP_DIR']);
         $instance = $injector->getInstance(FakeAop::class);
         /* @var $instance FakeAop */
         $result = $instance->returnSame(2);

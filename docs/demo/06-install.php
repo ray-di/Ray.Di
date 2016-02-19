@@ -2,8 +2,8 @@
 
 namespace Ray\Di\Demo;
 
-use Ray\Di\Injector;
 use Ray\Di\AbstractModule;
+use Ray\Di\Injector;
 
 require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/src/modules.php';
@@ -25,4 +25,4 @@ $robot = $injector->getInstance(RobotInterface::class);
 /* @var $robot Robot */
 $works = $robot->isReady === true;
 
-echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
+echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

@@ -7,7 +7,7 @@
 namespace Ray\Di\Di;
 
 /**
- * Qualifier
+ * Identifies qualifier annotations
  *
  * @Annotation
  * @Target("CLASS")

@@ -2,9 +2,9 @@
 
 namespace Ray\Di\Demo;
 
+use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Injector;
-use Ray\Di\AbstractModule;
 
 require __DIR__ . '/bootstrap.php';
 
@@ -22,9 +22,6 @@ class DeepLinkedClassBindingModule extends AbstractModule
         // $this->bind(E::class)->to(E::class);
     }
 }
-
-
-
 
 $injector = new Injector(new DeepLinkedClassBindingModule);
 // this will fail with an exception as E is not bound
@@ -49,4 +46,3 @@ try {
 //    Ray\Di\Exception\Unbound:dependency 'Ray\Di\Demo\E' with name '' used in /Users/akihito/git/Ray.Di/docs/demo/src/D.php:7
 //    Ray\Di\Exception\Untargetted:Ray\Di\Demo\E
 }
-

@@ -2,16 +2,22 @@
 
 namespace Ray\Di\Demo;
 
+use Ray\Di\AbstractModule;
 use Ray\Di\InjectionPoints;
 use Ray\Di\Injector;
-use Ray\Di\AbstractModule;
 
 require __DIR__ . '/bootstrap.php';
 
-interface FinderInterface {}
-interface ListerInterface {}
+interface FinderInterface
+{
+}
+interface ListerInterface
+{
+}
 
-class Finder implements FinderInterface {}
+class Finder implements FinderInterface
+{
+}
 class Lister implements ListerInterface
 {
     public $finder;
@@ -38,7 +44,7 @@ $injector = new Injector(new ListerModule);
 $lister = $injector->getInstance(ListerInterface::class);
 /* @var $lister Lister */
 $works = ($lister->finder instanceof FinderInterface);
-echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
+echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
 
 class Lister2 implements ListerInterface
 {
@@ -69,4 +75,4 @@ $injector = new Injector(new Lister2Module);
 $lister = $injector->getInstance(ListerInterface::class);
 /* @var $lister Lister */
 $works = ($lister->finder instanceof FinderInterface);
-echo ($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
+echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

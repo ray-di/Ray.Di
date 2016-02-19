@@ -18,7 +18,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "ray/aop": "~2.0",
+        "ray/aop": "~2.3",
         "ray/compiler": "~1.0"
     },
     "autoload": {
@@ -26,8 +26,6 @@
             "Ray\\Di\\": "src/"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "autoload-dev": {
         "psr-4": {
             "Ray\\Di\\": [
