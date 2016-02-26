@@ -82,7 +82,8 @@ final class AssistedInterceptor implements MethodInterceptor
             $hint = $parameter->getClass();
             $interface = $hint ? $hint->getName() : '';
             $name = $this->getName($method, $parameter);
-            $arguments[] = $this->injector->getInstance($interface, $name);
+            $pos = $parameter->getPosition();
+            $arguments[$pos] = $this->injector->getInstance($interface, $name);
         }
 
         return $arguments;
