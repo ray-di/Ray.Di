@@ -287,4 +287,10 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(Unbound::class, FakeAbstractClass::class);
         (new Injector)->getInstance(FakeConcreteClass::class);
     }
+
+    public function testIsOptionalValue()
+    {
+        $pdo = (new Injector(new FakePdoModule))->getInstance(\PDO::class);
+        $this->assertInstanceOf(\PDO::class, $pdo);
+    }
 }
