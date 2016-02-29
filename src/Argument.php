@@ -37,9 +37,18 @@ final class Argument
     {
         $interface = $this->getTypeHint($parameter);
         $interface = ($interface === 'array') ? '' : $interface; // hhvm
-        $this->isDefaultAvailable = $parameter->isDefaultValueAvailable();
+        $isOptional = $parameter->isOptional();
+        $this->isDefaultAvailable = $parameter->isDefaultValueAvailable() || $isOptional;
+        if ($isOptional) {
+            $this->default = null;
+        }
         if ($this->isDefaultAvailable) {
-            $this->default = $parameter->getDefaultValue();
+            try {
+                $this->default = $parameter->getDefaultValue();
+            } catch (\ReflectionException $e) {
+                // probably it is internal class like \PDO
+                $this->default = null;
+            }
         }
         $this->index = $interface . '-' . $name;
         $this->reflection = $parameter;
