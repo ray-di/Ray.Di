@@ -1,24 +1,44 @@
 <?php
 
-namespace Ray\Di\Demo;
-
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 
-require __DIR__ . '/bootstrap.php';
+require __DIR__.'/bootstrap.php';
 
-class LinkedBindingModule extends AbstractModule
+interface FinderInterface
+{
+}
+
+class Finder implements FinderInterface
+{
+}
+
+class FinderModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind(LangInterface::class)->to(Php::class);
-        $this->bind(ComputerInterface::class)->to(Computer::class);
+        $this->bind(FinderInterface::class)->to(Finder::class);
+        $this->bind(MovieListerInterface::class)->to(MovieLister::class);
     }
 }
 
-$injector = new Injector(new LinkedBindingModule);
-$computer = $injector->getInstance(ComputerInterface::class);
-/* @var $computer Computer */
-$works = ($computer->lang instanceof Php);
+interface MovieListerInterface
+{
+}
+
+class MovieLister implements MovieListerInterface
+{
+    public $finder;
+
+    public function __construct(FinderInterface $finder)
+    {
+        $this->finder = $finder;
+    }
+}
+
+$injector = new Injector(new FinderModule());
+$movieLister = $injector->getInstance(MovieListerInterface::class);
+/* @var $movieLister MovieLister */
+$works = ($movieLister->finder instanceof Finder);
 
 echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
