@@ -1,6 +1,7 @@
 <?php
 
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Inject;
 use Ray\Di\Injector;
 
 require __DIR__.'/bootstrap.php';
@@ -30,7 +31,10 @@ class MovieLister implements MovieListerInterface
 {
     public $finder;
 
-    public function __construct(FinderInterface $finder)
+    /**
+     * @Inject
+     */
+    public function setFinder(FinderInterface $finder)
     {
         $this->finder = $finder;
     }
