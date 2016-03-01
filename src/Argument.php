@@ -42,14 +42,7 @@ final class Argument
         if ($isOptional) {
             $this->default = null;
         }
-        if ($this->isDefaultAvailable) {
-            try {
-                $this->default = $parameter->getDefaultValue();
-            } catch (\ReflectionException $e) {
-                // probably it is internal class like \PDO
-                $this->default = null;
-            }
-        }
+        $this->setDefaultValue($parameter);
         $this->index = $interface . '-' . $name;
         $this->reflection = $parameter;
         $this->meta = sprintf(
@@ -115,5 +108,18 @@ final class Argument
     public function getMeta()
     {
         return $this->meta;
+    }
+
+    private function setDefaultValue(\ReflectionParameter $parameter)
+    {
+        if (! $this->isDefaultAvailable) {
+            return;
+        }
+        try {
+            $this->default = $parameter->getDefaultValue();
+        } catch (\ReflectionException $e) {
+            // probably it is internal class like \PDO
+            $this->default = null;
+        }
     }
 }
