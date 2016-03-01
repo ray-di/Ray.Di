@@ -53,11 +53,12 @@ final class Argument
         $this->index = $interface . '-' . $name;
         $this->reflection = $parameter;
         $this->meta = sprintf(
-            "dependency '%s' with name '%s' used in %s:%d",
+            "dependency '%s' with name '%s' used in %s:%d ($%s)",
             $interface,
             $name,
             $this->reflection->getDeclaringFunction()->getFileName(),
-            $this->reflection->getDeclaringFunction()->getStartLine()
+            $this->reflection->getDeclaringFunction()->getStartLine(),
+            $parameter->getName()
         );
     }
 
