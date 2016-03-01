@@ -12,11 +12,11 @@ $movieLister = $injector->getInstance(MovieListerInterface::class);
 $time1 = microtime(true) - $start;
 
 // save file cache
-file_put_contents(__FILE__ . '.cache', serialize(new Injector(new FinderModule)));
+file_put_contents(__FILE__ . '.cache.php', serialize(new Injector(new FinderModule)));
 
 // cached injector
 $start = microtime(true);
-$injector = unserialize(file_get_contents(__FILE__ . '.cache'));
+$injector = unserialize(file_get_contents(__FILE__ . '.cache.php'));
 /* @var $movieLister2 MovieLister */
 $movieLister2 = $injector->getInstance(MovieListerInterface::class);
 $time2 = microtime(true) - $start;
