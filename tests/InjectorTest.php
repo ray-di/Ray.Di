@@ -290,7 +290,9 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testIsOptionalValue()
     {
-        $pdo = (new Injector(new FakePdoModule))->getInstance(\PDO::class);
-        $this->assertInstanceOf(\PDO::class, $pdo);
+        if (! defined('HHVM_VERSION')) {
+            $pdo = (new Injector(new FakePdoModule))->getInstance(\PDO::class);
+            $this->assertInstanceOf(\PDO::class, $pdo);
+        }
     }
 }
