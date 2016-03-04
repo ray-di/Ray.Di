@@ -1,5 +1,7 @@
 .idea
 build
 vendor
-*.cache
+*.cache.php
 composer.lock
+tmp/
+
