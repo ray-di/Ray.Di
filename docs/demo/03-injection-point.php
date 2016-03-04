@@ -11,29 +11,30 @@ interface FinderInterface
 {
 }
 
-class LegacyFinder implements FinderInterface
-{
-}
-
-class ModernFinder implements FinderInterface
-{
-}
-
-class FinderModule extends AbstractModule
-{
-    protected function configure()
-    {
-        $this->bind(FinderInterface::class)->toProvider(FinderProvider::class);
-        $this->bind(MovieListerInterface::class)->to(ModernMovieLister::class);
-    }
-}
-
 interface MovieListerInterface
 {
 }
 
-class ModernMovieLister implements MovieListerInterface
+class Finder implements FinderInterface
 {
+    private $className;
+
+    public function __construct($className)
+    {
+        $this->className = $className;
+    }
+
+    public function find()
+    {
+        return sprintf('search for [%s]', $this->className);
+    }
+}
+
+class MovieLister implements MovieListerInterface
+{
+    /**
+     * @var Finder
+     */
     public $finder;
 
     public function __construct(FinderInterface $finder)
@@ -56,17 +57,26 @@ class FinderProvider implements ProviderInterface
      */
     public function get()
     {
-        $consumer = $this->ip->getClass()->getName();
-        // chooseb dependency(finder) by consumer
-        $finder = ($consumer === 'ModernMovieLister') ? new ModernFinder() : new LegacyFinder();
+        $className = $this->ip->getClass()->getName();
+        $finder = new Finder($className);
 
         return $finder;
+    }
+}
+
+class FinderModule extends AbstractModule
+{
+    protected function configure()
+    {
+        $this->bind(FinderInterface::class)->toProvider(FinderProvider::class);
+        $this->bind(MovieListerInterface::class)->to(MovieLister::class);
     }
 }
 
 $injector = new Injector(new FinderModule());
 $movieLister = $injector->getInstance(MovieListerInterface::class);
 /* @var $movieLister MovieLister */
-$works = ($movieLister->finder instanceof ModernFinder);
+$result = $movieLister->finder->find();
+$works = ($result === 'search for [MovieLister]');
 
-echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
+echo($works ? 'It works!' : 'It DOES NOT work!').PHP_EOL;
