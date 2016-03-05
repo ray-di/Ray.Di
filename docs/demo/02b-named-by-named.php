@@ -23,7 +23,7 @@ class FinderModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind(FinderInterface::class)->annotatedWith("legacy")->to(LegacyFinder::class);
+        $this->bind(FinderInterface::class)->annotatedWith('legacy')->to(LegacyFinder::class);
         $this->bind(MovieListerInterface::class)->to(MovieLister::class);
     }
 }

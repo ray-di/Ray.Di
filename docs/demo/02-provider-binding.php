@@ -45,7 +45,6 @@ class ModernMovieLister implements MovieListerInterface
     }
 }
 
-
 class FinderProvider implements ProviderInterface
 {
     private $ip;
@@ -62,13 +61,11 @@ class FinderProvider implements ProviderInterface
     {
         $consumer = $this->ip->getClass()->getName();
         // chooseb dependency(finder) by consumer
-        $finder =  ($consumer === 'ModernMovieLister') ? new ModernFinder : new LegacyFinder ;
+        $finder =  ($consumer === 'ModernMovieLister') ? new ModernFinder : new LegacyFinder;
 
         return $finder;
     }
-
 }
-
 
 $injector = new Injector(new FinderModule);
 $movieLister = $injector->getInstance(MovieListerInterface::class);

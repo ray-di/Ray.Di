@@ -40,7 +40,6 @@ class Legacy
 {
 }
 
-
 class MovieLister implements MovieListerInterface
 {
     public $finder;

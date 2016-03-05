@@ -8,22 +8,30 @@ require __DIR__ . '/bootstrap.php';
 
 class A
 {
-    public function __construct(B $dep){}
+    public function __construct(B $dep)
+    {
+    }
 }
 
 class B
 {
-    public function __construct(C $dep){}
+    public function __construct(C $dep)
+    {
+    }
 }
 
 class C
 {
-    public function __construct(D $dep){}
+    public function __construct(D $dep)
+    {
+    }
 }
 
 class D
 {
-    public function __construct(EInterface $dep){}
+    public function __construct(EInterface $dep)
+    {
+    }
 }
 
 interface EInterface

@@ -5,7 +5,6 @@ require __DIR__ . '/bootstrap.php';
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 
-
 // 	public PDO::__construct ( string $dsn [, string $username [, string $password [, array $options ]]] )
 
 class PdoModule extends AbstractModule

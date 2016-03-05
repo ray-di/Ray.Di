@@ -1,8 +1,8 @@
 <?php
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Di\PostConstruct;
 use Ray\Di\Di\Inject;
+use Ray\Di\Di\PostConstruct;
 use Ray\Di\Scope;
 
 class Sorter
@@ -15,12 +15,16 @@ interface DbInterface
 
 class Db implements DbInterface
 {
-    public function __construct($dsn, $username, $password){}
+    public function __construct($dsn, $username, $password)
+    {
+    }
 
     /**
      * @PostConstruct
      */
-    public function init(){}
+    public function init()
+    {
+    }
 }
 
 interface FinderInterface
@@ -29,9 +33,15 @@ interface FinderInterface
 
 class DbFinder implements FinderInterface
 {
-    public function __construct(DbInterface $db){}
-    /** @Inject */public function setDb(DbInterface $db){}
-    /** @Inject */public function setSorter(Sorter $sorter, Sorter $sorte2){}
+    public function __construct(DbInterface $db)
+    {
+    }
+/** @Inject */public function setDb(DbInterface $db)
+{
+}
+/** @Inject */public function setSorter(Sorter $sorter, Sorter $sorte2)
+{
+}
 }
 
 interface MovieListerInterface
@@ -40,8 +50,12 @@ interface MovieListerInterface
 
 class MovieLister implements MovieListerInterface
 {
-    public function __construct(FinderInterface $finder){}
-    /** @Inject */public function setFinder01(FinderInterface $finder, FinderInterface $finder1, FinderInterface $finder2){}
+    public function __construct(FinderInterface $finder)
+    {
+    }
+/** @Inject */public function setFinder01(FinderInterface $finder, FinderInterface $finder1, FinderInterface $finder2)
+{
+}
 }
 
 class FinderModule extends AbstractModule

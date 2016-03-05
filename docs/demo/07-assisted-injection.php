@@ -39,4 +39,3 @@ $foo = $injector->getInstance(Foo::class);
 echo $foo->bar('Tokyo Story');
 
 // searching [Tokyo Story] by [Finder]...
-
