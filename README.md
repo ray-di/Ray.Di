@@ -685,8 +685,8 @@ $lister = $injector->getInstance(ListerInterface::class);
 ```
 ## Frameworks integration ##
 
- * [CakePHP3](https://github.com/lorenzo/piping-bag) by [@jose_zap](https://twitter.com/jose_zap)
- * [Symfony](https://github.com/qckanemoto/symfony-raydi-sample) by [@qckanemoto](https://twitter.com/qckanemoto)
+ * [CakePHP3 PipingBag](https://github.com/lorenzo/piping-bag) by [@jose_zap](https://twitter.com/jose_zap)
+ * [Symfony QckRayDiBundle](https://github.com/qckanemoto/QckRayDiBundle) and [sample project](https://github.com/qckanemoto/symfony-raydi-sample) by [@qckanemoto](https://twitter.com/qckanemoto)
  * [Radar](https://github.com/ray-di/Ray.Adr)
  * [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday)
 
