@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/Di/Inject.php';
-require __DIR__ . '/Di/Named.php';
-require __DIR__ . '/Di/PostConstruct.php';
-require __DIR__ . '/Di/Qualifier.php';
+require_once __DIR__ . '/Di/Inject.php';
+require_once __DIR__ . '/Di/Named.php';
+require_once __DIR__ . '/Di/PostConstruct.php';
+require_once __DIR__ . '/Di/Qualifier.php';
