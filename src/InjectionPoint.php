@@ -57,7 +57,7 @@ final class InjectionPoint implements InjectionPointInterface
     public function getQualifiers()
     {
         $qualifiers = [];
-        /** @noinspection PhpParamsInspection */
+        /* @noinspection PhpParamsInspection */
         $annotations = $this->reader->getMethodAnnotations($this->getMethod());
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(
