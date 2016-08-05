@@ -92,8 +92,8 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $this->container->add($bind);
         $this->container->merge($extraContainer);
         $array = $this->container->getContainer();
-        $this->assertArrayHasKey(FakeEngineInterface::class . '-' . Name::ANY,  $array);
-        $this->assertArrayHasKey(FakeRobotInterface::class . '-' . Name::ANY,  $array);
+        $this->assertArrayHasKey(FakeEngineInterface::class . '-' . Name::ANY, $array);
+        $this->assertArrayHasKey(FakeRobotInterface::class . '-' . Name::ANY, $array);
     }
 
     public function testMergePointcuts()

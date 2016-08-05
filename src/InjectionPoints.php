@@ -21,7 +21,7 @@ final class InjectionPoints
      *
      * @return $this
      */
-    public function addMethod($method, $name = NAME::ANY)
+    public function addMethod($method, $name = Name::ANY)
     {
         $this->points[] = [$method, $name, false];
 
@@ -34,7 +34,7 @@ final class InjectionPoints
      *
      * @return $this
      */
-    public function addOptionalMethod($method, $name = NAME::ANY)
+    public function addOptionalMethod($method, $name = Name::ANY)
     {
         $this->points[] = [$method, $name, true];
 
