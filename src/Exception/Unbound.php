@@ -6,8 +6,6 @@
  */
 namespace Ray\Di\Exception;
 
-use Ray\Di\Exception;
-
 class Unbound extends \LogicException implements ExceptionInterface
 {
     public function __toString()
