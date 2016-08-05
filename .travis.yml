@@ -1,16 +1,17 @@
-asudo: false
 language: php
 php:
-  - 5.5
   - 5.6
+  - 7.0
   - hhvm
-  - 7
+sudo: false
+cache:
+  directories:
+    - $HOME/.composer/cache
 before_script:
   - composer self-update
   - composer install
 script:
- - if [ "$TRAVIS_PHP_VERSION" == "hhvm" ]; then phpunit; fi
- - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then phpunit --coverage-text --coverage-clover=coverage.clover; fi
+  - phpunit
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
