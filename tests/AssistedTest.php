@@ -1,5 +1,7 @@
 <?php
 
+use Ray\Di\FakeAbstractDb;
+
 namespace Ray\Di;
 
 use Ray\Compiler\DiCompiler;
@@ -54,5 +56,15 @@ class AssistedTest extends \PHPUnit_Framework_TestCase
         $expected1 = 1;
         $this->assertSame($expected1, $assistedDependency1);
         $this->assertInstanceOf(FakeRobot::class, $assistedDependency2);
+    }
+
+    public function testAssistedMethodInvocation()
+    {
+        $assistedConsumer = (new Injector(new FakeAssistedDbModule))->getInstance(FakeAssistedParamsConsumer::class);
+        /* @var $assistedConsumer FakeAssistedParamsConsumer */
+        list($id, $db) = $assistedConsumer->getUser(1);
+        /* @var $db FakeAbstractDb */
+        $this->assertSame(1, $id);
+        $this->assertSame(1, $db->dbId);
     }
 }
