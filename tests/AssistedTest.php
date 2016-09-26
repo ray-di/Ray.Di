@@ -71,7 +71,7 @@ class AssistedTest extends \PHPUnit_Framework_TestCase
 
     public function testAssistedMethodInvocationNotAvailable()
     {
-        $this->expectException(MethodInvocationNotAvailable::class);
+        $this->setExpectedException(MethodInvocationNotAvailable::class);
         $assistedDbProvider = (new Injector(new FakeAssistedDbModule))->getInstance(FakeAssistedDbProvider::class);
         /* @var $assistedDbProvider FakeAssistedDbProvider */
         $assistedDbProvider->get();
