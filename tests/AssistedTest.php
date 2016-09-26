@@ -5,6 +5,7 @@ use Ray\Di\FakeAbstractDb;
 namespace Ray\Di;
 
 use Ray\Compiler\DiCompiler;
+use Ray\Di\Exception\MethodInvocationNotAvailable;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Exception\Untargetted;
 
@@ -66,5 +67,13 @@ class AssistedTest extends \PHPUnit_Framework_TestCase
         /* @var $db FakeAbstractDb */
         $this->assertSame(1, $id);
         $this->assertSame(1, $db->dbId);
+    }
+
+    public function testAssistedMethodInvocationNotAvailable()
+    {
+        $this->expectException(MethodInvocationNotAvailable::class);
+        $assistedDbProvider = (new Injector(new FakeAssistedDbModule))->getInstance(FakeAssistedDbProvider::class);
+        /* @var $assistedDbProvider FakeAssistedDbProvider */
+        $assistedDbProvider->get();
     }
 }
