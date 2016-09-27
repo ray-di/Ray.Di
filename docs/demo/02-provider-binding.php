@@ -61,7 +61,7 @@ class FinderProvider implements ProviderInterface
     {
         $consumer = $this->ip->getClass()->getName();
         // chooseb dependency(finder) by consumer
-        $finder =  ($consumer === 'ModernMovieLister') ? new ModernFinder : new LegacyFinder;
+        $finder = ($consumer === 'ModernMovieLister') ? new ModernFinder : new LegacyFinder;
 
         return $finder;
     }

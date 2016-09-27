@@ -14,7 +14,7 @@ $movieLister = $injector->getInstance(MovieListerInterface::class);
 $time1 = microtime(true) - $start;
 
 // compile
-$tmpDir =  __DIR__ . '/tmp';
+$tmpDir = __DIR__ . '/tmp';
 $compiler = new DiCompiler(new FinderModule, $tmpDir);
 $compiler->compile();
 $scriptInjector = new ScriptInjector($tmpDir);

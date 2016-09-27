@@ -29,6 +29,7 @@ class MethodInvocationProvider implements ProviderInterface
         if (is_null($this->invocation)) {
             throw new MethodInvocationNotAvailable;
         }
+
         return $this->invocation;
     }
 }
