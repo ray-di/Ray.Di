@@ -150,7 +150,7 @@ class HorizontalScaleDbProvider implements ProviderInterface
     public function get()
     {
         $methodInvocation = $this->invocationProvider->get();
-        $list($id) = methodInvocation->getArguments()->getArrayCopy();
+        list($id) = methodInvocation->getArguments()->getArrayCopy();
         
         return new UserDb($id); // $id for database choice.
     }
