@@ -85,6 +85,10 @@ abstract class AbstractModule
      */
     public function getContainer()
     {
+        if (! $this->container) {
+            $this->activate();
+        }
+
         return $this->container;
     }
 
