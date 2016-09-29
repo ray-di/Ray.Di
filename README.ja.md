@@ -474,7 +474,7 @@ $lister = $injector->getInstance(ListerInterface::class);
 
 ## 要件
 
-* PHP 5.4+
+* PHP 5.6+
 * hhvm
 
 

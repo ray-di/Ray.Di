@@ -239,12 +239,14 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
     public function testAopClassAutoloader()
     {
         passthru('php ' . __DIR__ . '/script/aop.php');
-        $injector = unserialize(file_get_contents(__DIR__ . '/script/aop.php.cache'));
+        $cacheFile = __DIR__ . '/script/aop.php.cache';
+        $injector = unserialize(file_get_contents($cacheFile));
         /* @var $injector Injector */
         $instance = $injector->getInstance(FakeAopInterface::class);
         /* @var $instance FakeAop */
         $result = $instance->returnSame(2);
         $this->assertSame(4, $result);
+        unlink($cacheFile);
     }
 
     public function testAopOnDemandByUnboundConcreteClass()
