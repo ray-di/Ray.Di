@@ -30,4 +30,11 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         $instance = $module->getContainer()->getInstance(FakeRobotInterface::class, 'original');
         $this->assertInstanceOf(FakeRobotInterface::class, $instance);
     }
+
+    public function testConstructorCallModule()
+    {
+        $module = new FakelNoConstructorCallModule;
+        $container = $module->getContainer();
+        $this->assertInstanceOf(Container::class, $container);
+    }
 }
