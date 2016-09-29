@@ -696,7 +696,7 @@ Various modules for `Ray.Di` are available at https://github.com/Ray-Di.
 
 ## Requirements ##
 
-* PHP 5.4+
+* PHP 5.6+
 * hhvm
 
 ## Installation ##
