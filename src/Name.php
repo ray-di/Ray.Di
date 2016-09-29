@@ -66,7 +66,7 @@ final class Name
      */
     private function parseName($name)
     {
-        $keyValues  = explode(',', $name);
+        $keyValues = explode(',', $name);
         foreach ($keyValues as $keyValue) {
             $exploded = explode('=', $keyValue);
             if (isset($exploded[1])) {
