@@ -21,7 +21,7 @@
     <rule ref="rulesets/design.xml/DepthOfInheritance"/>
     <rule ref="rulesets/design.xml/CouplingBetweenObjects">
         <properties>
-            <property name="minimum" value="14"/>
+            <property name="minimum" value="15"/>
         </properties>
     </rule>
     <!--naming-->

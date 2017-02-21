@@ -18,6 +18,7 @@ class BindTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
         $this->bind = new Bind(new Container, FakeTyreInterface::class);
     }
+
     public function testGetBound()
     {
         $this->bind->to(FakeTyre::class);
@@ -124,5 +125,22 @@ class BindTest extends \PHPUnit_Framework_TestCase
         $instance1 = $container->getInstance(ProviderInterface::class, 'handle');
         $instance2 = $container->getInstance(ProviderInterface::class, 'handle');
         $this->assertSame(spl_object_hash($instance1), spl_object_hash($instance2));
+    }
+
+    public function testProviderContext()
+    {
+        $container = new Container;
+        $bind = (new Bind($container, ProviderInterface::class))->toProvider(FakeContextualProvider::class, 'context_string');
+        $instance = $container->getInstance(ProviderInterface::class, Name::ANY);
+        $this->assertSame('context_string', $instance->context);
+    }
+
+    /**
+     * @expectedException \Ray\Di\Exception\InvalidContext
+     */
+    public function testInvalidProviderContext()
+    {
+        $container = new Container;
+        (new Bind($container, ProviderInterface::class))->toProvider(FakeHandleProvider::class, false);
     }
 }

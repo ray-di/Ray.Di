@@ -34,10 +34,10 @@ final class DependencyFactory
      *
      * @return DependencyProvider
      */
-    public function newProvider(\ReflectionClass $provider)
+    public function newProvider(\ReflectionClass $provider, $context)
     {
         $dependency = $this->newAnnotatedDependency($provider);
-        $dependency = new DependencyProvider($dependency);
+        $dependency = new DependencyProvider($dependency, $context);
 
         return $dependency;
     }

@@ -7,6 +7,7 @@
  */
 namespace Ray\Di;
 
+use Ray\Di\Exception\InvalidContext;
 use Ray\Di\Exception\NotFound;
 
 final class Bind
@@ -114,16 +115,20 @@ final class Bind
 
     /**
      * @param string $provider
+     * @param string $context
      *
      * @return $this
      *
      * @throws NotFound
      */
-    public function toProvider($provider)
+    public function toProvider($provider, $context = null)
     {
+        if (! is_null($context) && ! is_string($context)) {
+            throw new InvalidContext(gettype($context));
+        }
         $this->untarget = null;
         $this->validate->toProvider($provider);
-        $this->bound = (new DependencyFactory)->newProvider(new \ReflectionClass($provider));
+        $this->bound = (new DependencyFactory)->newProvider(new \ReflectionClass($provider), $context);
         $this->container->add($this);
 
         return $this;
