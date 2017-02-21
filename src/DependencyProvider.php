@@ -9,6 +9,11 @@ namespace Ray\Di;
 final class DependencyProvider implements DependencyInterface
 {
     /**
+     * @var string
+     */
+    public $context;
+
+    /**
      * Provider dependency
      *
      * @var Dependency
@@ -25,9 +30,10 @@ final class DependencyProvider implements DependencyInterface
      */
     private $instance;
 
-    public function __construct(Dependency $dependency)
+    public function __construct(Dependency $dependency, $context = null)
     {
         $this->dependency = $dependency;
+        $this->context = $context;
     }
 
     /**
@@ -46,7 +52,11 @@ final class DependencyProvider implements DependencyInterface
         if ($this->isSingleton && $this->instance) {
             return $this->instance;
         }
-        $this->instance = $this->dependency->inject($container)->get();
+        $provider = $this->dependency->inject($container);
+        if ($provider instanceof SetContextInterface) {
+            $this->setContext($provider);
+        }
+        $this->instance = $provider->get();
 
         return $this->instance;
     }
@@ -59,6 +69,11 @@ final class DependencyProvider implements DependencyInterface
         if ($scope === Scope::SINGLETON) {
             $this->isSingleton = true;
         }
+    }
+
+    public function setContext(SetContextInterface $provider)
+    {
+        $provider->setContext($this->context);
     }
 
     public function __sleep()
