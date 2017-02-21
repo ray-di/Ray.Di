@@ -242,6 +242,61 @@ class DatabaseTransactionLogProvider implements Provider
 ```php
 $this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider:class);
 ```
+## コンテンキストプロバイダ束縛
+
+同じプロバイダーでコンテキスト別にオブジェクトを生成したい場合があります。例えば接続先の違う複数のDBオブジェクトを同じインターフェイスでインジェクトしたい場合などです。そういう場合には`toProvider()`でコンテキスト（文字列）を指定して束縛をします。
+
+```php
+$dbConfig = ['user' => $userDsn, 'job'=> $jobDsn, 'log' => $logDsn];
+$this->bind()->annotatedWith('db_config')->toInstance(dbConfig);
+$this->bind(Connection::class)->annotatedWith('usr_db')->toProvider(DbalProvider::class, 'user');
+$this->bind(Connection::class)->annotatedWith('job_db')->toProvider(DbalProvider::class, 'job');
+$this->bind(Connection::class)->annotatedWith('log_db')->toProvider(DbalProvider::class, 'log');
+```
+
+プロバイダーはコンテキスト別に生成します。
+
+```php
+class DbalProvider implements ProviderInterface, SetContextInterface
+{
+    private $dbConfigs;
+
+    public function setContext($context)
+    {
+        $this->context = $context;
+    }
+
+    /**
+     * @Named("db_config")
+     */
+    public function __construct(array $dbConfigs)
+    {
+        $this->dbConfigs = $dbConfigs;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get()
+    {
+        $config = $this->dbConfigs[$this->context];
+        $conn = DriverManager::getConnection(config);
+
+        return $conn;
+    }
+}
+```
+同じインターフェイスですが、接続先の違う別々のDBオブジェクトを受け取ります。
+
+```php
+/**
+ * @Named("userDb=user_db,jobDb=job_db,logDb=log_db")
+ */
+public function __construct(Connection $userDb, Connection $jobDb, Connection $logDb)
+{
+  //...
+}
+```
 
 
 ## 名前束縛
