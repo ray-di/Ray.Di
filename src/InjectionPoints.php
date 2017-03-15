@@ -16,6 +16,21 @@ final class InjectionPoints
     private $points = [];
 
     /**
+     * @param string $class
+     *
+     * @return SetterMethods
+     */
+    public function __invoke($class)
+    {
+        $points = [];
+        foreach ($this->points as $point) {
+            $points[] = $this->getSetterMethod($class, $point);
+        }
+
+        return new SetterMethods($points);
+    }
+
+    /**
      * @param string $method setter method name
      * @param string $name   binding name
      *
@@ -39,21 +54,6 @@ final class InjectionPoints
         $this->points[] = [$method, $name, true];
 
         return $this;
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return SetterMethods
-     */
-    public function __invoke($class)
-    {
-        $points = [];
-        foreach ($this->points as $point) {
-            $points[] = $this->getSetterMethod($class, $point);
-        }
-
-        return new SetterMethods($points);
     }
 
     /**

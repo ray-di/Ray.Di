@@ -1,10 +1,7 @@
 <?php
-
 namespace Ray\Di;
 
-use Ray\Compiler\DiCompiler;
 use Ray\Di\Exception\Unbound;
-use Ray\Di\Exception\Untargetted;
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -101,7 +98,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $injector = new Injector(new FakeToBindModule);
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
-        $this->assertNotEquals(spl_object_hash($instance1), spl_object_hash($instance2));
+        $this->assertNotSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
     public function testToBindingSingleton()
@@ -117,7 +114,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
         $injector = new Injector(new FakeToProviderBindModule);
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
-        $this->assertNotEquals(spl_object_hash($instance1), spl_object_hash($instance2));
+        $this->assertNotSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
     public function testClassToProviderBinding()

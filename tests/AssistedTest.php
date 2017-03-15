@@ -1,13 +1,8 @@
 <?php
 
-use Ray\Di\FakeAbstractDb;
-
 namespace Ray\Di;
 
-use Ray\Compiler\DiCompiler;
 use Ray\Di\Exception\MethodInvocationNotAvailable;
-use Ray\Di\Exception\Unbound;
-use Ray\Di\Exception\Untargetted;
 
 class AssistedTest extends \PHPUnit_Framework_TestCase
 {

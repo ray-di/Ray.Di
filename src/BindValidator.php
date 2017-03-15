@@ -45,9 +45,9 @@ final class BindValidator
      *
      * @param string $provider
      *
-     * @return $this
-     *
      * @throws NotFound
+     *
+     * @return $this
      */
     public function toProvider($provider)
     {

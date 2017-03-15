@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 class FakeOverrideInstallModule extends AbstractModule

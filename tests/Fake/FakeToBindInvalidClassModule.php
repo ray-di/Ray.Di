@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 class FakeToBindInvalidClassModule extends AbstractModule

@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 class NewInstanceTest extends \PHPUnit_Framework_TestCase

@@ -19,16 +19,6 @@ final class SetterMethods
     }
 
     /**
-     * @param SetterMethod $setterMethod
-     */
-    public function add(SetterMethod $setterMethod = null)
-    {
-        if ($setterMethod) {
-            $this->setterMethods[] = $setterMethod;
-        }
-    }
-
-    /**
      * @param object    $instance
      * @param Container $container
      *
@@ -40,6 +30,16 @@ final class SetterMethods
         foreach ($this->setterMethods as $setterMethod) {
             /* @var SetterMethod $setterMethod */
             $setterMethod->__invoke($instance, $container);
+        }
+    }
+
+    /**
+     * @param SetterMethod $setterMethod
+     */
+    public function add(SetterMethod $setterMethod = null)
+    {
+        if ($setterMethod) {
+            $this->setterMethods[] = $setterMethod;
         }
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;

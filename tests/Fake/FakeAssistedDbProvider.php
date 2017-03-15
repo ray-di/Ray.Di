@@ -1,8 +1,5 @@
 <?php
-
 namespace Ray\Di;
-
-use Ray\Aop\MethodInvocation;
 
 class FakeAssistedDbProvider implements ProviderInterface
 {

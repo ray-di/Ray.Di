@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 class ArgumentTest extends \PHPUnit_Framework_TestCase

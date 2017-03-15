@@ -45,16 +45,6 @@ final class NewInstance
     }
 
     /**
-     * @param string  $class
-     * @param AopBind $bind
-     */
-    public function weaveAspects($class, AopBind $bind)
-    {
-        $this->class = $class;
-        $this->bind = new AspectBind($bind);
-    }
-
-    /**
      * @param Container $container
      *
      * @return object
@@ -81,5 +71,15 @@ final class NewInstance
     public function __toString()
     {
         return $this->class;
+    }
+
+    /**
+     * @param string  $class
+     * @param AopBind $bind
+     */
+    public function weaveAspects($class, AopBind $bind)
+    {
+        $this->class = $class;
+        $this->bind = new AspectBind($bind);
     }
 }

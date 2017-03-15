@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 use Ray\Di\Di\InjectInterface;

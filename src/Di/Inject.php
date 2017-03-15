@@ -22,7 +22,7 @@ final class Inject implements InjectInterface
     public $optional = false;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isOptional()
     {
