@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 class FakeEngineToProviderModule extends AbstractModule

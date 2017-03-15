@@ -54,6 +54,32 @@ final class AssistedInterceptor implements MethodInterceptor
     }
 
     /**
+     * @param ReflectionMethod       $method
+     * @param Assisted               $assisted
+     * @param \ReflectionParameter[] $parameters
+     * @param array                  $arguments
+     *
+     * @return array
+     *
+     * @internal param int $cntArgs
+     */
+    public function injectAssistedParameters(ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments)
+    {
+        foreach ($parameters as $parameter) {
+            if (! in_array($parameter->getName(), $assisted->values, true)) {
+                continue;
+            }
+            $hint = $parameter->getClass();
+            $interface = $hint ? $hint->getName() : '';
+            $name = $this->getName($method, $parameter);
+            $pos = $parameter->getPosition();
+            $arguments[$pos] = $this->injector->getInstance($interface, $name);
+        }
+
+        return $arguments;
+    }
+
+    /**
      * @param ReflectionMethod     $method
      * @param \ReflectionParameter $parameter
      *
@@ -72,31 +98,5 @@ final class AssistedInterceptor implements MethodInterceptor
         }
 
         return Name::ANY;
-    }
-
-    /**
-     * @param ReflectionMethod       $method
-     * @param Assisted               $assisted
-     * @param \ReflectionParameter[] $parameters
-     * @param array                  $arguments
-     *
-     * @return array
-     *
-     * @internal param int $cntArgs
-     */
-    public function injectAssistedParameters(ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments)
-    {
-        foreach ($parameters as $parameter) {
-            if (! in_array($parameter->getName(), $assisted->values)) {
-                continue;
-            }
-            $hint = $parameter->getClass();
-            $interface = $hint ? $hint->getName() : '';
-            $name = $this->getName($method, $parameter);
-            $pos = $parameter->getPosition();
-            $arguments[$pos] = $this->injector->getInstance($interface, $name);
-        }
-
-        return $arguments;
     }
 }

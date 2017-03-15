@@ -1,11 +1,9 @@
 <?php
-
 namespace Ray\Di;
 
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
-use Ray\Di\FakeGearStickInject;
 
 class FakeCar implements FakeCarInterface
 {
@@ -31,6 +29,14 @@ class FakeCar implements FakeCarInterface
     public $handle;
 
     public $gearStick;
+
+    /**
+     * Inject annotation at constructor is just for human, not mandatory.
+     */
+    public function __construct(FakeEngineInterface $engine)
+    {
+        $this->engine = $engine;
+    }
 
     /**
      * @Inject
@@ -82,14 +88,6 @@ class FakeCar implements FakeCarInterface
     public function setGearStick(FakeGearStickInterface $stick)
     {
         $this->gearStick = $stick;
-    }
-
-    /**
-     * Inject annotation at constructor is just for human, not mandatory.
-     */
-    public function __construct(FakeEngineInterface $engine)
-    {
-        $this->engine = $engine;
     }
 
     /**

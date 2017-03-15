@@ -4,4 +4,4 @@ vendor
 *.cache.php
 composer.lock
 tmp/
-
+.php_cs.cache

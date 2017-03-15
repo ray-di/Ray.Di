@@ -33,11 +33,6 @@ final class SetterMethod
         $this->arguments = new Arguments($method, $name);
     }
 
-    public function setOptional()
-    {
-        $this->isOptional = true;
-    }
-
     /**
      * @param object    $instance
      * @param Container $container
@@ -56,5 +51,10 @@ final class SetterMethod
             throw $e;
         }
         call_user_func_array([$instance, $this->method], $parameters);
+    }
+
+    public function setOptional()
+    {
+        $this->isOptional = true;
     }
 }

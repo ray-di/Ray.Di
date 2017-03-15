@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 class FakeContextualProvider implements ProviderInterface, SetContextInterface
@@ -7,7 +6,7 @@ class FakeContextualProvider implements ProviderInterface, SetContextInterface
     private $context;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setContext($context)
     {

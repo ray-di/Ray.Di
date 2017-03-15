@@ -24,6 +24,11 @@ final class Container
      */
     private $pointcuts = [];
 
+    public function __sleep()
+    {
+        return ['container', 'pointcuts'];
+    }
+
     /**
      * Add binding to container
      *
@@ -63,9 +68,9 @@ final class Container
      *
      * @param string $index
      *
-     * @return mixed
-     *
      * @throws Unbound
+     *
+     * @return mixed
      */
     public function getDependency($index)
     {
@@ -166,10 +171,5 @@ final class Container
         $dependency->weaveAspects($compiler, $this->pointcuts);
 
         return $this;
-    }
-
-    public function __sleep()
-    {
-        return ['container', 'pointcuts'];
     }
 }

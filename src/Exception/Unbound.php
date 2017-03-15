@@ -15,7 +15,7 @@ class Unbound extends \LogicException implements ExceptionInterface
         if (! $e instanceof \Exception) {
             return $this->getMainMessage($this);
         }
-        if ($e instanceof Unbound) {
+        if ($e instanceof self) {
             return $this->buildMessage($e, $messages) . "\n" . $e->getTraceAsString();
         }
 
@@ -31,7 +31,7 @@ class Unbound extends \LogicException implements ExceptionInterface
     private function buildMessage(Unbound $e, array $msg)
     {
         $lastE = $e;
-        while ($e instanceof Unbound) {
+        while ($e instanceof self) {
             $msg[] = sprintf("- %s\n", $e->getMessage());
             $lastE = $e;
             $e = $e->getPrevious();

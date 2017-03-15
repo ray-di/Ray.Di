@@ -40,6 +40,23 @@ class Injector implements InjectorInterface
     }
 
     /**
+     * Wakeup
+     */
+    public function __wakeup()
+    {
+        spl_autoload_register(
+            function ($class) {
+                $file = $this->classDir . DIRECTORY_SEPARATOR . $class . '.php';
+                if (file_exists($file)) {
+                    // @codeCoverageIgnoreStart
+                    include $file;
+                    // @codeCoverageIgnoreEnd
+                }
+            }
+        );
+    }
+
+    /**
      * @param string $interface
      * @param string $name
      *
@@ -66,22 +83,5 @@ class Injector implements InjectorInterface
         /* @var $bound Dependency */
         $bound = $this->container->getContainer()[$class . '-' . Name::ANY];
         $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
-    }
-
-    /**
-     * Wakeup
-     */
-    public function __wakeup()
-    {
-        spl_autoload_register(
-            function ($class) {
-                $file = $this->classDir . DIRECTORY_SEPARATOR . $class . '.php';
-                if (file_exists($file)) {
-                    // @codeCoverageIgnoreStart
-                    include $file;
-                    // @codeCoverageIgnoreEnd
-                }
-            }
-        );
     }
 }

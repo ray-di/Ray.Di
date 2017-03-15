@@ -36,6 +36,11 @@ final class DependencyProvider implements DependencyInterface
         $this->context = $context;
     }
 
+    public function __sleep()
+    {
+        return ['dependency', 'isSingleton'];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -74,10 +79,5 @@ final class DependencyProvider implements DependencyInterface
     public function setContext(SetContextInterface $provider)
     {
         $provider->setContext($this->context);
-    }
-
-    public function __sleep()
-    {
-        return ['dependency', 'isSingleton'];
     }
 }

@@ -69,6 +69,14 @@ final class Bind
     }
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->interface . '-' . $this->name;
+    }
+
+    /**
      * @param string $name
      *
      * @return $this
@@ -117,9 +125,9 @@ final class Bind
      * @param string $provider
      * @param string $context
      *
-     * @return $this
-     *
      * @throws NotFound
+     *
+     * @return $this
      */
     public function toProvider($provider, $context = null)
     {
@@ -163,14 +171,6 @@ final class Bind
         }
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->interface . '-' . $this->name;
     }
 
     /**

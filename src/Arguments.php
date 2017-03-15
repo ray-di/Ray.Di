@@ -29,9 +29,9 @@ final class Arguments
      *
      * @param Container $container
      *
-     * @return Argument[]
-     *
      * @throws Exception\Unbound
+     *
+     * @return Argument[]
      */
     public function inject(Container $container)
     {
@@ -47,9 +47,9 @@ final class Arguments
      * @param Container $container
      * @param Argument  $argument
      *
-     * @return mixed
-     *
      * @throws Unbound
+     *
+     * @return mixed
      */
     private function getParameter(Container $container, Argument $argument)
     {

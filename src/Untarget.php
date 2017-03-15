@@ -26,11 +26,6 @@ class Untarget
         $this->class = new \ReflectionClass($class);
     }
 
-    public function setScope($scope)
-    {
-        $this->scope = $scope;
-    }
-
     /**
      * Bind untargeted binding
      *
@@ -47,5 +42,10 @@ class Untarget
         if ($constructor) {
             (new UntargetedBind)->__invoke($container, $constructor);
         }
+    }
+
+    public function setScope($scope)
+    {
+        $this->scope = $scope;
     }
 }

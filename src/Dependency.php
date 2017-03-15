@@ -46,6 +46,11 @@ final class Dependency implements DependencyInterface
         $this->postConstruct = $postConstruct ? $postConstruct->name : null;
     }
 
+    public function __sleep()
+    {
+        return ['newInstance', 'postConstruct', 'isSingleton'];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -100,10 +105,5 @@ final class Dependency implements DependencyInterface
         }
         $class = $compiler->compile((string) $this->newInstance, $bind);
         $this->newInstance->weaveAspects($class, $bind);
-    }
-
-    public function __sleep()
-    {
-        return ['newInstance', 'postConstruct', 'isSingleton'];
     }
 }

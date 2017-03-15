@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 class FakeContextualRobot implements FakeRobotInterface

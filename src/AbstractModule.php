@@ -19,14 +19,14 @@ abstract class AbstractModule
     protected $matcher;
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * @var AbstractModule
      */
     protected $lastModule;
+
+    /**
+     * @var Container
+     */
+    private $container;
 
     public function __construct(
         AbstractModule $module = null
@@ -36,25 +36,6 @@ abstract class AbstractModule
         if ($module) {
             $this->container->merge($module->getContainer());
         }
-    }
-
-    /**
-     * Configure binding
-     */
-    abstract protected function configure();
-
-    /**
-     * Bind interface
-     *
-     * @param string $interface
-     *
-     * @return Bind
-     */
-    protected function bind($interface = '')
-    {
-        $bind = new Bind($this->getContainer(), $interface);
-
-        return $bind;
     }
 
     /**
@@ -124,13 +105,6 @@ abstract class AbstractModule
         }
     }
 
-    private function activate()
-    {
-        $this->container = new Container;
-        $this->matcher = new Matcher;
-        $this->configure();
-    }
-
     /**
      * Rename binding name
      *
@@ -143,5 +117,31 @@ abstract class AbstractModule
     {
         $targetInterface = $targetInterface ?: $interface;
         $this->lastModule->getContainer()->move($interface, $sourceName, $targetInterface, $newName);
+    }
+
+    /**
+     * Configure binding
+     */
+    abstract protected function configure();
+
+    /**
+     * Bind interface
+     *
+     * @param string $interface
+     *
+     * @return Bind
+     */
+    protected function bind($interface = '')
+    {
+        $bind = new Bind($this->getContainer(), $interface);
+
+        return $bind;
+    }
+
+    private function activate()
+    {
+        $this->container = new Container;
+        $this->matcher = new Matcher;
+        $this->configure();
     }
 }

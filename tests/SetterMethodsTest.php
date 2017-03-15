@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 class SetterMethodsTest extends \PHPUnit_Framework_TestCase

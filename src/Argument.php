@@ -56,6 +56,14 @@ final class Argument
     }
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->index;
+    }
+
+    /**
      * Return reflection
      *
      * @return \ReflectionParameter
@@ -63,30 +71,6 @@ final class Argument
     public function get()
     {
         return $this->reflection;
-    }
-
-    /**
-     * @param \ReflectionParameter $parameter
-     *
-     * @return string
-     */
-    private function getTypeHint(\ReflectionParameter $parameter)
-    {
-        if (defined('HHVM_VERSION')) {
-            /* @noinspection PhpUndefinedFieldInspection */
-            return $parameter->info['type_hint']; // @codeCoverageIgnore
-        }
-        $typHint = $parameter->getClass();
-
-        return $typHint instanceof \ReflectionClass ? $typHint->name : '';
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->index;
     }
 
     /**
@@ -108,6 +92,22 @@ final class Argument
     public function getMeta()
     {
         return $this->meta;
+    }
+
+    /**
+     * @param \ReflectionParameter $parameter
+     *
+     * @return string
+     */
+    private function getTypeHint(\ReflectionParameter $parameter)
+    {
+        if (defined('HHVM_VERSION')) {
+            /* @noinspection PhpUndefinedFieldInspection */
+            return $parameter->info['type_hint']; // @codeCoverageIgnore
+        }
+        $typHint = $parameter->getClass();
+
+        return $typHint instanceof \ReflectionClass ? $typHint->name : '';
     }
 
     private function setDefaultValue(\ReflectionParameter $parameter)

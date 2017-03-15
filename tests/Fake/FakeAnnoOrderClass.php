@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 /**
@@ -14,6 +13,5 @@ class FakeAnnoOrderClass
      */
     public function get()
     {
-        return;
     }
 }

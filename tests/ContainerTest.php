@@ -1,8 +1,6 @@
 <?php
-
 namespace Ray\Di;
 
-use Aura\Cli\Exception;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;

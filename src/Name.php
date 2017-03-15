@@ -39,6 +39,32 @@ final class Name
     }
 
     /**
+     * @param \ReflectionParameter $parameter
+     *
+     * @return string
+     */
+    public function __invoke(\ReflectionParameter $parameter)
+    {
+        // single variable named binding
+        if ($this->name) {
+            return $this->name;
+        }
+
+        // multiple variable named binding
+        if (isset($this->names[$parameter->name])) {
+            return $this->names[$parameter->name];
+        }
+
+        // ANY match
+        if (isset($this->names[self::ANY])) {
+            return $this->names[self::ANY];
+        }
+
+        // not matched
+        return self::ANY;
+    }
+
+    /**
      * @param string $name
      */
     private function setName($name)
@@ -51,7 +77,7 @@ final class Name
         }
         // single name
         // @Named(name)
-        if ($name === Name::ANY || preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
+        if ($name === self::ANY || preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
             $this->name = $name;
 
             return;
@@ -74,31 +100,5 @@ final class Name
                 $this->names[trim($key)] = trim($value);
             }
         }
-    }
-
-    /**
-     * @param \ReflectionParameter $parameter
-     *
-     * @return string
-     */
-    public function __invoke(\ReflectionParameter $parameter)
-    {
-        // single variable named binding
-        if ($this->name) {
-            return $this->name;
-        }
-
-        // multiple variable named binding
-        if (isset($this->names[$parameter->name])) {
-            return $this->names[$parameter->name];
-        }
-
-        // ANY match
-        if (isset($this->names[Name::ANY])) {
-            return $this->names[Name::ANY];
-        }
-
-        // not matched
-        return Name::ANY;
     }
 }
