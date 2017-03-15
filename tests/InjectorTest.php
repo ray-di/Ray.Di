@@ -5,14 +5,6 @@ use Ray\Di\Exception\Unbound;
 
 class InjectorTest extends \PHPUnit_Framework_TestCase
 {
-    public function tearDown()
-    {
-        parent::tearDown();
-        foreach (new \RecursiveDirectoryIterator($_ENV['TMP_DIR'], \FilesystemIterator::SKIP_DOTS) as $file) {
-            unlink($file);
-        }
-    }
-
     public function testNew()
     {
         $injector = new Injector(new FakeInstanceBindModule);

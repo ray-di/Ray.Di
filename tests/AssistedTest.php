@@ -16,14 +16,6 @@ class AssistedTest extends \PHPUnit_Framework_TestCase
         $this->injector = new Injector(new FakeToBindModule);
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-        foreach (new \RecursiveDirectoryIterator($_ENV['TMP_DIR'], \FilesystemIterator::SKIP_DOTS) as $file) {
-            unlink($file);
-        }
-    }
-
     public function testAssisted()
     {
         $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
