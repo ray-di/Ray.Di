@@ -1,10 +1,7 @@
 language: php
 sudo: false
 php:
-  - 5.6
-  - 7
-  - 7.1
-  - hhvm
+  - 5.5
 cache:
   directories:
     - vendor
@@ -18,7 +15,7 @@ before_script:
   - composer update $DEPENDENCIES
 script:
   - ./vendor/bin/phpunit --coverage-clover=coverage.clover;
-  - if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then wget http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar && php php-cs-fixer-v2.phar fix --config=.php_cs -v --dry-run --using-cache=no --path-mode=intersection `git diff --name-only --diff-filter=ACMRTUXB $TRAVIS_COMMIT_RANGE`; fi
+  - wget http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar && php php-cs-fixer-v2.phar fix --config=.php_cs -v --dry-run --using-cache=no --path-mode=intersection `git diff --name-only --diff-filter=ACMRTUXB $TRAVIS_COMMIT_RANGE`
 
 after_script:
-  - if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
+  - wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover
