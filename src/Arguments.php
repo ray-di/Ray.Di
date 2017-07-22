@@ -80,10 +80,10 @@ final class Arguments
 
     private function bindInjectionPoint(Container $container, Argument $argument) : void
     {
-        $isSelf = (string) $argument === 'Ray\Di\InjectionPointInterface-' . Name::ANY;
+        $isSelf = (string) $argument === InjectionPointInterface::class . '-' . Name::ANY;
         if ($isSelf) {
             return;
         }
-        (new Bind($container, 'Ray\Di\InjectionPointInterface'))->toInstance(new InjectionPoint($argument->get(), new AnnotationReader));
+        (new Bind($container, InjectionPointInterface::class))->toInstance(new InjectionPoint($argument->get(), new AnnotationReader));
     }
 }

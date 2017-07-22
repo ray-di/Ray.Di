@@ -42,7 +42,7 @@ final class AssistedInterceptor implements MethodInterceptor
     public function invoke(MethodInvocation $invocation)
     {
         $method = $invocation->getMethod();
-        $assisted = $method->getAnnotation('Ray\Di\Di\Assisted');
+        $assisted = $method->getAnnotation(Assisted::class);
         /* @var \Ray\Di\Di\Assisted $assisted */
         $parameters = $method->getParameters();
         $arguments = $invocation->getArguments()->getArrayCopy();

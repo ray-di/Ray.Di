@@ -63,7 +63,7 @@ final class InjectionPoint implements InjectionPointInterface
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(
                 new \ReflectionClass($annotation),
-                'Ray\Di\Di\Qualifier'
+                Qualifier::class
             );
             if ($qualifier instanceof Qualifier) {
                 $qualifiers[] = $annotation;
