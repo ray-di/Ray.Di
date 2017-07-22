@@ -5,7 +5,7 @@ use Ray\Di\InjectionPointInterface;
 use Ray\Di\Injector;
 use Ray\Di\ProviderInterface;
 
-require __DIR__.'/bootstrap.php';
+require __DIR__ . '/bootstrap.php';
 
 interface FinderInterface
 {
@@ -79,4 +79,4 @@ $movieLister = $injector->getInstance(MovieListerInterface::class);
 $result = $movieLister->finder->find();
 $works = ($result === 'search for [MovieLister]');
 
-echo($works ? 'It works!' : 'It DOES NOT work!').PHP_EOL;
+echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
