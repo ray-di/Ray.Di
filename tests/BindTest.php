@@ -31,27 +31,21 @@ class BindTest extends TestCase
         $this->assertSame('Ray\Di\FakeTyreInterface-' . NAME::ANY, (string) $this->bind);
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\Notfound
-     */
     public function testInvalidToTest()
     {
+        $this->setExpectedException(Notfound::class);
         $this->bind->to('invalid-class');
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\Notfound
-     */
     public function testInvalidToProviderTest()
     {
+        $this->setExpectedException(Notfound::class);
         $this->bind->toProvider('invalid-class');
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\NotFound
-     */
     public function testInValidInterfaceBinding()
     {
+        $this->setExpectedException(NotFound::class);
         new Bind(new Container, 'invalid-interface');
     }
 
@@ -115,19 +109,15 @@ class BindTest extends TestCase
         $this->assertInstanceOf(FakeEngine::class, $instance->engine);
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\InvalidType
-     */
     public function testToValidation()
     {
+        $this->setExpectedException(InvalidType::class);
         (new Bind(new Container, FakeHandleInterface::class))->to(FakeEngine::class);
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\InvalidProvider
-     */
     public function testToProvider()
     {
+        $this->setExpectedException(InvalidProvider::class);
         (new Bind(new Container, FakeHandleInterface::class))->toProvider(FakeEngine::class);
     }
 

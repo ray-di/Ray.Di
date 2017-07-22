@@ -120,11 +120,9 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(FakeEngine::class, $instance);
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\Unbound
-     */
     public function testMoveUnbound()
     {
+        $this->setExpectedException(Unbound::class);
         $this->container->move(FakeEngineInterface::class, 'invalid', FakeEngineInterface::class, 'new');
     }
 

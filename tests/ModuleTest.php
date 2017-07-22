@@ -18,11 +18,9 @@ class ModuleTest extends TestCase
         $this->assertInstanceOf(AbstractModule::class, $module);
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\NotFound
-     */
     public function testToInvalidClass()
     {
+        $this->setExpectedException(NotFound::class);
         new FakeToBindInvalidClassModule;
     }
 

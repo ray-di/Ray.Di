@@ -30,11 +30,9 @@ class SetterMethodTest extends TestCase
         $this->assertNotSame(spl_object_hash($car->frontTyre), spl_object_hash($car->rearTyre));
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\Unbound
-     */
     public function testUnbound()
     {
+        $this->setExpectedException(Unbound::class);
         $container = new Container;
         $car = new FakeCar(new FakeEngine);
         $this->setterMethods->__invoke($car, $container);

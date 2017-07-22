@@ -26,11 +26,9 @@ class InjectorTest extends TestCase
         $this->assertSame($engine, $injector->getInstance(FakeEngine::class));
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\Unbound
-     */
     public function testUnbound()
     {
+        $this->setExpectedException(Unbound::class);
         $injector = new Injector(new FakeInstanceBindModule);
         $injector->getInstance('', 'invalid-binding-xxx');
     }
@@ -276,11 +274,9 @@ class InjectorTest extends TestCase
         $this->assertInstanceOf(FakeRightLeg::class, $robot->rightLeg);
     }
 
-    /**
-     * @expectedException \Ray\Di\Exception\Unbound
-     */
     public function testNewAbstract()
     {
+        $this->setExpectedException(Unbound::class, FakeAbstractClass::class);
         (new Injector)->getInstance(FakeConcreteClass::class);
     }
 
