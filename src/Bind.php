@@ -114,12 +114,7 @@ final class Bind
     public function toConstructor($class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null)
     {
         if (is_array($name)) {
-            $names = array_reduce(array_keys($name), function ($carry, $key) use ($name) {
-                $carry[] .= $key . '=' . $name[$key];
-
-                return $carry;
-            }, []);
-            $name = implode(',', $names);
+            $name = $this->getStringName($name);
         }
         $this->untarget = null;
         $postConstruct = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
@@ -207,5 +202,27 @@ final class Bind
         $hasNotRegistered = ! isset($this->container->getContainer()[$interface . '-' . Name::ANY]);
 
         return $hasNotRegistered;
+    }
+
+    /**
+     * Return string
+     *
+     * input: [['varA' => 'nameA'], ['varB' => 'nameB']]
+     * output: "varA=nameA,varB=nameB"
+     *
+     * @param array $name
+     *
+     * @return string
+     */
+    private function getStringName(array $name)
+    {
+        $names = array_reduce(array_keys($name), function ($carry, $key) use ($name) {
+            $carry[] .= $key . '=' . $name[$key];
+
+            return $carry;
+        }, []);
+        $string = implode(',', $names);
+
+        return $string;
     }
 }
