@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -92,7 +94,6 @@ final class Argument
     {
         return $this->meta;
     }
-
 
     private function setDefaultValue(\ReflectionParameter $parameter)
     {

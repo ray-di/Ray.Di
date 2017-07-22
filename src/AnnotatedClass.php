@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Ray.Di package.
  *
@@ -7,7 +8,6 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Ray\Di\Di\PostConstruct;
 
 final class AnnotatedClass
