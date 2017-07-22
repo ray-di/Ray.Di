@@ -57,9 +57,11 @@ class AssistedTest extends TestCase
         $this->assertSame(1, $db->dbId);
     }
 
+    /**
+     * @expectedException \Ray\Di\Exception\MethodInvocationNotAvailable
+     */
     public function testAssistedMethodInvocationNotAvailable()
     {
-        $this->setExpectedException(MethodInvocationNotAvailable::class);
         $assistedDbProvider = (new Injector(new FakeAssistedDbModule))->getInstance(FakeAssistedDbProvider::class);
         /* @var $assistedDbProvider FakeAssistedDbProvider */
         $assistedDbProvider->get();
