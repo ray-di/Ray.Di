@@ -105,7 +105,7 @@ final class Bind
 
     /**
      * @param string          $class           class name
-     * @param string          $name            varName=bindName,...
+     * @param string | array  $name            "varName=bindName,..." or [[varName=>bindName],...]
      * @param InjectionPoints $injectionPoints injection points
      * @param null            $postConstruct   method name of initialization after all dependencies are injected
      *
@@ -113,6 +113,9 @@ final class Bind
      */
     public function toConstructor($class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null)
     {
+        if (is_array($name)) {
+            $name = $this->getStringName($name);
+        }
         $this->untarget = null;
         $postConstruct = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
         $this->bound = (new DependencyFactory)->newToConstructor(new \ReflectionClass($class), $name, $injectionPoints, $postConstruct);
@@ -199,5 +202,27 @@ final class Bind
         $hasNotRegistered = ! isset($this->container->getContainer()[$interface . '-' . Name::ANY]);
 
         return $hasNotRegistered;
+    }
+
+    /**
+     * Return string
+     *
+     * input: [['varA' => 'nameA'], ['varB' => 'nameB']]
+     * output: "varA=nameA,varB=nameB"
+     *
+     * @param array $name
+     *
+     * @return string
+     */
+    private function getStringName(array $name)
+    {
+        $names = array_reduce(array_keys($name), function ($carry, $key) use ($name) {
+            $carry[] .= $key . '=' . $name[$key];
+
+            return $carry;
+        }, []);
+        $string = implode(',', $names);
+
+        return $string;
     }
 }
