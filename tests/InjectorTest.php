@@ -28,7 +28,7 @@ class InjectorTest extends TestCase
 
     public function testUnbound()
     {
-        $this->setExpectedException(Unbound::class);
+        $this->expectException(Unbound::class);
         $injector = new Injector(new FakeInstanceBindModule);
         $injector->getInstance('', 'invalid-binding-xxx');
     }
@@ -276,7 +276,7 @@ class InjectorTest extends TestCase
 
     public function testNewAbstract()
     {
-        $this->setExpectedException(Unbound::class, FakeAbstractClass::class);
+        $this->expectException(Unbound::class, FakeAbstractClass::class);
         (new Injector)->getInstance(FakeConcreteClass::class);
     }
 

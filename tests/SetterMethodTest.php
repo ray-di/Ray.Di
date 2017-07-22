@@ -32,7 +32,7 @@ class SetterMethodTest extends TestCase
 
     public function testUnbound()
     {
-        $this->setExpectedException(Unbound::class);
+        $this->expectException(Unbound::class);
         $container = new Container;
         $car = new FakeCar(new FakeEngine);
         $this->setterMethods->__invoke($car, $container);

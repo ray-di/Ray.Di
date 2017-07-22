@@ -33,19 +33,19 @@ class BindTest extends TestCase
 
     public function testInvalidToTest()
     {
-        $this->setExpectedException(Notfound::class);
+        $this->expectException(Notfound::class);
         $this->bind->to('invalid-class');
     }
 
     public function testInvalidToProviderTest()
     {
-        $this->setExpectedException(Notfound::class);
+        $this->expectException(Notfound::class);
         $this->bind->toProvider('invalid-class');
     }
 
     public function testInValidInterfaceBinding()
     {
-        $this->setExpectedException(NotFound::class);
+        $this->expectException(NotFound::class);
         new Bind(new Container, 'invalid-interface');
     }
 
@@ -111,13 +111,13 @@ class BindTest extends TestCase
 
     public function testToValidation()
     {
-        $this->setExpectedException(InvalidType::class);
+        $this->expectException(InvalidType::class);
         (new Bind(new Container, FakeHandleInterface::class))->to(FakeEngine::class);
     }
 
     public function testToProvider()
     {
-        $this->setExpectedException(InvalidProvider::class);
+        $this->expectException(InvalidProvider::class);
         (new Bind(new Container, FakeHandleInterface::class))->toProvider(FakeEngine::class);
     }
 

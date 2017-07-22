@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
@@ -59,7 +58,7 @@ class AssistedTest extends TestCase
 
     public function testAssistedMethodInvocationNotAvailable()
     {
-        $this->setExpectedException(MethodInvocationNotAvailable::class);
+        $this->expectException(MethodInvocationNotAvailable::class);
         $assistedDbProvider = (new Injector(new FakeAssistedDbModule))->getInstance(FakeAssistedDbProvider::class);
         /* @var $assistedDbProvider FakeAssistedDbProvider */
         $assistedDbProvider->get();

@@ -20,7 +20,7 @@ class ModuleTest extends TestCase
 
     public function testToInvalidClass()
     {
-        $this->setExpectedException(NotFound::class);
+        $this->expectException(NotFound::class);
         new FakeToBindInvalidClassModule;
     }
 

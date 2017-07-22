@@ -122,7 +122,7 @@ class ContainerTest extends TestCase
 
     public function testMoveUnbound()
     {
-        $this->setExpectedException(Unbound::class);
+        $this->expectException(Unbound::class);
         $this->container->move(FakeEngineInterface::class, 'invalid', FakeEngineInterface::class, 'new');
     }
 
