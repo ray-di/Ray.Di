@@ -24,7 +24,6 @@ final class AnnotatedClass
 
     public function __construct(AnnotationReader $reader)
     {
-        AnnotationRegistry::registerFile(__DIR__ . '/DoctrineAnnotations.php');
         $this->reader = $reader;
         $this->injectionMethod = new AnnotatedClassMethods($reader);
     }
