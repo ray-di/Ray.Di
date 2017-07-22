@@ -1,7 +1,9 @@
 <?php
 namespace Ray\Di;
 
-class SetterMethodsTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class SetterMethodsTest extends TestCase
 {
     /**
      * @var SetterMethod

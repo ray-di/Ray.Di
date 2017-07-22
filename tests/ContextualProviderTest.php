@@ -1,7 +1,9 @@
 <?php
 namespace Ray\Di;
 
-class ContextualProviderTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ContextualProviderTest extends TestCase
 {
     public function testContextualProviderInjection()
     {

@@ -1,7 +1,9 @@
 <?php
 namespace Ray\Di;
 
-class NewInstanceTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class NewInstanceTest extends TestCase
 {
     /**
      * @var NewInstance

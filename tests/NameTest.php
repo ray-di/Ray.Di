@@ -1,7 +1,9 @@
 <?php
 namespace Ray\Di;
 
-class NameTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class NameTest extends TestCase
 {
     public function testUnName()
     {

@@ -1,9 +1,10 @@
 <?php
 namespace Ray\Di;
 
+use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
 
-class SetterMethodTest extends \PHPUnit_Framework_TestCase
+class SetterMethodTest extends TestCase
 {
     /**
      * @var SetterMethods

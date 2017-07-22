@@ -1,9 +1,10 @@
 <?php
 namespace Ray\Di;
 
+use PHPUnit\Framework\TestCase;
 use Ray\Compiler\DiCompiler;
 
-class DiCompilerTest extends \PHPUnit_Framework_TestCase
+class DiCompilerTest extends TestCase
 {
     public function testUntargetInject()
     {

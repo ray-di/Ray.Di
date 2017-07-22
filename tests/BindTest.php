@@ -1,11 +1,12 @@
 <?php
 namespace Ray\Di;
 
+use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\InvalidProvider;
 use Ray\Di\Exception\InvalidType;
 use Ray\Di\Exception\NotFound;
 
-class BindTest extends \PHPUnit_Framework_TestCase
+class BindTest extends TestCase
 {
     /**
      * @var Bind
