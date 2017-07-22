@@ -8,7 +8,7 @@ declare(strict_types=1);
  */
 namespace Ray\Di;
 
-class Untarget
+final class Untarget
 {
     /**
      * @var \ReflectionClass
@@ -20,10 +20,7 @@ class Untarget
      */
     private $scope = Scope::PROTOTYPE;
 
-    /**
-     * @param string $class
-     */
-    public function __construct($class)
+    public function __construct(string $class)
     {
         $this->class = new \ReflectionClass($class);
     }
@@ -46,7 +43,7 @@ class Untarget
         }
     }
 
-    public function setScope($scope)
+    public function setScope(string $scope)
     {
         $this->scope = $scope;
     }

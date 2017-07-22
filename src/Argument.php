@@ -35,7 +35,7 @@ final class Argument
      */
     private $reflection;
 
-    public function __construct(\ReflectionParameter $parameter, $name)
+    public function __construct(\ReflectionParameter $parameter, string $name)
     {
         $type = $parameter->getType();
         $isOptional = $parameter->isOptional();
@@ -66,10 +66,8 @@ final class Argument
 
     /**
      * Return reflection
-     *
-     * @return \ReflectionParameter
      */
-    public function get()
+    public function get() : \ReflectionParameter
     {
         return $this->reflection;
     }
@@ -77,7 +75,7 @@ final class Argument
     /**
      * @return bool
      */
-    public function isDefaultAvailable()
+    public function isDefaultAvailable() : bool
     {
         return $this->isDefaultAvailable;
     }
@@ -90,12 +88,12 @@ final class Argument
         return $this->default;
     }
 
-    public function getMeta()
+    public function getMeta() : string
     {
         return $this->meta;
     }
 
-    private function setDefaultValue(\ReflectionParameter $parameter)
+    private function setDefaultValue(\ReflectionParameter $parameter) : void
     {
         if (! $this->isDefaultAvailable) {
             return;

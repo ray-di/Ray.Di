@@ -24,7 +24,7 @@ class InjectionPointsTest extends TestCase
     public function testInvoke()
     {
         $car = new FakeCar(new FakeEngine);
-        $setterMethods = $this->injectionPoints->__invoke($car);
+        $setterMethods = $this->injectionPoints->__invoke(get_class($car));
         $this->assertInstanceOf(SetterMethods::class, $setterMethods);
 
         return $setterMethods;

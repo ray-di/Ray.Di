@@ -26,7 +26,7 @@ class Injector implements InjectorInterface
      * @param AbstractModule $module
      * @param string         $classDir
      */
-    public function __construct(AbstractModule $module = null, $classDir = null)
+    public function __construct(AbstractModule $module = null, string $classDir = null)
     {
         if (is_null($module)) {
             $module = new NullModule;
@@ -78,7 +78,7 @@ class Injector implements InjectorInterface
     /**
      * @param string $class
      */
-    private function bind($class)
+    private function bind(string $class) : void
     {
         new Bind($this->container, $class);
         /* @var $bound Dependency */

@@ -23,11 +23,9 @@ final class AspectBind
     }
 
     /**
-     * @param Container $container
-     *
-     * @return array
+     * Instantiate interceptors
      */
-    public function inject(Container $container)
+    public function inject(Container $container) : array
     {
         $bindings = $this->bind->getBindings();
         foreach ($bindings as &$interceptors) {

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -40,20 +42,16 @@ abstract class AbstractModule
 
     /**
      * Install module
-     *
-     * @param AbstractModule $module
      */
-    public function install(AbstractModule $module)
+    public function install(AbstractModule $module) : void
     {
         $this->getContainer()->merge($module->getContainer());
     }
 
     /**
      * Override module
-     *
-     * @param AbstractModule $module
      */
-    public function override(AbstractModule $module)
+    public function override(AbstractModule $module) : void
     {
         $module->getContainer()->merge($this->container);
         $this->container = $module->getContainer();
@@ -64,7 +62,7 @@ abstract class AbstractModule
      *
      * @return Container
      */
-    public function getContainer()
+    public function getContainer() : Container
     {
         if (! $this->container) {
             $this->activate();
@@ -80,7 +78,7 @@ abstract class AbstractModule
      * @param AbstractMatcher $methodMatcher
      * @param array           $interceptors
      */
-    public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
+    public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
     {
         $pointcut = new Pointcut($classMatcher, $methodMatcher, $interceptors);
         $this->container->addPointcut($pointcut);
@@ -96,7 +94,7 @@ abstract class AbstractModule
      * @param AbstractMatcher $methodMatcher
      * @param array           $interceptors
      */
-    public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
+    public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
     {
         $pointcut = new PriorityPointcut($classMatcher, $methodMatcher, $interceptors);
         $this->container->addPointcut($pointcut);
@@ -113,7 +111,7 @@ abstract class AbstractModule
      * @param string $sourceName      Original binding name
      * @param string $targetInterface Original interface
      */
-    public function rename($interface, $newName, $sourceName = Name::ANY, $targetInterface = '')
+    public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = '') : void
     {
         $targetInterface = $targetInterface ?: $interface;
         $this->lastModule->getContainer()->move($interface, $sourceName, $targetInterface, $newName);
@@ -126,19 +124,18 @@ abstract class AbstractModule
 
     /**
      * Bind interface
-     *
-     * @param string $interface
-     *
-     * @return Bind
      */
-    protected function bind($interface = '')
+    protected function bind(string $interface = '') : Bind
     {
         $bind = new Bind($this->getContainer(), $interface);
 
         return $bind;
     }
 
-    private function activate()
+    /**
+     * Activate bindings
+     */
+    private function activate() : void
     {
         $this->container = new Container;
         $this->matcher = new Matcher;

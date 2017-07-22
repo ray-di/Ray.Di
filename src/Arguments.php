@@ -35,7 +35,7 @@ final class Arguments
      *
      * @return Argument[]
      */
-    public function inject(Container $container)
+    public function inject(Container $container) : array
     {
         $parameters = $this->arguments;
         foreach ($parameters as &$parameter) {
@@ -46,9 +46,6 @@ final class Arguments
     }
 
     /**
-     * @param Container $container
-     * @param Argument  $argument
-     *
      * @throws Unbound
      *
      * @return mixed
@@ -72,7 +69,7 @@ final class Arguments
      *
      * @return array [$hasDefaultValue, $defaultValue]
      */
-    private function getDefaultValue(Argument $argument)
+    private function getDefaultValue(Argument $argument) : array
     {
         if ($argument->isDefaultAvailable()) {
             return [true, $argument->getDefaultValue()];
@@ -81,7 +78,7 @@ final class Arguments
         return [false, null];
     }
 
-    private function bindInjectionPoint(Container $container, Argument $argument)
+    private function bindInjectionPoint(Container $container, Argument $argument) : void
     {
         $isSelf = (string) $argument === 'Ray\Di\InjectionPointInterface-' . Name::ANY;
         if ($isSelf) {

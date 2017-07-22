@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -9,6 +8,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
+use Ray\Di\Di\InjectInterface;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\Qualifier;
 
@@ -35,7 +35,7 @@ final class AnnotatedClassMethods
         if (! $constructor) {
             return new Name(Name::ANY);
         }
-        $named = $this->reader->getMethodAnnotation($constructor, 'Ray\Di\Di\Named');
+        $named = $this->reader->getMethodAnnotation($constructor, Named::class);
         if ($named instanceof Named) {
             /* @var $named Named */
             return new Name($named->value);
@@ -55,7 +55,7 @@ final class AnnotatedClassMethods
      */
     public function getSetterMethod(\ReflectionMethod $method)
     {
-        $inject = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\InjectInterface');
+        $inject = $this->reader->getMethodAnnotation($method, InjectInterface::class);
 
         /* @var $inject \Ray\Di\Di\Inject */
         if (! $inject) {
@@ -79,7 +79,7 @@ final class AnnotatedClassMethods
     {
         $keyVal = [];
         /* @var $named Named */
-        $named = $this->reader->getMethodAnnotation($method, 'Ray\Di\Di\Named');
+        $named = $this->reader->getMethodAnnotation($method, Named::class);
         if ($named) {
             $keyVal[] = $named->value;
         }
@@ -105,7 +105,7 @@ final class AnnotatedClassMethods
         $names = [];
         foreach ($annotations as $annotation) {
             /* @var $bindAnnotation object|null */
-            $qualifier = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), 'Ray\Di\Di\Qualifier');
+            $qualifier = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), Qualifier::class);
             if ($qualifier instanceof Qualifier) {
                 $value = isset($annotation->value) ? $annotation->value : Name::ANY;
                 $names[] = sprintf('%s=%s', $value, get_class($annotation));

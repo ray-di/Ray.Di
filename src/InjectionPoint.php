@@ -31,7 +31,7 @@ final class InjectionPoint implements InjectionPointInterface
     /**
      * {@inheritdoc}
      */
-    public function getParameter()
+    public function getParameter() : \ReflectionParameter
     {
         return $this->parameter;
     }
@@ -39,7 +39,7 @@ final class InjectionPoint implements InjectionPointInterface
     /**
      * {@inheritdoc}
      */
-    public function getMethod()
+    public function getMethod() : \ReflectionFunctionAbstract
     {
         return $this->parameter->getDeclaringFunction();
     }
@@ -47,7 +47,7 @@ final class InjectionPoint implements InjectionPointInterface
     /**
      * {@inheritdoc}
      */
-    public function getClass()
+    public function getClass() : \ReflectionClass
     {
         return $this->parameter->getDeclaringClass();
     }

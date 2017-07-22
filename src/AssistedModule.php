@@ -8,6 +8,7 @@
 namespace Ray\Di;
 
 use Ray\Aop\MethodInvocation;
+use Ray\Di\Di\Assisted;
 
 class AssistedModule extends AbstractModule
 {
@@ -15,8 +16,8 @@ class AssistedModule extends AbstractModule
     {
         $this->bindInterceptor(
             $this->matcher->any(),
-            $this->matcher->annotatedWith('Ray\Di\Di\Assisted'),
-            ['\Ray\Di\AssistedInterceptor']
+            $this->matcher->annotatedWith(Assisted::class),
+            [AssistedInterceptor::class]
         );
         $this->bind(MethodInvocation::class)->toProvider(MethodInvocationProvider::class)->in(Scope::SINGLETON);
         $this->bind(MethodInvocationProvider::class)->in(Scope::SINGLETON);

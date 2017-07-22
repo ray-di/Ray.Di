@@ -48,12 +48,12 @@ final class Bind
      * @param Container $container dependency container
      * @param string    $interface interface or concrete class name
      */
-    public function __construct(Container $container, $interface)
+    public function __construct(Container $container, string $interface)
     {
         $this->container = $container;
         $this->interface = $interface;
         $this->validate = new BindValidator;
-        $bindUntarget = class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract() && $this->hasNotRegistered($interface);
+        $bindUntarget = class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract() && ! $this->IsRegistered($interface);
         if ($bindUntarget) {
             $this->untarget = new Untarget($interface);
 
@@ -79,11 +79,9 @@ final class Bind
     }
 
     /**
-     * @param string $name
-     *
-     * @return $this
+     * Bind dependency name
      */
-    public function annotatedWith($name)
+    public function annotatedWith(string $name) : self
     {
         $this->name = $name;
 
@@ -91,11 +89,9 @@ final class Bind
     }
 
     /**
-     * @param string $class
-     *
-     * @return $this
+     * Bind to clss
      */
-    public function to($class)
+    public function to(string $class) : self
     {
         $this->untarget = null;
         $this->validate->to($this->interface, $class);
@@ -106,14 +102,14 @@ final class Bind
     }
 
     /**
+     * Bind to constroctur
+     *
      * @param string          $class           class name
      * @param string | array  $name            "varName=bindName,..." or [[varName=>bindName],...]
      * @param InjectionPoints $injectionPoints injection points
-     * @param null            $postConstruct   method name of initialization after all dependencies are injected
-     *
-     * @return $this
+     * @param null            $postConstruct   method name of initialization after all dependencies are injected*
      */
-    public function toConstructor($class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null)
+    public function toConstructor($class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null) : self
     {
         if (is_array($name)) {
             $name = $this->getStringName($name);
@@ -127,14 +123,11 @@ final class Bind
     }
 
     /**
-     * @param string $provider
-     * @param string $context
+     * Bind to provider
      *
      * @throws NotFound
-     *
-     * @return $this
      */
-    public function toProvider($provider, $context = null)
+    public function toProvider(string $provider, $context = null) : self
     {
         if (! is_null($context) && ! is_string($context)) {
             throw new InvalidContext(gettype($context));
@@ -194,16 +187,11 @@ final class Bind
         $this->bound = $bound;
     }
 
-    /**
-     * @param string $interface
-     *
-     * @return bool
-     */
-    private function hasNotRegistered($interface)
+    private function IsRegistered(string $interface) : bool
     {
-        $hasNotRegistered = ! isset($this->container->getContainer()[$interface . '-' . Name::ANY]);
+        $isRegistered = isset($this->container->getContainer()[$interface . '-' . Name::ANY]);
 
-        return $hasNotRegistered;
+        return $isRegistered;
     }
 
     /**
