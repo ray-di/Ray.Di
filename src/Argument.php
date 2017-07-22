@@ -35,19 +35,18 @@ final class Argument
 
     public function __construct(\ReflectionParameter $parameter, $name)
     {
-        $interface = $this->getTypeHint($parameter);
-        $interface = ($interface === 'array') ? '' : $interface; // hhvm
+        $type = $parameter->getType();
         $isOptional = $parameter->isOptional();
         $this->isDefaultAvailable = $parameter->isDefaultValueAvailable() || $isOptional;
         if ($isOptional) {
             $this->default = null;
         }
         $this->setDefaultValue($parameter);
-        $this->index = $interface . '-' . $name;
+        $this->index = $type . '-' . $name;
         $this->reflection = $parameter;
         $this->meta = sprintf(
             "dependency '%s' with name '%s' used in %s:%d ($%s)",
-            $interface,
+            $type,
             $name,
             $this->reflection->getDeclaringFunction()->getFileName(),
             $this->reflection->getDeclaringFunction()->getStartLine(),
@@ -94,21 +93,6 @@ final class Argument
         return $this->meta;
     }
 
-    /**
-     * @param \ReflectionParameter $parameter
-     *
-     * @return string
-     */
-    private function getTypeHint(\ReflectionParameter $parameter)
-    {
-        if (defined('HHVM_VERSION')) {
-            /* @noinspection PhpUndefinedFieldInspection */
-            return $parameter->info['type_hint']; // @codeCoverageIgnore
-        }
-        $typHint = $parameter->getClass();
-
-        return $typHint instanceof \ReflectionClass ? $typHint->name : '';
-    }
 
     private function setDefaultValue(\ReflectionParameter $parameter)
     {

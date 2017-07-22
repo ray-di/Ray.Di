@@ -31,10 +31,6 @@ final class UntargetedBind
      */
     private function getTypeHint(\ReflectionParameter $parameter)
     {
-        if (defined('HHVM_VERSION')) {
-            /* @noinspection PhpUndefinedFieldInspection */
-            return $parameter->info['type_hint']; // @codeCoverageIgnore
-        }
         $typeHintClass = $parameter->getClass();
 
         return $typeHintClass ? $typeHintClass->name : '';
