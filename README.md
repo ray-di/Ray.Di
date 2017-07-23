@@ -538,9 +538,9 @@ To address this, Ray.Di has `toConstructor` bindings.
 class Car implements CarInerface
 {
     /**
-     * @Named("na")
+     * @Named("engine=na,number=registrtion_number")
      */
-    public function __construct(EngineInterface $engine)
+    public function __construct(EngineInterface $engine, $numer, $passowrd)
     {
         // ...
     }
@@ -577,16 +577,64 @@ protected function configure()
     $this
         ->bind(CarInterface::class)
         ->toConstructor(
-            Car::class,
-            'na',                                            // constructor injection
-            (new InjectionPoints)                            
-                ->addMethod('setWheel', "right")             // setter injection
-                ->addOptionalMethod('setTurboCharger'),      // optional setter injection
-            'initialize'                                     // @PostCosntruct
+            Car::class,                                 // $class_name
+            [
+                ['enginne' => 'na'],                    // $name
+                ['number' => 'registrtion_number']
+            ], 
+            (new InjectionPoints)                       // $setter_injection
+                ->addMethod('setWheel', "right")        
+                ->addOptionalMethod('setTurboCharger'),
+                'initialize'                            // $postCosntruct
         );
 }
 ```
-Ray.Di will invoke that constructor and setter method to satisfy the binding and invoke in `initialize` method after all dependencies are injected.
+### Parameter
+
+**class_name**
+
+Class Name
+
+**name**
+
+Parameter name binding. 
+
+array `[[$parame_name => $binding_name],...]` or string `"param_name=binding_name&..."`
+
+**setter_injection**
+
+Setter Injection
+
+**postCosntruct**
+ 
+Ray.Di will invoke that constructor and setter method to satisfy the binding and invoke in `$postCosntruct` method after all dependencies are injected.
+
+## PDO Example
+
+Here is the example for the native [PDO](http://php.net/manual/ja/pdo.construct.php) class. 
+
+```php
+public PDO::__construct ( string $dsn [, string $username [, string $password [, array $options ]]] )
+```
+
+```php
+protected function configure()
+{       
+    $this->bind(\PDO::class)->toConstructor(
+        \PDO::class,
+        [
+            ['pdo' => 'pdo_dsn'],
+            ['username' => 'pdo_username'],
+            ['password' => 'pdo_password']
+        ]
+    )->in(Scope::SINGLETON);
+    $this->bind()->annotatedWith('pdo_dsn')->toInstance($dsn);
+    $this->bind()->annotatedWith('pdo_username')->toInstance($username);
+    $this->bind()->annotatedWith('pdo_password')->toInstance($password);
+}
+```
+
+Since no argument of PDO has a type, it binds with the `Name Binding` of the second argument of the `toConstructor()` method.
 
 ## Scopes ##
 

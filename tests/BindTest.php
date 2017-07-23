@@ -67,12 +67,23 @@ class BindTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(spl_object_hash($dependency1), spl_object_hash($dependency2));
     }
 
-    public function testToConstructor()
+    public function nameProvider()
+    {
+        return [
+            ['tmpDir=tmp_dir,leg=left'],
+            [['tmpDir' => 'tmp_dir','leg' => 'left']]
+        ];
+    }
+
+    /**
+     * @dataProvider nameProvider
+     */
+    public function testToConstructor($name)
     {
         $container = new Container;
         $container->add((new Bind($container, ''))->annotatedWith('tmp_dir')->toInstance('/tmp'));
         $container->add((new Bind($container, FakeLegInterface::class))->annotatedWith('left')->to(FakeLeftLeg::class));
-        $container->add((new Bind($container, FakeRobotInterface::class))->toConstructor(FakeToConstructorRobot::class, 'tmpDir=tmp_dir,leg=left'));
+        $container->add((new Bind($container, FakeRobotInterface::class))->toConstructor(FakeToConstructorRobot::class, $name));
         $instance = $container->getInstance(FakeRobotInterface::class, Name::ANY);
         /* @var $instance FakeToConstructorRobot */
         $this->assertInstanceOf(FakeLeftLeg::class, $instance->leg);

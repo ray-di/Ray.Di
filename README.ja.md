@@ -372,32 +372,77 @@ protected function configure()
 
 ## コンストラクタ束縛
 
-`@Inject`アノテーションのないサードパーティーのクラスに特定の束縛を指定するのに`toConstructor`を使うことができます。クラス名と`Named Binding`を指定して束縛します。
+`@Inject`アノテーションのないサードパーティーのクラスやアノテーションを使いたくない時には`Provider`束縛を使うこともできますが、その場合インスタンスをユーザーコードが作成する事になりAOPが利用できません。
 
-```php
-<?php
-class Car
-{
-    public function __construct(EngineInterface $engine, $carName)
-    {
-        // ...
-```
+この問題は`toConstructor()`束縛で解決できます。インターフェイスにクラスを束縛するのは`to()`と同じですが、`@Named`やセッターメソッドの`@Inject`の指定をアノテートする事なしに指定できます。
+
 ```php
 <?php
 protected function configure()
 {
-    $this->bind(EngineInterface::class)->annotatedWith('na')->to(NaturalAspirationEngine::class);
-    $this->bind()->annotatedWith('car_name')->toInstance('Eunos Roadster');
     $this
         ->bind(CarInterface::class)
         ->toConstructor(
-            Car::class,
-            'engine=na,carName=car_name' // varName=BindName,...
+            Car::class,                                 // $class_name
+            [
+                ['enginne' => 'na'],                    // $name
+                ['number' => 'registrtion_number']
+            ], 
+            (new InjectionPoints)                       // $setter_injection
+                ->addMethod('setWheel', "right")        
+                ->addOptionalMethod('setTurboCharger'),
+                'initialize'                            // $postCosntruct
         );
 }
 ```
-
 この例では`Car`クラスでは`EngineInterface $engine, $carName`と二つの引数が必要ですが、それぞれの変数名に`Named binding`束縛を行い依存解決をしています。
+
+### Parameter
+
+**class_name**
+
+クラス名
+
+**name**
+
+名前束縛。配列か文字列で`引数名`と`束縛名の名前`をペアにして指定します。
+
+array `[[$parame_name => $binding_name],...]` or string `"param_name=binding_name&..."`
+
+**setter_injection**
+
+セッターインジェクションのメソッド名と`束縛名の名前`を指定したインジェクとポイントオブジェクト
+
+**postCosntruct**
+ 
+`＠postCosntruct`と同じく全てのインジェクションが終わった後に呼ばれる初期化メソッド名。
+
+## PDO Example
+
+[PDO](http://php.net/manual/ja/pdo.construct.php)クラスの束縛の例です. 
+
+```php
+public PDO::__construct ( string $dsn [, string $username [, string $password [, array $options ]]] )
+```
+
+```php
+protected function configure()
+{       
+    $this->bind(\PDO::class)->toConstructor(
+        \PDO::class,
+        [
+            ['pdo' => 'pdo_dsn'],
+            ['username' => 'pdo_username'],
+            ['password' => 'pdo_password']
+        ]
+    )->in(Scope::SINGLETON);
+    $this->bind()->annotatedWith('pdo_dsn')->toInstance($dsn);
+    $this->bind()->annotatedWith('pdo_username')->toInstance($username);
+    $this->bind()->annotatedWith('pdo_password')->toInstance($password);
+}
+```
+
+PDOのどのインターフェイスがないので`toConstructor()`メソッドの二番目の引数の名前束縛でP束縛しています
 
 ## スコープ
 
