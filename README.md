@@ -781,7 +781,7 @@ try {
 } catch (NotCompiled $e) {
     $compiler = new DiCompiler(new ListerModule, $tmpDir);
     $compiler->compile();
-    $instance = $compiler->getInstance(ListerInterface::class);
+    $instance = $injector->getInstance(ListerInterface::class);
 }
 ```
 Once an instance has been created, You can view the generated factory files in `$tmpDir`

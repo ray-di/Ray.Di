@@ -495,7 +495,7 @@ try {
 } catch (NotCompiled $e) {
     $compiler = new DiCompiler(new ListerModule, $tmpDir);
     $compiler->compile();
-    $instance = $compiler->getInstance(ListerInterface::class);
+    $instance = $injector->getInstance(ListerInterface::class);
 }
 ```
 
