@@ -1,9 +1,10 @@
 <?php
 namespace Ray\Di;
 
+use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
 
-class UnboundTest extends \PHPUnit_Framework_TestCase
+class UnboundTest extends TestCase
 {
     public function testGetBound()
     {

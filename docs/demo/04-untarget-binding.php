@@ -4,7 +4,7 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 use Ray\Di\Scope;
 
-require __DIR__.'/bootstrap.php';
+require __DIR__ . '/bootstrap.php';
 
 class Finder
 {

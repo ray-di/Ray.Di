@@ -1,9 +1,10 @@
 <?php
 namespace Ray\Di;
 
+use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
 
-class SetterMethodTest extends \PHPUnit_Framework_TestCase
+class SetterMethodTest extends TestCase
 {
     /**
      * @var SetterMethods
@@ -31,7 +32,7 @@ class SetterMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testUnbound()
     {
-        $this->setExpectedException(Unbound::class);
+        $this->expectException(Unbound::class);
         $container = new Container;
         $car = new FakeCar(new FakeEngine);
         $this->setterMethods->__invoke($car, $container);

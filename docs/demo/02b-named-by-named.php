@@ -2,7 +2,6 @@
 
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Named;
-use Ray\Di\Di\Qualifier;
 use Ray\Di\Injector;
 
 require __DIR__ . '/bootstrap.php';

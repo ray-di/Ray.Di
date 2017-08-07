@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Ray.Di package.
  *
@@ -10,6 +11,7 @@ use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\Assisted;
+use Ray\Di\Di\Named;
 
 final class AssistedInterceptor implements MethodInterceptor
 {
@@ -40,7 +42,7 @@ final class AssistedInterceptor implements MethodInterceptor
     public function invoke(MethodInvocation $invocation)
     {
         $method = $invocation->getMethod();
-        $assisted = $method->getAnnotation('Ray\Di\Di\Assisted');
+        $assisted = $method->getAnnotation(Assisted::class);
         /* @var \Ray\Di\Di\Assisted $assisted */
         $parameters = $method->getParameters();
         $arguments = $invocation->getArguments()->getArrayCopy();
@@ -63,7 +65,7 @@ final class AssistedInterceptor implements MethodInterceptor
      *
      * @internal param int $cntArgs
      */
-    public function injectAssistedParameters(ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments)
+    public function injectAssistedParameters(ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments) : array
     {
         foreach ($parameters as $parameter) {
             if (! in_array($parameter->getName(), $assisted->values, true)) {
@@ -80,14 +82,11 @@ final class AssistedInterceptor implements MethodInterceptor
     }
 
     /**
-     * @param ReflectionMethod     $method
-     * @param \ReflectionParameter $parameter
-     *
-     * @return string
+     * Return dependency "name"
      */
-    private function getName(ReflectionMethod $method, \ReflectionParameter $parameter)
+    private function getName(ReflectionMethod $method, \ReflectionParameter $parameter) : string
     {
-        $named = $method->getAnnotation('Ray\Di\Di\Named');
+        $named = $method->getAnnotation(Named::class);
         if (! $named) {
             return Name::ANY;
         }

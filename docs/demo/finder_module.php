@@ -36,12 +36,16 @@ class DbFinder implements FinderInterface
     public function __construct(DbInterface $db)
     {
     }
-/** @Inject */public function setDb(DbInterface $db)
-{
-}
-/** @Inject */public function setSorter(Sorter $sorter, Sorter $sorte2)
-{
-}
+
+    /** @Inject */
+    public function setDb(DbInterface $db)
+    {
+    }
+
+    /** @Inject */
+    public function setSorter(Sorter $sorter, Sorter $sorte2)
+    {
+    }
 }
 
 interface MovieListerInterface
@@ -53,9 +57,11 @@ class MovieLister implements MovieListerInterface
     public function __construct(FinderInterface $finder)
     {
     }
-/** @Inject */public function setFinder01(FinderInterface $finder, FinderInterface $finder1, FinderInterface $finder2)
-{
-}
+
+    /** @Inject */
+    public function setFinder01(FinderInterface $finder, FinderInterface $finder1, FinderInterface $finder2)
+    {
+    }
 }
 
 class FinderModule extends AbstractModule

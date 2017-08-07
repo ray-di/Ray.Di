@@ -2,8 +2,9 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use PHPUnit\Framework\TestCase;
 
-class InjectionPointTest extends \PHPUnit_Framework_TestCase
+class InjectionPointTest extends TestCase
 {
     /**
      * @var InjectionPointInterface

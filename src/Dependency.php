@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -8,6 +10,7 @@ namespace Ray\Di;
 
 use Ray\Aop\Bind as AopBind;
 use Ray\Aop\Compiler as AopCompiler;
+use Ray\Aop\MethodInterceptor;
 
 final class Dependency implements DependencyInterface
 {
@@ -54,7 +57,7 @@ final class Dependency implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function register(array &$container, Bind $bind)
+    public function register(array &$container, Bind $bind) : void
     {
         $this->index = $index = (string) $bind;
         $container[$index] = $bind->getBound();
@@ -84,7 +87,7 @@ final class Dependency implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function setScope($scope)
+    public function setScope($scope) : void
     {
         if ($scope === Scope::SINGLETON) {
             $this->isSingleton = true;
@@ -94,7 +97,7 @@ final class Dependency implements DependencyInterface
     public function weaveAspects(AopCompiler $compiler, array $pointcuts)
     {
         $class = (string) $this->newInstance;
-        $isInterceptor = (new \ReflectionClass($class))->implementsInterface('Ray\Aop\MethodInterceptor');
+        $isInterceptor = (new \ReflectionClass($class))->implementsInterface(MethodInterceptor::class);
         if ($isInterceptor) {
             return;
         }

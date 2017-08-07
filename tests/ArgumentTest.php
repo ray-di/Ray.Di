@@ -1,7 +1,9 @@
 <?php
 namespace Ray\Di;
 
-class ArgumentTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ArgumentTest extends TestCase
 {
     /**
      * @var Argument

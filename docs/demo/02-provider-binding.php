@@ -36,9 +36,6 @@ class ModernMovieLister implements MovieListerInterface
 {
     public $finder;
 
-    /**
-     *
-     */
     public function __construct(FinderInterface $finder)
     {
         $this->finder = $finder;
@@ -55,7 +52,7 @@ class FinderProvider implements ProviderInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function get()
     {

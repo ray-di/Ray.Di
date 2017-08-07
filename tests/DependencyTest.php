@@ -1,12 +1,13 @@
 <?php
 namespace Ray\Di;
 
+use PHPUnit\Framework\TestCase;
 use Ray\Aop\Compiler;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
 use Ray\Aop\WeavedInterface;
 
-class DependencyTest extends \PHPUnit_Framework_TestCase
+class DependencyTest extends TestCase
 {
     /**
      * @var Dependency

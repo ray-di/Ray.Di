@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -33,21 +35,20 @@ final class Argument
      */
     private $reflection;
 
-    public function __construct(\ReflectionParameter $parameter, $name)
+    public function __construct(\ReflectionParameter $parameter, string $name)
     {
-        $interface = $this->getTypeHint($parameter);
-        $interface = ($interface === 'array') ? '' : $interface; // hhvm
+        $type = $parameter->getType();
         $isOptional = $parameter->isOptional();
         $this->isDefaultAvailable = $parameter->isDefaultValueAvailable() || $isOptional;
         if ($isOptional) {
             $this->default = null;
         }
         $this->setDefaultValue($parameter);
-        $this->index = $interface . '-' . $name;
+        $this->index = $type . '-' . $name;
         $this->reflection = $parameter;
         $this->meta = sprintf(
             "dependency '%s' with name '%s' used in %s:%d ($%s)",
-            $interface,
+            $type,
             $name,
             $this->reflection->getDeclaringFunction()->getFileName(),
             $this->reflection->getDeclaringFunction()->getStartLine(),
@@ -65,10 +66,8 @@ final class Argument
 
     /**
      * Return reflection
-     *
-     * @return \ReflectionParameter
      */
-    public function get()
+    public function get() : \ReflectionParameter
     {
         return $this->reflection;
     }
@@ -76,7 +75,7 @@ final class Argument
     /**
      * @return bool
      */
-    public function isDefaultAvailable()
+    public function isDefaultAvailable() : bool
     {
         return $this->isDefaultAvailable;
     }
@@ -89,28 +88,12 @@ final class Argument
         return $this->default;
     }
 
-    public function getMeta()
+    public function getMeta() : string
     {
         return $this->meta;
     }
 
-    /**
-     * @param \ReflectionParameter $parameter
-     *
-     * @return string
-     */
-    private function getTypeHint(\ReflectionParameter $parameter)
-    {
-        if (defined('HHVM_VERSION')) {
-            /* @noinspection PhpUndefinedFieldInspection */
-            return $parameter->info['type_hint']; // @codeCoverageIgnore
-        }
-        $typHint = $parameter->getClass();
-
-        return $typHint instanceof \ReflectionClass ? $typHint->name : '';
-    }
-
-    private function setDefaultValue(\ReflectionParameter $parameter)
+    private function setDefaultValue(\ReflectionParameter $parameter) : void
     {
         if (! $this->isDefaultAvailable) {
             return;

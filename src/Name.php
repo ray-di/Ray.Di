@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -28,22 +29,14 @@ final class Name
      */
     private $names;
 
-    /**
-     * @param string $name
-     */
-    public function __construct($name)
+    public function __construct(string $name = null)
     {
         if (! is_null($name)) {
             $this->setName($name);
         }
     }
 
-    /**
-     * @param \ReflectionParameter $parameter
-     *
-     * @return string
-     */
-    public function __invoke(\ReflectionParameter $parameter)
+    public function __invoke(\ReflectionParameter $parameter) : string
     {
         // single variable named binding
         if ($this->name) {
@@ -64,10 +57,7 @@ final class Name
         return self::ANY;
     }
 
-    /**
-     * @param string $name
-     */
-    private function setName($name)
+    private function setName(string $name) : void
     {
         // annotation
         if (class_exists($name, false)) {
@@ -90,7 +80,7 @@ final class Name
     /**
      * @param string $name
      */
-    private function parseName($name)
+    private function parseName(string $name) : void
     {
         $keyValues = explode(',', $name);
         foreach ($keyValues as $keyValue) {

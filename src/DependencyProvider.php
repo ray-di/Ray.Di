@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -30,7 +32,7 @@ final class DependencyProvider implements DependencyInterface
      */
     private $instance;
 
-    public function __construct(Dependency $dependency, $context = null)
+    public function __construct(Dependency $dependency, string $context = null)
     {
         $this->dependency = $dependency;
         $this->context = $context;
@@ -44,7 +46,7 @@ final class DependencyProvider implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function register(array &$container, Bind $bind)
+    public function register(array &$container, Bind $bind) : void
     {
         $container[(string) $bind] = $bind->getBound();
     }
@@ -69,7 +71,7 @@ final class DependencyProvider implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function setScope($scope)
+    public function setScope($scope) : void
     {
         if ($scope === Scope::SINGLETON) {
             $this->isSingleton = true;
