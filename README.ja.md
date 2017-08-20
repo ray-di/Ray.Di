@@ -572,19 +572,13 @@ $lister = $injector->getInstance(ListerInterface::class);
 
 `Ray.Di` のためのさまざまなモジュールが利用可能です。 https://github.com/Ray-Di
 
-## 要件
-
-* PHP 5.6+
-* hhvm
-
-
 ## インストール
 
 Ray.Diをインストールにするには [Composer](http://getcomposer.org)を利用します。
 
 ```bash
 # Add Ray.Di as a dependency
-$ composer require ray/di ~2.0@dev
+$ composer require ray/di ^2.0
 ```
 
 ## テスト
@@ -592,8 +586,8 @@ $ composer require ray/di ~2.0@dev
 インストールしてテストとデモプログラムを実行します。
 
 ```bash
-$ composer create-project ray/di Ray.Di ~2.0@dev
+$ git clone https://github.com/ray-di/Ray.Di.git
 $ cd Ray.Di
-$ phpunit
+$ ./vendor/bin/phpunit
 $ php docs/demo/run.php
 ```
