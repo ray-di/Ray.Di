@@ -1,5 +1,4 @@
 <?php
-
 namespace Ray\Di\Demo;
 
 use Ray\Di\AbstractModule;

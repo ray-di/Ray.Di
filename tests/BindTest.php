@@ -72,7 +72,7 @@ class BindTest extends TestCase
     {
         return [
             ['tmpDir=tmp_dir,leg=left'],
-            [['tmpDir' => 'tmp_dir','leg' => 'left']]
+            [['tmpDir' => 'tmp_dir', 'leg' => 'left']]
         ];
     }
 
