@@ -26,13 +26,19 @@
     "autoload": {
         "psr-4": {
             "Ray\\Di\\": "src/"
-        }
+        },
+        "files": [
+            "load_annotations.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
             "Ray\\Di\\": ["tests/", "tests/Fake/"],
             "FakeVendor\\Sandbox\\": "tests/Fake/FakeVendor/Sandbox/"
-        }
+        },
+        "files": [
+            "tests/load_annotations.php"
+        ]
     },
     "scripts" :{
         "test": ["@cs", "phpunit"],

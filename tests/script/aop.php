@@ -6,7 +6,8 @@
  */
 namespace Ray\Di;
 
-require dirname(__DIR__) . '/bootstrap.php';
+$appRoot = dirname(dirname(__DIR__));
+require $appRoot . '/vendor/autoload.php';
 
-$injector = new Injector(new FakeAopModule, $_ENV['TMP_DIR']);
+$injector = new Injector(new FakeAopModule, $appRoot . '/tests/tmp');
 file_put_contents(__FILE__ . '.cache', serialize($injector));
