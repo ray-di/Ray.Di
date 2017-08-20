@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * This file is part of the Ray.Di package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 use Ray\Di\Injector;
 
 require __DIR__ . '/bootstrap.php';

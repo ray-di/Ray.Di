@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * This file is part of the Ray.Di package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\PostConstruct;
