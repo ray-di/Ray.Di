@@ -10,7 +10,7 @@ return \PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules(array(
         '@PSR2' => true,
-//        'header_comment' => ['header' => $header, 'commentType' => 'PHPDoc', 'separate' => 'none'],
+        'header_comment' => ['header' => $header, 'commentType' => 'PHPDoc', 'separate' => 'none'],
         'array_syntax' => ['syntax' => 'short'],
         'binary_operator_spaces' => ['align_equals' => false, 'align_double_arrow' => false],
         'blank_line_after_opening_tag' => true,

@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * This file is part of the Ray.Di package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 require __DIR__ . '/bootstrap.php';
 
 use Ray\Di\AbstractModule;

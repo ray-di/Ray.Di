@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * This file is part of the Ray.Di package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 passthru('php ' . __DIR__ . '/01-linked-binding.php');
 passthru('php ' . __DIR__ . '/01-linked-binding-setter-injection.php');
 passthru('php ' . __DIR__ . '/02-provider-binding.php');

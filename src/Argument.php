@@ -37,7 +37,7 @@ final class Argument
 
     public function __construct(\ReflectionParameter $parameter, string $name)
     {
-        $type = $parameter->getType();
+        $type = $this->getType($parameter);
         $isOptional = $parameter->isOptional();
         $this->isDefaultAvailable = $parameter->isDefaultValueAvailable() || $isOptional;
         if ($isOptional) {
@@ -104,5 +104,15 @@ final class Argument
             // probably it is internal class like \PDO
             $this->default = null;
         }
+    }
+
+    private function getType(\ReflectionParameter $parameter) : string
+    {
+        $type = $parameter->getType();
+        if ($type instanceof \ReflectionType && in_array((string) $type, ['bool', 'int', 'string', 'array'], true)) {
+            return '';
+        }
+
+        return (string) $type;
     }
 }
