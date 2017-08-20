@@ -2,8 +2,9 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use PHPUnit\Framework\TestCase;
 
-class AnnotatedClassTest extends \PHPUnit_Framework_TestCase
+class AnnotatedClassTest extends TestCase
 {
     /**
      * @var AnnotatedClass

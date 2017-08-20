@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Ray.Di package.
  *
@@ -20,7 +21,7 @@ final class InjectionPoints
      *
      * @return SetterMethods
      */
-    public function __invoke($class)
+    public function __invoke(string $class) : SetterMethods
     {
         $points = [];
         foreach ($this->points as $point) {
@@ -30,39 +31,21 @@ final class InjectionPoints
         return new SetterMethods($points);
     }
 
-    /**
-     * @param string $method setter method name
-     * @param string $name   binding name
-     *
-     * @return $this
-     */
-    public function addMethod($method, $name = Name::ANY)
+    public function addMethod(string $method, string $name = Name::ANY) : self
     {
         $this->points[] = [$method, $name, false];
 
         return $this;
     }
 
-    /**
-     * @param string $method setter method name
-     * @param string $name   binding name
-     *
-     * @return $this
-     */
-    public function addOptionalMethod($method, $name = Name::ANY)
+    public function addOptionalMethod(string $method, string $name = Name::ANY) : self
     {
         $this->points[] = [$method, $name, true];
 
         return $this;
     }
 
-    /**
-     * @param string $class
-     * @param array  $point
-     *
-     * @return SetterMethod
-     */
-    private function getSetterMethod($class, $point)
+    private function getSetterMethod(string $class, array $point) : SetterMethod
     {
         $setterMethod = new SetterMethod(new \ReflectionMethod($class, $point[0]), new Name($point[1]));
         if ($point[2]) {

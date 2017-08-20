@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -53,12 +54,9 @@ final class Container
     /**
      * Return instance by interface + name(interface namespace)
      *
-     * @param string $interface
-     * @param string $name
-     *
      * @return mixed
      */
-    public function getInstance($interface, $name)
+    public function getInstance(string $interface, string $name)
     {
         return $this->getDependency($interface . '-' . $name);
     }
@@ -66,13 +64,11 @@ final class Container
     /**
      * Return dependency injected instance
      *
-     * @param string $index
-     *
      * @throws Unbound
      *
      * @return mixed
      */
-    public function getDependency($index)
+    public function getDependency(string $index)
     {
         if (! isset($this->container[$index])) {
             throw $this->unbound($index);
@@ -85,13 +81,8 @@ final class Container
 
     /**
      * Rename existing dependency interface + name
-     *
-     * @param string $sourceInterface
-     * @param string $sourceName
-     * @param string $targetInterface
-     * @param string $targetName
      */
-    public function move($sourceInterface, $sourceName, $targetInterface, $targetName)
+    public function move(string $sourceInterface, string $sourceName, string $targetInterface, string $targetName)
     {
         $sourceIndex = $sourceInterface . '-' . $sourceName;
         if (! isset($this->container[$sourceIndex])) {
@@ -103,11 +94,13 @@ final class Container
     }
 
     /**
+     * Return Unbound exception
+     *
      * @param string $index {interface}-{bind name}
      *
      * @return Untargetted | Unbound
      */
-    public function unbound($index)
+    public function unbound(string $index)
     {
         list($class, $name) = explode('-', $index);
         if (class_exists($class) && ! (new \ReflectionClass($class))->isAbstract()) {
@@ -118,23 +111,27 @@ final class Container
     }
 
     /**
+     * Return container
+     *
      * @return DependencyInterface[]
      */
-    public function getContainer()
+    public function getContainer() : array
     {
         return $this->container;
     }
 
     /**
+     * Return pointcuts
+     *
      * @return \Ray\Aop\Pointcut[]
      */
-    public function getPointcuts()
+    public function getPointcuts() : array
     {
         return $this->pointcuts;
     }
 
     /**
-     * @param Container $container
+     * Merge container
      */
     public function merge(Container $container)
     {
@@ -144,8 +141,6 @@ final class Container
 
     /**
      * Weave aspects to all dependency in container
-     *
-     * @param Compiler $compiler
      */
     public function weaveAspects(Compiler $compiler)
     {
@@ -160,13 +155,8 @@ final class Container
 
     /**
      * Weave aspect to single dependency
-     *
-     * @param Compiler   $compiler
-     * @param Dependency $dependency
-     *
-     * @return $this
      */
-    public function weaveAspect(Compiler $compiler, Dependency $dependency)
+    public function weaveAspect(Compiler $compiler, Dependency $dependency) : self
     {
         $dependency->weaveAspects($compiler, $this->pointcuts);
 

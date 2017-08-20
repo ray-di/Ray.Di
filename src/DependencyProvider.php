@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -30,7 +32,7 @@ final class DependencyProvider implements DependencyInterface
      */
     private $instance;
 
-    public function __construct(Dependency $dependency, $context = null)
+    public function __construct(Dependency $dependency, string $context = null)
     {
         $this->dependency = $dependency;
         $this->context = $context;

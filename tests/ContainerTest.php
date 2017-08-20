@@ -1,11 +1,12 @@
 <?php
 namespace Ray\Di;
 
+use PHPUnit\Framework\TestCase;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
 
-class ContainerTest extends \PHPUnit_Framework_TestCase
+class ContainerTest extends TestCase
 {
     /**
      * @var Container
@@ -121,7 +122,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
     public function testMoveUnbound()
     {
-        $this->setExpectedException(Unbound::class);
+        $this->expectException(Unbound::class);
         $this->container->move(FakeEngineInterface::class, 'invalid', FakeEngineInterface::class, 'new');
     }
 

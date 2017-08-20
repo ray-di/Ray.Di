@@ -861,18 +861,13 @@ $lister = $injector->getInstance(ListerInterface::class);
 
 Various modules for `Ray.Di` are available at https://github.com/Ray-Di.
 
-## Requirements ##
-
-* PHP 5.6+
-* hhvm
-
 ## Installation ##
 
 The recommended way to install Ray.Di is through [Composer](https://github.com/composer/composer).
 
 ```bash
 # Add Ray.Di as a dependency
-$ composer require ray/di ~2.0
+$ composer require ray/di ^2.0
 ```
 
 ## Testing Ray.Di ##
@@ -880,8 +875,8 @@ $ composer require ray/di ~2.0
 Here's how to install Ray.Di from source and run the unit tests and demos.
 
 ```bash
-$ composer create-project ray/di:~2.0 Ray.Di
+$ git clone https://github.com/ray-di/Ray.Di.git
 $ cd Ray.Di
-$ phpunit
+$ ./vendor/bin/phpunit
 $ php docs/demo/run.php
 ```

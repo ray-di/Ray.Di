@@ -4,7 +4,7 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Di\Assisted;
 use Ray\Di\Injector;
 
-require __DIR__.'/bootstrap.php';
+require __DIR__ . '/bootstrap.php';
 
 interface FinderInterface
 {

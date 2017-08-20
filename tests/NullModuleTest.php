@@ -1,7 +1,9 @@
 <?php
 namespace Ray\Di;
 
-class NullModuleTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class NullModuleTest extends TestCase
 {
     public function testNew()
     {

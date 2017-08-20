@@ -1,7 +1,9 @@
 <?php
 namespace Ray\Di;
 
-class InjectionPointsTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class InjectionPointsTest extends TestCase
 {
     /**
      * @var InjectionPoints
@@ -22,7 +24,7 @@ class InjectionPointsTest extends \PHPUnit_Framework_TestCase
     public function testInvoke()
     {
         $car = new FakeCar(new FakeEngine);
-        $setterMethods = $this->injectionPoints->__invoke($car);
+        $setterMethods = $this->injectionPoints->__invoke(get_class($car));
         $this->assertInstanceOf(SetterMethods::class, $setterMethods);
 
         return $setterMethods;

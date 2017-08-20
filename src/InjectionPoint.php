@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Ray.Di package.
  *
@@ -30,7 +31,7 @@ final class InjectionPoint implements InjectionPointInterface
     /**
      * {@inheritdoc}
      */
-    public function getParameter()
+    public function getParameter() : \ReflectionParameter
     {
         return $this->parameter;
     }
@@ -38,7 +39,7 @@ final class InjectionPoint implements InjectionPointInterface
     /**
      * {@inheritdoc}
      */
-    public function getMethod()
+    public function getMethod() : \ReflectionFunctionAbstract
     {
         return $this->parameter->getDeclaringFunction();
     }
@@ -46,7 +47,7 @@ final class InjectionPoint implements InjectionPointInterface
     /**
      * {@inheritdoc}
      */
-    public function getClass()
+    public function getClass() : \ReflectionClass
     {
         return $this->parameter->getDeclaringClass();
     }
@@ -62,7 +63,7 @@ final class InjectionPoint implements InjectionPointInterface
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(
                 new \ReflectionClass($annotation),
-                'Ray\Di\Di\Qualifier'
+                Qualifier::class
             );
             if ($qualifier instanceof Qualifier) {
                 $qualifiers[] = $annotation;

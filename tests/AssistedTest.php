@@ -1,10 +1,10 @@
 <?php
-
 namespace Ray\Di;
 
+use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\MethodInvocationNotAvailable;
 
-class AssistedTest extends \PHPUnit_Framework_TestCase
+class AssistedTest extends TestCase
 {
     /**
      * @var InjectorInterface
@@ -58,7 +58,7 @@ class AssistedTest extends \PHPUnit_Framework_TestCase
 
     public function testAssistedMethodInvocationNotAvailable()
     {
-        $this->setExpectedException(MethodInvocationNotAvailable::class);
+        $this->expectException(MethodInvocationNotAvailable::class);
         $assistedDbProvider = (new Injector(new FakeAssistedDbModule))->getInstance(FakeAssistedDbProvider::class);
         /* @var $assistedDbProvider FakeAssistedDbProvider */
         $assistedDbProvider->get();

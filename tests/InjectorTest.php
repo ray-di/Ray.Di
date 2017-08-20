@@ -1,9 +1,10 @@
 <?php
 namespace Ray\Di;
 
+use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
 
-class InjectorTest extends \PHPUnit_Framework_TestCase
+class InjectorTest extends TestCase
 {
     public function testNew()
     {
@@ -27,7 +28,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testUnbound()
     {
-        $this->setExpectedException(Unbound::class);
+        $this->expectException(Unbound::class);
         $injector = new Injector(new FakeInstanceBindModule);
         $injector->getInstance('', 'invalid-binding-xxx');
     }
@@ -275,7 +276,7 @@ class InjectorTest extends \PHPUnit_Framework_TestCase
 
     public function testNewAbstract()
     {
-        $this->setExpectedException(Unbound::class, FakeAbstractClass::class);
+        $this->expectException(Unbound::class, FakeAbstractClass::class);
         (new Injector)->getInstance(FakeConcreteClass::class);
     }
 

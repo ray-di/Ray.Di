@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -21,11 +23,9 @@ final class AspectBind
     }
 
     /**
-     * @param Container $container
-     *
-     * @return array
+     * Instantiate interceptors
      */
-    public function inject(Container $container)
+    public function inject(Container $container) : array
     {
         $bindings = $this->bind->getBindings();
         foreach ($bindings as &$interceptors) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Ray.Di package.
  *
@@ -25,7 +26,7 @@ class Injector implements InjectorInterface
      * @param AbstractModule $module
      * @param string         $classDir
      */
-    public function __construct(AbstractModule $module = null, $classDir = null)
+    public function __construct(AbstractModule $module = null, string $classDir = null)
     {
         if (is_null($module)) {
             $module = new NullModule;
@@ -36,7 +37,7 @@ class Injector implements InjectorInterface
         $this->container->weaveAspects(new Compiler($this->classDir));
 
         // builtin injection
-        (new Bind($this->container, 'Ray\Di\InjectorInterface'))->toInstance($this);
+        (new Bind($this->container, InjectorInterface::class))->toInstance($this);
     }
 
     /**
@@ -77,7 +78,7 @@ class Injector implements InjectorInterface
     /**
      * @param string $class
      */
-    private function bind($class)
+    private function bind(string $class)
     {
         new Bind($this->container, $class);
         /* @var $bound Dependency */

@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -13,10 +14,7 @@ use Ray\Di\Exception\NotFound;
 
 final class BindValidator
 {
-    /**
-     * @param string $interface
-     */
-    public function constructor($interface)
+    public function constructor(string $interface)
     {
         if ($interface && ! interface_exists($interface) && ! class_exists($interface)) {
             throw new NotFound($interface);
@@ -25,11 +23,8 @@ final class BindValidator
 
     /**
      * To validator
-     *
-     * @param string $interface
-     * @param string $class
      */
-    public function to($interface, $class)
+    public function to(string $interface, string $class)
     {
         if (! class_exists($class)) {
             throw new NotFound($class);
@@ -43,18 +38,14 @@ final class BindValidator
     /**
      * toProvider validator
      *
-     * @param string $provider
-     *
      * @throws NotFound
-     *
-     * @return $this
      */
-    public function toProvider($provider)
+    public function toProvider(string $provider)
     {
         if (! class_exists($provider)) {
             throw new NotFound($provider);
         }
-        if (! (new \ReflectionClass($provider))->implementsInterface('Ray\Di\ProviderInterface')) {
+        if (! (new \ReflectionClass($provider))->implementsInterface(ProviderInterface::class)) {
             throw new InvalidProvider($provider);
         }
     }

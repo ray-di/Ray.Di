@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the Ray.Di package.
  *
@@ -40,8 +42,6 @@ abstract class AbstractModule
 
     /**
      * Install module
-     *
-     * @param AbstractModule $module
      */
     public function install(AbstractModule $module)
     {
@@ -50,8 +50,6 @@ abstract class AbstractModule
 
     /**
      * Override module
-     *
-     * @param AbstractModule $module
      */
     public function override(AbstractModule $module)
     {
@@ -64,7 +62,7 @@ abstract class AbstractModule
      *
      * @return Container
      */
-    public function getContainer()
+    public function getContainer() : Container
     {
         if (! $this->container) {
             $this->activate();
@@ -113,7 +111,7 @@ abstract class AbstractModule
      * @param string $sourceName      Original binding name
      * @param string $targetInterface Original interface
      */
-    public function rename($interface, $newName, $sourceName = Name::ANY, $targetInterface = '')
+    public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = '')
     {
         $targetInterface = $targetInterface ?: $interface;
         $this->lastModule->getContainer()->move($interface, $sourceName, $targetInterface, $newName);
@@ -126,18 +124,17 @@ abstract class AbstractModule
 
     /**
      * Bind interface
-     *
-     * @param string $interface
-     *
-     * @return Bind
      */
-    protected function bind($interface = '')
+    protected function bind(string $interface = '') : Bind
     {
         $bind = new Bind($this->getContainer(), $interface);
 
         return $bind;
     }
 
+    /**
+     * Activate bindings
+     */
     private function activate()
     {
         $this->container = new Container;
