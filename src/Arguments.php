@@ -78,7 +78,7 @@ final class Arguments
         return [false, null];
     }
 
-    private function bindInjectionPoint(Container $container, Argument $argument) : void
+    private function bindInjectionPoint(Container $container, Argument $argument)
     {
         $isSelf = (string) $argument === InjectionPointInterface::class . '-' . Name::ANY;
         if ($isSelf) {

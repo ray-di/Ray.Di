@@ -23,7 +23,7 @@ interface DependencyInterface
      * @param DependencyInterface[] $container
      * @param Bind                  $bind
      */
-    public function register(array &$container, Bind $bind) : void;
+    public function register(array &$container, Bind $bind);
 
     /**
      * Set scope
@@ -32,5 +32,5 @@ interface DependencyInterface
      *
      * @return mixed
      */
-    public function setScope($scope) : void;
+    public function setScope($scope);
 }

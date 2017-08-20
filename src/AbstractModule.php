@@ -43,7 +43,7 @@ abstract class AbstractModule
     /**
      * Install module
      */
-    public function install(AbstractModule $module) : void
+    public function install(AbstractModule $module)
     {
         $this->getContainer()->merge($module->getContainer());
     }
@@ -51,7 +51,7 @@ abstract class AbstractModule
     /**
      * Override module
      */
-    public function override(AbstractModule $module) : void
+    public function override(AbstractModule $module)
     {
         $module->getContainer()->merge($this->container);
         $this->container = $module->getContainer();
@@ -78,7 +78,7 @@ abstract class AbstractModule
      * @param AbstractMatcher $methodMatcher
      * @param array           $interceptors
      */
-    public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
+    public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
     {
         $pointcut = new Pointcut($classMatcher, $methodMatcher, $interceptors);
         $this->container->addPointcut($pointcut);
@@ -94,7 +94,7 @@ abstract class AbstractModule
      * @param AbstractMatcher $methodMatcher
      * @param array           $interceptors
      */
-    public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
+    public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
     {
         $pointcut = new PriorityPointcut($classMatcher, $methodMatcher, $interceptors);
         $this->container->addPointcut($pointcut);
@@ -111,7 +111,7 @@ abstract class AbstractModule
      * @param string $sourceName      Original binding name
      * @param string $targetInterface Original interface
      */
-    public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = '') : void
+    public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = '')
     {
         $targetInterface = $targetInterface ?: $interface;
         $this->lastModule->getContainer()->move($interface, $sourceName, $targetInterface, $newName);
@@ -135,7 +135,7 @@ abstract class AbstractModule
     /**
      * Activate bindings
      */
-    private function activate() : void
+    private function activate()
     {
         $this->container = new Container;
         $this->matcher = new Matcher;

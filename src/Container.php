@@ -133,7 +133,7 @@ final class Container
     /**
      * Merge container
      */
-    public function merge(Container $container) : void
+    public function merge(Container $container)
     {
         $this->container = $this->container + $container->getContainer();
         $this->pointcuts = array_merge($this->pointcuts, $container->getPointcuts());
@@ -142,7 +142,7 @@ final class Container
     /**
      * Weave aspects to all dependency in container
      */
-    public function weaveAspects(Compiler $compiler) : void
+    public function weaveAspects(Compiler $compiler)
     {
         foreach ($this->container as $dependency) {
             if (! $dependency instanceof Dependency) {

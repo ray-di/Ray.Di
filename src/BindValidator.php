@@ -24,7 +24,7 @@ final class BindValidator
     /**
      * To validator
      */
-    public function to(string $interface, string $class) : void
+    public function to(string $interface, string $class)
     {
         if (! class_exists($class)) {
             throw new NotFound($class);
@@ -40,7 +40,7 @@ final class BindValidator
      *
      * @throws NotFound
      */
-    public function toProvider(string $provider) : void
+    public function toProvider(string $provider)
     {
         if (! class_exists($provider)) {
             throw new NotFound($provider);

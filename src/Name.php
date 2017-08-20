@@ -57,7 +57,7 @@ final class Name
         return self::ANY;
     }
 
-    private function setName(string $name) : void
+    private function setName(string $name)
     {
         // annotation
         if (class_exists($name, false)) {
@@ -80,7 +80,7 @@ final class Name
     /**
      * @param string $name
      */
-    private function parseName(string $name) : void
+    private function parseName(string $name)
     {
         $keyValues = explode(',', $name);
         foreach ($keyValues as $keyValue) {

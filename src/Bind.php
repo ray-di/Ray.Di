@@ -53,7 +53,7 @@ final class Bind
         $this->container = $container;
         $this->interface = $interface;
         $this->validate = new BindValidator;
-        $bindUntarget = class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract() && ! $this->IsRegistered($interface);
+        $bindUntarget = class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
         if ($bindUntarget) {
             $this->untarget = new Untarget($interface);
 
@@ -187,7 +187,7 @@ final class Bind
         $this->bound = $bound;
     }
 
-    private function IsRegistered(string $interface) : bool
+    private function isRegistered(string $interface) : bool
     {
         $isRegistered = isset($this->container->getContainer()[$interface . '-' . Name::ANY]);
 

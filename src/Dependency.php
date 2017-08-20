@@ -57,7 +57,7 @@ final class Dependency implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function register(array &$container, Bind $bind) : void
+    public function register(array &$container, Bind $bind)
     {
         $this->index = $index = (string) $bind;
         $container[$index] = $bind->getBound();
@@ -87,7 +87,7 @@ final class Dependency implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function setScope($scope) : void
+    public function setScope($scope)
     {
         if ($scope === Scope::SINGLETON) {
             $this->isSingleton = true;

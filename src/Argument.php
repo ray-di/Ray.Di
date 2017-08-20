@@ -93,7 +93,7 @@ final class Argument
         return $this->meta;
     }
 
-    private function setDefaultValue(\ReflectionParameter $parameter) : void
+    private function setDefaultValue(\ReflectionParameter $parameter)
     {
         if (! $this->isDefaultAvailable) {
             return;
