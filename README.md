@@ -536,31 +536,39 @@ To address this, Ray.Di has `toConstructor` bindings.
 
 ```php
 <?php
-class Car implements CarInerface
+class WebApi implements WebApiInterface
 {
+    private $id;
+    private $password;
+    private $client;
+    private $token;
+
     /**
-     * @Named("engine=na,number=registrtion_number")
+     * @Named("id=user_id,password=user_password")
      */
-    public function __construct(EngineInterface $engine, $numer, $passowrd)
+    public function __construct(string $id, string $password)
     {
-        // ...
+        $this->id = $id;
+        $this->password = $password;
     }
     
     /**
      * @Inject
-     * @Named("right")
      */
-    public function setWheel(WheelInterface $wheel)
+    public function setGuzzle(ClientInterface $client)
     {
+        $this->client = $client;
     }
-    
+
     /**
      * @Inect(optional=true)
+     * @Named("token")
      */
-    public function setTurboCharger(TurboInterfece $turbo)
+    public function setOptionalToken(string $token)
     {
+        $this->token = $token;
     }
-    
+
     /**
      * @PostConstruct
      */
@@ -569,27 +577,30 @@ class Car implements CarInerface
     }
 ```
 
-All annotation in dependent above can be removed by following `toConstructor ` binding.
+All annotation in dependent above can be removed by following `toConstructor` binding.
 
 ```php
 <?php
 protected function configure()
 {
     $this
-        ->bind(CarInterface::class)
+        ->bind(WebApiInterface::class)
         ->toConstructor(
-            Car::class,                                 // $class_name
+            WebApi::class,                              // string $class_name
             [
-                ['enginne' => 'na'],                    // $name
-                ['number' => 'registrtion_number']
-            ], 
-            (new InjectionPoints)                       // $setter_injection
-                ->addMethod('setWheel', "right")        
-                ->addOptionalMethod('setTurboCharger'),
-                'initialize'                            // $postCosntruct
+                ['id' => 'user_id'],                    // array $name
+                ['passowrd' => 'user_password']
+            ],
+            (new InjectionPoints)                       // InjectionPoints　$setter_injection
+                ->addMethod('setGuzzle', 'token')
+                ->addOptionalMethod('setOptionalToken'),
+            'initialize'                                // string $postCostruct
         );
+    $this->bind()->annotated('user_id')->toInstance($_ENV['user_id']);
+    $this->bind()->annotated('user_password')->toInstance($_ENV['user_password']);
 }
 ```
+
 ### Parameter
 
 **class_name**
@@ -630,8 +641,8 @@ protected function configure()
         ]
     )->in(Scope::SINGLETON);
     $this->bind()->annotatedWith('pdo_dsn')->toInstance($dsn);
-    $this->bind()->annotatedWith('pdo_username')->toInstance($username);
-    $this->bind()->annotatedWith('pdo_password')->toInstance($password);
+    $this->bind()->annotatedWith('pdo_username')->toInstance($_ENV['db_user']);
+    $this->bind()->annotatedWith('pdo_password')->toInstance($_ENV['db_password']);
 }
 ```
 
