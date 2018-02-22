@@ -99,7 +99,7 @@ final class Bind
     }
 
     /**
-     * Bind to constroctur
+     * Bind to constructor
      *
      * @param string          $class           class name
      * @param string | array  $name            "varName=bindName,..." or [[varName=>bindName],...]
