@@ -31,7 +31,7 @@ abstract class AbstractModule
     private $container;
 
     public function __construct(
-        AbstractModule $module = null
+        self $module = null
     ) {
         $this->lastModule = $module;
         $this->activate();
@@ -43,7 +43,7 @@ abstract class AbstractModule
     /**
      * Install module
      */
-    public function install(AbstractModule $module)
+    public function install(self $module)
     {
         $this->getContainer()->merge($module->getContainer());
     }
@@ -51,7 +51,7 @@ abstract class AbstractModule
     /**
      * Override module
      */
-    public function override(AbstractModule $module)
+    public function override(self $module)
     {
         $module->getContainer()->merge($this->container);
         $this->container = $module->getContainer();
@@ -114,7 +114,7 @@ abstract class AbstractModule
     public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = '')
     {
         $targetInterface = $targetInterface ?: $interface;
-        if ($this->lastModule instanceof AbstractModule) {
+        if ($this->lastModule instanceof self) {
             $this->lastModule->getContainer()->move($interface, $sourceName, $targetInterface, $newName);
         }
     }

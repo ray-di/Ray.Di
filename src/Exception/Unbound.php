@@ -28,7 +28,7 @@ class Unbound extends \LogicException implements ExceptionInterface
      *
      * @return string
      */
-    private function buildMessage(Unbound $e, array $msg)
+    private function buildMessage(self $e, array $msg)
     {
         $lastE = $e;
         while ($e instanceof self) {
@@ -42,7 +42,7 @@ class Unbound extends \LogicException implements ExceptionInterface
         return $this->getMainMessage($lastE) . implode('', $msg);
     }
 
-    private function getMainMessage(Unbound $e)
+    private function getMainMessage(self $e)
     {
         return sprintf(
             "exception '%s' with message '%s'\n",
