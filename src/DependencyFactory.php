@@ -41,7 +41,7 @@ final class DependencyFactory
      */
     public function newToConstructor(
         \ReflectionClass $class,
-        $name,
+        string $name,
         InjectionPoints $injectionPoints = null,
         \ReflectionMethod $postConstruct = null
     ) : Dependency {
