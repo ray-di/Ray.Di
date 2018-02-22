@@ -129,9 +129,7 @@ abstract class AbstractModule
      */
     protected function bind(string $interface = '') : Bind
     {
-        $bind = new Bind($this->getContainer(), $interface);
-
-        return $bind;
+        return new Bind($this->getContainer(), $interface);
     }
 
     /**

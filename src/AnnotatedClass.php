@@ -44,9 +44,7 @@ final class AnnotatedClass
             $setterMethods->add($this->injectionMethod->getSetterMethod($method));
         }
         $name = $this->injectionMethod->getConstructorName($class);
-        $newInstance = new NewInstance($class, $setterMethods, $name);
-
-        return $newInstance;
+        return new NewInstance($class, $setterMethods, $name);
     }
 
     /**

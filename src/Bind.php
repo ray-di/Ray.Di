@@ -192,8 +192,6 @@ final class Bind
 
             return $carry;
         }, []);
-        $string = implode(',', $names);
-
-        return $string;
+        return implode(',', $names);
     }
 }

@@ -20,9 +20,7 @@ final class DependencyFactory
         $annotateClass = new AnnotatedClass(new AnnotationReader);
         $newInstance = $annotateClass->getNewInstance($class);
         $postConstruct = $annotateClass->getPostConstruct($class);
-        $dependency = new Dependency($newInstance, $postConstruct);
-
-        return $dependency;
+        return new Dependency($newInstance, $postConstruct);
     }
 
     /**
@@ -48,8 +46,6 @@ final class DependencyFactory
         $setterMethods = $injectionPoints ? $injectionPoints($class->name) : new SetterMethods([]);
         $postConstruct = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
         $newInstance = new NewInstance($class, $setterMethods, new Name($name));
-        $dependency = new Dependency($newInstance, $postConstruct);
-
-        return $dependency;
+        return new Dependency($newInstance, $postConstruct);
     }
 }
