@@ -59,7 +59,7 @@ final class AssistedInterceptor implements MethodInterceptor
     public function injectAssistedParameters(ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments) : array
     {
         foreach ($parameters as $parameter) {
-            if (! in_array($parameter->getName(), $assisted->values, true)) {
+            if (! \in_array($parameter->getName(), $assisted->values, true)) {
                 continue;
             }
             $hint = $parameter->getClass();

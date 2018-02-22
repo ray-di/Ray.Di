@@ -108,7 +108,7 @@ final class Bind
      */
     public function toConstructor($class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null) : self
     {
-        if (is_array($name)) {
+        if (\is_array($name)) {
             $name = $this->getStringName($name);
         }
         $this->untarget = null;

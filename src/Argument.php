@@ -109,7 +109,7 @@ final class Argument
     private function getType(\ReflectionParameter $parameter) : string
     {
         $type = $parameter->getType();
-        if ($type instanceof \ReflectionType && in_array((string) $type, ['bool', 'int', 'string', 'array'], true)) {
+        if ($type instanceof \ReflectionType && \in_array((string) $type, ['bool', 'int', 'string', 'array'], true)) {
             return '';
         }
 
