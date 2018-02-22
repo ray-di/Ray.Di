@@ -11,7 +11,7 @@ namespace Ray\Di;
 final class DependencyProvider implements DependencyInterface
 {
     /**
-     * @var string
+     * @var string|null
      */
     public $context;
 
@@ -32,7 +32,7 @@ final class DependencyProvider implements DependencyInterface
      */
     private $instance;
 
-    public function __construct(Dependency $dependency, string $context = null)
+    public function __construct(Dependency $dependency, string $context)
     {
         $this->dependency = $dependency;
         $this->context = $context;

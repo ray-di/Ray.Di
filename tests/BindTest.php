@@ -150,13 +150,4 @@ class BindTest extends TestCase
         $instance = $container->getInstance(ProviderInterface::class, Name::ANY);
         $this->assertSame('context_string', $instance->context);
     }
-
-    /**
-     * @expectedException \Ray\Di\Exception\InvalidContext
-     */
-    public function testInvalidProviderContext()
-    {
-        $container = new Container;
-        (new Bind($container, ProviderInterface::class))->toProvider(FakeHandleProvider::class, false);
-    }
 }

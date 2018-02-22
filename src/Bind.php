@@ -127,11 +127,8 @@ final class Bind
      *
      * @throws NotFound
      */
-    public function toProvider(string $provider, $context = null) : self
+    public function toProvider(string $provider, string $context = '') : self
     {
-        if (! is_null($context) && ! is_string($context)) {
-            throw new InvalidContext(gettype($context));
-        }
         $this->untarget = null;
         $this->validate->toProvider($provider);
         $this->bound = (new DependencyFactory)->newProvider(new \ReflectionClass($provider), $context);
