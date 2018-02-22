@@ -78,9 +78,8 @@ final class AnnotatedClassMethods
     private function getNamedKeyVarString(\ReflectionMethod $method)
     {
         $keyVal = [];
-        /* @var $named Named */
         $named = $this->reader->getMethodAnnotation($method, Named::class);
-        if ($named) {
+        if ($named instanceof Named) {
             $keyVal[] = $named->value;
         }
         $qualifierNamed = $this->getQualifierKeyVarString($method);
