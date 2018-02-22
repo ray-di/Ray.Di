@@ -56,9 +56,7 @@ final class AnnotatedClassMethods
     public function getSetterMethod(\ReflectionMethod $method)
     {
         $inject = $this->reader->getMethodAnnotation($method, InjectInterface::class);
-
-        /* @var $inject \Ray\Di\Di\Inject */
-        if (! $inject) {
+        if (! $inject instanceof InjectInterface) {
             return null;
         }
         $nameValue = $this->getNamedKeyVarString($method);
