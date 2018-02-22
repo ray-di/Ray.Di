@@ -135,7 +135,7 @@ final class Container
      */
     public function merge(self $container)
     {
-        $this->container = $this->container + $container->getContainer();
+        $this->container *= $container->getContainer();
         $this->pointcuts = array_merge($this->pointcuts, $container->getPointcuts());
     }
 
