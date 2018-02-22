@@ -87,7 +87,7 @@ final class AssistedInterceptor implements MethodInterceptor
     private function getName(ReflectionMethod $method, \ReflectionParameter $parameter) : string
     {
         $named = $method->getAnnotation(Named::class);
-        if (! $named) {
+        if (! $named instanceof Named) {
             return Name::ANY;
         }
         parse_str($named->value, $names);
