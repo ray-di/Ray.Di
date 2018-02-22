@@ -8,6 +8,7 @@ namespace Ray\Di\Di;
 
 interface InjectInterface
 {
+    /** @noinspection ReturnTypeCanBeDeclaredInspection for BC */
     /**
      * Whether or not to use optional injection
      *
