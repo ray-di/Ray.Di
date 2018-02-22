@@ -59,7 +59,7 @@ final class InjectionPoint implements InjectionPointInterface
     /**
      * {@inheritdoc}
      */
-    public function getQualifiers()
+    public function getQualifiers() : array
     {
         $qualifiers = [];
         $annotations = $this->reader->getMethodAnnotations($this->getMethod());

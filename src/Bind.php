@@ -161,10 +161,7 @@ final class Bind
         return $this;
     }
 
-    /**
-     * @return DependencyInterface
-     */
-    public function getBound()
+    public function getBound() : DependencyInterface
     {
         return $this->bound;
     }

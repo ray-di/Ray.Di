@@ -22,13 +22,7 @@ class Unbound extends \LogicException implements ExceptionInterface
         return parent::__toString();
     }
 
-    /**
-     * @param Unbound  $e
-     * @param string[] $msg
-     *
-     * @return string
-     */
-    private function buildMessage(self $e, array $msg)
+    private function buildMessage(self $e, array $msg) : string
     {
         $lastE = $e;
         while ($e instanceof self) {

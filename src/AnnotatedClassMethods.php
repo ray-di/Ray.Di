@@ -24,12 +24,7 @@ final class AnnotatedClassMethods
         $this->reader = $reader;
     }
 
-    /**
-     * @param \ReflectionClass $class
-     *
-     * @return Name
-     */
-    public function getConstructorName(\ReflectionClass $class)
+    public function getConstructorName(\ReflectionClass $class) : Name
     {
         $constructor = $class->getConstructor();
         if (! $constructor) {
@@ -91,12 +86,7 @@ final class AnnotatedClassMethods
         return null;
     }
 
-    /**
-     * @param \ReflectionMethod $method
-     *
-     * @return string
-     */
-    private function getQualifierKeyVarString(\ReflectionMethod $method)
+    private function getQualifierKeyVarString(\ReflectionMethod $method) : string
     {
         $annotations = $this->reader->getMethodAnnotations($method);
         $names = [];
