@@ -41,7 +41,7 @@ final class InjectionPoint implements InjectionPointInterface
      */
     public function getMethod() : \ReflectionMethod
     {
-        $class = $this->parameter->getDeclaringClass()->getName();
+        $class = $this->parameter->getDeclaringClass()->name;
         $method = $this->parameter->getDeclaringFunction()->getShortName();
 
         return new \ReflectionMethod($class, $method);
