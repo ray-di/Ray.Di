@@ -15,8 +15,8 @@ env:
 before_script:
   - composer self-update
   - composer update $DEPENDENCIES
-  - if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then wget http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar fi
-  - if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then composer require phpstan/phpstan-shim fi
+  - if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then wget http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar; fi
+  - if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then composer require phpstan/phpstan-shim; fi
 script:
   - ./vendor/bin/phpunit --coverage-clover=coverage.clover;
   - if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then php php-cs-fixer-v2.phar fix --config=.php_cs -v --dry-run --using-cache=no --path-mode=intersection `git diff --name-only --diff-filter=ACMRTUXB $TRAVIS_COMMIT_RANGE`; fi
