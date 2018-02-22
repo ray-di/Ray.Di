@@ -39,9 +39,12 @@ final class InjectionPoint implements InjectionPointInterface
     /**
      * {@inheritdoc}
      */
-    public function getMethod() : \ReflectionFunctionAbstract
+    public function getMethod() : \ReflectionMethod
     {
-        return $this->parameter->getDeclaringFunction();
+        $class = $this->parameter->getDeclaringClass()->name;
+        $method = $this->parameter->getDeclaringFunction()->getShortName();
+
+        return new \ReflectionMethod($class, $method);
     }
 
     /**
@@ -55,10 +58,9 @@ final class InjectionPoint implements InjectionPointInterface
     /**
      * {@inheritdoc}
      */
-    public function getQualifiers()
+    public function getQualifiers() : array
     {
         $qualifiers = [];
-        /* @noinspection PhpParamsInspection */
         $annotations = $this->reader->getMethodAnnotations($this->getMethod());
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(

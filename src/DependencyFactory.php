@@ -14,29 +14,20 @@ final class DependencyFactory
 {
     /**
      * Create dependency object
-     *
-     * @param \ReflectionClass $class
-     *
-     * @return Dependency
      */
-    public function newAnnotatedDependency(\ReflectionClass $class)
+    public function newAnnotatedDependency(\ReflectionClass $class) : Dependency
     {
         $annotateClass = new AnnotatedClass(new AnnotationReader);
         $newInstance = $annotateClass->getNewInstance($class);
         $postConstruct = $annotateClass->getPostConstruct($class);
-        $dependency = new Dependency($newInstance, $postConstruct);
 
-        return $dependency;
+        return new Dependency($newInstance, $postConstruct);
     }
 
     /**
      * Create Provider binding
-     *
-     * @param \ReflectionClass $provider
-     *
-     * @return DependencyProvider
      */
-    public function newProvider(\ReflectionClass $provider, $context)
+    public function newProvider(\ReflectionClass $provider, string $context) : DependencyProvider
     {
         $dependency = $this->newAnnotatedDependency($provider);
         $dependency = new DependencyProvider($dependency, $context);
@@ -46,25 +37,17 @@ final class DependencyFactory
 
     /**
      * Create ToConstructor binding
-     *
-     * @param \ReflectionClass  $class
-     * @param string            $name
-     * @param InjectionPoints   $injectionPoints
-     * @param \ReflectionMethod $postConstruct
-     *
-     * @return Dependency
      */
     public function newToConstructor(
         \ReflectionClass $class,
-        $name,
+        string $name,
         InjectionPoints $injectionPoints = null,
         \ReflectionMethod $postConstruct = null
-    ) {
+    ) : Dependency {
         $setterMethods = $injectionPoints ? $injectionPoints($class->name) : new SetterMethods([]);
         $postConstruct = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
         $newInstance = new NewInstance($class, $setterMethods, new Name($name));
-        $dependency = new Dependency($newInstance, $postConstruct);
 
-        return $dependency;
+        return new Dependency($newInstance, $postConstruct);
     }
 }

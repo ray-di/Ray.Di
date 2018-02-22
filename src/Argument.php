@@ -21,7 +21,7 @@ final class Argument
     private $isDefaultAvailable;
 
     /**
-     * @var
+     * @var mixed
      */
     private $default;
 
@@ -100,7 +100,7 @@ final class Argument
         }
         try {
             $this->default = $parameter->getDefaultValue();
-        } catch (\ReflectionException $e) {
+        } /* @noinspection PhpRedundantCatchClauseInspection */ catch (\ReflectionException $e) {
             // probably it is internal class like \PDO
             $this->default = null;
         }
@@ -109,7 +109,7 @@ final class Argument
     private function getType(\ReflectionParameter $parameter) : string
     {
         $type = $parameter->getType();
-        if ($type instanceof \ReflectionType && in_array((string) $type, ['bool', 'int', 'string', 'array'], true)) {
+        if ($type instanceof \ReflectionType && \in_array((string) $type, ['bool', 'int', 'string', 'array'], true)) {
             return '';
         }
 

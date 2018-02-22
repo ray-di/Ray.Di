@@ -28,7 +28,7 @@ class Injector implements InjectorInterface
      */
     public function __construct(AbstractModule $module = null, string $classDir = null)
     {
-        if (is_null($module)) {
+        if ($module === null) {
             $module = new NullModule;
         }
         $module->install(new AssistedModule);
@@ -83,6 +83,8 @@ class Injector implements InjectorInterface
         new Bind($this->container, $class);
         /* @var $bound Dependency */
         $bound = $this->container->getContainer()[$class . '-' . Name::ANY];
-        $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
+        if ($bound instanceof Dependency) {
+            $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
+        }
     }
 }

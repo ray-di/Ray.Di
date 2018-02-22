@@ -22,13 +22,7 @@ class Unbound extends \LogicException implements ExceptionInterface
         return parent::__toString();
     }
 
-    /**
-     * @param Unbound  $e
-     * @param string[] $msg
-     *
-     * @return string
-     */
-    private function buildMessage(Unbound $e, array $msg)
+    private function buildMessage(self $e, array $msg) : string
     {
         $lastE = $e;
         while ($e instanceof self) {
@@ -42,11 +36,11 @@ class Unbound extends \LogicException implements ExceptionInterface
         return $this->getMainMessage($lastE) . implode('', $msg);
     }
 
-    private function getMainMessage(Unbound $e)
+    private function getMainMessage(self $e)
     {
         return sprintf(
             "exception '%s' with message '%s'\n",
-            get_class($e),
+            \get_class($e),
             $e->getMessage()
         );
     }

@@ -51,7 +51,7 @@ final class SetterMethod
             }
             throw $e;
         }
-        call_user_func_array([$instance, $this->method], $parameters);
+        \call_user_func_array([$instance, $this->method], $parameters);
     }
 
     public function setOptional()

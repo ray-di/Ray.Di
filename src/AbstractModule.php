@@ -21,7 +21,7 @@ abstract class AbstractModule
     protected $matcher;
 
     /**
-     * @var AbstractModule
+     * @var AbstractModule|null
      */
     protected $lastModule;
 
@@ -31,11 +31,11 @@ abstract class AbstractModule
     private $container;
 
     public function __construct(
-        AbstractModule $module = null
+        self $module = null
     ) {
         $this->lastModule = $module;
         $this->activate();
-        if ($module) {
+        if ($module instanceof self) {
             $this->container->merge($module->getContainer());
         }
     }
@@ -43,7 +43,7 @@ abstract class AbstractModule
     /**
      * Install module
      */
-    public function install(AbstractModule $module)
+    public function install(self $module)
     {
         $this->getContainer()->merge($module->getContainer());
     }
@@ -51,7 +51,7 @@ abstract class AbstractModule
     /**
      * Override module
      */
-    public function override(AbstractModule $module)
+    public function override(self $module)
     {
         $module->getContainer()->merge($this->container);
         $this->container = $module->getContainer();
@@ -114,7 +114,9 @@ abstract class AbstractModule
     public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = '')
     {
         $targetInterface = $targetInterface ?: $interface;
-        $this->lastModule->getContainer()->move($interface, $sourceName, $targetInterface, $newName);
+        if ($this->lastModule instanceof self) {
+            $this->lastModule->getContainer()->move($interface, $sourceName, $targetInterface, $newName);
+        }
     }
 
     /**
@@ -127,9 +129,7 @@ abstract class AbstractModule
      */
     protected function bind(string $interface = '') : Bind
     {
-        $bind = new Bind($this->getContainer(), $interface);
-
-        return $bind;
+        return new Bind($this->getContainer(), $interface);
     }
 
     /**

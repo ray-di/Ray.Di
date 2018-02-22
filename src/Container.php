@@ -74,9 +74,8 @@ final class Container
             throw $this->unbound($index);
         }
         $dependency = $this->container[$index];
-        $instance = $dependency->inject($this);
 
-        return $instance;
+        return $dependency->inject($this);
     }
 
     /**
@@ -133,9 +132,9 @@ final class Container
     /**
      * Merge container
      */
-    public function merge(Container $container)
+    public function merge(self $container)
     {
-        $this->container = $this->container + $container->getContainer();
+        $this->container += $container->getContainer();
         $this->pointcuts = array_merge($this->pointcuts, $container->getPointcuts());
     }
 

@@ -32,10 +32,8 @@ final class AnnotatedClass
      * Return factory instance
      *
      * @param \ReflectionClass $class Target class reflection
-     *
-     * @return NewInstance
      */
-    public function getNewInstance(\ReflectionClass $class)
+    public function getNewInstance(\ReflectionClass $class) : NewInstance
     {
         $setterMethods = new SetterMethods([]);
         $methods = $class->getMethods();
@@ -46,9 +44,8 @@ final class AnnotatedClass
             $setterMethods->add($this->injectionMethod->getSetterMethod($method));
         }
         $name = $this->injectionMethod->getConstructorName($class);
-        $newInstance = new NewInstance($class, $setterMethods, $name);
 
-        return $newInstance;
+        return new NewInstance($class, $setterMethods, $name);
     }
 
     /**

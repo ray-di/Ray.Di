@@ -9,9 +9,6 @@ declare(strict_types=1);
  */
 namespace Ray\Di;
 
-use Ray\Di\Exception\InvalidContext;
-use Ray\Di\Exception\NotFound;
-
 final class Bind
 {
     /**
@@ -40,7 +37,7 @@ final class Bind
     private $validate;
 
     /**
-     * @var Untarget
+     * @var Untarget|null
      */
     private $untarget;
 
@@ -70,16 +67,13 @@ final class Bind
         }
     }
 
-    /**
-     * @return string
-     */
     public function __toString()
     {
         return $this->interface . '-' . $this->name;
     }
 
     /**
-     * Bind dependency name
+     * Set dependency name
      */
     public function annotatedWith(string $name) : self
     {
@@ -89,7 +83,7 @@ final class Bind
     }
 
     /**
-     * Bind to clss
+     * Bind to class
      */
     public function to(string $class) : self
     {
@@ -102,16 +96,16 @@ final class Bind
     }
 
     /**
-     * Bind to constroctur
+     * Bind to constructor
      *
      * @param string          $class           class name
-     * @param string | array  $name            "varName=bindName,..." or [[varName=>bindName],...]
+     * @param string | array  $name            "varName=bindName,..." or [[$varName => $bindName],[$varName => $bindName]...]
      * @param InjectionPoints $injectionPoints injection points
      * @param null            $postConstruct   method name of initialization after all dependencies are injected*
      */
-    public function toConstructor($class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null) : self
+    public function toConstructor(string $class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null) : self
     {
-        if (is_array($name)) {
+        if (\is_array($name)) {
             $name = $this->getStringName($name);
         }
         $this->untarget = null;
@@ -124,14 +118,9 @@ final class Bind
 
     /**
      * Bind to provider
-     *
-     * @throws NotFound
      */
-    public function toProvider(string $provider, $context = null) : self
+    public function toProvider(string $provider, string $context = '') : self
     {
-        if (! is_null($context) && ! is_string($context)) {
-            throw new InvalidContext(gettype($context));
-        }
         $this->untarget = null;
         $this->validate->toProvider($provider);
         $this->bound = (new DependencyFactory)->newProvider(new \ReflectionClass($provider), $context);
@@ -141,11 +130,11 @@ final class Bind
     }
 
     /**
-     * @param mixed $instance
+     * Bind to instance
      *
-     * @return $this
+     * @param mixed $instance
      */
-    public function toInstance($instance)
+    public function toInstance($instance) : self
     {
         $this->untarget = null;
         $this->bound = new Instance($instance);
@@ -155,11 +144,9 @@ final class Bind
     }
 
     /**
-     * @param string $scope
-     *
-     * @return $this
+     * Set scope
      */
-    public function in($scope)
+    public function in(string $scope) : self
     {
         if ($this->bound instanceof Dependency || $this->bound instanceof DependencyProvider) {
             $this->bound->setScope($scope);
@@ -171,17 +158,11 @@ final class Bind
         return $this;
     }
 
-    /**
-     * @return DependencyInterface
-     */
-    public function getBound()
+    public function getBound() : DependencyInterface
     {
         return $this->bound;
     }
 
-    /**
-     * @param DependencyInterface $bound
-     */
     public function setBound(DependencyInterface $bound)
     {
         $this->bound = $bound;
@@ -199,20 +180,15 @@ final class Bind
      *
      * input: [['varA' => 'nameA'], ['varB' => 'nameB']]
      * output: "varA=nameA,varB=nameB"
-     *
-     * @param array $name
-     *
-     * @return string
      */
-    private function getStringName(array $name)
+    private function getStringName(array $name) : string
     {
         $names = array_reduce(array_keys($name), function ($carry, $key) use ($name) {
             $carry[] .= $key . '=' . $name[$key];
 
             return $carry;
         }, []);
-        $string = implode(',', $names);
 
-        return $string;
+        return implode(',', $names);
     }
 }

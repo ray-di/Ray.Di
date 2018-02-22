@@ -11,29 +11,21 @@ interface InjectionPointInterface
 {
     /**
      * Return parameter reflection
-     *
-     * @return \ReflectionParameter
      */
-    public function getParameter();
+    public function getParameter() : \ReflectionParameter;
 
     /**
      * Return method reflection
-     *
-     * @return \ReflectionFunctionAbstract
      */
-    public function getMethod();
+    public function getMethod() : \ReflectionMethod;
 
     /**
      * Return class reflection
-     *
-     * @return \ReflectionClass
      */
-    public function getClass();
+    public function getClass() : \ReflectionClass;
 
     /**
      * Return Qualifier annotations
-     *
-     * @return array
      */
-    public function getQualifiers();
+    public function getQualifiers() : array;
 }

@@ -24,12 +24,7 @@ final class AnnotatedClassMethods
         $this->reader = $reader;
     }
 
-    /**
-     * @param \ReflectionClass $class
-     *
-     * @return Name
-     */
-    public function getConstructorName(\ReflectionClass $class)
+    public function getConstructorName(\ReflectionClass $class) : Name
     {
         $constructor = $class->getConstructor();
         if (! $constructor) {
@@ -51,14 +46,12 @@ final class AnnotatedClassMethods
     /**
      * @param \ReflectionMethod $method
      *
-     * @return SetterMethod
+     * @return SetterMethod|null
      */
     public function getSetterMethod(\ReflectionMethod $method)
     {
         $inject = $this->reader->getMethodAnnotation($method, InjectInterface::class);
-
-        /* @var $inject \Ray\Di\Di\Inject */
-        if (! $inject) {
+        if (! $inject instanceof InjectInterface) {
             return null;
         }
         $nameValue = $this->getNamedKeyVarString($method);
@@ -78,9 +71,8 @@ final class AnnotatedClassMethods
     private function getNamedKeyVarString(\ReflectionMethod $method)
     {
         $keyVal = [];
-        /* @var $named Named */
         $named = $this->reader->getMethodAnnotation($method, Named::class);
-        if ($named) {
+        if ($named instanceof Named) {
             $keyVal[] = $named->value;
         }
         $qualifierNamed = $this->getQualifierKeyVarString($method);
@@ -94,12 +86,7 @@ final class AnnotatedClassMethods
         return null;
     }
 
-    /**
-     * @param \ReflectionMethod $method
-     *
-     * @return string
-     */
-    private function getQualifierKeyVarString(\ReflectionMethod $method)
+    private function getQualifierKeyVarString(\ReflectionMethod $method) : string
     {
         $annotations = $this->reader->getMethodAnnotations($method);
         $names = [];
@@ -107,8 +94,8 @@ final class AnnotatedClassMethods
             /* @var $bindAnnotation object|null */
             $qualifier = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), Qualifier::class);
             if ($qualifier instanceof Qualifier) {
-                $value = isset($annotation->value) ? $annotation->value : Name::ANY;
-                $names[] = sprintf('%s=%s', $value, get_class($annotation));
+                $value = $annotation->value ?? Name::ANY;
+                $names[] = sprintf('%s=%s', $value, \get_class($annotation));
             }
         }
 

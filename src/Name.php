@@ -31,7 +31,7 @@ final class Name
 
     public function __construct(string $name = null)
     {
-        if (! is_null($name)) {
+        if ($name !== null) {
             $this->setName($name);
         }
     }
@@ -67,7 +67,7 @@ final class Name
         }
         // single name
         // @Named(name)
-        if ($name === self::ANY || preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
+        if ($name === self::ANY || preg_match('/^\w+$/', $name)) {
             $this->name = $name;
 
             return;
