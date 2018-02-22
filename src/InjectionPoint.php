@@ -8,6 +8,7 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
+use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\Qualifier;
 
 final class InjectionPoint implements InjectionPointInterface
@@ -39,9 +40,12 @@ final class InjectionPoint implements InjectionPointInterface
     /**
      * {@inheritdoc}
      */
-    public function getMethod() : \ReflectionFunctionAbstract
+    public function getMethod() : \ReflectionMethod
     {
-        return $this->parameter->getDeclaringFunction();
+        $class = $this->parameter->getDeclaringClass()->getName();
+        $method = $this->parameter->getDeclaringFunction()->getShortName();
+
+        return new \ReflectionMethod($class, $method);
     }
 
     /**
@@ -58,7 +62,6 @@ final class InjectionPoint implements InjectionPointInterface
     public function getQualifiers()
     {
         $qualifiers = [];
-        /* @noinspection PhpParamsInspection */
         $annotations = $this->reader->getMethodAnnotations($this->getMethod());
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(
