@@ -104,7 +104,7 @@ final class Bind
      * @param InjectionPoints $injectionPoints injection points
      * @param null            $postConstruct   method name of initialization after all dependencies are injected*
      */
-    public function toConstructor($class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null) : self
+    public function toConstructor(string $class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null) : self
     {
         if (\is_array($name)) {
             $name = $this->getStringName($name);
