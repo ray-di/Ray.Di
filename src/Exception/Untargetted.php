@@ -6,6 +6,6 @@
  */
 namespace Ray\Di\Exception;
 
-class Untargetted extends Unbound implements ExceptionInterface
+class Untargetted extends Unbound
 {
 }

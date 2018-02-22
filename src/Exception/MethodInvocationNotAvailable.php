@@ -6,6 +6,6 @@
  */
 namespace Ray\Di\Exception;
 
-class MethodInvocationNotAvailable extends Unbound implements ExceptionInterface
+class MethodInvocationNotAvailable extends Unbound
 {
 }
