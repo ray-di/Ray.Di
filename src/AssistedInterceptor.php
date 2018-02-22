@@ -35,8 +35,6 @@ final class AssistedInterceptor implements MethodInterceptor
      * Intercepts any method and injects instances of the missing arguments
      * when they are type hinted
      *
-     * @param MethodInvocation $invocation
-     *
      * @return object
      */
     public function invoke(MethodInvocation $invocation)
@@ -56,13 +54,6 @@ final class AssistedInterceptor implements MethodInterceptor
     }
 
     /**
-     * @param ReflectionMethod       $method
-     * @param Assisted               $assisted
-     * @param \ReflectionParameter[] $parameters
-     * @param array                  $arguments
-     *
-     * @return array
-     *
      * @internal param int $cntArgs
      */
     public function injectAssistedParameters(ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments) : array

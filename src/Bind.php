@@ -70,16 +70,13 @@ final class Bind
         }
     }
 
-    /**
-     * @return string
-     */
     public function __toString()
     {
         return $this->interface . '-' . $this->name;
     }
 
     /**
-     * Bind dependency name
+     * Set dependency name
      */
     public function annotatedWith(string $name) : self
     {
@@ -89,7 +86,7 @@ final class Bind
     }
 
     /**
-     * Bind to clss
+     * Bind to class
      */
     public function to(string $class) : self
     {
@@ -124,8 +121,6 @@ final class Bind
 
     /**
      * Bind to provider
-     *
-     * @throws NotFound
      */
     public function toProvider(string $provider, string $context = '') : self
     {
@@ -138,11 +133,11 @@ final class Bind
     }
 
     /**
-     * @param mixed $instance
+     * Bind to instance
      *
-     * @return $this
+     * @param mixed $instance
      */
-    public function toInstance($instance)
+    public function toInstance($instance) : self
     {
         $this->untarget = null;
         $this->bound = new Instance($instance);
@@ -152,11 +147,9 @@ final class Bind
     }
 
     /**
-     * @param string $scope
-     *
-     * @return $this
+     * Set scope
      */
-    public function in($scope)
+    public function in(string $scope) : self
     {
         if ($this->bound instanceof Dependency || $this->bound instanceof DependencyProvider) {
             $this->bound->setScope($scope);
@@ -177,7 +170,7 @@ final class Bind
     }
 
     /**
-     * @param DependencyInterface $bound
+     * @return void
      */
     public function setBound(DependencyInterface $bound)
     {
@@ -196,12 +189,8 @@ final class Bind
      *
      * input: [['varA' => 'nameA'], ['varB' => 'nameB']]
      * output: "varA=nameA,varB=nameB"
-     *
-     * @param array $name
-     *
-     * @return string
      */
-    private function getStringName(array $name)
+    private function getStringName(array $name) : string
     {
         $names = array_reduce(array_keys($name), function ($carry, $key) use ($name) {
             $carry[] .= $key . '=' . $name[$key];
