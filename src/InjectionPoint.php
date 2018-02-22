@@ -8,7 +8,7 @@
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
-use Ray\Aop\ReflectionMethod;
+
 use Ray\Di\Di\Qualifier;
 
 final class InjectionPoint implements InjectionPointInterface

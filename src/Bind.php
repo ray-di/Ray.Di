@@ -9,8 +9,6 @@ declare(strict_types=1);
  */
 namespace Ray\Di;
 
-use Ray\Di\Exception\InvalidContext;
-use Ray\Di\Exception\NotFound;
 
 final class Bind
 {
