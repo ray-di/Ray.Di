@@ -104,7 +104,7 @@ final class AnnotatedClassMethods
             /* @var $bindAnnotation object|null */
             $qualifier = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), Qualifier::class);
             if ($qualifier instanceof Qualifier) {
-                $value = isset($annotation->value) ? $annotation->value : Name::ANY;
+                $value = $annotation->value ?? Name::ANY;
                 $names[] = sprintf('%s=%s', $value, get_class($annotation));
             }
         }
