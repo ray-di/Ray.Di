@@ -40,7 +40,7 @@ final class Bind
     private $validate;
 
     /**
-     * @var Untarget
+     * @var Untarget|null
      */
     private $untarget;
 
