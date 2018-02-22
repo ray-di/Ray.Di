@@ -635,7 +635,7 @@ protected function configure()
     $this->bind(\PDO::class)->toConstructor(
         \PDO::class,
         [
-            ['pdo' => 'pdo_dsn'],
+            ['dsn' => 'pdo_dsn'],
             ['username' => 'pdo_username'],
             ['password' => 'pdo_password']
         ]
