@@ -21,7 +21,7 @@ final class Argument
     private $isDefaultAvailable;
 
     /**
-     * @var
+     * @var mixed
      */
     private $default;
 
