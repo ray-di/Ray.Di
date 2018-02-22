@@ -1,23 +1,12 @@
 <phpunit bootstrap="tests/bootstrap.php">
-  <testsuites>
-    <testsuite>
-      <directory suffix="Test.php">tests</directory>
-    </testsuite>
-  </testsuites>
-
-  <logging>
-    <log type="coverage-html" target="build/coverage"/>
-    <log type="coverage-clover" target="build/logs/clover.xml"/>
-    <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
-  </logging>
-
-  <filter>
-    <whitelist>
-      <directory suffix=".php">src</directory>
-      <exclude>
-        <file>src/DoctrineAnnotations.php</file>
-        <file>src/EmptyModule.php</file>
-      </exclude>
-    </whitelist>
-  </filter>
+    <testsuites>
+        <testsuite>
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>
