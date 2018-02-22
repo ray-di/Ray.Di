@@ -28,7 +28,7 @@ class Injector implements InjectorInterface
      */
     public function __construct(AbstractModule $module = null, string $classDir = null)
     {
-        if (is_null($module)) {
+        if ($module === null) {
             $module = new NullModule;
         }
         $module->install(new AssistedModule);

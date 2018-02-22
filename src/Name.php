@@ -31,7 +31,7 @@ final class Name
 
     public function __construct(string $name = null)
     {
-        if (! is_null($name)) {
+        if ($name !== null) {
             $this->setName($name);
         }
     }
