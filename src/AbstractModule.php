@@ -35,7 +35,7 @@ abstract class AbstractModule
     ) {
         $this->lastModule = $module;
         $this->activate();
-        if ($module instanceof AbstractModule) {
+        if ($module instanceof self) {
             $this->container->merge($module->getContainer());
         }
     }
