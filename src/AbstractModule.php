@@ -21,7 +21,7 @@ abstract class AbstractModule
     protected $matcher;
 
     /**
-     * @var AbstractModule
+     * @var AbstractModule|null
      */
     protected $lastModule;
 
@@ -114,7 +114,9 @@ abstract class AbstractModule
     public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = '')
     {
         $targetInterface = $targetInterface ?: $interface;
-        $this->lastModule->getContainer()->move($interface, $sourceName, $targetInterface, $newName);
+        if ($this->lastModule instanceof AbstractModule) {
+            $this->lastModule->getContainer()->move($interface, $sourceName, $targetInterface, $newName);
+        }
     }
 
     /**
