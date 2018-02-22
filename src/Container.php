@@ -74,6 +74,7 @@ final class Container
             throw $this->unbound($index);
         }
         $dependency = $this->container[$index];
+
         return $dependency->inject($this);
     }
 

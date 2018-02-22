@@ -100,7 +100,7 @@ final class Argument
         }
         try {
             $this->default = $parameter->getDefaultValue();
-        } /** @noinspection PhpRedundantCatchClauseInspection */ catch (\ReflectionException $e) {
+        } /* @noinspection PhpRedundantCatchClauseInspection */ catch (\ReflectionException $e) {
             // probably it is internal class like \PDO
             $this->default = null;
         }

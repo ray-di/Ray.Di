@@ -9,7 +9,6 @@ declare(strict_types=1);
  */
 namespace Ray\Di;
 
-
 final class Bind
 {
     /**
@@ -164,9 +163,6 @@ final class Bind
         return $this->bound;
     }
 
-    /**
-     * @return void
-     */
     public function setBound(DependencyInterface $bound)
     {
         $this->bound = $bound;
@@ -192,6 +188,7 @@ final class Bind
 
             return $carry;
         }, []);
+
         return implode(',', $names);
     }
 }
