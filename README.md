@@ -530,7 +530,7 @@ public function __construct(CreditCardProcessorInterface $processor, CreditCardP
 
 ## Constructor Bindings ##
 
-When `@Inject` annotation cannot be applied to the target constructor or setter method because it is a third party class, Or you simply don't like to use annotations. `Provider Binding` provide the solution to this problem. By calling your target constructor explicitly, you don't need reflection and its associated pitfalls. But there are limitations of that approach: manually constructed instances do not participate in AOP.
+When `@Inject` annotation cannot be applied to the target constructor or setter method because it is a third party class, Or you simply don't like to use annotations. `Constructor Binding` provide the solution to this problem. By calling your target constructor explicitly, you don't need reflection and its associated pitfalls. But there are limitations of that approach: manually constructed instances do not participate in AOP.
 
 To address this, Ray.Di has `toConstructor` bindings.
 
