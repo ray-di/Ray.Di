@@ -4,7 +4,7 @@ namespace Ray\Di;
 class FakeWalkRobotLegProvider implements ProviderInterface
 {
     /**
-     * @var InjectionPoint
+     * @var InjectionPointInterface
      */
     private $ip;
 
