@@ -7,6 +7,7 @@
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
+use Ray\Aop\Demo\EmptyInterceptor;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
@@ -103,8 +104,8 @@ class ContainerTest extends TestCase
     public function testMergePointcuts()
     {
         $extraContainer = new Container;
-        $pointcut1 = new Pointcut((new Matcher)->any(), (new Matcher)->any(), ['Interceptor1']);
-        $pointcut2 = new Pointcut((new Matcher)->any(), (new Matcher)->any(), ['Interceptor2']);
+        $pointcut1 = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [new FakeDoubleInterceptor]);
+        $pointcut2 = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [new FakeDoubleInterceptor]);
         $this->container->addPointcut($pointcut1);
         $extraContainer->addPointcut($pointcut2);
         $this->container->merge($extraContainer);
