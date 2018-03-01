@@ -7,7 +7,6 @@
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
-use Ray\Aop\Demo\EmptyInterceptor;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;

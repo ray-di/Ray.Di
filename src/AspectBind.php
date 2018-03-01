@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Aop\Bind as AopBind;
-use Ray\Aop\Interceptor;
 
 final class AspectBind
 {
