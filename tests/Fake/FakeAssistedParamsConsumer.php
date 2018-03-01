@@ -6,9 +6,6 @@ use Ray\Di\Di\Assisted;
 class FakeAssistedParamsConsumer
 {
     /**
-     * @param string $id
-     * @param string $db
-     *
      * @Assisted("db")
      *
      * @return array [int, FakeAbstractDb]

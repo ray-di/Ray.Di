@@ -281,7 +281,7 @@ class InjectorTest extends TestCase
 
     public function testNewAbstract()
     {
-        $this->expectException(Unbound::class, FakeAbstractClass::class);
+        $this->expectException(Unbound::class);
         (new Injector)->getInstance(FakeConcreteClass::class);
     }
 

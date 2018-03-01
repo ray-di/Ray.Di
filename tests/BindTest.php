@@ -33,7 +33,7 @@ class BindTest extends TestCase
 
     public function testToString()
     {
-        $this->assertSame('Ray\Di\FakeTyreInterface-' . NAME::ANY, (string) $this->bind);
+        $this->assertSame('Ray\Di\FakeTyreInterface-' . Name::ANY, (string) $this->bind);
     }
 
     public function testInvalidToTest()
