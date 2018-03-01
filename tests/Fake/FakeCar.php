@@ -24,7 +24,7 @@ class FakeCar implements FakeCarInterface
     public $spareMirror;
 
     /**
-     * @var FakeHandle
+     * @var FakeHandleInterface
      */
     public $handle;
 
