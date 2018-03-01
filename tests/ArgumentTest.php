@@ -22,6 +22,6 @@ class ArgumentTest extends TestCase
 
     public function testToString()
     {
-        $this->assertSame('Ray\Di\FakeEngineInterface-' . NAME::ANY, (string) $this->argument);
+        $this->assertSame('Ray\Di\FakeEngineInterface-' . Name::ANY, (string) $this->argument);
     }
 }
