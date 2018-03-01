@@ -104,8 +104,10 @@ class ContainerTest extends TestCase
     public function testMergePointcuts()
     {
         $extraContainer = new Container;
-        $pointcut1 = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [new FakeDoubleInterceptor]);
-        $pointcut2 = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [new FakeDoubleInterceptor]);
+        $interceptor1 = new FakeDoubleInterceptor;
+        $interceptor2 = new FakeDoubleInterceptor;
+        $pointcut1 = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [$interceptor1]);
+        $pointcut2 = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [$interceptor2]);
         $this->container->addPointcut($pointcut1);
         $extraContainer->addPointcut($pointcut2);
         $this->container->merge($extraContainer);
@@ -113,8 +115,8 @@ class ContainerTest extends TestCase
         foreach ($this->container->getPointcuts() as $pointcut) {
             $array[] = $pointcut->interceptors[0];
         }
-        $this->assertContains('Interceptor1', $array);
-        $this->assertContains('Interceptor2', $array);
+        $this->assertContains($interceptor1, $array);
+        $this->assertContains($interceptor2, $array);
     }
 
     public function testMove()
