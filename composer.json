@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0.0",
+        "php": "^7.0",
         "ray/aop": "^2.5",
         "ray/compiler": "^1.1.5"
     },
@@ -26,19 +26,12 @@
     "autoload": {
         "psr-4": {
             "Ray\\Di\\": "src/"
-        },
-        "files": [
-            "load_annotations.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "Ray\\Di\\": ["tests/", "tests/Fake/"],
-            "FakeVendor\\Sandbox\\": "tests/Fake/FakeVendor/Sandbox/"
-        },
-        "files": [
-            "tests/load_annotations.php"
-        ]
+            "Ray\\Di\\": ["tests/", "tests/Fake/"]
+        }
     },
     "scripts" :{
         "test": ["@cs", "phpunit"],
