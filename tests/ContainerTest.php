@@ -134,7 +134,7 @@ class ContainerTest extends TestCase
     public function testAbstractClassUnbound()
     {
         try {
-            $this->container->getInstance(FakeAbstract::class, Name::ANY);
+            $this->container->getInstance('_INVALID_INTERFACE_', Name::ANY);
         } catch (\Exception $e) {
             $this->assertSame(Unbound::class, get_class($e));
         }
