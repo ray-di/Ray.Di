@@ -32,8 +32,8 @@ class NewInstanceTest extends TestCase
         (new Bind($container, FakeTyreInterface::class))->to(FakeTyre::class);
         (new Bind($container, FakeEngineInterface::class))->to(FakeEngine::class);
         (new Bind($container, FakeHardtopInterface::class))->to(FakeHardtop::class);
+        /** @var \Ray\Di\FakeCar $car */
         $car = $this->newInstance->__invoke($container);
-        /* @var $car FakeCar */
         $this->assertInstanceOf(FakeCar::class, $car);
         $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
         $this->assertInstanceOf(FakeTyre::class, $car->rearTyre);
