@@ -8,6 +8,7 @@ class FakeContextualModule extends AbstractModule
     public function __construct($context)
     {
         $this->context = $context;
+        parent::__construct();
     }
 
     protected function configure()
