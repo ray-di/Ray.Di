@@ -890,5 +890,5 @@ Here's how to install Ray.Di from source and run the unit tests and demos.
 $ git clone https://github.com/ray-di/Ray.Di.git
 $ cd Ray.Di
 $ ./vendor/bin/phpunit
-$ php docs/demo/run.php
+$ php demo/run.php
 ```
