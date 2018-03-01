@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Aop\Bind as AopBind;
+use Ray\Aop\Interceptor;
 
 final class AspectBind
 {
@@ -31,7 +32,9 @@ final class AspectBind
         foreach ($bindings as &$interceptors) {
             /* @var string[] $interceptors */
             foreach ($interceptors as &$interceptor) {
-                $interceptor = $container->getInstance($interceptor, Name::ANY);
+                if (is_string($interceptor)) {
+                    $interceptor = $container->getInstance($interceptor, Name::ANY);
+                }
             }
         }
 

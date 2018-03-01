@@ -102,7 +102,7 @@ class DependencyTest extends TestCase
     public function testInjectInterceptor()
     {
         $dependency = new Dependency(new NewInstance(new \ReflectionClass(FakeAop::class), new SetterMethods([])));
-        $pointcut = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [FakeDoubleInterceptor::class]);
+        $pointcut = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [new FakeDoubleInterceptor]);
         $dependency->weaveAspects(new Compiler($_ENV['TMP_DIR']), [$pointcut]);
         $container = new Container;
         $container->add((new Bind($container, FakeDoubleInterceptor::class))->to(FakeDoubleInterceptor::class));
