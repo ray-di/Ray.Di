@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the Ray.Di package.
  *
@@ -88,7 +90,7 @@ class Injector implements InjectorInterface
 
     private function setupClassDir(string $tmpDir = null) : string
     {
-        $tmpRootDir = is_dir($tmpDir) ? $tmpDir :  sys_get_temp_dir();
+        $tmpRootDir = is_dir((string) $tmpDir) ? $tmpDir : sys_get_temp_dir();
         $classDir = $tmpRootDir . '/ray-di/';
         if (! is_dir($classDir)) {
             mkdir($classDir, 0777, true);
