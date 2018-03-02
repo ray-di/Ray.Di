@@ -33,7 +33,7 @@ class Injector implements InjectorInterface
         }
         $module->install(new AssistedModule);
         $this->container = $module->getContainer();
-        $this->classDir = $classDir ?: sys_get_temp_dir();
+        $this->classDir = $this->setupClassDir($classDir);
         $this->container->weaveAspects(new Compiler($this->classDir));
 
         // builtin injection
@@ -86,5 +86,16 @@ class Injector implements InjectorInterface
         if ($bound instanceof Dependency) {
             $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
         }
+    }
+
+    private function setupClassDir(string $tmpDir = null) : string
+    {
+        $tmpRootDir = is_dir($tmpDir) ? $tmpDir :  sys_get_temp_dir();
+        $classDir = $tmpRootDir . '/ray-di/';
+        if (! is_dir($classDir)) {
+            mkdir($classDir, 0777, true);
+        }
+
+        return $classDir;
     }
 }
