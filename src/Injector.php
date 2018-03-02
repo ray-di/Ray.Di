@@ -23,17 +23,17 @@ class Injector implements InjectorInterface
     private $container;
 
     /**
-     * @param AbstractModule $module
-     * @param string         $classDir
+     * @param AbstractModule $module Binding module
+     * @param string         $tmpDir Temp directory for generated class
      */
-    public function __construct(AbstractModule $module = null, string $classDir = null)
+    public function __construct(AbstractModule $module = null, string $tmpDir = null)
     {
         if ($module === null) {
             $module = new NullModule;
         }
         $module->install(new AssistedModule);
         $this->container = $module->getContainer();
-        $this->classDir = $this->setupClassDir($classDir);
+        $this->classDir = $this->setupClassDir($tmpDir);
         $this->container->weaveAspects(new Compiler($this->classDir));
 
         // builtin injection
