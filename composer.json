@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^7.0",
-        "ray/aop": "^2.5",
+        "ray/aop": "^2.6",
         "ray/compiler": "^1.1.5"
     },
     "require-dev": {
@@ -34,7 +34,7 @@
         }
     },
     "scripts" :{
-        "test": ["@cs", "phpunit"],
+        "test": ["@cs", "phpunit", "phpstan analyse -l max src tests -c phpstan.neon --no-progress"],
         "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
         "cs": ["php-cs-fixer fix -v --dry-run", "phpcs --standard=./phpcs.xml src"],
         "cs-fix": ["php-cs-fixer fix -v", "phpcbf src"]
