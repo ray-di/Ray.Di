@@ -44,4 +44,10 @@ class ModuleTest extends TestCase
         $container = $module->getContainer();
         $this->assertInstanceOf(Container::class, $container);
     }
+
+    public function testActivate()
+    {
+        $module = new FakeInstanceBindModule;
+        $this->assertInstanceOf(Container::class, $module->getContainer());
+    }
 }
