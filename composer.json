@@ -2,7 +2,6 @@
     "name": "ray/di",
     "description": "Guice style annotation-driven dependency injection framework",
     "keywords": [
-        "ray",
         "di",
         "aop",
         "annotations",
