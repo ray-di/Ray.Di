@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Aop\Compiler;
-use Ray\Di\Exception\Untargetted;
+use Ray\Di\Exception\Untargeted;
 
 class Injector implements InjectorInterface
 {
@@ -67,7 +67,7 @@ class Injector implements InjectorInterface
     {
         try {
             $instance = $this->container->getInstance($interface, $name);
-        } catch (Untargetted $e) {
+        } catch (Untargeted $e) {
             $this->bind($interface);
             $instance = $this->getInstance($interface, $name);
         }

@@ -11,7 +11,7 @@ namespace Ray\Di;
 use Ray\Aop\Compiler;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
-use Ray\Di\Exception\Untargetted;
+use Ray\Di\Exception\Untargeted;
 
 final class Container
 {
@@ -97,13 +97,13 @@ final class Container
      *
      * @param string $index {interface}-{bind name}
      *
-     * @return Untargetted | Unbound
+     * @return Untargeted | Unbound
      */
     public function unbound(string $index)
     {
         list($class, $name) = explode('-', $index);
         if (class_exists($class) && ! (new \ReflectionClass($class))->isAbstract()) {
-            return new Untargetted($class);
+            return new Untargeted($class);
         }
 
         return new Unbound("{$class}-{$name}");
