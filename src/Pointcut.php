@@ -15,9 +15,14 @@ class Pointcut extends \Ray\Aop\Pointcut
     /**
      * @var string[]
      */
-    public $interceptors = [];
+    public $interceptors;
+    /** @noinspection SenselessMethodDuplicationInspection */
 
     /**
+     * Extend Ray\Di version Pointcut
+     *
+     * We have extended the $interceptor parameters so that you can specify the class name as well as the object
+     *
      * @param AbstractMatcher $classMatcher
      * @param AbstractMatcher $methodMatcher
      * @param string[]        $interceptors  array of interceptor class name
