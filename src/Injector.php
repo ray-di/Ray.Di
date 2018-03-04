@@ -28,12 +28,12 @@ class Injector implements InjectorInterface
      * @param AbstractModule $module Binding module
      * @param string         $tmpDir Temp directory for generated class
      */
-    public function __construct(AbstractModule $module = null, string $tmpDir = null)
+    public function __construct(AbstractModule $module = null, string $tmpDir = '')
     {
         $module = $module ?? new NullModule;
         $module->install(new AssistedModule);
         $this->container = $module->getContainer();
-        $this->classDir = $this->setupClassDir($tmpDir);
+        $this->classDir = is_dir($tmpDir) ? $tmpDir : sys_get_temp_dir();
         $this->container->weaveAspects(new Compiler($this->classDir));
 
         // builtin injection
@@ -86,16 +86,5 @@ class Injector implements InjectorInterface
         if ($bound instanceof Dependency) {
             $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
         }
-    }
-
-    private function setupClassDir(string $tmpDir = null) : string
-    {
-        $tmpRootDir = is_dir($tmpDir) ? $tmpDir : sys_get_temp_dir();
-        $classDir = $tmpRootDir . '/ray-di/';
-        if (! is_dir($classDir)) {
-            mkdir($classDir, 0777, true);
-        }
-
-        return $classDir;
     }
 }
