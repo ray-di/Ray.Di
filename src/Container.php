@@ -122,7 +122,7 @@ final class Container
     /**
      * Return pointcuts
      *
-     * @return \Ray\Aop\Pointcut[]
+     * @return Pointcut[]
      */
     public function getPointcuts() : array
     {
@@ -147,7 +147,6 @@ final class Container
             if (! $dependency instanceof Dependency) {
                 continue;
             }
-            /* @var $dependency Dependency */
             $dependency->weaveAspects($compiler, $this->pointcuts);
         }
     }
