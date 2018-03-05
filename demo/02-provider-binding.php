@@ -11,7 +11,7 @@ use Ray\Di\InjectionPointInterface;
 use Ray\Di\Injector;
 use Ray\Di\ProviderInterface;
 
-require __DIR__ . '/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 interface FinderInterface
 {

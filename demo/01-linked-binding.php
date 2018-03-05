@@ -9,7 +9,7 @@ declare(strict_types=1);
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 
-require __DIR__ . '/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 interface FinderInterface
 {

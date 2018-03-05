@@ -6,7 +6,7 @@ declare(strict_types=1);
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-require __DIR__ . '/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;

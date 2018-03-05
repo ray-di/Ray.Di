@@ -10,7 +10,7 @@ use Ray\Compiler\DiCompiler;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\Injector;
 
-require __DIR__ . '/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 require __DIR__ . '/finder_module.php';
 
 $start = microtime(true);

@@ -10,7 +10,7 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 use Ray\Di\Scope;
 
-require __DIR__ . '/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 class Finder
 {
