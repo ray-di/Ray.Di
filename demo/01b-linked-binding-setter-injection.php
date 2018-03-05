@@ -6,7 +6,9 @@ declare(strict_types=1);
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
+
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Inject;
 use Ray\Di\Injector;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -27,7 +29,10 @@ class MovieLister implements MovieListerInterface
 {
     public $finder;
 
-    public function __construct(FinderInterface $finder)
+    /**
+     * @Inject
+     */
+    public function setFinder(FinderInterface $finder)
     {
         $this->finder = $finder;
     }
@@ -42,15 +47,7 @@ class FinderModule extends AbstractModule
     }
 }
 
-class InstallModule extends AbstractModule
-{
-    protected function configure()
-    {
-        $this->install(new FinderModule);
-    }
-}
-
-$injector = new Injector(new FinderModule());
+$injector = new Injector(new FinderModule);
 $movieLister = $injector->getInstance(MovieListerInterface::class);
 /* @var $movieLister MovieLister */
 $works = ($movieLister->finder instanceof Finder);

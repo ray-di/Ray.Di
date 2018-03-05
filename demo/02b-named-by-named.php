@@ -6,6 +6,7 @@ declare(strict_types=1);
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
+
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Named;
 use Ray\Di\Injector;
@@ -24,15 +25,6 @@ class ModernFinder implements FinderInterface
 {
 }
 
-class FinderModule extends AbstractModule
-{
-    protected function configure()
-    {
-        $this->bind(FinderInterface::class)->annotatedWith('legacy')->to(LegacyFinder::class);
-        $this->bind(MovieListerInterface::class)->to(MovieLister::class);
-    }
-}
-
 interface MovieListerInterface
 {
 }
@@ -47,6 +39,15 @@ class MovieLister implements MovieListerInterface
     public function __construct(FinderInterface $finder)
     {
         $this->finder = $finder;
+    }
+}
+
+class FinderModule extends AbstractModule
+{
+    protected function configure()
+    {
+        $this->bind(FinderInterface::class)->annotatedWith('legacy')->to(LegacyFinder::class);
+        $this->bind(MovieListerInterface::class)->to(MovieLister::class);
     }
 }
 

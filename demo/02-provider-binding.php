@@ -6,8 +6,8 @@ declare(strict_types=1);
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
+
 use Ray\Di\AbstractModule;
-use Ray\Di\InjectionPointInterface;
 use Ray\Di\Injector;
 use Ray\Di\ProviderInterface;
 
@@ -17,20 +17,24 @@ interface FinderInterface
 {
 }
 
-class LegacyFinder implements FinderInterface
+class Finder implements FinderInterface
 {
-}
+    public $datetime;
 
-class ModernFinder implements FinderInterface
-{
-}
-
-class FinderModule extends AbstractModule
-{
-    protected function configure()
+    public function __construct(DateTimeInterface $dateTime)
     {
-        $this->bind(FinderInterface::class)->toProvider(FinderProvider::class);
-        $this->bind(MovieListerInterface::class)->to(ModernMovieLister::class);
+        $this->datetime = $dateTime;
+    }
+}
+
+class FinderProvider implements ProviderInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function get()
+    {
+        return new Finder(new DateTimeImmutable('now'));
     }
 }
 
@@ -38,8 +42,11 @@ interface MovieListerInterface
 {
 }
 
-class ModernMovieLister implements MovieListerInterface
+class MovieLister implements MovieListerInterface
 {
+    /**
+     * @var Finder
+     */
     public $finder;
 
     public function __construct(FinderInterface $finder)
@@ -48,31 +55,18 @@ class ModernMovieLister implements MovieListerInterface
     }
 }
 
-class FinderProvider implements ProviderInterface
+class FinderModule extends AbstractModule
 {
-    private $ip;
-
-    public function __construct(InjectionPointInterface $ip)
+    protected function configure()
     {
-        $this->ip = $ip;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get()
-    {
-        $consumer = $this->ip->getClass()->getName();
-        // chooseb dependency(finder) by consumer
-        $finder = ($consumer === 'ModernMovieLister') ? new ModernFinder : new LegacyFinder;
-
-        return $finder;
+        $this->bind(FinderInterface::class)->toProvider(FinderProvider::class);
+        $this->bind(MovieListerInterface::class)->to(MovieLister::class);
     }
 }
 
 $injector = new Injector(new FinderModule);
 $movieLister = $injector->getInstance(MovieListerInterface::class);
 /* @var $movieLister MovieLister */
-$works = ($movieLister->finder instanceof ModernFinder);
+$works = ($movieLister->finder->datetime instanceof DateTimeImmutable);
 
 echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

@@ -6,6 +6,7 @@ declare(strict_types=1);
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
+
 use Ray\Compiler\DiCompiler;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\Injector;
@@ -33,5 +34,5 @@ $movieLister2 = $scriptInjector->getInstance(MovieListerInterface::class);
 $time2 = microtime(true) - $start;
 
 $works = $movieLister instanceof MovieListerInterface;
-echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
-echo 'x' . round($time1 / $time2) . ' times faster.' . PHP_EOL;
+echo $works ? 'It works!' : 'It DOES NOT work!';
+echo ' [Script injector] x' . round($time1 / $time2) . ' times faster.' . PHP_EOL;

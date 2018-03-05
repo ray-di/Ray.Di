@@ -6,6 +6,7 @@ declare(strict_types=1);
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
+
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 use Ray\Di\Scope;
@@ -28,4 +29,5 @@ $injector = new Injector(new FinderModule());
 $finder1 = $injector->getInstance(Finder::class);
 $finder2 = $injector->getInstance(Finder::class);
 $works = spl_object_hash($finder1) === spl_object_hash($finder2);
+
 echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

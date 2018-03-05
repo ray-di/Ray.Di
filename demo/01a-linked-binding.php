@@ -6,6 +6,7 @@ declare(strict_types=1);
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
+
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 
@@ -17,15 +18,6 @@ interface FinderInterface
 
 class Finder implements FinderInterface
 {
-}
-
-class FinderModule extends AbstractModule
-{
-    protected function configure()
-    {
-        $this->bind(FinderInterface::class)->to(Finder::class);
-        $this->bind(MovieListerInterface::class)->to(MovieLister::class);
-    }
 }
 
 interface MovieListerInterface
@@ -42,7 +34,16 @@ class MovieLister implements MovieListerInterface
     }
 }
 
-$injector = new Injector(new FinderModule());
+class FinderModule extends AbstractModule
+{
+    protected function configure()
+    {
+        $this->bind(FinderInterface::class)->to(Finder::class);
+        $this->bind(MovieListerInterface::class)->to(MovieLister::class);
+    }
+}
+
+$injector = new Injector(new FinderModule);
 $movieLister = $injector->getInstance(MovieListerInterface::class);
 /* @var $movieLister MovieLister */
 $works = ($movieLister->finder instanceof Finder);

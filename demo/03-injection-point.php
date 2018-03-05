@@ -6,6 +6,7 @@ declare(strict_types=1);
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
+
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectionPointInterface;
 use Ray\Di\Injector;
@@ -64,9 +65,8 @@ class FinderProvider implements ProviderInterface
     public function get()
     {
         $className = $this->ip->getClass()->getName();
-        $finder = new Finder($className);
 
-        return $finder;
+        return new Finder($className);
     }
 }
 
@@ -79,7 +79,7 @@ class FinderModule extends AbstractModule
     }
 }
 
-$injector = new Injector(new FinderModule());
+$injector = new Injector(new FinderModule);
 $movieLister = $injector->getInstance(MovieListerInterface::class);
 /* @var $movieLister MovieLister */
 $result = $movieLister->finder->find();
