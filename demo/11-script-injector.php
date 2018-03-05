@@ -10,7 +10,7 @@ use Ray\Compiler\DiCompiler;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\Injector;
 
-require __DIR__ . '/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 require __DIR__ . '/finder_module.php';
 
 $start = microtime(true);
@@ -33,5 +33,5 @@ $movieLister2 = $scriptInjector->getInstance(MovieListerInterface::class);
 $time2 = microtime(true) - $start;
 
 $works = $movieLister instanceof MovieListerInterface;
-echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
-echo 'x' . round($time1 / $time2) . ' times faster.' . PHP_EOL;
+echo $works ? 'It works!' : 'It DOES NOT work!';
+echo ' [Script injector] x' . round($time1 / $time2) . ' times faster.' . PHP_EOL;

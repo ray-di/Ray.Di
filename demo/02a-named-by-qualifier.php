@@ -10,7 +10,7 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Di\Qualifier;
 use Ray\Di\Injector;
 
-require __DIR__ . '/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 interface FinderInterface
 {
@@ -24,25 +24,7 @@ class ModernFinder implements FinderInterface
 {
 }
 
-class FinderModule extends AbstractModule
-{
-    protected function configure()
-    {
-        $this->bind(FinderInterface::class)->annotatedWith(Legacy::class)->to(LegacyFinder::class);
-        $this->bind(MovieListerInterface::class)->to(MovieLister::class);
-    }
-}
-
 interface MovieListerInterface
-{
-}
-
-/**
- * @Annotation
- * @Target("METHOD")
- * @Qualifier
- */
-class Legacy
 {
 }
 
@@ -56,6 +38,24 @@ class MovieLister implements MovieListerInterface
     public function __construct(FinderInterface $finder)
     {
         $this->finder = $finder;
+    }
+}
+
+/**
+ * @Annotation
+ * @Target("METHOD")
+ * @Qualifier
+ */
+class Legacy
+{
+}
+
+class FinderModule extends AbstractModule
+{
+    protected function configure()
+    {
+        $this->bind(FinderInterface::class)->annotatedWith(Legacy::class)->to(LegacyFinder::class);
+        $this->bind(MovieListerInterface::class)->to(MovieLister::class);
     }
 }
 

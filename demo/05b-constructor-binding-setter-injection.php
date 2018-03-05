@@ -12,7 +12,7 @@ use Ray\Di\AbstractModule;
 use Ray\Di\InjectionPoints;
 use Ray\Di\Injector;
 
-require __DIR__ . '/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 interface FinderInterface
 {
@@ -30,7 +30,7 @@ class MovieLister implements MovieListerInterface
     public $finder;
 
     /**
-     * Setter Injection
+     * Setter Injection with no Inject annotation
      */
     public function setFinder(FinderInterface $finder)
     {
@@ -38,7 +38,7 @@ class MovieLister implements MovieListerInterface
     }
 }
 
-class Lister2Module extends AbstractModule
+class ListerModule extends AbstractModule
 {
     protected function configure()
     {
@@ -50,8 +50,9 @@ class Lister2Module extends AbstractModule
         );
     }
 }
-$injector = new Injector(new Lister2Module);
+$injector = new Injector(new ListerModule);
 $lister = $injector->getInstance(MovieListerInterface::class);
 /* @var $lister MovieLister */
 $works = ($lister->finder instanceof FinderInterface);
+
 echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

@@ -10,7 +10,7 @@ use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Injector;
 
-require __DIR__ . '/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 class A
 {
@@ -67,17 +67,17 @@ try {
     //    dependency 'B' with name '' used in12-dependency-chain-error-message.php:11
     echo PHP_EOL . '---------' . PHP_EOL;
     echo $e;
-    //    exception 'Ray\Di\Exception\Unbound' with message 'EInterface-'
-    //    - dependency 'EInterface' with name '' used in12-dependency-chain-error-message.php:26
-    //    - dependency 'D' with name '' used in12-dependency-chain-error-message.php:21
-    //    - dependency 'C' with name '' used in12-dependency-chain-error-message.php:16
-    //    - dependency 'B' with name '' used in12-dependency-chain-error-message.php:11
+//    exception 'Ray\Di\Exception\Unbound' with message 'EInterface-'
+//    - dependency 'EInterface' with name '' used in12-dependency-chain-error-message.php:26
+//    - dependency 'D' with name '' used in12-dependency-chain-error-message.php:21
+//    - dependency 'C' with name '' used in12-dependency-chain-error-message.php:16
+//    - dependency 'B' with name '' used in12-dependency-chain-error-message.php:11
     // ...
     echo PHP_EOL . '---------' . PHP_EOL;
     do {
         echo get_class($e) . ':' . $e->getMessage() . PHP_EOL;
     } while ($e = $e->getPrevious());
-    //    Ray\Di\Exception\Unbound:dependency 'B' with name '' used in12-dependency-chain-error-message.php:11
+//    Ray\Di\Exception\Unbound:dependency 'B' with name '' used in12-dependency-chain-error-message.php:11
 //    Ray\Di\Exception\Unbound:dependency 'C' with name '' used in12-dependency-chain-error-message.php:16
 //    Ray\Di\Exception\Unbound:dependency 'D' with name '' used in12-dependency-chain-error-message.php:21
 //    Ray\Di\Exception\Unbound:dependency 'EInterface' with name '' used in12-dependency-chain-error-message.php:26

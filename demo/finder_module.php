@@ -43,12 +43,16 @@ class DbFinder implements FinderInterface
     {
     }
 
-    /** @Inject */
+    /**
+     * @Inject
+     */
     public function setDb(DbInterface $db)
     {
     }
 
-    /** @Inject */
+    /**
+     * @Inject
+     */
     public function setSorter(Sorter $sorter, Sorter $sorte2)
     {
     }
@@ -83,5 +87,3 @@ class FinderModule extends AbstractModule
         $this->bind(MovieListerInterface::class)->to(MovieLister::class);
     }
 }
-
-return new FinderModule;

@@ -19,6 +19,7 @@ before_script:
   - if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then composer require phpstan/phpstan-shim; fi
 script:
   - ./vendor/bin/phpunit --coverage-clover=coverage.clover;
+  - php demo/run.php
   - if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then CHANGED_FILES=$(git diff --name-only --diff-filter=ACMRTUXB "${TRAVIS_COMMIT_RANGE}") & if ! echo "${CHANGED_FILES}" | grep -qE "^(\\.php_cs(\\.dist)?|composer\\.lock)$"; then IFS=$'\n' EXTRA_ARGS=('--path-mode=intersection' '--' ${CHANGED_FILES[@]}); fi & php php-cs-fixer-v2.phar fix --config=.php_cs -v --dry-run --stop-on-violation --using-cache=no "${EXTRA_ARGS[@]}"; fi
   - if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then ./vendor/bin/phpstan analyse -l max -c phpstan.neon src tests --no-progress --no-interaction; fi
 after_script:

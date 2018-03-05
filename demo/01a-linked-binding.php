@@ -9,7 +9,7 @@ declare(strict_types=1);
 use Ray\Di\AbstractModule;
 use Ray\Di\Injector;
 
-require __DIR__ . '/bootstrap.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 interface FinderInterface
 {
@@ -42,15 +42,7 @@ class FinderModule extends AbstractModule
     }
 }
 
-class InstallModule extends AbstractModule
-{
-    protected function configure()
-    {
-        $this->install(new FinderModule);
-    }
-}
-
-$injector = new Injector(new FinderModule());
+$injector = new Injector(new FinderModule);
 $movieLister = $injector->getInstance(MovieListerInterface::class);
 /* @var $movieLister MovieLister */
 $works = ($movieLister->finder instanceof Finder);
