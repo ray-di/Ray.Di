@@ -6,7 +6,6 @@ declare(strict_types=1);
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-
 use Ray\Di\Injector;
 
 require dirname(__DIR__) . '/vendor/autoload.php';

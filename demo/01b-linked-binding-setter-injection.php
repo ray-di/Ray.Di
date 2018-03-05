@@ -6,7 +6,6 @@ declare(strict_types=1);
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-
 use Ray\Di\AbstractModule;
 use Ray\Di\Di\Inject;
 use Ray\Di\Injector;

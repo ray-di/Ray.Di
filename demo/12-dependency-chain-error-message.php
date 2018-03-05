@@ -6,7 +6,6 @@ declare(strict_types=1);
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
-
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Injector;
