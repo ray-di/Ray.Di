@@ -1,4 +1,12 @@
-# Dependency Injection framework #
+# Ray.Di
+
+## Dependency Injection framework #
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/quality-score.png?b=2.x)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/?branch=2.x)
+[![Code Coverage](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/coverage.png?b=2.x)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/?branch=2.x)
+[![Build Status](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/build.png?b=2.x)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/build-status/2.x)
+[![Build Status](https://travis-ci.org/ray-di/Ray.Di.svg?branch=2.x)](https://travis-ci.org/ray-di/Ray.Di)
+[![Total Downloads](https://poser.pugx.org/ray/di/downloads)](https://packagist.org/packages/ray/di)
 
 **Ray.Di**はGoogleの[Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6)の主要な機能を持つPHPのDIフレームワークです。
 
@@ -6,17 +14,21 @@
 
 Ray.Diには以下の機能があります。
 
-- コンストラクタインジェクションとセッターインジェクション
+- コンストラクタインジェクション、セッターインジェクション、アシスッティドインジェクション
 
-- 自動インジェクション
+- 自動ワイアリング
 
-- コンストラクタの後の初期化メソッド指定(`@PostConstruct`)
+- DSLでの束縛（リンク束縛、プロバイダー束縛、インスタンス束縛、コンストラクタ束縛）
 
-- 高速化のため生PHPのファクトリーコード生成
+- シングルトンスコープ
+
+- コンストラクタ後の初期化 (`@PostConstruct`)
+
+- 高速化のためPHPファクトリーコード生成
 
 - 名前付きインターフェイス
 
-- インジェクション先のメタデータの取得が可能
+- インジェクションポイント
 
 - アノテーション([Doctrine Annotation](http://docs.doctrine-project.org/projects/doctrine-common/en/latest/reference/annotations.html))はオプション
 
@@ -376,7 +388,7 @@ protected function configure()
 
 この問題は`toConstructor`束縛で解決できます。インターフェイスにクラスを束縛するのは`to()`と同じですが、`@Named`やセッターメソッドの`@Inject`の指定をアノテートする事なしに指定できます。
 
-``php
+```php
 <?php
 class WebApi implements WebApiInterface
 {
