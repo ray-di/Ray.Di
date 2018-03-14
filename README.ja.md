@@ -69,12 +69,13 @@ class BillingModule extends AbstractModule
 }
 ```
 
-モジュールは`Ray.Di`でオブジェクトグラフを作るインジェクターに必要です。まずはモジュールでインジェクターを作って、そのインジェクターで`BillingService`を組み立てます。
+モジュールは`Ray.Di`でオブジェクトグラフを作るインジェクターの構成要素です。まずはインジェクターを作って、そのインジェクターで`BillingService`を組み立てます。
 
 ```php
 $injector = new Injector(new BillingModule);
 $billingService = $injector->getInstance(BillingService::class);
 ```
+
 # インジェクション
 
 ## コンストラクタインジェクション
@@ -108,7 +109,7 @@ $billingService = $injector->getInstance(BillingService::class);
 
 ## アシスティッドインジェクション
 
-メソッドが実行されるタイミングでメソッドの引数に依存を渡すことができます。そのためには依存を受け取る引数を引数を`@Assisted`で指定し、引数リストの終わり（右）に移動して`null`をディフォルトとして与える必要があります。
+メソッドが実行されるタイミングでメソッドの引数に依存を渡すことができます。そのためには依存を受け取る引数を`@Assisted`で指定し、引数リストの終わり（右）に移動して`null`をデフォルトとして与える必要があります。
 
 ```php
 use Ray\Di\Di\Assisted;
