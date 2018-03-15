@@ -69,7 +69,7 @@ class BillingModule extends AbstractModule
 }
 ```
 
-モジュールは`Ray.Di`でオブジェクトグラフを作るインジェクターの構成要素です。まずはインジェクターを作って、そのインジェクターで`BillingService`を組み立てます。
+`Ray.Di` がオブジェクトグラフを作るためにはモジュールが必要です。まずはモジュールでインジェクターを作って、そのインジェクターで`BillingService`を組み立てます。
 
 ```php
 $injector = new Injector(new BillingModule);
