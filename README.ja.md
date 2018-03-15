@@ -14,25 +14,23 @@
 
 Ray.Diには以下の機能があります。
 
-- コンストラクタインジェクション、セッターインジェクション、アシスティドインジェクション
+- コンストラクタインジェクションとセッターインジェクション
 
 - 自動ワイアリング
 
-- DSLでの束縛（リンク束縛、プロバイダー束縛、インスタンス束縛、コンストラクタ束縛）
+- コンストラクタの後の初期化
 
-- シングルトンスコープ
-
-- コンストラクタ後の初期化 (`@PostConstruct`)
-
-- 高速化のためPHPファクトリーコード生成
+- PHPのファクトリーコード生成
 
 - 名前付きインターフェイス
 
-- インジェクションポイント
+- インジェクションポイントメタデータ
 
-- アノテーション([Doctrine Annotation](http://docs.doctrine-project.org/projects/doctrine-common/en/latest/reference/annotations.html))はオプション
+- インスタンスファクトリー
 
-- [AOP Alliance](http://aopalliance.sourceforge.net/)に準拠したアスペクト指向プログラミング
+- アノテーションはオプション
+
+- AOP統合
 
 # 始めよう
 
@@ -71,12 +69,13 @@ class BillingModule extends AbstractModule
 }
 ```
 
-モジュールは`Ray.Di`でオブジェクトグラフを作るインジェクターに必要です。まずはモジュールでインジェクターを作って、そのインジェクターで`BillingService`を組み立てます。
+`Ray.Di` がオブジェクトグラフを作るためにはモジュールが必要です。まずはモジュールでインジェクターを作って、そのインジェクターで`BillingService`を組み立てます。
 
 ```php
 $injector = new Injector(new BillingModule);
 $billingService = $injector->getInstance(BillingService::class);
 ```
+
 # インジェクション
 
 ## コンストラクタインジェクション
@@ -92,7 +91,7 @@ $billingService = $injector->getInstance(BillingService::class);
 
 ## セッターインジェクション
 
-Ray.Di can inject methods that have the @Inject annotation. Dependencies take the form of parameters, which the injector resolves before invoking the method. Injected methods may have any number of parameters, and the method name does not impact injection.
+`@Inject` アノテーションを持つメソッドでメソッドインジェクションをすることができます。依存は引数の形を取り、メソッド実行前にインジェクタに解決されます。メソッドインジェクションでは任意の引数を取ることができます。メソッド名は注入には影響しません。
 
 ```php
     /**
@@ -110,7 +109,7 @@ Ray.Di can inject methods that have the @Inject annotation. Dependencies take th
 
 ## アシスティッドインジェクション
 
-メソッドが実行されるタイミングでメソッドの引数に依存を渡すことができます。そのためには依存を受け取る引数を引数を`@Assisted`で指定し、引数リストの終わり（右）に移動して`null`をディフォルトとして与える必要があります。
+メソッドが実行されるタイミングでメソッドの引数に依存を渡すことができます。そのためには依存を受け取る引数を`@Assisted`で指定し、引数リストの終わり（右）に移動して`null`をデフォルトとして与える必要があります。
 
 ```php
 use Ray\Di\Di\Assisted;
@@ -152,6 +151,8 @@ class HorizontalScaleDbProvider implements ProviderInterface
 ```
 
 # 束縛
+
+インジェクタの役目はオブジェクトグラフの構築です。インスタンスを型で要求されると生成すべきものを見つけて依存解決し、それらを結びつけます。依存解決の方法を指定するにはインジェクタに束縛で設定を行います。
 
 ## リンク束縛 ##
 
