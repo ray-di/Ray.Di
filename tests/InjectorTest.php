@@ -294,4 +294,16 @@ class InjectorTest extends TestCase
             $this->assertInstanceOf(\PDO::class, $pdo);
         }
     }
+
+    public function testInternalTypes()
+    {
+        $injector = new Injector(new FakeInternalTypeModule);
+        /* @var FakeInternalTypes $types */
+        $types = $injector->getInstance(FakeInternalTypes::class);
+        $this->assertInternalType('bool', $types->bool);
+        $this->assertInternalType('callable', $types->callable);
+        $this->assertInternalType('array', $types->array);
+        $this->assertInternalType('string', $types->string);
+        $this->assertInternalType('int', $types->int);
+    }
 }
