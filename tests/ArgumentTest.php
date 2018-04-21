@@ -29,7 +29,7 @@ class ArgumentTest extends TestCase
 
     public function testToStringScalar()
     {
-        $argument = new Argument(new \ReflectionParameter([FakeScalarType::class, 'stringId'], 'id'), Name::ANY);
+        $argument = new Argument(new \ReflectionParameter([FakeInternalTypes::class, 'stringId'], 'id'), Name::ANY);
         $this->assertSame('-' . Name::ANY, (string) $argument);
     }
 }
