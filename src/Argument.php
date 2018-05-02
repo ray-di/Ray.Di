@@ -8,7 +8,7 @@ declare(strict_types=1);
  */
 namespace Ray\Di;
 
-final class Argument
+final class Argument implements \Serializable
 {
     /**
      * @var string
@@ -91,6 +91,34 @@ final class Argument
     public function getMeta() : string
     {
         return $this->meta;
+    }
+
+    public function serialize() : string
+    {
+        $ref = [
+            $this->reflection->getDeclaringFunction()->class,
+            $this->reflection->getDeclaringFunction()->name,
+            $this->reflection->getName()
+        ];
+
+        return \serialize([
+            $this->index,
+            $this->isDefaultAvailable,
+            $this->default,
+            $this->meta,
+            $ref
+        ]);
+    }
+
+    public function unserialize($serialized)
+    {
+        list($this->index,
+            $this->isDefaultAvailable,
+            $this->default,
+            $this->meta,
+            $ref
+        ) = unserialize($serialized);
+        $this->reflection = new \ReflectionParameter([$ref[0], $ref[1]], $ref[2]);
     }
 
     private function setDefaultValue(\ReflectionParameter $parameter)
