@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Aop\Bind as AopBind;
-use Ray\Aop\Compiler as AopCompiler;
+use Ray\Aop\CompilerInterface;
 use Ray\Aop\MethodInterceptor;
 
 final class Dependency implements DependencyInterface
@@ -54,6 +54,14 @@ final class Dependency implements DependencyInterface
         return ['newInstance', 'postConstruct', 'isSingleton'];
     }
 
+    public function __toString()
+    {
+        return sprintf(
+            '(dependency) %s',
+            (string) $this->newInstance
+        );
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -94,7 +102,7 @@ final class Dependency implements DependencyInterface
         }
     }
 
-    public function weaveAspects(AopCompiler $compiler, array $pointcuts)
+    public function weaveAspects(CompilerInterface $compiler, array $pointcuts)
     {
         $class = (string) $this->newInstance;
         $isInterceptor = (new \ReflectionClass($class))->implementsInterface(MethodInterceptor::class);

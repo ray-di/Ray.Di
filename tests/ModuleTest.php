@@ -50,4 +50,18 @@ class ModuleTest extends TestCase
         $module = new FakeInstanceBindModule;
         $this->assertInstanceOf(Container::class, $module->getContainer());
     }
+
+    public function test__toString()
+    {
+        $string = (string) new FakeLogStringModule();
+        $this->assertSame('-array => (array)
+-bool => (boolean) 1
+-int => (integer) 1
+-null => (NULL)
+-object => (object) stdClass
+-string => (string) 1
+Ray\Di\FakeAopInterface- => (dependency) Ray\Di\FakeAop
+Ray\Di\FakeDoubleInterceptor- => (dependency) Ray\Di\FakeDoubleInterceptor
+Ray\Di\FakeRobotInterface- => (provider) (dependency) Ray\Di\FakeRobotProvider', $string);
+    }
 }

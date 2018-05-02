@@ -20,6 +20,23 @@ final class Instance implements DependencyInterface
         $this->value = $value;
     }
 
+    public function __toString()
+    {
+        if (is_scalar($this->value)) {
+            return sprintf(
+                '(%s) %s',
+                gettype($this->value),
+                (string) $this->value
+            );
+        }
+
+        if (is_object($this->value)) {
+            return '(object) ' . get_class($this->value);
+        }
+
+        return '(' . gettype($this->value) . ')';
+    }
+
     /**
      * {@inheritdoc}
      */

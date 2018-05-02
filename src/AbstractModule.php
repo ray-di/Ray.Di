@@ -39,6 +39,21 @@ abstract class AbstractModule
         }
     }
 
+    public function __toString()
+    {
+        $log = [];
+        foreach ($this->getContainer()->getContainer() as $dependencyIndex => $dependency) {
+            $log[] = sprintf(
+                '%s => %s',
+                $dependencyIndex,
+                (string) $dependency
+            );
+        }
+        sort($log);
+
+        return implode(PHP_EOL, $log);
+    }
+
     /**
      * Install module
      */

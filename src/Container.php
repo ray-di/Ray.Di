@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Aop\Compiler;
+use Ray\Aop\CompilerInterface;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Exception\Untargeted;
@@ -141,7 +142,7 @@ final class Container
     /**
      * Weave aspects to all dependency in container
      */
-    public function weaveAspects(Compiler $compiler)
+    public function weaveAspects(CompilerInterface $compiler)
     {
         foreach ($this->container as $dependency) {
             if (! $dependency instanceof Dependency) {
