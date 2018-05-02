@@ -43,6 +43,14 @@ final class DependencyProvider implements DependencyInterface
         return ['dependency', 'isSingleton'];
     }
 
+    public function __toString()
+    {
+        return sprintf(
+            '(provider) %s',
+            (string) $this->dependency
+        );
+    }
+
     /**
      * {@inheritdoc}
      */
