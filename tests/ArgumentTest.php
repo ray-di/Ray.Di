@@ -32,4 +32,12 @@ class ArgumentTest extends TestCase
         $argument = new Argument(new \ReflectionParameter([FakeInternalTypes::class, 'stringId'], 'id'), Name::ANY);
         $this->assertSame('-' . Name::ANY, (string) $argument);
     }
+
+    public function testSerializable()
+    {
+        /** @var Argument $argument */
+        $argument = unserialize(serialize(new Argument(new \ReflectionParameter([FakeInternalTypes::class, 'stringId'], 'id'), Name::ANY)));
+        $class = $argument->get()->getDeclaringFunction();
+        $this->assertInstanceOf(\ReflectionMethod::class, $class);
+    }
 }
