@@ -42,7 +42,13 @@ abstract class AbstractModule
     public function __toString()
     {
         $log = [];
-        foreach ($this->getContainer()->getContainer() as $dependencyIndex => $dependency) {
+        $contaier = unserialize(serialize($this->getContainer()->getContainer()));
+        $spy = new SpyCompiler();
+        $pointCuts = $this->getContainer()->getPointcuts();
+        foreach ($contaier as $dependencyIndex => $dependency) {
+            if ($dependency instanceof Dependency) {
+                $dependency->weaveAspects($spy, $pointCuts);
+            }
             $log[] = sprintf(
                 '%s => %s',
                 $dependencyIndex,

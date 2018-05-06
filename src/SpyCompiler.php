@@ -55,10 +55,14 @@ final class SpyCompiler implements CompilerInterface
 
     private function getInterceptors(BindInterface $bind) : string
     {
-        $log = '';
-        foreach ($bind->getBindings() as $mehtod => $intepceptors) {
+        $bindings = $bind->getBindings();
+        if (! $bindings) {
+            return '';
+        }
+        $log = ' (aop)';
+        foreach ($bindings as $mehtod => $intepceptors) {
             $log .= sprintf(
-                ' ::%s(%s)',
+                ' +%s(%s)',
                 $mehtod,
                 implode(', ', $intepceptors)
             );

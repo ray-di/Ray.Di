@@ -60,7 +60,7 @@ class ModuleTest extends TestCase
 -null => (NULL)
 -object => (object) stdClass
 -string => (string) 1
-Ray\Di\FakeAopInterface- => (dependency) Ray\Di\FakeAop
+Ray\Di\FakeAopInterface- => (dependency) Ray\Di\FakeAop (aop) +returnSame(Ray\Di\FakeDoubleInterceptor)
 Ray\Di\FakeDoubleInterceptor- => (dependency) Ray\Di\FakeDoubleInterceptor
 Ray\Di\FakeRobotInterface- => (provider) (dependency) Ray\Di\FakeRobotProvider', $string);
     }
