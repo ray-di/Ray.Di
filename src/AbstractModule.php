@@ -41,23 +41,7 @@ abstract class AbstractModule
 
     public function __toString()
     {
-        $log = [];
-        $contaier = unserialize(serialize($this->getContainer()->getContainer()));
-        $spy = new SpyCompiler();
-        $pointCuts = $this->getContainer()->getPointcuts();
-        foreach ($contaier as $dependencyIndex => $dependency) {
-            if ($dependency instanceof Dependency) {
-                $dependency->weaveAspects($spy, $pointCuts);
-            }
-            $log[] = sprintf(
-                '%s => %s',
-                $dependencyIndex,
-                (string) $dependency
-            );
-        }
-        sort($log);
-
-        return implode(PHP_EOL, $log);
+        return (new ModuleString)($this->getContainer(), $this->getContainer()->getPointcuts());
     }
 
     /**
