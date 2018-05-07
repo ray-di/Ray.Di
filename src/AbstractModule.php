@@ -39,6 +39,11 @@ abstract class AbstractModule
         }
     }
 
+    public function __toString()
+    {
+        return (new ModuleString)($this->getContainer(), $this->getContainer()->getPointcuts());
+    }
+
     /**
      * Install module
      */
