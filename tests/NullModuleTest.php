@@ -12,9 +12,10 @@ use PHPUnit\Framework\TestCase;
 
 class NullModuleTest extends TestCase
 {
-    public function testNew()
+    public function testEmpty()
     {
-        $injector = new Injector(new NullModule);
-        $this->assertInstanceOf(Injector::class, $injector);
+        $module = new NullModule;
+        $container = $module->getContainer();
+        $this->assertSame([], $container->getContainer());
     }
 }
