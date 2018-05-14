@@ -57,7 +57,7 @@ final class NewInstance
         $instance = $this->arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
 
         // setter injection
-        $this->setterMethods->__invoke($instance, $container);
+        ($this->setterMethods)($instance, $container);
 
         // bind dependency injected interceptors
         if ($this->bind instanceof AspectBind) {
