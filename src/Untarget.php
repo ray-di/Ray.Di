@@ -39,7 +39,7 @@ final class Untarget
         $container->add($bind);
         $constructor = $this->class->getConstructor();
         if ($constructor) {
-            (new UntargetedBind)->__invoke($container, $constructor);
+            (new UntargetedBind)($container, $constructor);
         }
     }
 

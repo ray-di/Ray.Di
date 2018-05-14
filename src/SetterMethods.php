@@ -31,7 +31,7 @@ final class SetterMethods
     {
         foreach ($this->setterMethods as $setterMethod) {
             /* @var SetterMethod $setterMethod */
-            $setterMethod->__invoke($instance, $container);
+            ($setterMethod)($instance, $container);
         }
     }
 

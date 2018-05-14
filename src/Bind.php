@@ -62,7 +62,7 @@ final class Bind
     public function __destruct()
     {
         if ($this->untarget) {
-            $this->untarget->__invoke($this->container, $this);
+            ($this->untarget)($this->container, $this);
             $this->untarget = null;
         }
     }

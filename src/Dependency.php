@@ -82,7 +82,7 @@ final class Dependency implements DependencyInterface
         }
 
         // create dependency injected instance
-        $this->instance = $this->newInstance->__invoke($container);
+        $this->instance = ($this->newInstance)($container);
 
         // @PostConstruct
         if ($this->postConstruct) {
