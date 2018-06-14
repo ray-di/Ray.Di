@@ -31,8 +31,6 @@ interface DependencyInterface
      * Set scope
      *
      * @param string $scope
-     *
-     * @return void
      */
     public function setScope($scope);
 }
