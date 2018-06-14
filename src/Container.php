@@ -98,7 +98,7 @@ final class Container
      *
      * @param string $index {interface}-{bind name}
      *
-     * @return Untargeted | Unbound
+     * @return Untargeted|Unbound
      */
     public function unbound(string $index)
     {
