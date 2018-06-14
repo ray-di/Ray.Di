@@ -183,7 +183,7 @@ final class Bind
      */
     private function getStringName(array $name) : string
     {
-        $names = array_reduce(array_keys($name), function (array $carry, string $key) use ($name) {
+        $names = array_reduce(array_keys($name), function (array $carry, string $key) use ($name) : array {
             $carry[] .= $key . '=' . $name[$key];
 
             return $carry;
