@@ -101,16 +101,16 @@ final class Bind
      * @param string          $class           class name
      * @param string | array  $name            "varName=bindName,..." or [[$varName => $bindName],[$varName => $bindName]...]
      * @param InjectionPoints $injectionPoints injection points
-     * @param null            $postConstruct   method name of initialization after all dependencies are injected*
+     * @param string          $postConstruct   method name of initialization after all dependencies are injected*
      */
-    public function toConstructor(string $class, $name, InjectionPoints $injectionPoints = null, $postConstruct = null) : self
+    public function toConstructor(string $class, $name, InjectionPoints $injectionPoints = null, string $postConstruct = null) : self
     {
         if (\is_array($name)) {
             $name = $this->getStringName($name);
         }
         $this->untarget = null;
-        $postConstruct = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
-        $this->bound = (new DependencyFactory)->newToConstructor(new \ReflectionClass($class), $name, $injectionPoints, $postConstruct);
+        $postConstructRef = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
+        $this->bound = (new DependencyFactory)->newToConstructor(new \ReflectionClass($class), $name, $injectionPoints, $postConstructRef);
         $this->container->add($this);
 
         return $this;
