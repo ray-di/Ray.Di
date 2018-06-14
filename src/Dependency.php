@@ -20,7 +20,7 @@ final class Dependency implements DependencyInterface
     private $newInstance;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $postConstruct;
 
