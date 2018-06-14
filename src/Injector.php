@@ -46,7 +46,7 @@ class Injector implements InjectorInterface
     public function __wakeup()
     {
         spl_autoload_register(
-            function ($class) {
+            function (string $class) {
                 $file = $this->classDir . DIRECTORY_SEPARATOR . $class . '.php';
                 if (file_exists($file)) {
                     // @codeCoverageIgnoreStart
