@@ -53,7 +53,11 @@ final class InjectionPoint implements InjectionPointInterface
      */
     public function getClass() : \ReflectionClass
     {
-        return $this->parameter->getDeclaringClass();
+        $class = $this->parameter->getDeclaringClass();
+        if ($class instanceof \ReflectionClass) {
+            return $class;
+        }
+        throw new \LogicException($this->parameter->getName());
     }
 
     /**
