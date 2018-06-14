@@ -32,7 +32,7 @@ interface DependencyInterface
      *
      * @param string $scope
      *
-     * @return mixed
+     * @return void
      */
     public function setScope($scope);
 }
