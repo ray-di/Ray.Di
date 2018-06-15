@@ -42,10 +42,13 @@ final class InjectionPoint implements InjectionPointInterface
      */
     public function getMethod() : \ReflectionMethod
     {
-        $class = $this->parameter->getDeclaringClass()->name;
+        $class = $this->parameter->getDeclaringClass();
+        if (! $class instanceof \ReflectionClass) {
+            throw new \LogicException($this->parameter->getName());
+        }
         $method = $this->parameter->getDeclaringFunction()->getShortName();
 
-        return new \ReflectionMethod($class, $method);
+        return new \ReflectionMethod($class->name, $method);
     }
 
     /**
@@ -53,7 +56,11 @@ final class InjectionPoint implements InjectionPointInterface
      */
     public function getClass() : \ReflectionClass
     {
-        return $this->parameter->getDeclaringClass();
+        $class = $this->parameter->getDeclaringClass();
+        if ($class instanceof \ReflectionClass) {
+            return $class;
+        }
+        throw new \LogicException($this->parameter->getName());
     }
 
     /**

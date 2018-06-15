@@ -51,7 +51,7 @@ class InjectionPointTest extends TestCase
     {
         /* @var $constant FakeConstant */
         $annotations = $this->ip->getQualifiers();
-        $this->assertSame(1, count($annotations));
+        $this->assertCount(1, $annotations);
         $this->assertInstanceOf(FakeConstant::class, $annotations[0]);
     }
 }

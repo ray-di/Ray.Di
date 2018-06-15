@@ -45,7 +45,6 @@ final class DependencyFactory
         \ReflectionMethod $postConstruct = null
     ) : Dependency {
         $setterMethods = $injectionPoints ? $injectionPoints($class->name) : new SetterMethods([]);
-        $postConstruct = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
         $newInstance = new NewInstance($class, $setterMethods, new Name($name));
 
         return new Dependency($newInstance, $postConstruct);

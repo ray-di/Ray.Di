@@ -95,9 +95,11 @@ final class Argument implements \Serializable
 
     public function serialize() : string
     {
+        /** @var \ReflectionMethod $method */
+        $method = $this->reflection->getDeclaringFunction();
         $ref = [
-            $this->reflection->getDeclaringFunction()->class,
-            $this->reflection->getDeclaringFunction()->name,
+            $method->class,
+            $method->name,
             $this->reflection->getName()
         ];
 
