@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": "^7.0",
-        "ray/aop": "^2.7.1",
+        "ray/aop": "2.x-dev",
         "ray/compiler": "^1.3.0"
     },
     "require-dev": {
