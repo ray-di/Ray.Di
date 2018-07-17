@@ -17,7 +17,7 @@ before_script:
   - phpenv config-rm xdebug.ini
   - composer self-update
   - composer update $DEPENDENCIES
-  - if [[ $TRAVIS_PHP_VERSION = '7.2' ]]; then composer require --dev phpstan/phpstan ^0.10 friendsofphp/php-cs-fixer ^2.0 vimeo/psalm ^2.0; fi
+  - if [[ $TRAVIS_PHP_VERSION = '7.2' ]]; then composer require --dev phpstan/phpstan-shim dev-master friendsofphp/php-cs-fixer ^2.0 vimeo/psalm ^2.0; fi
 script:
   - ./vendor/bin/phpunit $COVERAGE;
   - if [[ $TRAVIS_PHP_VERSION = '7.2' ]]; then ./vendor/bin/php-cs-fixer --dry-run -v fix; fi
