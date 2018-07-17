@@ -52,7 +52,12 @@ final class SetterMethod
             }
             throw $e;
         }
-        \call_user_func_array([$instance, $this->method], $parameters);
+        $func = [$instance, $this->method];
+        if (! is_callable($func)) {
+            throw new \LogicException; // @codeCoverageIgnore
+        }
+
+        \call_user_func_array($func, $parameters);
     }
 
     public function setOptional()
