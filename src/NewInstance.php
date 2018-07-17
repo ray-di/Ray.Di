@@ -54,7 +54,7 @@ final class NewInstance
     public function __invoke(Container $container)
     {
         // constructor injection
-        $instance = $this->arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
+        $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
 
         // setter injection
         ($this->setterMethods)($instance, $container);
