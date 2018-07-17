@@ -60,13 +60,11 @@ final class NewInstance
         ($this->setterMethods)($instance, $container);
 
         // bind dependency injected interceptors
-        if (! $this->bind instanceof AspectBind) {
-            return $instance;
+        if ($this->bind instanceof AspectBind) {
+            $instance->bindings = $this->bind->inject($container);
         }
-        if (! property_exists($instance, 'bindings')) {
-            throw new \LogicException; // @codeCoverageIgnore
-        }
-        $instance->bindings = $this->bind->inject($container);
+
+        return $instance;
     }
 
     /**
