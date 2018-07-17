@@ -56,7 +56,7 @@ class AnnotatedClassTest extends TestCase
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeLeft::class)->to(FakeMirrorLeft::class);
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeRight::class)->to(FakeMirrorRight::class);
         $handleBar = $newInstance($container);
-        if (! $handleBar instanceof FakeHandleBar) {
+        if (! $handleBar instanceof FakeHandleBar && ! $handleBar instanceof FakeHandleBarQualifier) {
             throw new \LogicException;
         }
         $this->assertInstanceOf(FakeMirrorLeft::class, $handleBar->leftMirror);

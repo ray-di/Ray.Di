@@ -242,7 +242,7 @@ class InjectorTest extends TestCase
             throw new \LogicException;
         }
         $injector = unserialize($cache);
-        if ($injector instanceof Injector) {
+        if (! $injector instanceof Injector) {
             throw new \LogicException;
         }
         $instance = $injector->getInstance(FakeAopInterface::class);
