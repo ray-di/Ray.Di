@@ -1,5 +1,6 @@
 parameters:
     ignoreErrors:
         - '#does not call parent constructor from#'
+        - '#Access to an undefined property object::\$bindings.#'
     excludes_analyse:
         - %currentWorkingDirectory%/tests/tmp/*
