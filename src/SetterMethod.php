@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use function is_callable;
 use Ray\Di\Exception\Unbound;
+use function method_exists;
 
 final class SetterMethod
 {
@@ -48,12 +50,12 @@ final class SetterMethod
 
             throw $e;
         }
-        $func = [$instance, $this->method];
-        if (! is_callable($func)) {
+        $callable = [$instance, $this->method];
+        if (! is_callable($callable)) {
             throw new \LogicException; // @codeCoverageIgnore
         }
 
-        \call_user_func_array($func, $parameters);
+        \call_user_func_array($callable, $parameters);
     }
 
     public function setOptional()
