@@ -47,7 +47,7 @@ final class AnnotatedClassMethods
     {
         $inject = $this->reader->getMethodAnnotation($method, InjectInterface::class);
         if (! $inject instanceof InjectInterface) {
-            return;
+            return null;
         }
         $nameValue = $this->getNamedKeyVarString($method);
         $setterMethod = new SetterMethod($method, new Name($nameValue));
