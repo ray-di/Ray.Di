@@ -232,7 +232,7 @@ class InjectorTest extends TestCase
     public function testAopClassAutoloader()
     {
         passthru('php ' . __DIR__ . '/script/aop.php');
-        $cacheFile = __DIR__ . '/script/aop.php.cache';
+        $cacheFile = __DIR__ . '/script/aop.php.cache.txt';
         $cache = file_get_contents($cacheFile);
         if (! is_string($cache)) {
             throw new \LogicException;
