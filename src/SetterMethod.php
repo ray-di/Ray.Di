@@ -1,14 +1,11 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 use Ray\Di\Exception\Unbound;
+use function is_callable;
 
 final class SetterMethod
 {
@@ -36,8 +33,7 @@ final class SetterMethod
     }
 
     /**
-     * @param object    $instance
-     * @param Container $container
+     * @param object $instance
      *
      * @throws Unbound
      * @throws \Exception
@@ -50,14 +46,15 @@ final class SetterMethod
             if ($this->isOptional) {
                 return;
             }
+
             throw $e;
         }
-        $func = [$instance, $this->method];
-        if (! is_callable($func)) {
+        $callable = [$instance, $this->method];
+        if (! is_callable($callable)) {
             throw new \LogicException; // @codeCoverageIgnore
         }
 
-        \call_user_func_array($func, $parameters);
+        \call_user_func_array($callable, $parameters);
     }
 
     public function setOptional()

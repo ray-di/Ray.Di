@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
@@ -17,7 +13,7 @@ class NewInstanceTest extends TestCase
      */
     protected $newInstance;
 
-    public function setUp()
+    protected function setUp()
     {
         $class = new \ReflectionClass(FakeCar::class);
         $setters = [];

@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 use Ray\Aop\Bind as AopBind;
@@ -20,7 +16,7 @@ final class Dependency implements DependencyInterface
     private $newInstance;
 
     /**
-     * @var string|null
+     * @var null|string
      */
     private $postConstruct;
 
@@ -40,7 +36,6 @@ final class Dependency implements DependencyInterface
     private $index;
 
     /**
-     * @param NewInstance       $newInstance
      * @param \ReflectionMethod $postConstruct
      */
     public function __construct(NewInstance $newInstance, \ReflectionMethod $postConstruct = null)

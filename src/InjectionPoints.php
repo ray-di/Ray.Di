@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 final class InjectionPoints
@@ -17,11 +13,6 @@ final class InjectionPoints
      */
     private $points = [];
 
-    /**
-     * @param string $class
-     *
-     * @return SetterMethods
-     */
     public function __invoke(string $class) : SetterMethods
     {
         $points = [];

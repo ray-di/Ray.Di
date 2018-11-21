@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 interface InjectorInterface
@@ -15,8 +11,6 @@ interface InjectorInterface
      *
      * @param string $interface
      * @param string $name
-     *
-     * @return mixed
      */
     public function getInstance($interface, $name = Name::ANY);
 }

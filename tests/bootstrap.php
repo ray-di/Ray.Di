@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 $_ENV['TMP_DIR'] = __DIR__ . '/tmp';
 // cleanup tmp directory
 $unlink = function ($path) use (&$unlink) {

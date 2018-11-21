@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
@@ -45,9 +41,7 @@ final class AnnotatedClassMethods
     }
 
     /**
-     * @param \ReflectionMethod $method
-     *
-     * @return SetterMethod|null
+     * @return null|SetterMethod
      */
     public function getSetterMethod(\ReflectionMethod $method)
     {
@@ -65,9 +59,7 @@ final class AnnotatedClassMethods
     }
 
     /**
-     * @param \ReflectionMethod $method
-     *
-     * @return string|null
+     * @return null|string
      */
     private function getNamedKeyVarString(\ReflectionMethod $method)
     {
@@ -83,8 +75,6 @@ final class AnnotatedClassMethods
         if ($keyVal !== []) {
             return implode(',', $keyVal); // var1=qualifier1,va2=qualifier2
         }
-
-        return null;
     }
 
     private function getQualifierKeyVarString(\ReflectionMethod $method) : string

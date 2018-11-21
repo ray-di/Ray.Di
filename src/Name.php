@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 final class Name
@@ -77,9 +73,6 @@ final class Name
         $this->parseName($name);
     }
 
-    /**
-     * @param string $name
-     */
     private function parseName(string $name)
     {
         $keyValues = explode(',', $name);
