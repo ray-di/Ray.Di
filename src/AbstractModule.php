@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 use Ray\Aop\AbstractMatcher;
@@ -20,7 +16,7 @@ abstract class AbstractModule
     protected $matcher;
 
     /**
-     * @var AbstractModule|null
+     * @var null|AbstractModule
      */
     protected $lastModule;
 
@@ -63,8 +59,6 @@ abstract class AbstractModule
 
     /**
      * Return container
-     *
-     * @return Container
      */
     public function getContainer() : Container
     {
@@ -78,9 +72,7 @@ abstract class AbstractModule
     /**
      * Bind interceptor
      *
-     * @param AbstractMatcher $classMatcher
-     * @param AbstractMatcher $methodMatcher
-     * @param string[]        $interceptors
+     * @param string[] $interceptors
      */
     public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
     {
@@ -93,10 +85,6 @@ abstract class AbstractModule
 
     /**
      * Bind interceptor early
-     *
-     * @param AbstractMatcher $classMatcher
-     * @param AbstractMatcher $methodMatcher
-     * @param array           $interceptors
      */
     public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
     {

@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 use Ray\Aop\BindInterface;
@@ -28,9 +24,8 @@ final class SpyCompiler implements CompilerInterface
         if ($this->hasNoBinding($class, $bind)) {
             return $class;
         }
-        $newClass = $class . $this->getInterceptors($bind);
 
-        return $newClass;
+        return $class . $this->getInterceptors($bind);
     }
 
     private function hasNoBinding($class, BindInterface $bind) : bool

@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 final class SetterMethods
@@ -21,8 +17,7 @@ final class SetterMethods
     }
 
     /**
-     * @param object    $instance
-     * @param Container $container
+     * @param object $instance
      *
      * @throws Exception\Unbound
      * @throws \Exception

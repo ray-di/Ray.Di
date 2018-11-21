@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -29,8 +25,6 @@ final class Arguments
     /**
      * Return arguments
      *
-     * @param Container $container
-     *
      * @throws Exception\Unbound
      *
      * @return Argument[]
@@ -47,8 +41,6 @@ final class Arguments
 
     /**
      * @throws Unbound
-     *
-     * @return mixed
      */
     private function getParameter(Container $container, Argument $argument)
     {
@@ -60,13 +52,12 @@ final class Arguments
             if ($hasDefaultValue) {
                 return $defaultValue;
             }
+
             throw new Unbound($argument->getMeta(), 0, $e);
         }
     }
 
     /**
-     * @param Argument $argument
-     *
      * @return array [$hasDefaultValue, $defaultValue]
      */
     private function getDefaultValue(Argument $argument) : array

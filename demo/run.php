@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 passthru('php ' . __DIR__ . '/01a-linked-binding.php');
 passthru('php ' . __DIR__ . '/01b-linked-binding-setter-injection.php');
 passthru('php ' . __DIR__ . '/02-provider-binding.php');
