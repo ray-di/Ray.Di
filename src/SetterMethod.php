@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use function is_callable;
 use Ray\Di\Exception\Unbound;
-use function method_exists;
+use function is_callable;
 
 final class SetterMethod
 {
