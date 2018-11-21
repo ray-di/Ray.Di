@@ -15,5 +15,6 @@
         <exclude name="PEAR.Commenting.FunctionComment.MissingParamTag"/>
         <exclude name="PEAR.Commenting.FunctionComment.Missing"/>
         <exclude name="PEAR.Commenting.FunctionComment.ParameterCommentsNotAligned"/>
+        <exclude name="PEAR.Commenting.FunctionComment.ParamNameNoMatch" />
     </rule>
 </ruleset>
