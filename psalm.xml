@@ -10,6 +10,7 @@
         <ignoreFiles>
             <directory name="src/Di" />
             <file name="src/SpyCompiler.php"></file>
+            <file name="src/NewInstance.php"></file>
         </ignoreFiles>
     </projectFiles>
 
