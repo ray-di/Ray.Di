@@ -174,8 +174,8 @@ final class Bind
      */
     private function getStringName(array $name) : string
     {
-        $names = array_reduce(array_keys($name), function (array $carry, string $key) use ($name) : array {
-            $carry[] .= $key . '=' . $name[$key];
+        $names = array_reduce(array_keys($name), function (array $carry, $key) use ($name) : array {
+            $carry[] .= $key . '=' . $name[(string) $key];
 
             return $carry;
         }, []);
