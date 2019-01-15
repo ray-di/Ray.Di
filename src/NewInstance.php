@@ -43,6 +43,8 @@ final class NewInstance
     }
 
     /**
+     * @throws \ReflectionException
+     *
      * @return object
      */
     public function __invoke(Container $container)
