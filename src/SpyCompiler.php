@@ -12,14 +12,14 @@ final class SpyCompiler implements CompilerInterface
     /**
      * {@inheritdoc}
      */
-    public function newInstance($class, array $args, BindInterface $bind)
+    public function newInstance(string $class, array $args, BindInterface $bind)
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function compile($class, BindInterface $bind) : string
+    public function compile(string $class, BindInterface $bind) : string
     {
         if ($this->hasNoBinding($class, $bind)) {
             return $class;
