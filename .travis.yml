@@ -6,7 +6,6 @@ php:
   - 7.2
   - 7.3
   - nightly
-
 cache:
   directories:
     - vendor
@@ -59,3 +58,23 @@ jobs:
 
   allow_failures:
   - php: nightly
+=======
+env:
+  matrix:
+    - DEPENDENCIES=""
+    - DEPENDENCIES="--prefer-lowest --prefer-stable"
+before_script:
+  - if [[ $TRAVIS_PHP_VERSION = '7.2' ]]; then cp $HOME/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini /tmp; fi
+  - if [[ $TRAVIS_PHP_VERSION != '7.3' ]]; then phpenv config-rm xdebug.ini ; fi
+  - composer self-update
+  - if [[ $TRAVIS_PHP_VERSION = '7.2' ]]; then composer require --dev phpstan/phpstan-shim ^0.10 friendsofphp/php-cs-fixer ^2.0; fi
+install:
+  - if [[ $TRAVIS_PHP_VERSION = '7.2' && DEPENDENCIES = '' ]]; then composer require --dev phpstan/phpstan-shim ^0.9 friendsofphp/php-cs-fixer ^2.13; fi
+  - composer update $DEPENDENCIES
+script:
+  - ./vendor/bin/phpunit $COVERAGE;
+  - if [[ $TRAVIS_PHP_VERSION = '7.2' && DEPENDENCIES = ''  ]]; then ./vendor/bin/php-cs-fixer --dry-run -v fix; fi
+  - if [[ $TRAVIS_PHP_VERSION = '7.2' && DEPENDENCIES = ''  ]]; then ./vendor/bin/phpstan analyse -l max -c phpstan.neon src tests --no-progress --no-interaction; fi
+  - if [[ $TRAVIS_PHP_VERSION = '7.2' && DEPENDENCIES = ''  ]]; then phpenv config-add /tmp/xdebug.ini; ./vendor/bin/phpunit --coverage-clover=coverage.clover; else ./vendor/bin/phpunit; fi
+after_script:
+  - if [[ $TRAVIS_PHP_VERSION = '7.2' && DEPENDENCIES = '' ]]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi

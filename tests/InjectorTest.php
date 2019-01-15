@@ -232,9 +232,15 @@ class InjectorTest extends TestCase
     public function testAopClassAutoloader()
     {
         passthru('php ' . __DIR__ . '/script/aop.php');
-        $cacheFile = __DIR__ . '/script/aop.php.cache';
-        $injector = unserialize(file_get_contents($cacheFile));
-        /* @var $injector Injector */
+        $cacheFile = __DIR__ . '/script/aop.php.cache.txt';
+        $cache = file_get_contents($cacheFile);
+        if (! is_string($cache)) {
+            throw new \LogicException;
+        }
+        $injector = unserialize($cache);
+        if (! $injector instanceof Injector) {
+            throw new \LogicException;
+        }
         $instance = $injector->getInstance(FakeAopInterface::class);
         /* @var $instance FakeAop */
         $result = $instance->returnSame(2);

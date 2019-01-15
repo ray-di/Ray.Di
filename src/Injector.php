@@ -44,9 +44,7 @@ class Injector implements InjectorInterface
             function (string $class) {
                 $file = $this->classDir . DIRECTORY_SEPARATOR . $class . '.php';
                 if (file_exists($file)) {
-                    // @codeCoverageIgnoreStart
-                    include $file;
-                    // @codeCoverageIgnoreEnd
+                    include $file; //@codeCoverageIgnore
                 }
             }
         );

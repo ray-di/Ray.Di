@@ -32,7 +32,9 @@ class AnnotatedClassTest extends TestCase
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith('left')->to(FakeMirrorRight::class);
         (new Bind($container, FakeGearStickInterface::class))->toProvider(FakeGearStickProvider::class);
         $car = $newInstance($container);
-        /* @var $car FakeCar */
+        if (! $car instanceof FakeCar) {
+            throw new \LogicException;
+        }
         $this->assertInstanceOf(FakeCar::class, $car);
         $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
         $this->assertInstanceOf(FakeTyre::class, $car->rearTyre);
@@ -50,7 +52,9 @@ class AnnotatedClassTest extends TestCase
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeLeft::class)->to(FakeMirrorLeft::class);
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeRight::class)->to(FakeMirrorRight::class);
         $handleBar = $newInstance($container);
-        /* @var $handleBar FakeHandleBar */
+        if (! $handleBar instanceof FakeHandleBar && ! $handleBar instanceof FakeHandleBarQualifier) {
+            throw new \LogicException;
+        }
         $this->assertInstanceOf(FakeMirrorLeft::class, $handleBar->leftMirror);
         $this->assertInstanceOf(FakeMirrorRight::class, $handleBar->rightMirror);
     }
