@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 use Ray\Aop\Bind as AopBind;
@@ -47,8 +43,6 @@ final class NewInstance
     }
 
     /**
-     * @param Container $container
-     *
      * @return object
      */
     public function __invoke(Container $container)
@@ -76,8 +70,7 @@ final class NewInstance
     }
 
     /**
-     * @param string  $class
-     * @param AopBind $bind
+     * @param string $class
      */
     public function weaveAspects($class, AopBind $bind)
     {

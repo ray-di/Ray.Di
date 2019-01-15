@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
 namespace Ray\Di;
 
 use Ray\Aop\Compiler;
@@ -60,8 +55,6 @@ class Injector implements InjectorInterface
     /**
      * @param string $interface
      * @param string $name
-     *
-     * @return mixed
      */
     public function getInstance($interface, $name = Name::ANY)
     {
@@ -75,9 +68,6 @@ class Injector implements InjectorInterface
         return $instance;
     }
 
-    /**
-     * @param string $class
-     */
     private function bind(string $class)
     {
         new Bind($this->container, $class);

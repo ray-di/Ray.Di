@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
@@ -18,7 +14,7 @@ class UnboundTest extends TestCase
         $previous = new Unbound('dep1-');
         $e = new Unbound('dep2-', 0, $previous);
         $string = (string) $e;
-        $this->assertContains("Ray\Di\Exception\Unbound", $string);
+        $this->assertContains('Ray\\Di\\Exception\\Unbound', $string);
         $this->assertContains('dep1-', $string);
         $this->assertContains('dep2-', $string);
     }
@@ -27,7 +23,7 @@ class UnboundTest extends TestCase
     {
         $e = new Unbound('dep0-', 0);
         $string = (string) $e;
-        $this->assertContains("Ray\Di\Exception\Unbound", $string);
+        $this->assertContains('Ray\\Di\\Exception\\Unbound', $string);
     }
 
     public function testNonUnboundPrevious()

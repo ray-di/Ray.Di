@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 final class Instance implements DependencyInterface
@@ -15,9 +11,6 @@ final class Instance implements DependencyInterface
      */
     public $value;
 
-    /**
-     * @param mixed $value
-     */
     public function __construct($value)
     {
         $this->value = $value;

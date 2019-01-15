@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 use Ray\Aop\Compiler;
@@ -33,8 +29,6 @@ final class Container
 
     /**
      * Add binding to container
-     *
-     * @param Bind $bind
      */
     public function add(Bind $bind)
     {
@@ -44,8 +38,6 @@ final class Container
 
     /**
      * Add Pointcut to container
-     *
-     * @param Pointcut $pointcut
      */
     public function addPointcut(Pointcut $pointcut)
     {
@@ -54,8 +46,6 @@ final class Container
 
     /**
      * Return instance by interface + name(interface namespace)
-     *
-     * @return mixed
      */
     public function getInstance(string $interface, string $name)
     {
@@ -66,8 +56,6 @@ final class Container
      * Return dependency injected instance
      *
      * @throws Unbound
-     *
-     * @return mixed
      */
     public function getDependency(string $index)
     {
@@ -98,7 +86,7 @@ final class Container
      *
      * @param string $index {interface}-{bind name}
      *
-     * @return Untargeted|Unbound
+     * @return Unbound|Untargeted
      */
     public function unbound(string $index)
     {

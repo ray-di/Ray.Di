@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
 namespace Ray\Di;
 
 final class Bind
@@ -37,7 +32,7 @@ final class Bind
     private $validate;
 
     /**
-     * @var Untarget|null
+     * @var null|Untarget
      */
     private $untarget;
 
@@ -131,8 +126,6 @@ final class Bind
 
     /**
      * Bind to instance
-     *
-     * @param mixed $instance
      */
     public function toInstance($instance) : self
     {
@@ -170,9 +163,7 @@ final class Bind
 
     private function isRegistered(string $interface) : bool
     {
-        $isRegistered = isset($this->container->getContainer()[$interface . '-' . Name::ANY]);
-
-        return $isRegistered;
+        return isset($this->container->getContainer()[$interface . '-' . Name::ANY]);
     }
 
     /**

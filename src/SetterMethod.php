@@ -1,11 +1,7 @@
 <?php
 
 declare(strict_types=1);
-/**
- * This file is part of the Ray.Di package.
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Ray\Di;
 
 use Ray\Di\Exception\Unbound;
@@ -36,8 +32,7 @@ final class SetterMethod
     }
 
     /**
-     * @param object    $instance
-     * @param Container $container
+     * @param object $instance
      *
      * @throws Unbound
      * @throws \Exception
@@ -50,6 +45,7 @@ final class SetterMethod
             if ($this->isOptional) {
                 return;
             }
+
             throw $e;
         }
         \call_user_func_array([$instance, $this->method], $parameters);
