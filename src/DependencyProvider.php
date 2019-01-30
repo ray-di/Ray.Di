@@ -36,7 +36,7 @@ final class DependencyProvider implements DependencyInterface
 
     public function __sleep()
     {
-        return ['dependency', 'isSingleton'];
+        return ['context', 'dependency', 'isSingleton'];
     }
 
     public function __toString()
