@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Ray\Di\Exception\NotFound;
+
 final class Bind
 {
     /**
@@ -83,8 +85,8 @@ final class Bind
     public function to(string $class) : self
     {
         $this->untarget = null;
-        $this->validate->to($this->interface, $class);
-        $this->bound = (new DependencyFactory)->newAnnotatedDependency(new \ReflectionClass($class));
+        $refClass = $this->validate->to($this->interface, $class);
+        $this->bound = (new DependencyFactory)->newAnnotatedDependency($refClass);
         $this->container->add($this);
 
         return $this;
@@ -104,8 +106,8 @@ final class Bind
             $name = $this->getStringName($name);
         }
         $this->untarget = null;
-        $postConstructRef = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
-        $this->bound = (new DependencyFactory)->newToConstructor(new \ReflectionClass($class), $name, $injectionPoints, $postConstructRef);
+        $postConstructRef = $postConstruct ? (new NewReflectionMethod)($class, $postConstruct) : null;
+        $this->bound = (new DependencyFactory)->newToConstructor((new NewReflectionClass)($class), $name, $injectionPoints, $postConstructRef);
         $this->container->add($this);
 
         return $this;
@@ -117,8 +119,8 @@ final class Bind
     public function toProvider(string $provider, string $context = '') : self
     {
         $this->untarget = null;
-        $this->validate->toProvider($provider);
-        $this->bound = (new DependencyFactory)->newProvider(new \ReflectionClass($provider), $context);
+        $refClass = $this->validate->toProvider($provider);
+        $this->bound = (new DependencyFactory)->newProvider($refClass, $context);
         $this->container->add($this);
 
         return $this;
@@ -159,6 +161,18 @@ final class Bind
     public function setBound(DependencyInterface $bound)
     {
         $this->bound = $bound;
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    private function getClass(string $class) : \ReflectionClass
+    {
+        if (! class_exists($class)) {
+            throw new NotFound($class);
+        }
+
+        return new \ReflectionClass($class);
     }
 
     private function isRegistered(string $interface) : bool
