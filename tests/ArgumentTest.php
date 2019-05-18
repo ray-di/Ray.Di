@@ -13,7 +13,7 @@ class ArgumentTest extends TestCase
      */
     protected $argument;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->argument = new Argument(new \ReflectionParameter([FakeCar::class, '__construct'], 'engine'), Name::ANY);
     }

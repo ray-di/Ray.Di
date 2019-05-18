@@ -17,7 +17,7 @@ class ContainerTest extends TestCase
     private $container;
     private $engine;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->container = new Container;

@@ -19,7 +19,7 @@ final class NewInstance
     private $setterMethods;
 
     /**
-     * @var Arguments
+     * @var null|Arguments
      */
     private $arguments;
 

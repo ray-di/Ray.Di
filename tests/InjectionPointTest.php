@@ -19,7 +19,7 @@ class InjectionPointTest extends TestCase
      */
     private $parameter;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->parameter = new \ReflectionParameter([FakeWalkRobot::class, '__construct'], 'rightLeg');
         $this->ip = new InjectionPoint($this->parameter, new AnnotationReader);

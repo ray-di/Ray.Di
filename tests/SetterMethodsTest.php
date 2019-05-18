@@ -13,7 +13,7 @@ class SetterMethodsTest extends TestCase
      */
     protected $setterMethod;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $method = new \ReflectionMethod(FakeCar::class, 'setTires');
         $this->setterMethod = new SetterMethod($method, new Name(Name::ANY));
