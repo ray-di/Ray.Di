@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use function substr;
+
 final class Name
 {
     /**
@@ -79,7 +81,10 @@ final class Name
         foreach ($keyValues as $keyValue) {
             $exploded = explode('=', $keyValue);
             if (isset($exploded[1])) {
-                list($key, $value) = $exploded;
+                [$key, $value] = $exploded;
+                if (isset($key[0]) && $key[0] === '$') {
+                    $key = substr($key, 1);
+                }
                 $this->names[trim($key)] = trim($value);
             }
         }
