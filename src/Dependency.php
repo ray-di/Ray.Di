@@ -100,7 +100,7 @@ final class Dependency implements DependencyInterface
     public function weaveAspects(CompilerInterface $compiler, array $pointcuts)
     {
         $class = (string) $this->newInstance;
-        $isInterceptor = (new \ReflectionClass($class))->implementsInterface(MethodInterceptor::class);
+        $isInterceptor = (new NewReflectionClass)($class)->implementsInterface(MethodInterceptor::class);
         if ($isInterceptor) {
             return;
         }
