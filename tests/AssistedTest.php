@@ -14,7 +14,7 @@ class AssistedTest extends TestCase
      */
     private $injector;
 
-    protected function setup()
+    protected function setUp() : void
     {
         $this->injector = new Injector(new FakeToBindModule, $_ENV['TMP_DIR']);
     }

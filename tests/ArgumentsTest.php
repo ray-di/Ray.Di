@@ -13,7 +13,7 @@ class ArgumentsTest extends TestCase
      */
     protected $arguments;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->arguments = new Arguments(new \ReflectionMethod(FakeCar::class, 'setTires'), new Name(Name::ANY));
     }

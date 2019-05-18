@@ -16,7 +16,7 @@ class BindTest extends TestCase
      */
     private $bind;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->bind = new Bind(new Container, FakeTyreInterface::class);

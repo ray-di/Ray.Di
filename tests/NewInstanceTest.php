@@ -13,7 +13,7 @@ class NewInstanceTest extends TestCase
      */
     protected $newInstance;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $class = new \ReflectionClass(FakeCar::class);
         $setters = [];
