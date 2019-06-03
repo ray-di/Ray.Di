@@ -57,7 +57,7 @@ class FakeCar implements FakeCarInterface
 
     /**
      * @Inject
-     * @Named("rightMirror=right,leftMirror=left")
+     * @Named("rightMirror=right,$leftMirror=left")
      */
     public function setMirrors(FakeMirrorInterface $rightMirror, FakeMirrorInterface $leftMirror)
     {

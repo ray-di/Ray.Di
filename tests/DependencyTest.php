@@ -17,7 +17,7 @@ class DependencyTest extends TestCase
      */
     private $dependency;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $class = new \ReflectionClass(FakeCar::class);
         $setters = [];
@@ -29,7 +29,7 @@ class DependencyTest extends TestCase
         $this->dependency = new Dependency($newInstance, new \ReflectionMethod(FakeCar::class, 'postConstruct'));
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
     }

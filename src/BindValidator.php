@@ -20,7 +20,7 @@ final class BindValidator
     /**
      * To validator
      */
-    public function to(string $interface, string $class)
+    public function to(string $interface, string $class) : \ReflectionClass
     {
         if (! class_exists($class)) {
             throw new NotFound($class);
@@ -30,6 +30,8 @@ final class BindValidator
 
             throw new InvalidType($msg);
         }
+
+        return new \ReflectionClass($class);
     }
 
     /**
@@ -37,7 +39,7 @@ final class BindValidator
      *
      * @throws NotFound
      */
-    public function toProvider(string $provider)
+    public function toProvider(string $provider) : \ReflectionClass
     {
         if (! class_exists($provider)) {
             throw new NotFound($provider);
@@ -45,5 +47,7 @@ final class BindValidator
         if (! (new \ReflectionClass($provider))->implementsInterface(ProviderInterface::class)) {
             throw new InvalidProvider($provider);
         }
+
+        return new \ReflectionClass($provider);
     }
 }

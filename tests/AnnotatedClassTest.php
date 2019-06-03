@@ -14,7 +14,7 @@ class AnnotatedClassTest extends TestCase
      */
     protected $annotatedClass;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->annotatedClass = new AnnotatedClass(new AnnotationReader);
