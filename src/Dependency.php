@@ -7,6 +7,7 @@ namespace Ray\Di;
 use Ray\Aop\Bind as AopBind;
 use Ray\Aop\CompilerInterface;
 use Ray\Aop\MethodInterceptor;
+use Ray\Aop\WeavedInterface;
 
 final class Dependency implements DependencyInterface
 {
@@ -101,7 +102,8 @@ final class Dependency implements DependencyInterface
     {
         $class = (string) $this->newInstance;
         $isInterceptor = (new \ReflectionClass($class))->implementsInterface(MethodInterceptor::class);
-        if ($isInterceptor) {
+        $isWeaved = (new \ReflectionClass($class))->implementsInterface(WeavedInterface::class);
+        if ($isInterceptor || $isWeaved) {
             return;
         }
         $bind = new AopBind;
