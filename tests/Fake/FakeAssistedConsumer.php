@@ -9,7 +9,7 @@ class FakeAssistedConsumer
     /**
      * @Assisted({"robot"})
      */
-    public function assistOne($a, $b, FakeRobotInterface $robot)
+    public function assistOne($a, $b, FakeRobotInterface $robot = null)
     {
         return $robot;
     }
@@ -18,7 +18,7 @@ class FakeAssistedConsumer
      * @Assisted({"var1"})
      * @Named("var1=one")
      */
-    public function assistWithName($a, $var1)
+    public function assistWithName($a, $var1 = null)
     {
         return $var1;
     }
@@ -27,7 +27,7 @@ class FakeAssistedConsumer
      * @Assisted({"var2", "robot"})
      * @Named("var2=one")
      */
-    public function assistAny($var2, FakeRobotInterface $robot)
+    public function assistAny($var2 = null, FakeRobotInterface $robot = null)
     {
         return [$var2, $robot];
     }

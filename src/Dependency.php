@@ -7,6 +7,7 @@ namespace Ray\Di;
 use Ray\Aop\Bind as AopBind;
 use Ray\Aop\CompilerInterface;
 use Ray\Aop\MethodInterceptor;
+use Ray\Aop\WeavedInterface;
 
 final class Dependency implements DependencyInterface
 {
@@ -100,8 +101,9 @@ final class Dependency implements DependencyInterface
     public function weaveAspects(CompilerInterface $compiler, array $pointcuts)
     {
         $class = (string) $this->newInstance;
-        $isInterceptor = (new NewReflectionClass)($class)->implementsInterface(MethodInterceptor::class);
-        if ($isInterceptor) {
+        $isInterceptor = (new \ReflectionClass($class))->implementsInterface(MethodInterceptor::class);
+        $isWeaved = (new \ReflectionClass($class))->implementsInterface(WeavedInterface::class);
+        if ($isInterceptor || $isWeaved) {
             return;
         }
         $bind = new AopBind;
