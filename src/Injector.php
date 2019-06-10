@@ -42,7 +42,7 @@ class Injector implements InjectorInterface
     {
         spl_autoload_register(
             function (string $class) {
-                $file = $this->classDir . DIRECTORY_SEPARATOR . $class . '.php';
+                $file = sprintf('%s/%s.php', $this->classDir, str_replace('\\', '_', $class));
                 if (file_exists($file)) {
                     include $file; //@codeCoverageIgnore
                 }
