@@ -6,7 +6,7 @@
  */
 namespace Ray\Di;
 
-class FakeUntargetModule extends AbstractModule
+class FakeUntargetToIntanceModule extends AbstractModule
 {
     protected function configure()
     {
