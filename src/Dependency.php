@@ -91,6 +91,27 @@ final class Dependency implements DependencyInterface
     /**
      * {@inheritdoc}
      */
+    public function injectWithArgs(Container $container, array $params)
+    {
+        // singleton ?
+        if ($this->isSingleton === true && $this->instance) {
+            return $this->instance;
+        }
+
+        // create dependency injected instance
+        $this->instance = $this->newInstance->newInstanceArgs($container, $params);
+
+        // @PostConstruct
+        if ($this->postConstruct) {
+            $this->instance->{$this->postConstruct}();
+        }
+
+        return $this->instance;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setScope($scope)
     {
         if ($scope === Scope::SINGLETON) {

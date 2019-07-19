@@ -72,6 +72,27 @@ final class NewInstance
     }
 
     /**
+     * @throws \ReflectionException
+     *
+     * @return object
+     */
+    public function newInstanceArgs(Container $container, array $args)
+    {
+        // constructor injection
+        $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($args) : new $this->class;
+
+        // setter injection
+        ($this->setterMethods)($instance, $container);
+
+        // bind dependency injected interceptors
+        if ($this->bind instanceof AspectBind) {
+            $instance->bindings = $this->bind->inject($container);
+        }
+
+        return $instance;
+    }
+
+    /**
      * @param string $class
      */
     public function weaveAspects($class, AopBind $bind)

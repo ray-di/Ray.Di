@@ -13,7 +13,7 @@ use Ray\Di\Exception\Untargeted;
 final class Container
 {
     /**
-     * @var DependencyInterface[]
+     * @var Dependency[]
      */
     private $container = [];
 
@@ -50,6 +50,22 @@ final class Container
     public function getInstance(string $interface, string $name)
     {
         return $this->getDependency($interface . '-' . $name);
+    }
+
+    /**
+     * Return dependency injected instance
+     *
+     * @throws Unbound
+     */
+    public function getInstanceWithArgs(string $interface, string $name, array $params)
+    {
+        $index = $interface . '-' . $name;
+        if (! isset($this->container[$index])) {
+            throw $this->unbound($index);
+        }
+        $dependency = $this->container[$index];
+
+        return $dependency->injectWithArgs($this, $params);
     }
 
     /**
@@ -101,7 +117,7 @@ final class Container
     /**
      * Return container
      *
-     * @return DependencyInterface[]
+     * @return Dependency[]
      */
     public function getContainer() : array
     {
