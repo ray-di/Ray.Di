@@ -163,18 +163,6 @@ final class Bind
         $this->bound = $bound;
     }
 
-    /**
-     * @throws \ReflectionException
-     */
-    private function getClass(string $class) : \ReflectionClass
-    {
-        if (! class_exists($class)) {
-            throw new NotFound($class);
-        }
-
-        return new \ReflectionClass($class);
-    }
-
     private function isRegistered(string $interface) : bool
     {
         return isset($this->container->getContainer()[$interface . '-' . Name::ANY]);
