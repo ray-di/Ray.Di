@@ -11,7 +11,7 @@ final class NewReflectionClass
     public function __invoke(string $class) : \ReflectionClass
     {
         if (! class_exists($class)) {
-            throw new NotFound($class);
+            throw new NotFound($class); // @codeCoverageIgnore
         }
 
         return new \ReflectionClass($class);

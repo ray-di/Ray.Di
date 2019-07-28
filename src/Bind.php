@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Ray\Di\Exception\NotFound;
-
 final class Bind
 {
     /**
@@ -161,18 +159,6 @@ final class Bind
     public function setBound(DependencyInterface $bound)
     {
         $this->bound = $bound;
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    private function getClass(string $class) : \ReflectionClass
-    {
-        if (! class_exists($class)) {
-            throw new NotFound($class);
-        }
-
-        return new \ReflectionClass($class);
     }
 
     private function isRegistered(string $interface) : bool
