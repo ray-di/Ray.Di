@@ -862,6 +862,18 @@ $injector = unserialize($cachedInjector);
 $lister = $injector->getInstance(ListerInterface::class);
 
 ```
+
+## Grapher
+
+In `Grapher`, constructor arguments are passed manually and subsequent injections are done automatically.
+It is useful to introduce Ray.Di into an existing system (where only root objects have an object generation mechanism). 
+
+```php
+// ...
+$grapher = new Grapher(new Module, __DIR__ . '/tmp');
+$instance = $grapher->newInstanceArgs(FooController::class, [$param1, $param2]);
+```
+
 ## Frameworks integration ##
 
  * [CakePHP3 PipingBag](https://github.com/lorenzo/piping-bag) by [@jose_zap](https://twitter.com/jose_zap)
