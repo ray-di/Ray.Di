@@ -66,18 +66,6 @@ class Injector implements InjectorInterface
         return $instance;
     }
 
-    public function getInstanceWithArgs(string $interface, string $name, array $params)
-    {
-        try {
-            $instance = $this->container->getInstanceWithArgs($interface, $name, $params);
-        } catch (Untargeted $e) {
-            $this->bind($interface);
-            $instance = $this->container->getInstanceWithArgs($interface, $name, $params);
-        }
-
-        return $instance;
-    }
-
     private function bind(string $class)
     {
         new Bind($this->container, $class);

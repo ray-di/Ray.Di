@@ -44,23 +44,13 @@ final class NewInstance
 
     /**
      * @throws \ReflectionException
-     *
-     * @return object
      */
     public function __invoke(Container $container)
     {
-        // constructor injection
         $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
 
-        // setter injection
-        ($this->setterMethods)($instance, $container);
+        return $this->postNewInstance($container, $instance);
 
-        // bind dependency injected interceptors
-        if ($this->bind instanceof AspectBind) {
-            $instance->bindings = $this->bind->inject($container);
-        }
-
-        return $instance;
     }
 
     /**
@@ -73,23 +63,12 @@ final class NewInstance
 
     /**
      * @throws \ReflectionException
-     *
-     * @return object
      */
-    public function newInstanceArgs(Container $container, array $args)
+    public function newInstanceArgs(Container $container, array $params)
     {
-        // constructor injection
-        $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($args) : new $this->class;
+        $instance = (new \ReflectionClass($this->class))->newInstanceArgs($params);
 
-        // setter injection
-        ($this->setterMethods)($instance, $container);
-
-        // bind dependency injected interceptors
-        if ($this->bind instanceof AspectBind) {
-            $instance->bindings = $this->bind->inject($container);
-        }
-
-        return $instance;
+        return $this->postNewInstance($container, $instance);
     }
 
     /**
@@ -100,4 +79,17 @@ final class NewInstance
         $this->class = $class;
         $this->bind = new AspectBind($bind);
     }
+
+    private function postNewInstance(Container $container, $instance)
+    {
+        // setter injection
+        ($this->setterMethods)( $instance, $container );
+
+        // bind dependency injected interceptors
+        if ($this->bind instanceof AspectBind) {
+            $instance->bindings = $this->bind->inject( $container );
+        }
+
+        return $instance;
+}
 }

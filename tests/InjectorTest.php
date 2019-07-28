@@ -308,12 +308,4 @@ class InjectorTest extends TestCase
         $this->assertInternalType('string', $types->string);
         $this->assertInternalType('int', $types->int);
     }
-
-    public function testGetInstanceWithArgs()
-    {
-        $injector = new Injector(new FakeUntargetModule);
-        $instance = $injector->getInstanceWithArgs(FakeUntargetChild::class, '', ['1']);
-        $this->assertInstanceOf(FakeUntargetChild::class, $instance);
-        $this->assertSame('1', $instance->val);
-    }
 }

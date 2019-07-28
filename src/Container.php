@@ -57,9 +57,9 @@ final class Container
      *
      * @throws Unbound
      */
-    public function getInstanceWithArgs(string $interface, string $name, array $params)
+    public function getInstanceWithArgs(string $interface, array $params)
     {
-        $index = $interface . '-' . $name;
+        $index = $interface . '-';
         if (! isset($this->container[$index])) {
             throw $this->unbound($index);
         }
