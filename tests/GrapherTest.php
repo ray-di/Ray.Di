@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
@@ -11,7 +13,6 @@ class GrapherTest extends TestCase
         $grapher = new Grapher(new FakeInstanceBindModule, __DIR__ . '/tmp');
         $this->assertInstanceOf(Grapher::class, $grapher);
     }
-
 
     public function testGetInstanceWithArgs()
     {
@@ -39,5 +40,4 @@ class GrapherTest extends TestCase
         $this->assertSame(4, $result);
         $this->assertSame('a', $instance->a);
     }
-
 }

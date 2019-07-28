@@ -20,7 +20,6 @@ final class Grapher
 
     /**
      * @param AbstractModule $module Binding module
-     * @param string         $tmpDir Writable directory for generated AOP classes
      */
     public function __construct(AbstractModule $module, string $classDir)
     {
@@ -53,8 +52,6 @@ final class Grapher
      *
      * @param string $class  class name
      * @param array  $params constuct paramteters
-     *
-     * @return mixed
      */
     public function newInstanceArgs(string $class, array $params)
     {

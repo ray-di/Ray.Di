@@ -50,7 +50,6 @@ final class NewInstance
         $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
 
         return $this->postNewInstance($container, $instance);
-
     }
 
     /**
@@ -83,13 +82,13 @@ final class NewInstance
     private function postNewInstance(Container $container, $instance)
     {
         // setter injection
-        ($this->setterMethods)( $instance, $container );
+        ($this->setterMethods)($instance, $container);
 
         // bind dependency injected interceptors
         if ($this->bind instanceof AspectBind) {
-            $instance->bindings = $this->bind->inject( $container );
+            $instance->bindings = $this->bind->inject($container);
         }
 
         return $instance;
-}
+    }
 }
