@@ -12,7 +12,7 @@ class DiCompilerTest extends TestCase
     public function testUntargetInject()
     {
         /* @var $fake FakeUntarget */
-        $module = new FakeUntargetModule;
+        $module = new FakeUntargetToIntanceModule;
         $compiler = new DiCompiler($module, $_ENV['TMP_DIR']);
         $compiler->compile();
         $fake = $compiler->getInstance(FakeUntarget::class);

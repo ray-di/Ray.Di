@@ -6,10 +6,11 @@
  */
 namespace Ray\Di;
 
-class FakeUntargetModule extends AbstractModule
+class FakeUntargetToIntanceModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind(FakeUntargetChild::class);
+        $instance = new FakeUntarget(new FakeUntargetChild(1));
+        $this->bind(FakeUntarget::class)->toInstance($instance);
     }
 }

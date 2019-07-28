@@ -44,23 +44,12 @@ final class NewInstance
 
     /**
      * @throws \ReflectionException
-     *
-     * @return object
      */
     public function __invoke(Container $container)
     {
-        // constructor injection
         $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
 
-        // setter injection
-        ($this->setterMethods)($instance, $container);
-
-        // bind dependency injected interceptors
-        if ($this->bind instanceof AspectBind) {
-            $instance->bindings = $this->bind->inject($container);
-        }
-
-        return $instance;
+        return $this->postNewInstance($container, $instance);
     }
 
     /**
@@ -72,11 +61,34 @@ final class NewInstance
     }
 
     /**
+     * @throws \ReflectionException
+     */
+    public function newInstanceArgs(Container $container, array $params)
+    {
+        $instance = (new \ReflectionClass($this->class))->newInstanceArgs($params);
+
+        return $this->postNewInstance($container, $instance);
+    }
+
+    /**
      * @param string $class
      */
     public function weaveAspects($class, AopBind $bind)
     {
         $this->class = $class;
         $this->bind = new AspectBind($bind);
+    }
+
+    private function postNewInstance(Container $container, $instance)
+    {
+        // setter injection
+        ($this->setterMethods)($instance, $container);
+
+        // bind dependency injected interceptors
+        if ($this->bind instanceof AspectBind) {
+            $instance->bindings = $this->bind->inject($container);
+        }
+
+        return $instance;
     }
 }
