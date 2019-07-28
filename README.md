@@ -880,6 +880,8 @@ $instance = $grapher->newInstanceArgs(FooController::class, [$param1, $param2]);
  * [Symfony QckRayDiBundle](https://github.com/qckanemoto/QckRayDiBundle) and [sample project](https://github.com/qckanemoto/symfony-raydi-sample) by [@qckanemoto](https://twitter.com/qckanemoto)
  * [Radar](https://github.com/ray-di/Ray.Adr)
  * [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday)
+ * [Yii 1](https://github.com/koriym/Ray.Dyii)
+
 
 ## Other Modules ##
 
