@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
@@ -153,5 +154,14 @@ class ContainerTest extends TestCase
         $this->assertSame('kuma', $instance->setterConstantWithoutVarName);
         $this->assertSame('default_construct', $instance->defaultByConstruct);
         $this->assertSame('default_setter', $instance->defaultBySetter);
+    }
+
+    public function testBadMethodCall()
+    {
+        $this->expectException(BadMethodCallException::class);
+        $container = new Container;
+        //FakeConstantInterface
+        (new Bind($container, FakeEngineInterface::class))->toInstance(new FakeEngine);
+        $container->getInstanceWithArgs(FakeEngineInterface::class, []);
     }
 }
