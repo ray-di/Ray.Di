@@ -7,7 +7,7 @@ namespace Ray\Di;
 use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Di\Qualifier;
 
-final class InjectionPoint implements InjectionPointInterface
+final class InjectionPoint implements InjectionPointInterface, \Serializable
 {
     /**
      * @var \ReflectionParameter
@@ -19,9 +19,28 @@ final class InjectionPoint implements InjectionPointInterface
      */
     private $reader;
 
+    /**
+     * @var string
+     */
+    private $pClass;
+
+    /**
+     * @var string
+     */
+    private $pFunction;
+
+    /**
+     * @var string
+     */
+    private $pName;
+
     public function __construct(\ReflectionParameter $parameter, Reader $reader)
     {
         $this->parameter = $parameter;
+        $this->pFunction = $parameter->getDeclaringFunction()->name;
+        $class = $parameter->getDeclaringClass();
+        $this->pClass = $class instanceof \ReflectionClass ? $class->name : '';
+        $this->pName = $parameter->name;
         $this->reader = $reader;
     }
 
@@ -30,7 +49,7 @@ final class InjectionPoint implements InjectionPointInterface
      */
     public function getParameter() : \ReflectionParameter
     {
-        return $this->parameter;
+        return $this->parameter ?? new \ReflectionParameter([$this->pClass, $this->pFunction], $this->pName);
     }
 
     /**
@@ -78,5 +97,15 @@ final class InjectionPoint implements InjectionPointInterface
         }
 
         return $qualifiers;
+    }
+
+    public function serialize() : string
+    {
+        return serialize([$this->reader, $this->pClass, $this->pFunction, $this->pName]);
+    }
+
+    public function unserialize($serialized)
+    {
+        [$this->reader, $this->pClass, $this->pFunction, $this->pName] = unserialize($serialized);
     }
 }
