@@ -13,7 +13,7 @@ use Ray\Di\Exception\Untargeted;
 final class Container
 {
     /**
-     * @var Dependency[]
+     * @var DependencyInterface[]
      */
     private $container = [];
 
@@ -64,6 +64,9 @@ final class Container
             throw $this->unbound($index);
         }
         $dependency = $this->container[$index];
+        if (! $dependency instanceof Dependency) {
+            throw new \BadMethodCallException($interface);
+        }
 
         return $dependency->injectWithArgs($this, $params);
     }
@@ -117,7 +120,7 @@ final class Container
     /**
      * Return container
      *
-     * @return Dependency[]
+     * @return DependencyInterface[]
      */
     public function getContainer() : array
     {
