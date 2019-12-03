@@ -129,10 +129,13 @@ final class Argument implements \Serializable
     private function getType(\ReflectionParameter $parameter) : string
     {
         $type = $parameter->getType();
-        if ($type instanceof \ReflectionType && \in_array((string) $type, ['bool', 'int', 'string', 'array', 'resource', 'callable'], true)) {
+        if (! $type instanceof \ReflectionType) {
+            return '';
+        }
+        if (\in_array((string) $type, ['bool', 'int', 'string', 'array', 'resource', 'callable'], true)) {
             return '';
         }
 
-        return (string) $type;
+        return $type->getName();
     }
 }
