@@ -132,7 +132,7 @@ final class Argument implements \Serializable
         if (! $type instanceof \ReflectionType) {
             return '';
         }
-        if (\in_array((string) $type, ['bool', 'int', 'string', 'array', 'resource', 'callable'], true)) {
+        if (\in_array($type->getName(), ['bool', 'int', 'string', 'array', 'resource', 'callable'], true)) {
             return '';
         }
 
