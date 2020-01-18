@@ -6,7 +6,7 @@ namespace Ray\Di;
 
 final class UntargetedBind
 {
-    public function __invoke(Container $container, \ReflectionMethod $method) : void 
+    public function __invoke(Container $container, \ReflectionMethod $method) : void
     {
         $parameters = $method->getParameters();
         foreach ($parameters as $parameter) {
