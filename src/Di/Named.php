@@ -15,5 +15,5 @@ final class Named
     /**
      * @var string
      */
-    public $value;
+    public $value = '';
 }
