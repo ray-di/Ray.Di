@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use phpDocumentor\Reflection\DocBlock\Tags\Covers;
 use Ray\Aop\AbstractMatcher;
 use Ray\Aop\Matcher;
 use Ray\Aop\PriorityPointcut;
@@ -43,7 +44,7 @@ abstract class AbstractModule
     /**
      * Install module
      */
-    public function install(self $module)
+    public function install(self $module) : void
     {
         $this->getContainer()->merge($module->getContainer());
     }
@@ -51,7 +52,7 @@ abstract class AbstractModule
     /**
      * Override module
      */
-    public function override(self $module)
+    public function override(self $module) : void
     {
         $module->getContainer()->merge($this->container);
         $this->container = $module->getContainer();
@@ -74,7 +75,7 @@ abstract class AbstractModule
      *
      * @param string[] $interceptors
      */
-    public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
+    public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
     {
         $pointcut = new Pointcut($classMatcher, $methodMatcher, $interceptors);
         $this->container->addPointcut($pointcut);
@@ -86,7 +87,7 @@ abstract class AbstractModule
     /**
      * Bind interceptor early
      */
-    public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
+    public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
     {
         $pointcut = new PriorityPointcut($classMatcher, $methodMatcher, $interceptors);
         $this->container->addPointcut($pointcut);
@@ -103,7 +104,7 @@ abstract class AbstractModule
      * @param string $sourceName      Original binding name
      * @param string $targetInterface Original interface
      */
-    public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = '')
+    public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = '') : void
     {
         $targetInterface = $targetInterface ?: $interface;
         if ($this->lastModule instanceof self) {
@@ -127,7 +128,7 @@ abstract class AbstractModule
     /**
      * Activate bindings
      */
-    private function activate()
+    private function activate() : void
     {
         $this->container = new Container;
         $this->matcher = new Matcher;
