@@ -25,7 +25,7 @@ final class Name
      *
      * @var string[]
      */
-    private $names;
+    private $names = [];
 
     public function __construct(string $name = null)
     {
