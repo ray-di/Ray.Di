@@ -55,7 +55,7 @@ final class Name
         return self::ANY;
     }
 
-    private function setName(string $name)
+    private function setName(string $name) : void
     {
         // annotation
         if (class_exists($name, false)) {
