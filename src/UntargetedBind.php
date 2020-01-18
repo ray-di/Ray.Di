@@ -6,7 +6,7 @@ namespace Ray\Di;
 
 final class UntargetedBind
 {
-    public function __invoke(Container $container, \ReflectionMethod $method)
+    public function __invoke(Container $container, \ReflectionMethod $method) : void 
     {
         $parameters = $method->getParameters();
         foreach ($parameters as $parameter) {
@@ -14,7 +14,7 @@ final class UntargetedBind
         }
     }
 
-    private function addConcreteClass(Container $container, \ReflectionParameter $parameter)
+    private function addConcreteClass(Container $container, \ReflectionParameter $parameter) : void
     {
         $class = $this->getTypeHint($parameter);
         if (class_exists($class)) {
