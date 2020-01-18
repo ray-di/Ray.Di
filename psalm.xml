@@ -1,16 +1,15 @@
 <?xml version="1.0"?>
 <psalm
     totallyTyped="false"
+    resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config file:///Users/akihito/.composer/vendor/vimeo/psalm/config.xsd"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
     <projectFiles>
         <directory name="src" />
         <ignoreFiles>
-            <directory name="src/Di" />
-            <file name="src/SpyCompiler.php"></file>
-            <file name="src/NewInstance.php"></file>
+            <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
 
@@ -22,10 +21,17 @@
         <DeprecatedMethod errorLevel="info" />
         <DeprecatedProperty errorLevel="info" />
         <DeprecatedClass errorLevel="info" />
+        <DeprecatedConstant errorLevel="info" />
+        <DeprecatedFunction errorLevel="info" />
         <DeprecatedInterface errorLevel="info" />
+        <DeprecatedTrait errorLevel="info" />
+
+        <InternalMethod errorLevel="info" />
+        <InternalProperty errorLevel="info" />
+        <InternalClass errorLevel="info" />
 
         <MissingClosureReturnType errorLevel="info" />
-        <MissingReturnType errorLevel="suppress" />
+        <MissingReturnType errorLevel="info" />
         <MissingPropertyType errorLevel="info" />
         <InvalidDocblock errorLevel="info" />
         <MisplacedRequiredParam errorLevel="info" />
@@ -43,6 +49,7 @@
         <UnresolvableInclude errorLevel="info" />
 
         <RawObjectIteration errorLevel="info" />
-        <TypeDoesNotContainType errorLevel="info" />
+
+        <InvalidStringClass errorLevel="info" />
     </issueHandlers>
 </psalm>

@@ -10,7 +10,9 @@ use Ray\Di\Di\Qualifier;
 final class InjectionPoint implements InjectionPointInterface, \Serializable
 {
     /**
-     * @var \ReflectionParameter
+     * @var ?\ReflectionParameter
+     *
+     * this may lost on wakeUp
      */
     private $parameter;
 
@@ -57,6 +59,7 @@ final class InjectionPoint implements InjectionPointInterface, \Serializable
      */
     public function getMethod() : \ReflectionMethod
     {
+        $this->parameter = $this->getParameter();
         $class = $this->parameter->getDeclaringClass();
         if (! $class instanceof \ReflectionClass) {
             throw new \LogicException($this->parameter->getName());
@@ -71,6 +74,7 @@ final class InjectionPoint implements InjectionPointInterface, \Serializable
      */
     public function getClass() : \ReflectionClass
     {
+        $this->parameter = $this->getParameter();
         $class = $this->parameter->getDeclaringClass();
         if ($class instanceof \ReflectionClass) {
             return $class;

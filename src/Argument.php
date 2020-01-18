@@ -52,10 +52,7 @@ final class Argument implements \Serializable
         );
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString() : string
     {
         return $this->index;
     }
@@ -73,6 +70,9 @@ final class Argument implements \Serializable
         return $this->isDefaultAvailable;
     }
 
+    /**
+     * @return null|mixed
+     */
     public function getDefaultValue()
     {
         return $this->default;
@@ -102,7 +102,7 @@ final class Argument implements \Serializable
         ]);
     }
 
-    public function unserialize($serialized)
+    public function unserialize($serialized) : void
     {
         list($this->index,
             $this->isDefaultAvailable,
@@ -113,7 +113,7 @@ final class Argument implements \Serializable
         $this->reflection = new \ReflectionParameter([$ref[0], $ref[1]], $ref[2]);
     }
 
-    private function setDefaultValue(\ReflectionParameter $parameter)
+    private function setDefaultValue(\ReflectionParameter $parameter) : void
     {
         if (! $this->isDefaultAvailable) {
             return;

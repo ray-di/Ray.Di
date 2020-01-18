@@ -57,7 +57,7 @@ final class SetterMethod
         \call_user_func_array($callable, $parameters);
     }
 
-    public function setOptional()
+    public function setOptional() : void
     {
         $this->isOptional = true;
     }

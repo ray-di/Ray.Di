@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 final class Bind
 {
     /**
@@ -104,8 +105,9 @@ final class Bind
             $name = $this->getStringName($name);
         }
         $this->untarget = null;
-        $postConstructRef = $postConstruct ? (new NewReflectionMethod)($class, $postConstruct) : null;
-        $this->bound = (new DependencyFactory)->newToConstructor((new NewReflectionClass)($class), $name, $injectionPoints, $postConstructRef);
+        $postConstructRef = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
+        assert(class_exists($class));
+        $this->bound = (new DependencyFactory)->newToConstructor(new \ReflectionClass($class), $name, $injectionPoints, $postConstructRef);
         $this->container->add($this);
 
         return $this;
@@ -126,6 +128,8 @@ final class Bind
 
     /**
      * Bind to instance
+     *
+     * @param mixed $instance
      */
     public function toInstance($instance) : self
     {
@@ -156,7 +160,7 @@ final class Bind
         return $this->bound;
     }
 
-    public function setBound(DependencyInterface $bound)
+    public function setBound(DependencyInterface $bound) : void
     {
         $this->bound = $bound;
     }
@@ -171,14 +175,21 @@ final class Bind
      *
      * input: [['varA' => 'nameA'], ['varB' => 'nameB']]
      * output: "varA=nameA,varB=nameB"
+     *
+     * @psalm-suppress MissingClosureParamType
      */
     private function getStringName(array $name) : string
     {
-        $names = array_reduce(array_keys($name), function (array $carry, string $key) use ($name) : array {
-            $carry[] = $key . '=' . $name[$key];
+        $names = array_reduce(
+            array_keys($name),
+            function (array $carry, $key) use ($name) : array {
+                /* @param array-key $key */
+                $carry[] = $key . '=' . $name[$key];
 
-            return $carry;
-        }, []);
+                return $carry;
+            },
+            []
+        );
 
         return implode(',', $names);
     }

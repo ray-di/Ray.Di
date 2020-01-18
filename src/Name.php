@@ -16,7 +16,7 @@ final class Name
     /**
      * @var string
      */
-    private $name;
+    private $name = '';
 
     /**
      * Named database
@@ -25,7 +25,7 @@ final class Name
      *
      * @var string[]
      */
-    private $names;
+    private $names = [];
 
     public function __construct(string $name = null)
     {
@@ -55,7 +55,7 @@ final class Name
         return self::ANY;
     }
 
-    private function setName(string $name)
+    private function setName(string $name) : void
     {
         // annotation
         if (class_exists($name, false)) {
@@ -75,7 +75,7 @@ final class Name
         $this->parseName($name);
     }
 
-    private function parseName(string $name)
+    private function parseName(string $name) : void
     {
         $keyValues = explode(',', $name);
         foreach ($keyValues as $keyValue) {

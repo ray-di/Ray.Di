@@ -34,7 +34,7 @@ class Unbound extends \LogicException implements ExceptionInterface
         return $this->getMainMessage($lastE) . implode('', $msg);
     }
 
-    private function getMainMessage(self $e)
+    private function getMainMessage(self $e) : string
     {
         return sprintf(
             "exception '%s' with message '%s'\n",
