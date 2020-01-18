@@ -42,7 +42,7 @@ final class AssistedInterceptor implements MethodInterceptor
         /* @var \Ray\Di\Di\Assisted $assisted */
         $parameters = $method->getParameters();
         $arguments = $invocation->getArguments()->getArrayCopy();
-        if ($assisted instanceof Assisted && $method instanceof ReflectionMethod) {
+        if ($assisted instanceof Assisted) {
             $this->methodInvocationProvider->set($invocation);
             $arguments = $this->injectAssistedParameters($method, $assisted, $parameters, $arguments);
         }
