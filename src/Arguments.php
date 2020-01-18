@@ -40,6 +40,7 @@ final class Arguments
     }
 
     /**
+     * @return mixed
      * @throws Unbound
      */
     private function getParameter(Container $container, Argument $argument)
