@@ -24,7 +24,7 @@ final class NewInstance
     private $arguments;
 
     /**
-     * @var AspectBind
+     * @var ?AspectBind
      */
     private $bind;
 
