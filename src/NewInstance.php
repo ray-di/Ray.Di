@@ -65,7 +65,7 @@ final class NewInstance
     /**
      * @throws \ReflectionException
      */
-    public function newInstanceArgs(Container $container, array $params)
+    public function newInstanceArgs(Container $container, array $params) : object
     {
         assert(class_exists($this->class));
         $instance = (new \ReflectionClass($this->class))->newInstanceArgs($params);
