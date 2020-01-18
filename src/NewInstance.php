@@ -73,10 +73,7 @@ final class NewInstance
         return $this->postNewInstance($container, $instance);
     }
 
-    /**
-     * @param string $class
-     */
-    public function weaveAspects($class, AopBind $bind)
+    public function weaveAspects(string $class, AopBind $bind) : void
     {
         $this->class = $class;
         $this->bind = new AspectBind($bind);

@@ -34,7 +34,7 @@ final class Dependency implements DependencyInterface
     /**
      * @var string
      */
-    private $index;
+    private $index = '';
 
     /**
      * @param \ReflectionMethod $postConstruct
