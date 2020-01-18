@@ -82,13 +82,14 @@ final class NewInstance
         $this->bind = new AspectBind($bind);
     }
 
-    private function postNewInstance(Container $container, $instance)
+    private function postNewInstance(Container $container, object $instance) : object
     {
         // setter injection
         ($this->setterMethods)($instance, $container);
 
         // bind dependency injected interceptors
         if ($this->bind instanceof AspectBind) {
+            assert(isset($instance->bindings));
             $instance->bindings = $this->bind->inject($container);
         }
 
