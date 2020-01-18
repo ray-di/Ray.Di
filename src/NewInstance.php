@@ -35,6 +35,7 @@ final class NewInstance
     ) {
         $constructorName = $constructorName ?: new Name(Name::ANY);
         $this->class = $class->name;
+        assert(class_exists($this->class));
         $constructor = $class->getConstructor();
         if ($constructor) {
             $this->arguments = new Arguments($constructor, $constructorName);
@@ -47,6 +48,7 @@ final class NewInstance
      */
     public function __invoke(Container $container)
     {
+        assert(class_exists($this->class));
         $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
 
         return $this->postNewInstance($container, $instance);
@@ -65,6 +67,7 @@ final class NewInstance
      */
     public function newInstanceArgs(Container $container, array $params)
     {
+        assert(class_exists($this->class));
         $instance = (new \ReflectionClass($this->class))->newInstanceArgs($params);
 
         return $this->postNewInstance($container, $instance);
