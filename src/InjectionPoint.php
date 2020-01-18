@@ -60,7 +60,7 @@ final class InjectionPoint implements InjectionPointInterface, \Serializable
     public function getMethod() : \ReflectionMethod
     {
         $this->parameter = $this->getParameter();
-        $class =  $this->parameter->getDeclaringClass();
+        $class = $this->parameter->getDeclaringClass();
         if (! $class instanceof \ReflectionClass) {
             throw new \LogicException($this->parameter->getName());
         }
