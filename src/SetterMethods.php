@@ -17,12 +17,10 @@ final class SetterMethods
     }
 
     /**
-     * @param object $instance
-     *
      * @throws Exception\Unbound
      * @throws \Exception
      */
-    public function __invoke($instance, Container $container)
+    public function __invoke(object $instance, Container $container)
     {
         foreach ($this->setterMethods as $setterMethod) {
             /* @var SetterMethod $setterMethod */
