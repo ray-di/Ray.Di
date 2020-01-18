@@ -73,6 +73,9 @@ final class Argument implements \Serializable
         return $this->isDefaultAvailable;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getDefaultValue()
     {
         return $this->default;
