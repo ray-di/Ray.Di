@@ -61,7 +61,7 @@ final class Dependency implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function register(array &$container, Bind $bind)
+    public function register(array &$container, Bind $bind) : void
     {
         $this->index = $index = (string) $bind;
         $container[$index] = $bind->getBound();
@@ -112,14 +112,14 @@ final class Dependency implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function setScope($scope)
+    public function setScope($scope) : void
     {
         if ($scope === Scope::SINGLETON) {
             $this->isSingleton = true;
         }
     }
 
-    public function weaveAspects(CompilerInterface $compiler, array $pointcuts)
+    public function weaveAspects(CompilerInterface $compiler, array $pointcuts) : void
     {
         $class = (string) $this->newInstance;
         assert(class_exists($class));

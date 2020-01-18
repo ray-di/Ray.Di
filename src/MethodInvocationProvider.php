@@ -14,11 +14,14 @@ class MethodInvocationProvider implements ProviderInterface
      */
     private $invocation;
 
-    public function set(MethodInvocation $invocation)
+    public function set(MethodInvocation $invocation) : void
     {
         $this->invocation = $invocation;
     }
 
+    /**
+     * @psalm-suppress MissingReturnType
+     */
     public function get()
     {
         if ($this->invocation === null) {

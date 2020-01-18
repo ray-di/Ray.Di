@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 final class Bind
 {
     /**
@@ -157,7 +158,7 @@ final class Bind
         return $this->bound;
     }
 
-    public function setBound(DependencyInterface $bound)
+    public function setBound(DependencyInterface $bound) : void
     {
         $this->bound = $bound;
     }

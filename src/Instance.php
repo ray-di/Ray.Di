@@ -36,7 +36,7 @@ final class Instance implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function register(array &$container, Bind $bind)
+    public function register(array &$container, Bind $bind) : void
     {
         $index = (string) $bind;
         $container[$index] = $bind->getBound();
@@ -57,7 +57,7 @@ final class Instance implements DependencyInterface
      *
      * @codeCoverageIgnore
      */
-    public function setScope($scope)
+    public function setScope($scope) : void
     {
     }
 }

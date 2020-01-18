@@ -6,7 +6,7 @@ namespace Ray\Di;
 
 class NullModule extends AbstractModule
 {
-    protected function configure()
+    protected function configure() : void
     {
     }
 }

@@ -50,7 +50,7 @@ final class DependencyProvider implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function register(array &$container, Bind $bind)
+    public function register(array &$container, Bind $bind) : void
     {
         $container[(string) $bind] = $bind->getBound();
     }
@@ -75,14 +75,14 @@ final class DependencyProvider implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function setScope($scope)
+    public function setScope($scope): void
     {
         if ($scope === Scope::SINGLETON) {
             $this->isSingleton = true;
         }
     }
 
-    public function setContext(SetContextInterface $provider)
+    public function setContext(SetContextInterface $provider): void
     {
         $provider->setContext($this->context);
     }
