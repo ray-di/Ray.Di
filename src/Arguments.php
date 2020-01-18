@@ -40,7 +40,6 @@ final class Arguments
     }
 
     /**
-     * @return mixed
      * @throws Unbound
      */
     private function getParameter(Container $container, Argument $argument)
@@ -49,25 +48,12 @@ final class Arguments
         try {
             return $container->getDependency((string) $argument);
         } catch (Unbound $e) {
-            list($hasDefaultValue, $defaultValue) = $this->getDefaultValue($argument);
-            if ($hasDefaultValue) {
-                return $defaultValue;
+            if ($argument->isDefaultAvailable()) {
+                return $argument->getDefaultValue();
             }
 
             throw new Unbound($argument->getMeta(), 0, $e);
         }
-    }
-
-    /**
-     * @return array [$hasDefaultValue, $defaultValue]
-     */
-    private function getDefaultValue(Argument $argument) : array
-    {
-        if ($argument->isDefaultAvailable()) {
-            return [true, $argument->getDefaultValue()];
-        }
-
-        return [false, null];
     }
 
     private function bindInjectionPoint(Container $container, Argument $argument)
