@@ -59,6 +59,8 @@ abstract class AbstractModule
 
     /**
      * Return container
+     *
+     * @psalm-suppress DocblockTypeContradiction
      */
     public function getContainer() : Container
     {

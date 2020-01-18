@@ -175,6 +175,8 @@ final class Bind
      *
      * input: [['varA' => 'nameA'], ['varB' => 'nameB']]
      * output: "varA=nameA,varB=nameB"
+     *
+     * @psalm-suppress MissingClosureParamType
      */
     private function getStringName(array $name) : string
     {
