@@ -5,3 +5,4 @@ vendor
 composer.lock
 tmp/
 .php_cs.cache
+.phpunit.result.cache
