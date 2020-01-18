@@ -31,7 +31,7 @@ final class SpyCompiler implements CompilerInterface
         return $class . $this->getInterceptors($bind);
     }
 
-    private function hasNoBinding($class, BindInterface $bind) : bool
+    private function hasNoBinding(string $class, BindInterface $bind) : bool
     {
         $hasMethod = $this->hasBoundMethod($class, $bind);
 
