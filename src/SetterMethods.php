@@ -31,7 +31,7 @@ final class SetterMethods
     /**
      * @param SetterMethod $setterMethod
      */
-    public function add(SetterMethod $setterMethod = null)
+    public function add(SetterMethod $setterMethod = null) : void
     {
         if ($setterMethod) {
             $this->setterMethods[] = $setterMethod;
