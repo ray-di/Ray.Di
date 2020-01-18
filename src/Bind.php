@@ -126,8 +126,6 @@ final class Bind
 
     /**
      * Bind to instance
-     *
-     * @param mixed $instance
      */
     public function toInstance($instance) : self
     {
@@ -176,11 +174,16 @@ final class Bind
      */
     private function getStringName(array $name) : string
     {
-        $names = array_reduce(array_keys($name), /** @param array-key $key*/ function (array $carry, string $key) use ($name) : array {
-            $carry[] = $key . '=' . $name[$key];
+        $names = array_reduce(
+            array_keys($name),
+            function (array $carry, $key) use ($name) : array {
+                /* @param array-key $key */
+                $carry[] = $key . '=' . $name[$key];
 
-            return $carry;
-        }, []);
+                return $carry;
+            },
+            []
+        );
 
         return implode(',', $names);
     }
