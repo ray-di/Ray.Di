@@ -70,7 +70,7 @@ class Injector implements InjectorInterface
         return $instance;
     }
 
-    private function bind(string $class) : void 
+    private function bind(string $class) : void
     {
         new Bind($this->container, $class);
         /* @var $bound Dependency */
