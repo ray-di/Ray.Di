@@ -90,6 +90,8 @@ final class Dependency implements DependencyInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return mixed
      */
     public function injectWithArgs(Container $container, array $params)
     {

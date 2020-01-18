@@ -11,6 +11,8 @@ interface ProviderInterface
 {
     /**
      * Get an instance
+     *
+     * @return mixed
      */
     public function get();
 }

@@ -75,14 +75,14 @@ final class DependencyProvider implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function setScope($scope): void
+    public function setScope($scope) : void
     {
         if ($scope === Scope::SINGLETON) {
             $this->isSingleton = true;
         }
     }
 
-    public function setContext(SetContextInterface $provider): void
+    public function setContext(SetContextInterface $provider) : void
     {
         $provider->setContext($this->context);
     }

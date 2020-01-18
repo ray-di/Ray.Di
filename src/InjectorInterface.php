@@ -11,6 +11,8 @@ interface InjectorInterface
      *
      * @param string $interface
      * @param string $name
+     *
+     * @return mixed
      */
     public function getInstance($interface, $name = Name::ANY);
 }

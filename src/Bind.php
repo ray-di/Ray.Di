@@ -128,6 +128,8 @@ final class Bind
 
     /**
      * Bind to instance
+     *
+     * @param mixed $instance
      */
     public function toInstance($instance) : self
     {

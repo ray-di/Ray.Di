@@ -46,6 +46,8 @@ final class Container
 
     /**
      * Return instance by interface + name(interface namespace)
+     *
+     * @return mixed
      */
     public function getInstance(string $interface, string $name)
     {
@@ -56,6 +58,8 @@ final class Container
      * Return dependency injected instance
      *
      * @throws Unbound
+     *
+     * @return mixed
      */
     public function getInstanceWithArgs(string $interface, array $params)
     {
@@ -75,6 +79,8 @@ final class Container
      * Return dependency injected instance
      *
      * @throws Unbound
+     *
+     * @return mixed
      */
     public function getDependency(string $index)
     {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use phpDocumentor\Reflection\DocBlock\Tags\Covers;
 use Ray\Aop\AbstractMatcher;
 use Ray\Aop\Matcher;
 use Ray\Aop\PriorityPointcut;
@@ -114,6 +113,8 @@ abstract class AbstractModule
 
     /**
      * Configure binding
+     *
+     * @psalm-suppress MissingReturnType
      */
     abstract protected function configure();
 
