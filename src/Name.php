@@ -75,7 +75,7 @@ final class Name
         $this->parseName($name);
     }
 
-    private function parseName(string $name)
+    private function parseName(string $name) : void
     {
         $keyValues = explode(',', $name);
         foreach ($keyValues as $keyValue) {
