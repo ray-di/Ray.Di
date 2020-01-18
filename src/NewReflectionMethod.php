@@ -11,7 +11,7 @@ final class NewReflectionMethod
     /**
      * @throws \ReflectionException
      */
-    public function __invoke($object, string $method) : \ReflectionMethod
+    public function __invoke(object $object, string $method) : \ReflectionMethod
     {
         if (! method_exists($object, $method)) {
             throw new NotFound(sprintf('%s::%s', get_class($object), $method));
