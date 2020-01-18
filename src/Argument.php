@@ -113,7 +113,7 @@ final class Argument implements \Serializable
         $this->reflection = new \ReflectionParameter([$ref[0], $ref[1]], $ref[2]);
     }
 
-    private function setDefaultValue(\ReflectionParameter $parameter)
+    private function setDefaultValue(\ReflectionParameter $parameter) : void
     {
         if (! $this->isDefaultAvailable) {
             return;
