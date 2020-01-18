@@ -52,10 +52,7 @@ final class Argument implements \Serializable
         );
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString() : string
     {
         return $this->index;
     }
@@ -74,7 +71,7 @@ final class Argument implements \Serializable
     }
 
     /**
-     * @return mixed|null
+     * @return null|mixed
      */
     public function getDefaultValue()
     {
@@ -105,7 +102,7 @@ final class Argument implements \Serializable
         ]);
     }
 
-    public function unserialize($serialized)
+    public function unserialize($serialized) : void
     {
         list($this->index,
             $this->isDefaultAvailable,
