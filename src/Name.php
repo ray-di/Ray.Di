@@ -16,7 +16,7 @@ final class Name
     /**
      * @var string
      */
-    private $name;
+    private $name = '';
 
     /**
      * Named database
