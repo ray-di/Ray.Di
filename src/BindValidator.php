@@ -10,7 +10,7 @@ use Ray\Di\Exception\NotFound;
 
 final class BindValidator
 {
-    public function constructor(string $interface)
+    public function constructor(string $interface) : void
     {
         if ($interface && ! interface_exists($interface) && ! class_exists($interface)) {
             throw new NotFound($interface);
