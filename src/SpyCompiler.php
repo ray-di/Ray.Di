@@ -14,6 +14,7 @@ final class SpyCompiler implements CompilerInterface
      */
     public function newInstance(string $class, array $args, BindInterface $bind)
     {
+        unset($class, $args, $bind);
         // never called
         return new \stdClass;
     }
