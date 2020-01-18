@@ -17,6 +17,8 @@ interface DependencyInterface
      * Register dependency to container
      *
      * @param DependencyInterface[] $container
+     *
+     * @return void
      */
     public function register(array &$container, Bind $bind);
 
@@ -24,6 +26,8 @@ interface DependencyInterface
      * Set scope
      *
      * @param string $scope
+     *
+     * @return void
      */
     public function setScope($scope);
 }
