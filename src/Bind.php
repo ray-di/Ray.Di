@@ -104,8 +104,9 @@ final class Bind
             $name = $this->getStringName($name);
         }
         $this->untarget = null;
-        $postConstructRef = $postConstruct ? (new NewReflectionMethod)($class, $postConstruct) : null;
-        $this->bound = (new DependencyFactory)->newToConstructor((new NewReflectionClass)($class), $name, $injectionPoints, $postConstructRef);
+        $postConstructRef = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
+        assert(class_exists($class));
+        $this->bound = (new DependencyFactory)->newToConstructor(new \ReflectionClass($class), $name, $injectionPoints, $postConstructRef);
         $this->container->add($this);
 
         return $this;

@@ -18,7 +18,8 @@ final class Untarget
 
     public function __construct(string $class)
     {
-        $this->class = (new NewReflectionClass)($class);
+        assert(class_exists($class));
+        $this->class = new \ReflectionClass($class);
     }
 
     /**
