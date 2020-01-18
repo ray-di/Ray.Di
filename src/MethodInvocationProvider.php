@@ -14,7 +14,7 @@ class MethodInvocationProvider implements ProviderInterface
      */
     private $invocation;
 
-    public function set(MethodInvocation $invocation) : void
+    public function set(MethodInvocation $invocation)
     {
         $this->invocation = $invocation;
     }
