@@ -40,10 +40,7 @@ final class AnnotatedClassMethods
         return new Name(Name::ANY);
     }
 
-    /**
-     * @return null|SetterMethod
-     */
-    public function getSetterMethod(\ReflectionMethod $method)
+    public function getSetterMethod(\ReflectionMethod $method) : ?SetterMethod
     {
         $inject = $this->reader->getMethodAnnotation($method, InjectInterface::class);
         if (! $inject instanceof InjectInterface) {
