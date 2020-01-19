@@ -7,7 +7,6 @@ namespace Ray\Di;
 use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Di\InjectInterface;
 use Ray\Di\Di\Named;
-use Ray\Di\Di\Qualifier;
 
 final class AnnotatedClassMethods
 {
@@ -16,9 +15,15 @@ final class AnnotatedClassMethods
      */
     private $reader;
 
+    /**
+     * @var NameKeyVarString
+     */
+    private $nameKeyVarString;
+
     public function __construct(Reader $reader)
     {
         $this->reader = $reader;
+        $this->nameKeyVarString = new NameKeyVarString($reader);
     }
 
     public function getConstructorName(\ReflectionClass $class) : Name
@@ -32,7 +37,7 @@ final class AnnotatedClassMethods
             /* @var $named Named */
             return new Name($named->value);
         }
-        $name = $this->getNamedKeyVarString($constructor);
+        $name = ($this->nameKeyVarString)($constructor);
         if ($name !== null) {
             return new Name($name);
         }
@@ -40,53 +45,21 @@ final class AnnotatedClassMethods
         return new Name(Name::ANY);
     }
 
-    public function getSetterMethod(\ReflectionMethod $method) : ?SetterMethod
+    /**
+     * @return null|SetterMethod
+     */
+    public function getSetterMethod(\ReflectionMethod $method)
     {
         $inject = $this->reader->getMethodAnnotation($method, InjectInterface::class);
         if (! $inject instanceof InjectInterface) {
             return null;
         }
-        $nameValue = $this->getNamedKeyVarString($method);
+        $nameValue = ($this->nameKeyVarString)($method);
         $setterMethod = new SetterMethod($method, new Name($nameValue));
         if ($inject->isOptional()) {
             $setterMethod->setOptional();
         }
 
         return $setterMethod;
-    }
-
-    /**
-     * @return null|string
-     */
-    private function getNamedKeyVarString(\ReflectionMethod $method)
-    {
-        $keyVal = [];
-        $named = $this->reader->getMethodAnnotation($method, Named::class);
-        if ($named instanceof Named) {
-            $keyVal[] = $named->value;
-        }
-        $qualifierNamed = $this->getQualifierKeyVarString($method);
-        if ($qualifierNamed) {
-            $keyVal[] = $qualifierNamed;
-        }
-        if ($keyVal !== []) {
-            return implode(',', $keyVal); // var1=qualifier1,va2=qualifier2
-        }
-    }
-
-    private function getQualifierKeyVarString(\ReflectionMethod $method) : string
-    {
-        $annotations = $this->reader->getMethodAnnotations($method);
-        $names = [];
-        foreach ($annotations as $annotation) {
-            /* @var $bindAnnotation object|null */
-            $qualifier = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), Qualifier::class);
-            if ($qualifier instanceof Qualifier) {
-                $value = $annotation->value ?? Name::ANY;
-                $names[] = sprintf('%s=%s', $value, \get_class($annotation));
-            }
-        }
-
-        return implode(',', $names);
     }
 }
