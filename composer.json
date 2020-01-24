@@ -20,7 +20,7 @@
         "ray/compiler": "1.x-dev|^1.3.6"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.5"
+        "phpunit/phpunit": "^8.5"
     },
     "autoload": {
         "psr-4": {
