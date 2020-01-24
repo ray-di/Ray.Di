@@ -14,6 +14,9 @@ final class SpyCompiler implements CompilerInterface
      */
     public function newInstance(string $class, array $args, BindInterface $bind)
     {
+        unset($class, $args, $bind);
+        // never called
+        return new \stdClass;
     }
 
     /**
@@ -28,7 +31,7 @@ final class SpyCompiler implements CompilerInterface
         return $class . $this->getInterceptors($bind);
     }
 
-    private function hasNoBinding($class, BindInterface $bind) : bool
+    private function hasNoBinding(string $class, BindInterface $bind) : bool
     {
         $hasMethod = $this->hasBoundMethod($class, $bind);
 
@@ -40,6 +43,7 @@ final class SpyCompiler implements CompilerInterface
         $bindingMethods = array_keys($bind->getBindings());
         $hasMethod = false;
         foreach ($bindingMethods as $bindingMethod) {
+            assert(class_exists($class));
             if (method_exists($class, $bindingMethod)) {
                 $hasMethod = true;
             }

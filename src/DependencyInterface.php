@@ -8,6 +8,8 @@ interface DependencyInterface
 {
     /**
      * Inject dependencies into dependent objects
+     *
+     * @return mixed
      */
     public function inject(Container $container);
 

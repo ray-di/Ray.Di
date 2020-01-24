@@ -47,10 +47,8 @@ final class AnnotatedClass
 
     /**
      * Return @-PostConstruct method reflection
-     *
-     * @return null|\ReflectionMethod
      */
-    public function getPostConstruct(\ReflectionClass $class)
+    public function getPostConstruct(\ReflectionClass $class) : ?\ReflectionMethod
     {
         $methods = $class->getMethods();
         foreach ($methods as $method) {
@@ -60,5 +58,7 @@ final class AnnotatedClass
                 return $method;
             }
         }
+
+        return null;
     }
 }

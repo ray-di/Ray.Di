@@ -34,7 +34,7 @@ final class Dependency implements DependencyInterface
     /**
      * @var string
      */
-    private $index;
+    private $index = '';
 
     /**
      * @param \ReflectionMethod $postConstruct
@@ -61,7 +61,7 @@ final class Dependency implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function register(array &$container, Bind $bind)
+    public function register(array &$container, Bind $bind) : void
     {
         $this->index = $index = (string) $bind;
         $container[$index] = $bind->getBound();
@@ -90,6 +90,8 @@ final class Dependency implements DependencyInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return mixed
      */
     public function injectWithArgs(Container $container, array $params)
     {
@@ -112,16 +114,17 @@ final class Dependency implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function setScope($scope)
+    public function setScope($scope) : void
     {
         if ($scope === Scope::SINGLETON) {
             $this->isSingleton = true;
         }
     }
 
-    public function weaveAspects(CompilerInterface $compiler, array $pointcuts)
+    public function weaveAspects(CompilerInterface $compiler, array $pointcuts) : void
     {
         $class = (string) $this->newInstance;
+        assert(class_exists($class));
         $isInterceptor = (new \ReflectionClass($class))->implementsInterface(MethodInterceptor::class);
         $isWeaved = (new \ReflectionClass($class))->implementsInterface(WeavedInterface::class);
         if ($isInterceptor || $isWeaved) {

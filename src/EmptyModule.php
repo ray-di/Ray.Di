@@ -12,7 +12,7 @@ class EmptyModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
     }
 }

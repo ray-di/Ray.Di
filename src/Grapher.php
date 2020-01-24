@@ -52,6 +52,8 @@ final class Grapher
      *
      * @param string $class  class name
      * @param array  $params constuct paramteters
+     *
+     * @return mixed
      */
     public function newInstanceArgs(string $class, array $params)
     {

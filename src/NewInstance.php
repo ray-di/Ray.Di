@@ -24,7 +24,7 @@ final class NewInstance
     private $arguments;
 
     /**
-     * @var AspectBind
+     * @var ?AspectBind
      */
     private $bind;
 
@@ -35,6 +35,7 @@ final class NewInstance
     ) {
         $constructorName = $constructorName ?: new Name(Name::ANY);
         $this->class = $class->name;
+        assert(class_exists($this->class));
         $constructor = $class->getConstructor();
         if ($constructor) {
             $this->arguments = new Arguments($constructor, $constructorName);
@@ -47,6 +48,7 @@ final class NewInstance
      */
     public function __invoke(Container $container)
     {
+        assert(class_exists($this->class));
         $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
 
         return $this->postNewInstance($container, $instance);
@@ -63,29 +65,28 @@ final class NewInstance
     /**
      * @throws \ReflectionException
      */
-    public function newInstanceArgs(Container $container, array $params)
+    public function newInstanceArgs(Container $container, array $params) : object
     {
+        assert(class_exists($this->class));
         $instance = (new \ReflectionClass($this->class))->newInstanceArgs($params);
 
         return $this->postNewInstance($container, $instance);
     }
 
-    /**
-     * @param string $class
-     */
-    public function weaveAspects($class, AopBind $bind)
+    public function weaveAspects(string $class, AopBind $bind) : void
     {
         $this->class = $class;
         $this->bind = new AspectBind($bind);
     }
 
-    private function postNewInstance(Container $container, $instance)
+    private function postNewInstance(Container $container, object $instance) : object
     {
         // setter injection
         ($this->setterMethods)($instance, $container);
 
         // bind dependency injected interceptors
         if ($this->bind instanceof AspectBind) {
+            assert(isset($instance->bindings));
             $instance->bindings = $this->bind->inject($container);
         }
 

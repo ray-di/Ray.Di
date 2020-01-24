@@ -30,7 +30,7 @@ final class Container
     /**
      * Add binding to container
      */
-    public function add(Bind $bind)
+    public function add(Bind $bind) : void
     {
         $dependency = $bind->getBound();
         $dependency->register($this->container, $bind);
@@ -39,13 +39,15 @@ final class Container
     /**
      * Add Pointcut to container
      */
-    public function addPointcut(Pointcut $pointcut)
+    public function addPointcut(Pointcut $pointcut) : void
     {
         $this->pointcuts[] = $pointcut;
     }
 
     /**
      * Return instance by interface + name(interface namespace)
+     *
+     * @return mixed
      */
     public function getInstance(string $interface, string $name)
     {
@@ -56,6 +58,8 @@ final class Container
      * Return dependency injected instance
      *
      * @throws Unbound
+     *
+     * @return mixed
      */
     public function getInstanceWithArgs(string $interface, array $params)
     {
@@ -75,6 +79,8 @@ final class Container
      * Return dependency injected instance
      *
      * @throws Unbound
+     *
+     * @return mixed
      */
     public function getDependency(string $index)
     {
@@ -89,7 +95,7 @@ final class Container
     /**
      * Rename existing dependency interface + name
      */
-    public function move(string $sourceInterface, string $sourceName, string $targetInterface, string $targetName)
+    public function move(string $sourceInterface, string $sourceName, string $targetInterface, string $targetName) : void
     {
         $sourceIndex = $sourceInterface . '-' . $sourceName;
         if (! isset($this->container[$sourceIndex])) {
@@ -140,7 +146,7 @@ final class Container
     /**
      * Merge container
      */
-    public function merge(self $container)
+    public function merge(self $container) : void
     {
         $this->container += $container->getContainer();
         $this->pointcuts = array_merge($this->pointcuts, $container->getPointcuts());
@@ -149,7 +155,7 @@ final class Container
     /**
      * Weave aspects to all dependency in container
      */
-    public function weaveAspects(CompilerInterface $compiler)
+    public function weaveAspects(CompilerInterface $compiler) : void
     {
         foreach ($this->container as $dependency) {
             if (! $dependency instanceof Dependency) {

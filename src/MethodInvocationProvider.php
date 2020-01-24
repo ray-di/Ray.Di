@@ -19,6 +19,9 @@ class MethodInvocationProvider implements ProviderInterface
         $this->invocation = $invocation;
     }
 
+    /**
+     * @psalm-suppress MissingReturnType
+     */
     public function get()
     {
         if ($this->invocation === null) {

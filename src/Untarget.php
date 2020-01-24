@@ -18,7 +18,8 @@ final class Untarget
 
     public function __construct(string $class)
     {
-        $this->class = (new NewReflectionClass)($class);
+        assert(class_exists($class));
+        $this->class = new \ReflectionClass($class);
     }
 
     /**
@@ -36,7 +37,7 @@ final class Untarget
         }
     }
 
-    public function setScope(string $scope)
+    public function setScope(string $scope) : void
     {
         $this->scope = $scope;
     }
