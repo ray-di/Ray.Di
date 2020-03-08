@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
+use Ray\Di\Exception\InvalidToConstructorNameParameter;
 use Ray\Di\Exception\Unbound;
 
 class InjectorTest extends TestCase
@@ -307,5 +308,44 @@ class InjectorTest extends TestCase
         $this->assertIsArray($types->array);
         $this->assertIsString($types->string);
         $this->assertIsInt($types->int);
+    }
+
+    public function testToConstructor()
+    {
+        $module = new class extends AbstractModule {
+            protected function configure()
+            {
+                $this->bind(\PDO::class)->toConstructor(
+                    \PDO::class,
+                    [
+                        'dsn' => 'pdo_dsn',
+                    ]
+                )->in(Scope::SINGLETON);
+                $this->bind()->annotatedWith('pdo_dsn')->toInstance('sqlite::memory:');
+            }
+        };
+        $injector = new Injector($module);
+        $pdo = $injector->getInstance(\PDO::class);
+        $this->assertInstanceOf(\PDO::class, $pdo);
+    }
+
+    public function testToConstructorInvalidName()
+    {
+        $this->expectException(InvalidToConstructorNameParameter::class);
+        $module = new class extends AbstractModule {
+            protected function configure()
+            {
+                $this->bind(\PDO::class)->toConstructor(
+                    \PDO::class,
+                    [
+                        ['dsn' => 'pdo_dsn'], // wrong, cause InvalidToConstructorNameParameter exception
+                    ]
+                )->in(Scope::SINGLETON);
+                $this->bind()->annotatedWith('pdo_dsn')->toInstance('sqlite::memory:');
+            }
+        };
+        $injector = new Injector($module);
+        $pdo = $injector->getInstance(\PDO::class);
+        $this->assertInstanceOf(\PDO::class, $pdo);
     }
 }
