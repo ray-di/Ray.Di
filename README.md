@@ -588,8 +588,8 @@ protected function configure()
         ->toConstructor(
             WebApi::class,                              // string $class_name
             [
-                ['id' => 'user_id'],                    // array $name
-                ['passowrd' => 'user_password']
+                'id' => 'user_id',                    // array $name
+                'passowrd' => 'user_password'
             ],
             (new InjectionPoints)                       // InjectionPoints　$setter_injection
                 ->addMethod('setGuzzle', 'token')
@@ -635,14 +635,14 @@ protected function configure()
     $this->bind(\PDO::class)->toConstructor(
         \PDO::class,
         [
-            ['dsn' => 'pdo_dsn'],
-            ['username' => 'pdo_username'],
-            ['password' => 'pdo_password']
+            'dsn' => 'pdo_dsn',
+            'username' => 'pdo_username',
+            'password' => 'pdo_password'
         ]
     )->in(Scope::SINGLETON);
     $this->bind()->annotatedWith('pdo_dsn')->toInstance($dsn);
-    $this->bind()->annotatedWith('pdo_username')->toInstance($_ENV['db_user']);
-    $this->bind()->annotatedWith('pdo_password')->toInstance($_ENV['db_password']);
+    $this->bind()->annotatedWith('pdo_username')->toInstance(getenv('db_user'));
+    $this->bind()->annotatedWith('pdo_password')->toInstance(getenv('db_password'));
 }
 ```
 
