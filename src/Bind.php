@@ -183,8 +183,12 @@ final class Bind
     private function getStringName(array $name) : string
     {
         $keys = array_keys($name);
-        $names = array_reduce($keys, function (array $carry, string $key) use ($name) : array {
+        $names = array_reduce($keys, function (array $carry, $key) use ($name) : array {
+            if (! is_string($key)) {
+                throw new InvalidToConstructorNameParameter((string) $key);
+            }
             $varName = $name[$key];
+            assert(is_string($key));
             if (! is_string($varName)) {
                 throw new InvalidToConstructorNameParameter(print_r($varName, true));
             }
