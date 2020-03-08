@@ -1,5 +1,4 @@
 language: php
-sudo: false
 
 php:
   - 7.2
@@ -10,9 +9,6 @@ cache:
   directories:
     - vendor
     - $HOME/.composer/cache
-
-matrix:
-  fast_finish: true
 
 before_install:
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
