@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-/** @psalm-suppress PropertyNotSetInConstructor */
+/* @psalm-suppress PropertyNotSetInConstructor */
+use Ray\Di\Exception\InvalidToConstructorNameParameter;
+
 final class Bind
 {
     /**
@@ -173,23 +175,23 @@ final class Bind
     /**
      * Return string
      *
-     * input: [['varA' => 'nameA'], ['varB' => 'nameB']]
+     * input: ['varA' => 'nameA', 'varB' => 'nameB']
      * output: "varA=nameA,varB=nameB"
      *
      * @psalm-suppress MissingClosureParamType
      */
     private function getStringName(array $name) : string
     {
-        $names = array_reduce(
-            array_keys($name),
-            function (array $carry, $key) use ($name) : array {
-                /* @param array-key $key */
-                $carry[] = $key . '=' . $name[$key];
+        $keys = array_keys($name);
+        $names = array_reduce($keys, function (array $carry, string $key) use ($name) : array {
+            $varName = $name[$key];
+            if (! is_string($varName)) {
+                throw new InvalidToConstructorNameParameter(print_r($varName, true));
+            }
+            $carry[] = $key . '=' . $varName;
 
-                return $carry;
-            },
-            []
-        );
+            return $carry;
+        }, []);
 
         return implode(',', $names);
     }
