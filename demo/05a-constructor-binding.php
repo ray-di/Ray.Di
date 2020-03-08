@@ -13,7 +13,7 @@ class PdoModuleLegacyNaming extends AbstractModule
 {
     protected function configure()
     {
-        // dsn=pdo_dsn works
+        // 'dsn=pdo_dsn' (still) works
         $this->bind(PDO::class)->toConstructor(\PDO::class, 'dsn=pdo_dsn');
         $this->bind()->annotatedWith('pdo_dsn')->toInstance('sqlite::memory:');
     }
@@ -23,7 +23,7 @@ class PdoModule extends AbstractModule
 {
     protected function configure()
     {
-        // 'dsn' => 'pdo_dsn' works
+        // ['dsn' => 'pdo_dsn'] works (recommended)
         $this->bind(PDO::class)->toConstructor(\PDO::class, ['dsn' => 'pdo_dsn']);
         $this->bind()->annotatedWith('pdo_dsn')->toInstance('sqlite::memory:');
     }
