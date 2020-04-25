@@ -74,7 +74,7 @@ abstract class AbstractModule
     /**
      * Bind interceptor
      *
-     * @param string[] $interceptors
+     * @param class-string[] $interceptors
      */
     public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
     {
@@ -116,12 +116,14 @@ abstract class AbstractModule
     /**
      * Configure binding
      *
-     * @psalm-suppress MissingReturnType
+     * @return void
      */
     abstract protected function configure();
 
     /**
      * Bind interface
+     *
+     * @phpstan-param class-string|string $interface
      */
     protected function bind(string $interface = '') : Bind
     {
