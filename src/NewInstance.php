@@ -46,7 +46,7 @@ final class NewInstance
     /**
      * @throws \ReflectionException
      */
-    public function __invoke(Container $container)
+    public function __invoke(Container $container) : object
     {
         assert(class_exists($this->class));
         $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
