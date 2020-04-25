@@ -16,6 +16,7 @@ final class Bind
 
     /**
      * @var string
+     * @phpstan-var class-string|string
      */
     private $interface;
 
@@ -40,8 +41,8 @@ final class Bind
     private $untarget;
 
     /**
-     * @param Container $container dependency container
-     * @param string    $interface interface or concrete class name
+     * @param Container           $container dependency container
+     * @param class-string|string $interface interface or concrete class name
      */
     public function __construct(Container $container, string $interface)
     {
@@ -50,6 +51,7 @@ final class Bind
         $this->validate = new BindValidator;
         $bindUntarget = class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
         if ($bindUntarget) {
+            assert(class_exists($interface));
             $this->untarget = new Untarget($interface);
 
             return;
@@ -117,6 +119,8 @@ final class Bind
 
     /**
      * Bind to provider
+     *
+     * @phpstan-param class-string $provider
      */
     public function toProvider(string $provider, string $context = '') : self
     {
