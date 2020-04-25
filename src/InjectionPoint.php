@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Di\Qualifier;
 
@@ -113,6 +114,6 @@ final class InjectionPoint implements InjectionPointInterface, \Serializable
      */
     public function unserialize($serialized) : void
     {
-        [$this->reader, $this->pClass, $this->pFunction, $this->pName] = unserialize($serialized);
+        [$this->reader, $this->pClass, $this->pFunction, $this->pName] = unserialize($serialized, ['allowed_classes' => [AnnotationReader::class]]);
     }
 }
