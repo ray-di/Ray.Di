@@ -9,8 +9,7 @@ interface SetContextInterface
     /**
      * Set provider context
      *
-     * @psalm-suppress MissingReturnType
-     * @psalm-suppress MissingParamType
+     * @param string $context
      */
     public function setContext($context);
 }
