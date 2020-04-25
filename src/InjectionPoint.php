@@ -108,7 +108,10 @@ final class InjectionPoint implements InjectionPointInterface, \Serializable
         return serialize([$this->reader, $this->pClass, $this->pFunction, $this->pName]);
     }
 
-    public function unserialize($serialized)
+    /**
+     * @param string $serialized
+     */
+    public function unserialize($serialized) : void
     {
         [$this->reader, $this->pClass, $this->pFunction, $this->pName] = unserialize($serialized);
     }
