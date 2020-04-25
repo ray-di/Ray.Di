@@ -38,7 +38,7 @@ final class Grapher
     public function __wakeup()
     {
         spl_autoload_register(
-            function (string $class) {
+            function (string $class) : void {
                 $file = sprintf('%s/%s.php', $this->classDir, str_replace('\\', '_', $class));
                 if (file_exists($file)) {
                     include $file; //@codeCoverageIgnore
