@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-/**
- * @template T of object
- */
 final class Untarget
 {
     /**
-     * @var \ReflectionClass<T>
+     * @var \ReflectionClass<object>
      */
     private $class;
 
@@ -20,7 +17,7 @@ final class Untarget
     private $scope = Scope::PROTOTYPE;
 
     /**
-     * @phpstan-param class-string<T> $class
+     * @phpstan-param class-string $class
      */
     public function __construct(string $class)
     {
