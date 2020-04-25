@@ -10,6 +10,8 @@ final class DependencyFactory
 {
     /**
      * Create dependency object
+     *
+     * @param \ReflectionClass<object> $class
      */
     public function newAnnotatedDependency(\ReflectionClass $class) : Dependency
     {
@@ -22,6 +24,9 @@ final class DependencyFactory
 
     /**
      * Create Provider binding
+     *
+     * @param \ReflectionClass<object> $provider
+
      */
     public function newProvider(\ReflectionClass $provider, string $context) : DependencyProvider
     {
@@ -32,6 +37,8 @@ final class DependencyFactory
 
     /**
      * Create ToConstructor binding
+     *
+     * @param \ReflectionClass<object> $class
      */
     public function newToConstructor(
         \ReflectionClass $class,
