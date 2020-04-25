@@ -81,8 +81,10 @@ class BindTest extends TestCase
 
     /**
      * @dataProvider nameProvider
+     *
+     * @param array|string $name
      */
-    public function testToConstructor(string $name)
+    public function testToConstructor($name)
     {
         $container = new Container;
         $container->add((new Bind($container, ''))->annotatedWith('tmp_dir')->toInstance('/tmp'));
