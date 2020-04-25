@@ -1,4 +1,16 @@
 parameters:
-    excludes_analyse:
-        - %currentWorkingDirectory%/tests/tmp/*
-    checkMissingIterableValueType: false
+  level: max
+  paths:
+    - src
+    - tests
+  excludes_analyse:
+    - %currentWorkingDirectory%/tests/tmp/*
+    - %currentWorkingDirectory%/tests/Fake/*
+  checkMissingIterableValueType: false
+  ignoreErrors:
+  -
+    message: "#has no return typehint specified\\.$#"
+    path: tests/*
+  -
+    message: "#expects class-string, string given\\.$#"
+    path: tests/BindTest.php
