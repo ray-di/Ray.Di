@@ -25,7 +25,7 @@ final class Untarget
     /**
      * Bind untargeted binding
      */
-    public function __invoke(Container $container, Bind $bind)
+    public function __invoke(Container $container, Bind $bind) : void
     {
         $bound = (new DependencyFactory)->newAnnotatedDependency($this->class);
         $bound->setScope($this->scope);
