@@ -28,7 +28,7 @@ final class AnnotatedClass
     /**
      * Return factory instance
      *
-     * @param \ReflectionClass $class Target class reflection
+     * @phpstan-param \ReflectionClass<object> $class Target class reflection
      */
     public function getNewInstance(\ReflectionClass $class) : NewInstance
     {
@@ -47,6 +47,8 @@ final class AnnotatedClass
 
     /**
      * Return @-PostConstruct method reflection
+     *
+     * @phpstan-param \ReflectionClass<object> $class
      */
     public function getPostConstruct(\ReflectionClass $class) : ?\ReflectionMethod
     {
