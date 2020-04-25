@@ -102,14 +102,19 @@ final class Argument implements \Serializable
         ]);
     }
 
+    /**
+     * @param string $serialized
+     *
+     * @throws \ReflectionException
+     */
     public function unserialize($serialized) : void
     {
-        list($this->index,
+        [$this->index,
             $this->isDefaultAvailable,
             $this->default,
             $this->meta,
             $ref
-        ) = unserialize($serialized);
+        ] = unserialize($serialized, ['allowed_classes' => false]);
         $this->reflection = new \ReflectionParameter([$ref[0], $ref[1]], $ref[2]);
     }
 

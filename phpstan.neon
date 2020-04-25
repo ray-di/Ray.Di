@@ -1,5 +1,6 @@
 parameters:
     ignoreErrors:
         - '#does not call parent constructor from#'
+        - '#Call to an undefined method ReflectionType::getName()#'
     excludes_analyse:
         - %currentWorkingDirectory%/tests/tmp/*
