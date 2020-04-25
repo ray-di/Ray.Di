@@ -26,7 +26,6 @@ final class DependencyFactory
      * Create Provider binding
      *
      * @param \ReflectionClass<object> $provider
-
      */
     public function newProvider(\ReflectionClass $provider, string $context) : DependencyProvider
     {

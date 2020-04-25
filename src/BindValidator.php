@@ -38,8 +38,10 @@ final class BindValidator
      * toProvider validator
      *
      * @phpstan-param class-string $provider
-     * @return \ReflectionClass<object>
+     *
      * @throws NotFound
+     *
+     * @return \ReflectionClass<object>
      */
     public function toProvider(string $provider) : \ReflectionClass
     {
