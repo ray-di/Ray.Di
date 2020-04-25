@@ -27,7 +27,7 @@ class NameTest extends TestCase
     /**
      * @dataProvider keyPairStringProvider
      */
-    public function testKeyValuePairName($keyPairValueString)
+    public function testKeyValuePairName(string $keyPairValueString)
     {
         $name = new Name($keyPairValueString);
         $parameter = new \ReflectionParameter([FakeCar::class, '__construct'], 'engine');
