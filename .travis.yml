@@ -21,6 +21,7 @@ script:
   - ./vendor/bin/phpunit;
 
 jobs:
+  fast_finish: true
   include:
   - stage: Test
     name: Lowest dependencies
@@ -41,9 +42,9 @@ jobs:
   - stage: Code Quality
     name: Static analysis
     php: 7.4
-    install: composer require --dev phpstan/phpstan ^0.11 phpmetrics/phpmetrics vimeo/psalm
+    install: composer require --dev phpstan/phpstan ^0.12 phpmetrics/phpmetrics vimeo/psalm
     script:
-      - ./vendor/bin/phpstan analyse -l max -c phpstan.neon src tests --no-progress --no-interaction;
+      - ./vendor/bin/phpstan analyse -c phpstan.neon --no-progress --no-interaction;
       - ./vendor/bin/psalm
       - ./vendor/bin/phpmetrics --excluded-dirs=src/Exception src
 
