@@ -53,8 +53,8 @@ class Injector implements InjectorInterface
     /**
      * Return instance
      *
-     * @param class-string $interface
-     * @param string       $name
+     * @param class-string|string $interface
+     * @param string              $name
      *
      * @return mixed instance
      */
@@ -71,7 +71,7 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * @phpstan-param class-string $class
+     * @phpstan-param class-string|string $class
      *
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
