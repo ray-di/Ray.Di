@@ -16,6 +16,10 @@ class ContainerTest extends TestCase
      * @var Container
      */
     private $container;
+
+    /**
+     * @var FakeEngine
+     */
     private $engine;
 
     protected function setUp() : void
