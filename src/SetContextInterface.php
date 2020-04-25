@@ -10,6 +10,8 @@ interface SetContextInterface
      * Set provider context
      *
      * @param string $context
+     *
+     * @return void
      */
     public function setContext($context);
 }
