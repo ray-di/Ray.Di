@@ -29,8 +29,7 @@ final class NewInstance
     private $bind;
 
     /**
-     * @template T of object
-     * @phpstan-param \ReflectionClass<T> $class
+     * @phpstan-param \ReflectionClass<object> $class
      */
     public function __construct(
         \ReflectionClass $class,
