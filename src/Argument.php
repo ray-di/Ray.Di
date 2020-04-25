@@ -134,7 +134,7 @@ final class Argument implements \Serializable
     private function getType(\ReflectionParameter $parameter) : string
     {
         $type = $parameter->getType();
-        if (! $type instanceof \ReflectionType) {
+        if (! $type instanceof \ReflectionNamedType) {
             return '';
         }
         if (\in_array($type->getName(), ['bool', 'int', 'string', 'array', 'resource', 'callable'], true)) {
