@@ -192,7 +192,6 @@ final class Bind
                 throw new InvalidToConstructorNameParameter((string) $key);
             }
             $varName = $name[$key];
-            assert(is_string($key));
             if (! is_string($varName)) {
                 throw new InvalidToConstructorNameParameter(print_r($varName, true));
             }
