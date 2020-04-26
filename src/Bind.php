@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-/* @psalm-suppress PropertyNotSetInConstructor */
 use Ray\Di\Exception\InvalidToConstructorNameParameter;
 
 final class Bind
@@ -50,6 +49,7 @@ final class Bind
         $this->interface = $interface;
         $this->validate = new BindValidator;
         $bindUntarget = class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
+        $this->bound = new NullDependency;
         if ($bindUntarget) {
             assert(class_exists($interface));
             $this->untarget = new Untarget($interface);
@@ -181,24 +181,30 @@ final class Bind
      *
      * input: ['varA' => 'nameA', 'varB' => 'nameB']
      * output: "varA=nameA,varB=nameB"
-     *
-     * @psalm-suppress MissingClosureParamType
      */
     private function getStringName(array $name) : string
     {
         $keys = array_keys($name);
-        $names = array_reduce($keys, function (array $carry, $key) use ($name) : array {
-            if (! is_string($key)) {
-                throw new InvalidToConstructorNameParameter((string) $key);
-            }
-            $varName = $name[$key];
-            if (! is_string($varName)) {
-                throw new InvalidToConstructorNameParameter(print_r($varName, true));
-            }
-            $carry[] = $key . '=' . $varName;
 
-            return $carry;
-        }, []);
+        $names = array_reduce(
+            $keys,
+            /**
+             * @param array-key $key
+             */
+            function (array $carry, $key) use ($name) : array {
+                if (! is_string($key)) {
+                    throw new InvalidToConstructorNameParameter((string) $key);
+                }
+                $varName = $name[$key];
+                if (! is_string($varName)) {
+                    throw new InvalidToConstructorNameParameter(print_r($varName, true));
+                }
+                $carry[] = $key . '=' . $varName;
+
+                return $carry;
+            },
+            []
+        );
 
         return implode(',', $names);
     }
