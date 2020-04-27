@@ -42,11 +42,11 @@ jobs:
   - stage: Code Quality
     name: Static analysis
     php: 7.4
-    install: composer require --dev phpstan/phpstan ^0.12 phpmetrics/phpmetrics vimeo/psalm
+    install: composer global require --dev phpstan/phpstan ^0.12 phpmetrics/phpmetrics vimeo/psalm
     script:
-      - ./vendor/bin/phpstan analyse -c phpstan.neon --no-progress --no-interaction;
-      - ./vendor/bin/psalm
-      - ./vendor/bin/phpmetrics --excluded-dirs=src/Exception src
+      - ~/.composer/vendor/bin/phpstan analyse -c phpstan.neon --no-progress --no-interaction;
+      - ~/.composer/vendor/bin/psalm
+      - ~/.composer/vendor/bin/phpmetrics --exclude=Exception src
 
   - stage: Code Quality
     name: Coding standards
