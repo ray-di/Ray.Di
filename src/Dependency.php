@@ -131,11 +131,13 @@ final class Dependency implements DependencyInterface
             return;
         }
         $bind = new AopBind;
-        $bind->bind((string) $this->newInstance, $pointcuts);
+        $className = (string) $this->newInstance;
+        assert(class_exists($className) || interface_exists($className));
+        $bind->bind($className, $pointcuts);
         if (! $bind->getBindings()) {
             return;
         }
-        $class = $compiler->compile((string) $this->newInstance, $bind);
+        $class = $compiler->compile($className, $bind);
         $this->newInstance->weaveAspects($class, $bind);
     }
 }
