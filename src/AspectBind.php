@@ -25,11 +25,8 @@ final class AspectBind
     {
         $bindings = $this->bind->getBindings();
         foreach ($bindings as &$interceptors) {
-            /* @var string[] $interceptors */
             foreach ($interceptors as &$interceptor) {
-                if (\is_string($interceptor)) {
-                    $interceptor = $container->getInstance($interceptor, Name::ANY);
-                }
+                $interceptor = $container->getInstance($interceptor, Name::ANY);
             }
         }
 
