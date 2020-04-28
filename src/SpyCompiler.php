@@ -20,7 +20,7 @@ final class SpyCompiler implements CompilerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {inheritdoc}
      */
     public function compile(string $class, BindInterface $bind) : string
     {
