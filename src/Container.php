@@ -47,6 +47,8 @@ final class Container
     /**
      * Return instance by interface + name(interface namespace)
      *
+     * @param class-string|string $interface
+     *
      * @return mixed
      */
     public function getInstance(string $interface, string $name)

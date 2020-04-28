@@ -9,7 +9,7 @@ use Ray\Aop\AbstractMatcher;
 class Pointcut extends \Ray\Aop\Pointcut
 {
     /**
-     * @var string[]
+     * @var array<class-string<\Ray\Aop\MethodInterceptor>>
      */
     public $interceptors;
     /** @noinspection SenselessMethodDuplicationInspection */
@@ -19,7 +19,7 @@ class Pointcut extends \Ray\Aop\Pointcut
      *
      * We have extended the $interceptor parameters so that you can specify the class name as well as the object
      *
-     * @param string[] $interceptors array of interceptor class name
+     * @param array<class-string<\Ray\Aop\MethodInterceptor>> $interceptors array of interceptor class name
      */
     public function __construct(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors)
     {

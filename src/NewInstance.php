@@ -9,7 +9,7 @@ use Ray\Aop\Bind as AopBind;
 final class NewInstance
 {
     /**
-     * @var string
+     * @var class-string
      */
     private $class;
 
@@ -58,7 +58,7 @@ final class NewInstance
     }
 
     /**
-     * @return string
+     * @return class-string
      */
     public function __toString()
     {
@@ -76,6 +76,9 @@ final class NewInstance
         return $this->postNewInstance($container, $instance);
     }
 
+    /**
+     * @param class-string $class
+     */
     public function weaveAspects(string $class, AopBind $bind) : void
     {
         $this->class = $class;

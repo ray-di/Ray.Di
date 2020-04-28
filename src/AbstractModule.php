@@ -73,7 +73,7 @@ abstract class AbstractModule
     /**
      * Bind interceptor
      *
-     * @param class-string[] $interceptors
+     * @param array<class-string<\Ray\Aop\MethodInterceptor>> $interceptors
      */
     public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
     {
@@ -86,6 +86,8 @@ abstract class AbstractModule
 
     /**
      * Bind interceptor early
+     *
+     * @param array<class-string<\Ray\Aop\MethodInterceptor>> $interceptors
      */
     public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
     {

@@ -15,7 +15,7 @@ final class Bind
 
     /**
      * @var string
-     * @phpstan-var class-string|string
+     * @phpstan-var class-string<\Ray\Aop\MethodInterceptor>|string
      */
     private $interface;
 
@@ -40,8 +40,8 @@ final class Bind
     private $untarget;
 
     /**
-     * @param Container           $container dependency container
-     * @param class-string|string $interface interface or concrete class name
+     * @param Container                                       $container dependency container
+     * @param class-string<\Ray\Aop\MethodInterceptor>|string $interface interface or concrete class name
      */
     public function __construct(Container $container, string $interface)
     {
