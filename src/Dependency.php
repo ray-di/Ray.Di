@@ -140,6 +140,7 @@ final class Dependency implements DependencyInterface
             return;
         }
         $class = $compiler->compile($className, $bind);
+        /** @var class-string $class */
         $this->newInstance->weaveAspects($class, $bind);
     }
 }
