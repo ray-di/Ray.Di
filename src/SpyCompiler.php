@@ -20,11 +20,13 @@ final class SpyCompiler implements CompilerInterface
     }
 
     /**
-     * Return dummy class name for logging
+     * Return "logging" class name
      *
-     * The dummy class is used for logging, It does not exists.
+     * Dummy classes are used for logging and don't really exist.
+     * So the code breaks the QA rules as shown below.
      *
      * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
      */
     public function compile(string $class, BindInterface $bind) : string
     {
@@ -32,7 +34,6 @@ final class SpyCompiler implements CompilerInterface
             return $class;
         }
 
-        /** @psalm-suppress LessSpecificReturnStatement */
         return $class . $this->getInterceptors($bind);
     }
 
