@@ -42,7 +42,9 @@ jobs:
     - stage: Code Quality
       name: Static analysis
       php: 7.2
-      install: composer global require --dev phpstan/phpstan ^0.12 vimeo/psalm ^3.11 phpmetrics/phpmetrics ^2.6;
+      install:
+        - composer install
+        - composer global require --dev phpstan/phpstan ^0.12 vimeo/psalm ^3.11 phpmetrics/phpmetrics ^2.6;
       script:
         - ~/.composer/vendor/bin/phpstan analyse -c phpstan.neon --no-progress --no-interaction;
         - ~/.composer/vendor/bin/psalm --show-info=false
