@@ -124,6 +124,7 @@ final class Dependency implements DependencyInterface
     public function weaveAspects(CompilerInterface $compiler, array $pointcuts) : void
     {
         $class = (string) $this->newInstance;
+        /**  @psalm-suppress RedundantConditionGivenDocblockType */
         assert(class_exists($class));
         $isInterceptor = (new \ReflectionClass($class))->implementsInterface(MethodInterceptor::class);
         $isWeaved = (new \ReflectionClass($class))->implementsInterface(WeavedInterface::class);
@@ -132,6 +133,7 @@ final class Dependency implements DependencyInterface
         }
         $bind = new AopBind;
         $className = (string) $this->newInstance;
+        /**  @psalm-suppress RedundantConditionGivenDocblockType */
         assert(class_exists($className) || interface_exists($className));
         $bind->bind($className, $pointcuts);
         if (! $bind->getBindings()) {

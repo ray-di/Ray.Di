@@ -20,7 +20,11 @@ final class SpyCompiler implements CompilerInterface
     }
 
     /**
-     * {inheritdoc}
+     * Return dummy class name for logging
+     *
+     * The dummy class is used for logging, It does not exists.
+     *
+     * @psalm-suppress MoreSpecificReturnType
      */
     public function compile(string $class, BindInterface $bind) : string
     {
@@ -28,6 +32,7 @@ final class SpyCompiler implements CompilerInterface
             return $class;
         }
 
+        /** @psalm-suppress LessSpecificReturnStatement */
         return $class . $this->getInterceptors($bind);
     }
 
