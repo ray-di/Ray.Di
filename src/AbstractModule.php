@@ -6,6 +6,7 @@ namespace Ray\Di;
 
 use Ray\Aop\AbstractMatcher;
 use Ray\Aop\Matcher;
+use Ray\Aop\PriorityPointcut;
 
 abstract class AbstractModule
 {
