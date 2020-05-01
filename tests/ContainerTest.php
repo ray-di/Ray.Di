@@ -7,6 +7,7 @@ namespace Ray\Di;
 use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
 use Ray\Aop\Matcher;
+use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
 
 class ContainerTest extends TestCase
