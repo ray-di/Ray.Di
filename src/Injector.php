@@ -41,7 +41,7 @@ class Injector implements InjectorInterface
     public function __wakeup()
     {
         spl_autoload_register(
-            function (string $class) {
+            function (string $class) : void {
                 $file = sprintf('%s/%s.php', $this->classDir, str_replace('\\', '_', $class));
                 if (file_exists($file)) {
                     include $file; //@codeCoverageIgnore
@@ -53,8 +53,8 @@ class Injector implements InjectorInterface
     /**
      * Return instance
      *
-     * @param string $interface
-     * @param string $name
+     * @param class-string|string $interface
+     * @param string              $name
      *
      * @return mixed instance
      */
@@ -70,6 +70,11 @@ class Injector implements InjectorInterface
         return $instance;
     }
 
+    /**
+     * @phpstan-param class-string|string $class
+     *
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     private function bind(string $class) : void
     {
         new Bind($this->container, $class);

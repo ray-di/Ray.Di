@@ -47,6 +47,8 @@ final class Container
     /**
      * Return instance by interface + name(interface namespace)
      *
+     * @param class-string|string $interface
+     *
      * @return mixed
      */
     public function getInstance(string $interface, string $name)
@@ -115,7 +117,7 @@ final class Container
      */
     public function unbound(string $index)
     {
-        list($class, $name) = explode('-', $index);
+        [$class, $name] = explode('-', $index);
         if (class_exists($class) && ! (new \ReflectionClass($class))->isAbstract()) {
             return new Untargeted($class);
         }

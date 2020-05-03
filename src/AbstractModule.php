@@ -6,6 +6,7 @@ namespace Ray\Di;
 
 use Ray\Aop\AbstractMatcher;
 use Ray\Aop\Matcher;
+use Ray\Aop\Pointcut;
 use Ray\Aop\PriorityPointcut;
 
 abstract class AbstractModule
@@ -21,7 +22,7 @@ abstract class AbstractModule
     protected $lastModule;
 
     /**
-     * @var Container
+     * @var ?Container
      */
     private $container;
 
@@ -30,6 +31,7 @@ abstract class AbstractModule
     ) {
         $this->lastModule = $module;
         $this->activate();
+        assert($this->container instanceof Container);
         if ($module instanceof self) {
             $this->container->merge($module->getContainer());
         }
@@ -53,14 +55,12 @@ abstract class AbstractModule
      */
     public function override(self $module) : void
     {
-        $module->getContainer()->merge($this->container);
+        $module->getContainer()->merge($this->getContainer());
         $this->container = $module->getContainer();
     }
 
     /**
-     * Return container
-     *
-     * @psalm-suppress DocblockTypeContradiction
+     * Return activated container
      */
     public function getContainer() : Container
     {
@@ -74,26 +74,28 @@ abstract class AbstractModule
     /**
      * Bind interceptor
      *
-     * @param string[] $interceptors
+     * @param array<class-string<\Ray\Aop\MethodInterceptor>> $interceptors
      */
     public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
     {
         $pointcut = new Pointcut($classMatcher, $methodMatcher, $interceptors);
-        $this->container->addPointcut($pointcut);
+        $this->getContainer()->addPointcut($pointcut);
         foreach ($interceptors as $interceptor) {
-            (new Bind($this->container, $interceptor))->to($interceptor)->in(Scope::SINGLETON);
+            (new Bind($this->getContainer(), $interceptor))->to($interceptor)->in(Scope::SINGLETON);
         }
     }
 
     /**
      * Bind interceptor early
+     *
+     * @param array<class-string<\Ray\Aop\MethodInterceptor>> $interceptors
      */
     public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
     {
         $pointcut = new PriorityPointcut($classMatcher, $methodMatcher, $interceptors);
-        $this->container->addPointcut($pointcut);
+        $this->getContainer()->addPointcut($pointcut);
         foreach ($interceptors as $interceptor) {
-            (new Bind($this->container, $interceptor))->to($interceptor)->in(Scope::SINGLETON);
+            (new Bind($this->getContainer(), $interceptor))->to($interceptor)->in(Scope::SINGLETON);
         }
     }
 
@@ -116,12 +118,14 @@ abstract class AbstractModule
     /**
      * Configure binding
      *
-     * @psalm-suppress MissingReturnType
+     * @return void
      */
     abstract protected function configure();
 
     /**
      * Bind interface
+     *
+     * @phpstan-param class-string|string $interface
      */
     protected function bind(string $interface = '') : Bind
     {

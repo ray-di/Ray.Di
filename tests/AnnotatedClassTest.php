@@ -44,8 +44,10 @@ class AnnotatedClassTest extends TestCase
 
     /**
      * @dataProvider classProvider
+     *
+     * @phpstan-param class-string $class
      */
-    public function testAnnotatedByAnnotation($class)
+    public function testAnnotatedByAnnotation(string $class)
     {
         $newInstance = $this->annotatedClass->getNewInstance(new \ReflectionClass($class));
         $container = new Container;

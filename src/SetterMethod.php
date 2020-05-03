@@ -38,7 +38,7 @@ final class SetterMethod
      * @throws Unbound
      * @throws \Exception
      */
-    public function __invoke($instance, Container $container)
+    public function __invoke($instance, Container $container) : void
     {
         try {
             $parameters = $this->arguments->inject($container);

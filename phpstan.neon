@@ -1,5 +1,19 @@
 parameters:
-    ignoreErrors:
-        - '#does not call parent constructor from#'
-    excludes_analyse:
-        - %currentWorkingDirectory%/tests/tmp/*
+  level: max
+  paths:
+    - src
+    - tests
+  excludes_analyse:
+    - %currentWorkingDirectory%/tests/tmp/*
+    - %currentWorkingDirectory%/tests/Fake/*
+  checkMissingIterableValueType: false
+  ignoreErrors:
+  -
+    message: "#Method Ray\\Di\\AbstractModule::getContainer() should return Ray\\Di\\Container but returns Ray\\Di\\Container|null\\.$#"
+    path: src/AbstractModule.php
+  -
+    message: "#has no return typehint specified\\.$#"
+    path: tests/*
+  -
+    message: "#expects class-string, string given\\.$#"
+    path: tests/BindTest.php

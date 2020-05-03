@@ -7,7 +7,7 @@ namespace Ray\Di;
 final class Untarget
 {
     /**
-     * @var \ReflectionClass
+     * @var \ReflectionClass<object>
      */
     private $class;
 
@@ -16,16 +16,18 @@ final class Untarget
      */
     private $scope = Scope::PROTOTYPE;
 
+    /**
+     * @phpstan-param class-string $class
+     */
     public function __construct(string $class)
     {
-        assert(class_exists($class));
         $this->class = new \ReflectionClass($class);
     }
 
     /**
      * Bind untargeted binding
      */
-    public function __invoke(Container $container, Bind $bind)
+    public function __invoke(Container $container, Bind $bind) : void
     {
         $bound = (new DependencyFactory)->newAnnotatedDependency($this->class);
         $bound->setScope($this->scope);

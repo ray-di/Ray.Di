@@ -7,7 +7,7 @@ namespace Ray\Di;
 final class DependencyProvider implements DependencyInterface
 {
     /**
-     * @var null|string
+     * @var string
      */
     public $context;
 

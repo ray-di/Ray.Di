@@ -23,13 +23,11 @@ final class AspectBind
      */
     public function inject(Container $container) : array
     {
+        /** @var array<array<class-string>> $bindings */
         $bindings = $this->bind->getBindings();
         foreach ($bindings as &$interceptors) {
-            /* @var string[] $interceptors */
             foreach ($interceptors as &$interceptor) {
-                if (\is_string($interceptor)) {
-                    $interceptor = $container->getInstance($interceptor, Name::ANY);
-                }
+                $interceptor = $container->getInstance($interceptor, Name::ANY);
             }
         }
 

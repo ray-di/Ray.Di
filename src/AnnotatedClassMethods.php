@@ -26,6 +26,9 @@ final class AnnotatedClassMethods
         $this->nameKeyVarString = new NameKeyVarString($reader);
     }
 
+    /**
+     * @phpstan-param \ReflectionClass<object> $class
+     */
     public function getConstructorName(\ReflectionClass $class) : Name
     {
         $constructor = $class->getConstructor();

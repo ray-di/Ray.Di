@@ -20,7 +20,13 @@ final class SpyCompiler implements CompilerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Return "logging" class name
+     *
+     * Dummy classes are used for logging and don't really exist.
+     * So the code breaks the QA rules as shown below.
+     *
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress LessSpecificReturnStatement
      */
     public function compile(string $class, BindInterface $bind) : string
     {

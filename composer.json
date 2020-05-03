@@ -16,9 +16,8 @@
     ],
     "require": {
         "php": ">=7.2.0",
-        "ray/aop": "^2.8.5",
-        "ray/compiler": "1.x-dev|^1.3.6",
-        "doctrine/annotations": "^1.7"
+        "ray/aop": "^2.9.3",
+        "ray/compiler": "1.x-dev|^1.3.6"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5"
@@ -35,10 +34,10 @@
     },
     "scripts" :{
         "test": ["phpunit"],
-        "tests": ["@cs", "phpstan analyse -l max src tests -c phpstan.neon --no-progress", "psalm", "@test"],
+        "tests": ["@cs", "phpstan analyse -c phpstan.neon --no-progress", "psalm", "@test"],
         "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
         "cs": ["php-cs-fixer fix -v --dry-run", "phpcs --standard=./phpcs.xml src"],
         "cs-fix": ["php-cs-fixer fix -v", "phpcbf src"],
-        "metrics": ["phpmetrics --report-html=build/metrics --excluded-dirs=src/Exception src"]
+        "metrics": ["phpmetrics --report-html=build/metrics --exclude=Exception src"]
     }
 }

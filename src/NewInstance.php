@@ -9,7 +9,7 @@ use Ray\Aop\Bind as AopBind;
 final class NewInstance
 {
     /**
-     * @var string
+     * @var class-string
      */
     private $class;
 
@@ -28,14 +28,16 @@ final class NewInstance
      */
     private $bind;
 
+    /**
+     * @phpstan-param \ReflectionClass<object> $class
+     */
     public function __construct(
         \ReflectionClass $class,
         SetterMethods $setterMethods,
         Name $constructorName = null
     ) {
         $constructorName = $constructorName ?: new Name(Name::ANY);
-        $this->class = $class->name;
-        assert(class_exists($this->class));
+        $this->class = $class->getName();
         $constructor = $class->getConstructor();
         if ($constructor) {
             $this->arguments = new Arguments($constructor, $constructorName);
@@ -46,16 +48,15 @@ final class NewInstance
     /**
      * @throws \ReflectionException
      */
-    public function __invoke(Container $container)
+    public function __invoke(Container $container) : object
     {
-        assert(class_exists($this->class));
         $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
 
         return $this->postNewInstance($container, $instance);
     }
 
     /**
-     * @return string
+     * @return class-string
      */
     public function __toString()
     {
@@ -67,12 +68,14 @@ final class NewInstance
      */
     public function newInstanceArgs(Container $container, array $params) : object
     {
-        assert(class_exists($this->class));
         $instance = (new \ReflectionClass($this->class))->newInstanceArgs($params);
 
         return $this->postNewInstance($container, $instance);
     }
 
+    /**
+     * @param class-string $class
+     */
     public function weaveAspects(string $class, AopBind $bind) : void
     {
         $this->class = $class;

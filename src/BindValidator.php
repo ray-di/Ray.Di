@@ -19,6 +19,8 @@ final class BindValidator
 
     /**
      * To validator
+     *
+     * @return \ReflectionClass<object>
      */
     public function to(string $interface, string $class) : \ReflectionClass
     {
@@ -26,9 +28,7 @@ final class BindValidator
             throw new NotFound($class);
         }
         if (interface_exists($interface) && ! (new \ReflectionClass($class))->implementsInterface($interface)) {
-            $msg = "[{$class}] is no implemented [{$interface}] interface";
-
-            throw new InvalidType($msg);
+            throw new InvalidType("[{$class}] is no implemented [{$interface}] interface");
         }
 
         return new \ReflectionClass($class);
@@ -37,7 +37,11 @@ final class BindValidator
     /**
      * toProvider validator
      *
+     * @phpstan-param class-string $provider
+     *
      * @throws NotFound
+     *
+     * @return \ReflectionClass<object>
      */
     public function toProvider(string $provider) : \ReflectionClass
     {
