@@ -46,7 +46,7 @@ final class BindValidator
     public function toProvider(string $provider) : \ReflectionClass
     {
         if (! class_exists($provider)) {
-            throw new NotFound($provider);
+            throw new NotFound((string) $provider);
         }
         if (! (new \ReflectionClass($provider))->implementsInterface(ProviderInterface::class)) {
             throw new InvalidProvider($provider);
