@@ -37,12 +37,13 @@ final class NameKeyVarString
 
     private function getQualifierKeyVarString(\ReflectionMethod $method) : string
     {
+        /** @var array<object> $annotations */
         $annotations = $this->reader->getMethodAnnotations($method);
         $names = [];
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), Qualifier::class);
             if ($qualifier instanceof Qualifier) {
-                $value = $annotation->value ?? Name::ANY;
+                $value = isset($annotation->value) && is_string($annotation->value) ? $annotation->value : Name::ANY;
                 $names[] = sprintf('%s=%s', $value, \get_class($annotation));
             }
         }
