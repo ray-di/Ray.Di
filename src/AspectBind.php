@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Aop\Bind as AopBind;
+use Ray\Aop\MethodInterceptor;
 
 final class AspectBind
 {
@@ -27,7 +28,9 @@ final class AspectBind
         $bindings = $this->bind->getBindings();
         foreach ($bindings as &$interceptors) {
             foreach ($interceptors as &$interceptor) {
+                /** @psalm-suppress MixedAssignment */
                 $interceptor = $container->getInstance($interceptor, Name::ANY);
+                assert($interceptor instanceof MethodInterceptor);
             }
         }
 
