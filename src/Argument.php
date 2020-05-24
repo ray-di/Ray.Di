@@ -109,12 +109,14 @@ final class Argument implements \Serializable
      */
     public function unserialize($serialized) : void
     {
+        /** @var array{0: string, 1: bool, 2: string, 3: string, 4: string, 5: array{0: string, 1: string, 2:string}} $unserialized */
+        $unserialized = unserialize($serialized, ['allowed_classes' => false]);
         [$this->index,
             $this->isDefaultAvailable,
             $this->default,
             $this->meta,
             $ref
-        ] = unserialize($serialized, ['allowed_classes' => false]);
+        ] = $unserialized;
         $this->reflection = new \ReflectionParameter([$ref[0], $ref[1]], $ref[2]);
     }
 
