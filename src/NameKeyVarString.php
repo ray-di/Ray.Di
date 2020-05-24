@@ -43,8 +43,9 @@ final class NameKeyVarString
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(new \ReflectionClass($annotation), Qualifier::class);
             if ($qualifier instanceof Qualifier) {
-                $value = isset($annotation->value) && is_string($annotation->value) ? $annotation->value : Name::ANY;
-                $names[] = sprintf('%s=%s', $value, \get_class($annotation));
+                /** @var ?scalar $annotation->value */
+                $value = $annotation->value ?? Name::ANY; // @phpstan-ignore-line
+                $names[] = sprintf('%s=%s', (string) $value, \get_class($annotation)); // @phpstan-ignore-line
             }
         }
 
