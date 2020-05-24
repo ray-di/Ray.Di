@@ -64,6 +64,7 @@ final class DependencyProvider implements DependencyInterface
             return $this->instance;
         }
         $provider = $this->dependency->inject($container);
+        assert($provider instanceof ProviderInterface);
         if ($provider instanceof SetContextInterface) {
             $this->setContext($provider);
         }
