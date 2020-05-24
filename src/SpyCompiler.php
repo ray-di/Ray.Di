@@ -34,7 +34,7 @@ final class SpyCompiler implements CompilerInterface
             return $class;
         }
 
-        return $class . $this->getInterceptors($bind); // @phpstan-ignore-line
+        return $class . $this->getInterceptors($bind);
     }
 
     private function hasNoBinding(string $class, BindInterface $bind) : bool
