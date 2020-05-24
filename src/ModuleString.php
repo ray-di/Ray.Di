@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Ray\Aop\Pointcut;
+
 final class ModuleString
 {
+    /**
+     * @param array<int, Pointcut> $pointcuts
+     */
     public function __invoke(Container $container, array $pointcuts) : string
     {
         $log = [];
