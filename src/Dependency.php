@@ -146,6 +146,6 @@ final class Dependency implements DependencyInterface
         }
         $class = $compiler->compile($className, $bind);
         /** @psalm-suppress ArgumentTypeCoercion */
-        $this->newInstance->weaveAspects($class, $bind);
+        $this->newInstance->weaveAspects($class, $bind); // @phpstan-ignore-line
     }
 }
