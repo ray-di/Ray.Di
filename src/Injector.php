@@ -61,9 +61,11 @@ class Injector implements InjectorInterface
     public function getInstance($interface, $name = Name::ANY)
     {
         try {
+            /** @psalm-suppress MixedAssignment */
             $instance = $this->container->getInstance($interface, $name);
         } catch (Untargeted $e) {
             $this->bind($interface);
+            /** @psalm-suppress MixedAssignment */
             $instance = $this->getInstance($interface, $name);
         }
 
