@@ -7,6 +7,7 @@ namespace Ray\Di;
 use Ray\Aop\Bind as AopBind;
 use Ray\Aop\CompilerInterface;
 use Ray\Aop\MethodInterceptor;
+use Ray\Aop\Pointcut;
 use Ray\Aop\WeavedInterface;
 
 final class Dependency implements DependencyInterface
@@ -82,6 +83,7 @@ final class Dependency implements DependencyInterface
 
         // @PostConstruct
         if ($this->postConstruct) {
+            assert(method_exists($this->instance, $this->postConstruct));
             $this->instance->{$this->postConstruct}();
         }
 
@@ -89,7 +91,7 @@ final class Dependency implements DependencyInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param array<int, mixed> $params
      *
      * @return mixed
      */
@@ -105,6 +107,7 @@ final class Dependency implements DependencyInterface
 
         // @PostConstruct
         if ($this->postConstruct) {
+            assert(method_exists($this->instance, $this->postConstruct));
             $this->instance->{$this->postConstruct}();
         }
 
@@ -121,6 +124,9 @@ final class Dependency implements DependencyInterface
         }
     }
 
+    /**
+     * @param array<int,Pointcut> $pointcuts
+     */
     public function weaveAspects(CompilerInterface $compiler, array $pointcuts) : void
     {
         $class = (string) $this->newInstance;
@@ -133,8 +139,7 @@ final class Dependency implements DependencyInterface
         }
         $bind = new AopBind;
         $className = (string) $this->newInstance;
-        /**  @psalm-suppress RedundantConditionGivenDocblockType */
-        assert(class_exists($className) || interface_exists($className));
+        assert(class_exists($className) || interface_exists((string) $className));
         $bind->bind($className, $pointcuts);
         if (! $bind->getBindings()) {
             return;
