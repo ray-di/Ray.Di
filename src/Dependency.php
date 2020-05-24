@@ -145,7 +145,7 @@ final class Dependency implements DependencyInterface
             return;
         }
         $class = $compiler->compile($className, $bind);
-        /** @var class-string $class */
+        /** @psalm-suppress ArgumentTypeCoercion */
         $this->newInstance->weaveAspects($class, $bind);
     }
 }
