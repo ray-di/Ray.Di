@@ -202,7 +202,7 @@ final class Bind
                 if (! is_string($varName)) {
                     throw new InvalidToConstructorNameParameter(print_r($varName, true));
                 }
-                $carry[] = $key . '=' . $varName;
+                $carry[] = $key . '=' . (string) $varName;
 
                 return $carry;
             },
