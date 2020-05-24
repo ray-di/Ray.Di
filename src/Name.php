@@ -75,6 +75,9 @@ final class Name
         $this->names = $this->parseName($name);
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function parseName(string $name) : array
     {
         $names = [];
@@ -83,6 +86,7 @@ final class Name
             $exploded = explode('=', $keyValue);
             if (isset($exploded[1])) {
                 [$key, $value] = $exploded;
+                assert(is_string($key));
                 if (isset($key[0]) && $key[0] === '$') {
                     $key = substr($key, 1);
                 }
