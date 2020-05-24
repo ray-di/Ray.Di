@@ -50,6 +50,7 @@ final class NewInstance
      */
     public function __invoke(Container $container) : object
     {
+        /** @psalm-suppress MixedMethodCall */
         $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
 
         return $this->postNewInstance($container, $instance);
@@ -67,7 +68,6 @@ final class NewInstance
      * @param array<int, mixed> $params
      *
      * @throws \ReflectionException
-     *
      */
     public function newInstanceArgs(Container $container, array $params) : object
     {
