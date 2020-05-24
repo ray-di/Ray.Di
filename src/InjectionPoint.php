@@ -40,7 +40,7 @@ final class InjectionPoint implements InjectionPointInterface, \Serializable
     public function __construct(\ReflectionParameter $parameter, Reader $reader)
     {
         $this->parameter = $parameter;
-        $this->pFunction = $parameter->getDeclaringFunction()->name;
+        $this->pFunction = (string) $parameter->getDeclaringFunction()->name;
         $class = $parameter->getDeclaringClass();
         $this->pClass = $class instanceof \ReflectionClass ? $class->name : '';
         $this->pName = $parameter->name;
@@ -90,6 +90,7 @@ final class InjectionPoint implements InjectionPointInterface, \Serializable
     public function getQualifiers() : array
     {
         $qualifiers = [];
+        /** @var array<object> $annotations */
         $annotations = $this->reader->getMethodAnnotations($this->getMethod());
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(
@@ -114,6 +115,8 @@ final class InjectionPoint implements InjectionPointInterface, \Serializable
      */
     public function unserialize($serialized) : void
     {
-        [$this->reader, $this->pClass, $this->pFunction, $this->pName] = unserialize($serialized, ['allowed_classes' => [AnnotationReader::class]]);
+        /** @var array{0: Reader, 1: string, 2: string, 3: string} $unserialized */
+        $unserialized = unserialize($serialized, ['allowed_classes' => [AnnotationReader::class]]);
+        [$this->reader, $this->pClass, $this->pFunction, $this->pName] = $unserialized;
     }
 }
