@@ -18,7 +18,7 @@ final class Container
     private $container = [];
 
     /**
-     * @var Pointcut[]
+     * @var array<int, Pointcut>
      */
     private $pointcuts = [];
 
@@ -58,6 +58,8 @@ final class Container
 
     /**
      * Return dependency injected instance
+     *
+     * @param array<int, mixed> $params
      *
      * @throws Unbound
      *
@@ -138,7 +140,7 @@ final class Container
     /**
      * Return pointcuts
      *
-     * @return Pointcut[]
+     * @return array<int, Pointcut>
      */
     public function getPointcuts() : array
     {
