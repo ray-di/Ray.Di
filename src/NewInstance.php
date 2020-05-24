@@ -64,7 +64,10 @@ final class NewInstance
     }
 
     /**
+     * @param array<int, mixed> $params
+     *
      * @throws \ReflectionException
+     *
      */
     public function newInstanceArgs(Container $container, array $params) : object
     {
