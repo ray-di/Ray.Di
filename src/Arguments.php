@@ -27,13 +27,14 @@ final class Arguments
      *
      * @throws Exception\Unbound
      *
-     * @return Argument[]
+     * @return array<int, mixed>
      */
     public function inject(Container $container) : array
     {
-        $parameters = $this->arguments;
-        foreach ($parameters as &$parameter) {
-            $parameter = $this->getParameter($container, $parameter);
+        $parameters = [];
+        foreach ($this->arguments as $parameter) {
+            /** @psalm-suppress MixedAssignment */
+            $parameters[] = $this->getParameter($container, $parameter);
         }
 
         return $parameters;
