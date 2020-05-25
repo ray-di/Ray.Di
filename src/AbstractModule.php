@@ -17,7 +17,7 @@ abstract class AbstractModule
     protected $matcher;
 
     /**
-     * @var null|AbstractModule
+     * @var ?AbstractModule
      */
     protected $lastModule;
 

@@ -71,7 +71,7 @@ final class Argument implements \Serializable
     }
 
     /**
-     * @return null|mixed
+     * @return mixed
      */
     public function getDefaultValue()
     {
