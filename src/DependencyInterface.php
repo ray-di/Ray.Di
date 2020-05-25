@@ -7,6 +7,11 @@ namespace Ray\Di;
 interface DependencyInterface
 {
     /**
+     * @return string
+     */
+    public function __toString();
+
+    /**
      * Inject dependencies into dependent objects
      *
      * @return mixed

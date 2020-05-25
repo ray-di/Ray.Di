@@ -18,8 +18,6 @@ interface InjectionPointInterface
 
     /**
      * Return class reflection
-     *
-     * @return \ReflectionClass<object>
      */
     public function getClass() : \ReflectionClass;
 

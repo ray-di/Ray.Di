@@ -17,3 +17,6 @@ parameters:
   -
     message: "#expects class-string, string given\\.$#"
     path: tests/BindTest.php
+  -
+    message: "#ReflectionClass does not specify#"
+    path: src/*

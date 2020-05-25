@@ -335,7 +335,7 @@ class InjectorTest extends TestCase
         $module = new class extends AbstractModule {
             protected function configure()
             {
-                $this->bind(\PDO::class)->toConstructor(
+                $this->bind(\PDO::class)->toConstructor( // @phpstan-ignore-line
                     \PDO::class,
                     [
                         ['dsn' => 'pdo_dsn'], // wrong, cause InvalidToConstructorNameParameter exception

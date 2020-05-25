@@ -32,7 +32,7 @@ final class AssistedInterceptor implements MethodInterceptor
      * Intercepts any method and injects instances of the missing arguments
      * when they are type hinted
      *
-     * @return object
+     * @return mixed
      */
     public function invoke(MethodInvocation $invocation)
     {
@@ -52,6 +52,8 @@ final class AssistedInterceptor implements MethodInterceptor
     }
 
     /**
+     * @param array<\ReflectionParameter> $parameters
+     *
      * @internal param int $cntArgs
      */
     public function injectAssistedParameters(ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments) : array
@@ -65,6 +67,7 @@ final class AssistedInterceptor implements MethodInterceptor
             $interface = $hint ? $hint->getName() : '';
             $name = $this->getName($method, $parameter);
             $pos = $parameter->getPosition();
+            /** @psalm-suppress MixedAssignment */
             $arguments[$pos] = $this->injector->getInstance($interface, $name);
         }
 
@@ -83,7 +86,7 @@ final class AssistedInterceptor implements MethodInterceptor
         parse_str($named->value, $names);
         $paramName = $parameter->getName();
         if (isset($names[$paramName])) {
-            return $names[$paramName];
+            return (string) $names[$paramName];
         }
 
         return Name::ANY;

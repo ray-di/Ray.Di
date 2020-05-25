@@ -49,7 +49,7 @@ final class AnnotatedClassMethods
     }
 
     /**
-     * @return null|SetterMethod
+     * @return ?SetterMethod
      */
     public function getSetterMethod(\ReflectionMethod $method)
     {

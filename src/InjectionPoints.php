@@ -9,7 +9,7 @@ final class InjectionPoints
     /**
      * Injection points
      *
-     * @var array [method name, name binding, is optional point ?][]
+     * @var array<array{0:string, 1:string, 2:bool}>
      */
     private $points = [];
 
@@ -37,6 +37,9 @@ final class InjectionPoints
         return $this;
     }
 
+    /**
+     * @param array{0: string, 1: string, 2: bool} $point
+     */
     private function getSetterMethod(string $class, array $point) : SetterMethod
     {
         $setterMethod = new SetterMethod(new \ReflectionMethod($class, $point[0]), new Name($point[1]));
