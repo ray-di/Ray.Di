@@ -6,6 +6,7 @@ namespace Ray\Di;
 
 use Ray\Aop\AbstractMatcher;
 use Ray\Aop\Matcher;
+use Ray\Aop\MethodInterceptor;
 use Ray\Aop\Pointcut;
 use Ray\Aop\PriorityPointcut;
 
@@ -74,7 +75,7 @@ abstract class AbstractModule
     /**
      * Bind interceptor
      *
-     * @param array<class-string<\Ray\Aop\MethodInterceptor>> $interceptors
+     * @param array<class-string<MethodInterceptor>> $interceptors
      */
     public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
     {
@@ -88,7 +89,7 @@ abstract class AbstractModule
     /**
      * Bind interceptor early
      *
-     * @param array<class-string<\Ray\Aop\MethodInterceptor>> $interceptors
+     * @param array<class-string<MethodInterceptor>> $interceptors
      */
     public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
     {
