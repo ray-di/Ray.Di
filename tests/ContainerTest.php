@@ -30,7 +30,7 @@ class ContainerTest extends TestCase
         (new Bind($this->container, FakeEngineInterface::class))->toInstance($this->engine);
     }
 
-    public function testGetDependency()
+    public function testGetDependency() : void
     {
         $dependencyIndex = FakeEngineInterface::class . '-' . Name::ANY;
         $instance = $this->container->getDependency($dependencyIndex);
@@ -38,7 +38,7 @@ class ContainerTest extends TestCase
         $this->assertSame($this->engine, $instance);
     }
 
-    public function testClassGetDependency()
+    public function testClassGetDependency() : void
     {
         (new Bind($this->container, FakeEngine::class))->toInstance($this->engine);
         $dependencyIndex = FakeEngine::class . '-' . Name::ANY;
@@ -47,7 +47,7 @@ class ContainerTest extends TestCase
         $this->assertSame($this->engine, $instance);
     }
 
-    public function testProviderGetDependency()
+    public function testProviderGetDependency() : void
     {
         (new Bind($this->container, FakeEngine::class))->toProvider(FakeEngineProvider::class);
         $dependencyIndex = FakeEngine::class . '-' . Name::ANY;
@@ -55,14 +55,14 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(FakeEngine::class, $instance);
     }
 
-    public function testGetInstance()
+    public function testGetInstance() : void
     {
         $instance = $this->container->getInstance(FakeEngineInterface::class, Name::ANY);
         $this->assertInstanceOf(FakeEngine::class, $instance);
         $this->assertSame($this->engine, $instance);
     }
 
-    public function testClassGetInstance()
+    public function testClassGetInstance() : void
     {
         (new Bind($this->container, FakeEngine::class))->toInstance($this->engine);
         $instance = $this->container->getInstance(FakeEngine::class, Name::ANY);
@@ -70,21 +70,21 @@ class ContainerTest extends TestCase
         $this->assertSame($this->engine, $instance);
     }
 
-    public function testProviderGetInstance()
+    public function testProviderGetInstance() : void
     {
         (new Bind($this->container, FakeEngine::class))->toProvider(FakeEngineProvider::class);
         $instance = $this->container->getInstance(FakeEngine::class, Name::ANY);
         $this->assertInstanceOf(FakeEngine::class, $instance);
     }
 
-    public function testGetContainer()
+    public function testGetContainer() : void
     {
         $array = $this->container->getContainer();
         $dependencyIndex = FakeEngineInterface::class . '-' . Name::ANY;
         $this->assertArrayHasKey($dependencyIndex, $array);
     }
 
-    public function testClassGetContainer()
+    public function testClassGetContainer() : void
     {
         (new Bind($this->container, FakeEngine::class))->toInstance($this->engine);
         $array = $this->container->getContainer();
@@ -92,7 +92,7 @@ class ContainerTest extends TestCase
         $this->assertArrayHasKey($dependencyIndex, $array);
     }
 
-    public function testMerge()
+    public function testMerge() : void
     {
         $extraContainer = new Container;
         $bind = (new Bind($this->container, FakeRobotInterface::class))->to(FakeRobot::class);
@@ -103,7 +103,7 @@ class ContainerTest extends TestCase
         $this->assertArrayHasKey(FakeRobotInterface::class . '-' . Name::ANY, $array);
     }
 
-    public function testMergePointcuts()
+    public function testMergePointcuts() : void
     {
         $extraContainer = new Container;
         $pointcut1 = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [FakeDoubleInterceptor::class]);
@@ -118,7 +118,7 @@ class ContainerTest extends TestCase
         $this->assertContains(FakeDoubleInterceptor::class, $array);
     }
 
-    public function testMove()
+    public function testMove() : void
     {
         $newName = 'new';
         $this->container->move(FakeEngineInterface::class, Name::ANY, FakeEngineInterface::class, $newName);
@@ -127,13 +127,13 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(FakeEngine::class, $instance);
     }
 
-    public function testMoveUnbound()
+    public function testMoveUnbound() : void
     {
         $this->expectException(Unbound::class);
         $this->container->move(FakeEngineInterface::class, 'invalid', FakeEngineInterface::class, 'new');
     }
 
-    public function testAbstractClassUnbound()
+    public function testAbstractClassUnbound() : void
     {
         try {
             $this->container->getInstance('_INVALID_INTERFACE_', Name::ANY);
@@ -142,7 +142,7 @@ class ContainerTest extends TestCase
         }
     }
 
-    public function testAnnotateConstant()
+    public function testAnnotateConstant() : void
     {
         $container = new Container;
         //FakeConstantInterface
@@ -157,7 +157,7 @@ class ContainerTest extends TestCase
         $this->assertSame('default_setter', $instance->defaultBySetter);
     }
 
-    public function testBadMethodCall()
+    public function testBadMethodCall() : void
     {
         $this->expectException(BadMethodCallException::class);
         $container = new Container;

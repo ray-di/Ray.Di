@@ -21,19 +21,24 @@ final class AspectBind
 
     /**
      * Instantiate interceptors
+     *
+     * @return array<string, array<MethodInterceptor>>
      */
     public function inject(Container $container) : array
     {
-        /** @var array<array<class-string>> $bindings */
         $bindings = $this->bind->getBindings();
-        foreach ($bindings as &$interceptors) {
-            foreach ($interceptors as &$interceptor) {
-                /** @psalm-suppress MixedAssignment */
-                $interceptor = $container->getInstance($interceptor, Name::ANY);
-                assert($interceptor instanceof MethodInterceptor);
+        $instanciatedBindings = [];
+        foreach ($bindings as $methodName => $interceptorClassNames) {
+            $interceptors = [];
+            foreach ($interceptorClassNames as &$interceptorClassName) {
+                assert(is_string($interceptorClassName));
+                /** @var MethodInterceptor $interceptor */
+                $interceptor = $container->getInstance($interceptorClassName, Name::ANY);
+                $interceptors[] = $interceptor;
             }
+            $instanciatedBindings[$methodName] = $interceptors;
         }
 
-        return $bindings;
+        return $instanciatedBindings;
     }
 }

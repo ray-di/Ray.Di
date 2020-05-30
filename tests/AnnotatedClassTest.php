@@ -20,7 +20,7 @@ class AnnotatedClassTest extends TestCase
         $this->annotatedClass = new AnnotatedClass(new AnnotationReader);
     }
 
-    public function testInvoke()
+    public function testInvoke() : void
     {
         $newInstance = $this->annotatedClass->getNewInstance(new \ReflectionClass(FakeCar::class));
         $this->assertInstanceOf(NewInstance::class, $newInstance);
@@ -47,7 +47,7 @@ class AnnotatedClassTest extends TestCase
      *
      * @phpstan-param class-string $class
      */
-    public function testAnnotatedByAnnotation(string $class)
+    public function testAnnotatedByAnnotation(string $class) : void
     {
         $newInstance = $this->annotatedClass->getNewInstance(new \ReflectionClass($class));
         $container = new Container;
@@ -61,7 +61,12 @@ class AnnotatedClassTest extends TestCase
         $this->assertInstanceOf(FakeMirrorRight::class, $handleBar->rightMirror);
     }
 
-    public function classProvider()
+    /**
+     * @return FakeHandleBar::class|FakeHandleBarQualifier::class[][]
+     *
+     * @psalm-return array{0: array{0: FakeHandleBar::class}, 1: array{0: FakeHandleBarQualifier::class}}
+     */
+    public function classProvider() : array
     {
         return [
             [FakeHandleBar::class],

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Ray\Di\Di\Qualifier;
+
 interface InjectionPointInterface
 {
     /**
@@ -18,11 +20,16 @@ interface InjectionPointInterface
 
     /**
      * Return class reflection
+     *
+     * @phpstan-return \ReflectionClass<object>
+     * @psalm-return \ReflectionClass
      */
     public function getClass() : \ReflectionClass;
 
     /**
      * Return Qualifier annotations
+     *
+     * @return array<object>
      */
     public function getQualifiers() : array;
 }

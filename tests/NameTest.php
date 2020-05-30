@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class NameTest extends TestCase
 {
-    public function testUnName()
+    public function testUnName() : void
     {
         $name = new Name(Name::ANY);
         $parameter = new \ReflectionParameter([FakeCar::class, '__construct'], 'engine');
@@ -16,7 +16,7 @@ class NameTest extends TestCase
         $this->assertSame(Name::ANY, $boundName);
     }
 
-    public function testSingleName()
+    public function testSingleName() : void
     {
         $name = new Name('turbo');
         $parameter = new \ReflectionParameter([FakeCar::class, '__construct'], 'engine');
@@ -27,7 +27,7 @@ class NameTest extends TestCase
     /**
      * @dataProvider keyPairStringProvider
      */
-    public function testKeyValuePairName(string $keyPairValueString)
+    public function testKeyValuePairName(string $keyPairValueString) : void
     {
         $name = new Name($keyPairValueString);
         $parameter = new \ReflectionParameter([FakeCar::class, '__construct'], 'engine');
@@ -35,7 +35,12 @@ class NameTest extends TestCase
         $this->assertSame('engine_name', $boundName);
     }
 
-    public function keyPairStringProvider()
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array{0: array{0: string}, 1: array{0: string}, 2: array{0: string}, 3: array{0: string}}
+     */
+    public function keyPairStringProvider() : array
     {
         return [
             ['engine=engine_name,var=va_name'],
@@ -45,7 +50,7 @@ class NameTest extends TestCase
         ];
     }
 
-    public function testKeyValuePairButNotFound()
+    public function testKeyValuePairButNotFound() : void
     {
         $name = new Name('foo=bar');
         $parameter = new \ReflectionParameter([FakeCar::class, '__construct'], 'engine');
@@ -53,7 +58,7 @@ class NameTest extends TestCase
         $this->assertSame(Name::ANY, $boundName);
     }
 
-    public function testSetName()
+    public function testSetName() : void
     {
         $name = new Name(FakeMirrorRight::class);
         $parameter = new \ReflectionParameter([FakeHandleBar::class, 'setMirrors'], 'rightMirror');

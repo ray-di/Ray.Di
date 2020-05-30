@@ -24,7 +24,7 @@ class NewInstanceTest extends TestCase
         $this->newInstance = new NewInstance($class, $setterMethods);
     }
 
-    public function testInvoke()
+    public function testInvoke() : void
     {
         $container = new Container;
         (new Bind($container, FakeTyreInterface::class))->to(FakeTyre::class);

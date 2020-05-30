@@ -19,12 +19,12 @@ class InjectionPointsTest extends TestCase
         $this->injectionPoints = (new InjectionPoints)->addMethod('setTires')->addOptionalMethod('setHardtop');
     }
 
-    public function testNew()
+    public function testNew() : void
     {
         $this->assertInstanceOf(InjectionPoints::class, $this->injectionPoints);
     }
 
-    public function testInvoke()
+    public function testInvoke() : SetterMethods
     {
         $car = new FakeCar(new FakeEngine);
         $setterMethods = $this->injectionPoints->__invoke(get_class($car));
@@ -36,7 +36,7 @@ class InjectionPointsTest extends TestCase
     /**
      * @depends testInvoke
      */
-    public function testSetterMethod(SetterMethods $setterMethod)
+    public function testSetterMethod(SetterMethods $setterMethod) : void
     {
         $car = new FakeCar(new FakeEngine);
         $container = (new FakeCarModule)->getContainer();
@@ -49,7 +49,7 @@ class InjectionPointsTest extends TestCase
     /**
      * @depends testInvoke
      */
-    public function testSetterMethodOptional(SetterMethods $setterMethod)
+    public function testSetterMethodOptional(SetterMethods $setterMethod) : void
     {
         $car = new FakeCar(new FakeEngine);
         // no hardtop installed with this module

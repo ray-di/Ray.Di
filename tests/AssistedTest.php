@@ -19,7 +19,7 @@ class AssistedTest extends TestCase
         $this->injector = new Injector(new FakeToBindModule, $_ENV['TMP_DIR']);
     }
 
-    public function testAssisted()
+    public function testAssisted() : void
     {
         $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
         /* @var $consumer FakeAssistedConsumer */
@@ -28,7 +28,7 @@ class AssistedTest extends TestCase
         $this->assertInstanceOf($expecetd, $assistedDependency);
     }
 
-    public function testAssistedWithName()
+    public function testAssistedWithName() : void
     {
         $this->injector = new Injector(new FakeInstanceBindModule);
         $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
@@ -38,7 +38,7 @@ class AssistedTest extends TestCase
         $this->assertSame($expecetd, $assistedDependency);
     }
 
-    public function testAssistedAnyWithName()
+    public function testAssistedAnyWithName() : void
     {
         $injector = new Injector(new FakeToBindModule(new FakeInstanceBindModule));
         $consumer = $injector->getInstance(FakeAssistedConsumer::class);
@@ -49,7 +49,7 @@ class AssistedTest extends TestCase
         $this->assertInstanceOf(FakeRobot::class, $assistedDependency2);
     }
 
-    public function testAssistedMethodInvocation()
+    public function testAssistedMethodInvocation() : void
     {
         $assistedConsumer = (new Injector(new FakeAssistedDbModule, $_ENV['TMP_DIR']))->getInstance(FakeAssistedParamsConsumer::class);
         /* @var $assistedConsumer FakeAssistedParamsConsumer */
@@ -59,7 +59,7 @@ class AssistedTest extends TestCase
         $this->assertSame(1, $db->dbId);
     }
 
-    public function testAssistedMethodInvocationNotAvailable()
+    public function testAssistedMethodInvocationNotAvailable() : void
     {
         $this->expectException(MethodInvocationNotAvailable::class);
         $assistedDbProvider = (new Injector(new FakeAssistedDbModule))->getInstance(FakeAssistedDbProvider::class);

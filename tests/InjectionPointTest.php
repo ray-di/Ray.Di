@@ -25,25 +25,25 @@ class InjectionPointTest extends TestCase
         $this->ip = new InjectionPoint($this->parameter, new AnnotationReader);
     }
 
-    public function testGetParameter()
+    public function testGetParameter() : void
     {
         $actual = $this->ip->getParameter();
         $this->assertSame($this->parameter, $actual);
     }
 
-    public function testGetMethod()
+    public function testGetMethod() : void
     {
         $actual = $this->ip->getMethod();
         $this->assertSame((string) $this->parameter->getDeclaringFunction(), (string) $actual);
     }
 
-    public function testGetClass()
+    public function testGetClass() : void
     {
         $actual = $this->ip->getClass();
         $this->assertSame((string) $this->parameter->getDeclaringClass(), (string) $actual);
     }
 
-    public function testGetQualifiers()
+    public function testGetQualifiers() : void
     {
         /* @var $constant FakeConstant */
         $annotations = $this->ip->getQualifiers();

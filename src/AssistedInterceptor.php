@@ -36,7 +36,6 @@ final class AssistedInterceptor implements MethodInterceptor
      */
     public function invoke(MethodInvocation $invocation)
     {
-        /** @var ReflectionMethod $method */
         $method = $invocation->getMethod();
         $assisted = $method->getAnnotation(Assisted::class);
         /* @var \Ray\Di\Di\Assisted $assisted */
@@ -53,6 +52,9 @@ final class AssistedInterceptor implements MethodInterceptor
 
     /**
      * @param array<\ReflectionParameter> $parameters
+     * @param array<int, mixed>           $arguments
+     *
+     * @return array<int, mixed>
      *
      * @internal param int $cntArgs
      */

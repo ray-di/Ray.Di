@@ -69,7 +69,7 @@ abstract class AbstractModule
             $this->activate();
         }
 
-        return $this->container;
+        return $this->container; // @phpstan-ignore-line
     }
 
     /**
