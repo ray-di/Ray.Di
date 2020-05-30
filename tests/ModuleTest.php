@@ -9,45 +9,45 @@ use Ray\Di\Exception\NotFound;
 
 class ModuleTest extends TestCase
 {
-    public function testNew()
+    public function testNew() : void
     {
         $module = new FakeInstanceBindModule;
         $this->assertInstanceOf(AbstractModule::class, $module);
     }
 
-    public function testInstall()
+    public function testInstall() : void
     {
         $module = new FakeInstallModule;
         $this->assertInstanceOf(AbstractModule::class, $module);
     }
 
-    public function testToInvalidClass()
+    public function testToInvalidClass() : void
     {
         $this->expectException(NotFound::class);
         new FakeToBindInvalidClassModule;
     }
 
-    public function testRename()
+    public function testRename() : void
     {
         $module = new FakeRenameModule(new FakeToBindModule);
         $instance = $module->getContainer()->getInstance(FakeRobotInterface::class, 'original');
         $this->assertInstanceOf(FakeRobotInterface::class, $instance);
     }
 
-    public function testConstructorCallModule()
+    public function testConstructorCallModule() : void
     {
         $module = new FakelNoConstructorCallModule;
         $container = $module->getContainer();
         $this->assertInstanceOf(Container::class, $container);
     }
 
-    public function testActivate()
+    public function testActivate() : void
     {
         $module = new FakeInstanceBindModule;
         $this->assertInstanceOf(Container::class, $module->getContainer());
     }
 
-    public function test__toString()
+    public function test__toString() : void
     {
         $string = (string) new FakeLogStringModule();
         $this->assertSame('-array => (array)

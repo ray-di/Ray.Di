@@ -34,7 +34,12 @@ class DependencyTest extends TestCase
         parent::tearDown();
     }
 
-    public function containerProvider()
+    /**
+     * @return Container[][]
+     *
+     * @psalm-return array{0: array{0: Container}}
+     */
+    public function containerProvider() : array
     {
         $container = new Container;
         (new Bind($container, FakeTyreInterface::class))->to(FakeTyre::class);
@@ -47,7 +52,7 @@ class DependencyTest extends TestCase
     /**
      * @dataProvider containerProvider
      */
-    public function testInject(Container $container)
+    public function testInject(Container $container) : void
     {
         $car = $this->dependency->inject($container);
         /* @var $car FakeCar */
@@ -57,7 +62,7 @@ class DependencyTest extends TestCase
     /**
      * @dataProvider containerProvider
      */
-    public function testSetterInjection(Container $container)
+    public function testSetterInjection(Container $container) : void
     {
         $car = $this->dependency->inject($container);
         /* @var $car FakeCar */
@@ -68,7 +73,7 @@ class DependencyTest extends TestCase
     /**
      * @dataProvider containerProvider
      */
-    public function testPostConstruct(Container $container)
+    public function testPostConstruct(Container $container) : void
     {
         $car = $this->dependency->inject($container);
         /* @var $car FakeCar */
@@ -78,7 +83,7 @@ class DependencyTest extends TestCase
     /**
      * @dataProvider containerProvider
      */
-    public function testPrototype(Container $container)
+    public function testPrototype(Container $container) : void
     {
         $this->dependency->setScope(Scope::PROTOTYPE);
         $car1 = $this->dependency->inject($container);
@@ -89,7 +94,7 @@ class DependencyTest extends TestCase
     /**
      * @dataProvider containerProvider
      */
-    public function testSingleton(Container $container)
+    public function testSingleton(Container $container) : void
     {
         $this->dependency->setScope(Scope::SINGLETON);
         $car1 = $this->dependency->inject($container);
@@ -97,7 +102,7 @@ class DependencyTest extends TestCase
         $this->assertSame(spl_object_hash($car1), spl_object_hash($car2));
     }
 
-    public function testInjectInterceptor()
+    public function testInjectInterceptor() : void
     {
         $dependency = new Dependency(new NewInstance(new \ReflectionClass(FakeAop::class), new SetterMethods([])));
         $pointcut = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [FakeDoubleInterceptor::class]);

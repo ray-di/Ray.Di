@@ -8,13 +8,13 @@ use PHPUnit\Framework\TestCase;
 
 class GrapherTest extends TestCase
 {
-    public function testNew()
+    public function testNew() : void
     {
         $grapher = new Grapher(new FakeInstanceBindModule, __DIR__ . '/tmp');
         $this->assertInstanceOf(Grapher::class, $grapher);
     }
 
-    public function testGetInstanceWithArgs()
+    public function testGetInstanceWithArgs() : void
     {
         $grapher = new Grapher(new FakeUntargetModule, __DIR__ . '/tmp');
         $instance = $grapher->newInstanceArgs(FakeUntargetChild::class, ['1']);
@@ -22,7 +22,7 @@ class GrapherTest extends TestCase
         $this->assertSame('1', $instance->val);
     }
 
-    public function testAopClassAutoloader()
+    public function testAopClassAutoloader() : void
     {
         passthru('php ' . __DIR__ . '/script/grapher.php');
         $cacheFile = __DIR__ . '/script/grapher.php.txt';

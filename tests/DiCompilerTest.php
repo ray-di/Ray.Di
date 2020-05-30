@@ -9,7 +9,7 @@ use Ray\Compiler\DiCompiler;
 
 class DiCompilerTest extends TestCase
 {
-    public function testUntargetInject()
+    public function testUntargetInject() : void
     {
         /* @var $fake FakeUntarget */
         $module = new FakeUntargetToIntanceModule;

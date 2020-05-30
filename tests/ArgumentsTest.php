@@ -18,7 +18,7 @@ class ArgumentsTest extends TestCase
         $this->arguments = new Arguments(new \ReflectionMethod(FakeCar::class, 'setTires'), new Name(Name::ANY));
     }
 
-    public function testInject()
+    public function testInject() : void
     {
         $container = (new FakeCarModule)->getContainer();
         $parameters = $this->arguments->inject($container);
@@ -27,7 +27,7 @@ class ArgumentsTest extends TestCase
         $this->assertNotSame(spl_object_hash($parameters[0]), $parameters[1]);
     }
 
-    public function testParameterDefaultValue()
+    public function testParameterDefaultValue() : void
     {
         $defaultValue = (new \ReflectionParameter([FakeHandleProvider::class, '__construct'], 'logo'))->getDefaultValue();
         $emptyContainer = new Container;

@@ -19,7 +19,7 @@ class SetterMethodsTest extends TestCase
         $this->setterMethod = new SetterMethod($method, new Name(Name::ANY));
     }
 
-    public function testInvoke()
+    public function testInvoke() : void
     {
         $car = new FakeCar(new FakeEngine);
         $container = (new FakeCarModule)->getContainer();
