@@ -11,7 +11,4 @@ parameters:
   -
     message: "#Method Ray\\Di\\AbstractModule::getContainer() should return Ray\\Di\\Container but returns Ray\\Di\\Container|null\\.$#"
     path: src/AbstractModule.php
-  -
-    message: "#expects class-string, string given\\.$#"
-    path: tests/BindTest.php
 

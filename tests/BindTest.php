@@ -43,7 +43,7 @@ class BindTest extends TestCase
     public function testInvalidToProviderTest() : void
     {
         $this->expectException(Notfound::class);
-        $this->bind->toProvider('invalid-class');
+        $this->bind->toProvider('invalid-class'); // @phpstan-ignore-line
     }
 
     public function testInValidInterfaceBinding() : void
