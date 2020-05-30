@@ -18,6 +18,9 @@ interface InjectionPointInterface
 
     /**
      * Return class reflection
+     *
+     * @phpstan-return \ReflectionClass<object>
+     * @psalm-return \ReflectionClass
      */
     public function getClass() : \ReflectionClass;
 
