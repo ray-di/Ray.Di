@@ -7,8 +7,4 @@ parameters:
     - %currentWorkingDirectory%/tests/tmp/*
     - %currentWorkingDirectory%/tests/Fake/*
   checkMissingIterableValueType: false
-  ignoreErrors:
-  -
-    message: "#Method Ray\\Di\\AbstractModule::getContainer() should return Ray\\Di\\Container but returns Ray\\Di\\Container|null\\.$#"
-    path: src/AbstractModule.php
 
