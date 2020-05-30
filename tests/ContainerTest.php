@@ -165,4 +165,13 @@ class ContainerTest extends TestCase
         (new Bind($container, FakeEngineInterface::class))->toInstance(new FakeEngine);
         $container->getInstanceWithArgs(FakeEngineInterface::class, []);
     }
+
+    public function testParentClassBinding() : void
+    {
+        $container = new Container;
+        (new Bind($container, FakeAbstractClass::class))->toProvider(FakeExtendedProvider::class);
+        // note: FakeExtendedClass is not bound to FakeAbstractClass but FakeExtendedProvider
+        $instance = $container->getDependency(FakeExtendedClass::class . '-');
+        $this->assertInstanceOf(FakeExtendedClass::class, $instance);
+    }
 }

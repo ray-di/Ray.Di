@@ -88,10 +88,7 @@ final class Container
      */
     public function getDependency(string $index)
     {
-        if (! isset($this->container[$index])) {
-            throw $this->unbound($index);
-        }
-        $dependency = $this->container[$index];
+        $dependency = $this->container[$index] ?? $this->getParentDependency($index);
 
         return $dependency->inject($this);
     }
@@ -177,5 +174,23 @@ final class Container
         $dependency->weaveAspects($compiler, $this->pointcuts);
 
         return $this;
+    }
+
+    private function getParentDependency(string $index) : DependencyInterface
+    {
+        [$class] = explode('-', $index);
+        if (! class_exists($class)) {
+            throw $this->unbound($index);
+        }
+        $parent = (new \ReflectionClass($class))->getParentClass();
+        if (! $parent) {
+            throw $this->unbound($index);
+        }
+        $parentIndex = $parent->getName() . '-';
+        if (isset($this->container[$parentIndex])) {
+            return $this->container[$parentIndex];
+        }
+
+        return $this->getParentDependency($parentIndex);
     }
 }
