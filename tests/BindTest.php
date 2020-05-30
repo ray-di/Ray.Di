@@ -87,7 +87,7 @@ class BindTest extends TestCase
     /**
      * @dataProvider nameProvider
      *
-     * @param array|string $name
+     * @param array<string, string>|string $name
      */
     public function testToConstructor($name) : void
     {

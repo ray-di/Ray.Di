@@ -52,6 +52,9 @@ final class AssistedInterceptor implements MethodInterceptor
 
     /**
      * @param array<\ReflectionParameter> $parameters
+     * @param array<int, mixed>           $arguments
+     *
+     * @return array<int, mixed>
      *
      * @internal param int $cntArgs
      */

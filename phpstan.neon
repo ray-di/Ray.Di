@@ -6,5 +6,4 @@ parameters:
   excludes_analyse:
     - %currentWorkingDirectory%/tests/tmp/*
     - %currentWorkingDirectory%/tests/Fake/*
-  checkMissingIterableValueType: false
 
