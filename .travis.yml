@@ -7,11 +7,12 @@ php:
 
 cache:
   directories:
-    - vendor
+    - ./vendor
     - $HOME/.composer/cache
 
 before_install:
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
+  - composer validate
   - composer self-update
 
 install:

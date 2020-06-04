@@ -3,9 +3,7 @@
     "description": "Guice style annotation-driven dependency injection framework",
     "keywords": [
         "di",
-        "aop",
-        "annotations",
-        "guice"
+        "aop"
     ],
     "license": "MIT",
     "authors": [
@@ -16,7 +14,7 @@
     ],
     "require": {
         "php": ">=7.2.0",
-        "ray/aop": "^2.9.6",
+        "ray/aop": "^2.9.8",
         "ray/compiler": "1.x-dev|^1.3.6"
     },
     "require-dev": {
@@ -24,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Ray\\Di\\": "src/"
+            "Ray\\Di\\": ["src/", "src-deprecated"]
         }
     },
     "autoload-dev": {
