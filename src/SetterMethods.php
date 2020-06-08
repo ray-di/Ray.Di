@@ -22,7 +22,6 @@ final class SetterMethods
     }
 
     /**
-     * @throws Exception\Unbound
      * @throws Exception
      */
     public function __invoke(object $instance, Container $container) : void
