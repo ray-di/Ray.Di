@@ -127,7 +127,7 @@ final class Argument implements \Serializable
         }
         try {
             $this->default = $parameter->getDefaultValue();
-        } /* @noinspection PhpRedundantCatchClauseInspection */ catch (\ReflectionException $e) {
+        }  catch (\ReflectionException $e) {
             // probably it is internal class like \PDO
             $this->default = null;
         }
