@@ -9,6 +9,8 @@ use Ray\Aop\Compiler;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
 use Ray\Aop\WeavedInterface;
+use ReflectionClass;
+use ReflectionMethod;
 
 class DependencyTest extends TestCase
 {
@@ -19,14 +21,14 @@ class DependencyTest extends TestCase
 
     protected function setUp() : void
     {
-        $class = new \ReflectionClass(FakeCar::class);
+        $class = new ReflectionClass(FakeCar::class);
         $setters = [];
         $name = new Name(Name::ANY);
-        $setters[] = new SetterMethod(new \ReflectionMethod(FakeCar::class, 'setTires'), $name);
-        $setters[] = new SetterMethod(new \ReflectionMethod(FakeCar::class, 'setHardtop'), $name);
+        $setters[] = new SetterMethod(new ReflectionMethod(FakeCar::class, 'setTires'), $name);
+        $setters[] = new SetterMethod(new ReflectionMethod(FakeCar::class, 'setHardtop'), $name);
         $setterMethods = new SetterMethods($setters);
         $newInstance = new NewInstance($class, $setterMethods);
-        $this->dependency = new Dependency($newInstance, new \ReflectionMethod(FakeCar::class, 'postConstruct'));
+        $this->dependency = new Dependency($newInstance, new ReflectionMethod(FakeCar::class, 'postConstruct'));
     }
 
     protected function tearDown() : void
@@ -104,13 +106,13 @@ class DependencyTest extends TestCase
 
     public function testInjectInterceptor() : void
     {
-        $dependency = new Dependency(new NewInstance(new \ReflectionClass(FakeAop::class), new SetterMethods([])));
+        $dependency = new Dependency(new NewInstance(new ReflectionClass(FakeAop::class), new SetterMethods([])));
         $pointcut = new Pointcut((new Matcher)->any(), (new Matcher)->any(), [FakeDoubleInterceptor::class]);
         $dependency->weaveAspects(new Compiler($_ENV['TMP_DIR']), [$pointcut]);
         $container = new Container;
         $container->add((new Bind($container, FakeDoubleInterceptor::class))->to(FakeDoubleInterceptor::class));
         $instance = $dependency->inject($container);
-        $isWeave = (new \ReflectionClass($instance))->implementsInterface(WeavedInterface::class);
+        $isWeave = (new ReflectionClass($instance))->implementsInterface(WeavedInterface::class);
         $this->assertTrue($isWeave);
         $this->assertArrayHasKey('returnSame', $instance->bindings);
     }

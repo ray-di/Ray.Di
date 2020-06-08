@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Ray\Di\Exception;
 
-class Unbound extends \LogicException implements ExceptionInterface
+use Exception;
+use function get_class;
+use LogicException;
+
+class Unbound extends LogicException implements ExceptionInterface
 {
     public function __toString()
     {
         $messages = [sprintf("- %s\n", $this->getMessage())];
         $e = $this->getPrevious();
-        if (! $e instanceof \Exception) {
+        if (! $e instanceof Exception) {
             return $this->getMainMessage($this);
         }
         if ($e instanceof self) {
@@ -41,7 +45,7 @@ class Unbound extends \LogicException implements ExceptionInterface
     {
         return sprintf(
             "exception '%s' with message '%s'\n",
-            \get_class($e),
+            get_class($e),
             $e->getMessage()
         );
     }

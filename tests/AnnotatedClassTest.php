@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use LogicException;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 class AnnotatedClassTest extends TestCase
 {
@@ -22,7 +24,7 @@ class AnnotatedClassTest extends TestCase
 
     public function testInvoke() : void
     {
-        $newInstance = $this->annotatedClass->getNewInstance(new \ReflectionClass(FakeCar::class));
+        $newInstance = $this->annotatedClass->getNewInstance(new ReflectionClass(FakeCar::class));
         $this->assertInstanceOf(NewInstance::class, $newInstance);
         $container = new Container;
         (new Bind($container, FakeTyreInterface::class))->to(FakeTyre::class);
@@ -33,7 +35,7 @@ class AnnotatedClassTest extends TestCase
         (new Bind($container, FakeGearStickInterface::class))->toProvider(FakeGearStickProvider::class);
         $car = $newInstance($container);
         if (! $car instanceof FakeCar) {
-            throw new \LogicException;
+            throw new LogicException;
         }
         $this->assertInstanceOf(FakeCar::class, $car);
         $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
@@ -49,13 +51,13 @@ class AnnotatedClassTest extends TestCase
      */
     public function testAnnotatedByAnnotation(string $class) : void
     {
-        $newInstance = $this->annotatedClass->getNewInstance(new \ReflectionClass($class));
+        $newInstance = $this->annotatedClass->getNewInstance(new ReflectionClass($class));
         $container = new Container;
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeLeft::class)->to(FakeMirrorLeft::class);
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeRight::class)->to(FakeMirrorRight::class);
         $handleBar = $newInstance($container);
         if (! $handleBar instanceof FakeHandleBar && ! $handleBar instanceof FakeHandleBarQualifier) {
-            throw new \LogicException;
+            throw new LogicException;
         }
         $this->assertInstanceOf(FakeMirrorLeft::class, $handleBar->leftMirror);
         $this->assertInstanceOf(FakeMirrorRight::class, $handleBar->rightMirror);

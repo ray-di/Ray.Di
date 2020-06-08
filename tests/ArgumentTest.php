@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
+use ReflectionParameter;
 
 class ArgumentTest extends TestCase
 {
@@ -15,7 +17,7 @@ class ArgumentTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->argument = new Argument(new \ReflectionParameter([FakeCar::class, '__construct'], 'engine'), Name::ANY);
+        $this->argument = new Argument(new ReflectionParameter([FakeCar::class, '__construct'], 'engine'), Name::ANY);
     }
 
     public function testToString() : void
@@ -25,15 +27,15 @@ class ArgumentTest extends TestCase
 
     public function testToStringScalar() : void
     {
-        $argument = new Argument(new \ReflectionParameter([FakeInternalTypes::class, 'stringId'], 'id'), Name::ANY);
+        $argument = new Argument(new ReflectionParameter([FakeInternalTypes::class, 'stringId'], 'id'), Name::ANY);
         $this->assertSame('-' . Name::ANY, (string) $argument);
     }
 
     public function testSerializable() : void
     {
         /** @var Argument $argument */
-        $argument = unserialize(serialize(new Argument(new \ReflectionParameter([FakeInternalTypes::class, 'stringId'], 'id'), Name::ANY)));
+        $argument = unserialize(serialize(new Argument(new ReflectionParameter([FakeInternalTypes::class, 'stringId'], 'id'), Name::ANY)));
         $class = $argument->get()->getDeclaringFunction();
-        $this->assertInstanceOf(\ReflectionMethod::class, $class);
+        $this->assertInstanceOf(ReflectionMethod::class, $class);
     }
 }

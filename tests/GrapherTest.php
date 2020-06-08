@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 class GrapherTest extends TestCase
@@ -28,7 +29,7 @@ class GrapherTest extends TestCase
         $cacheFile = __DIR__ . '/script/grapher.php.txt';
         $cache = file_get_contents($cacheFile);
         if (! is_string($cache)) {
-            throw new \LogicException;
+            throw new LogicException;
         }
         /* @var Grapher $grapher */
         $grapher = unserialize($cache);

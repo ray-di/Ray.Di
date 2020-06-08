@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use ReflectionParameter;
 use function substr;
 
 final class Name
@@ -11,7 +12,7 @@ final class Name
     /**
      * 'Unnamed' name
      */
-    const ANY = '';
+    public const ANY = '';
 
     /**
      * @var string
@@ -34,7 +35,7 @@ final class Name
         }
     }
 
-    public function __invoke(\ReflectionParameter $parameter) : string
+    public function __invoke(ReflectionParameter $parameter) : string
     {
         // single variable named binding
         if ($this->name) {

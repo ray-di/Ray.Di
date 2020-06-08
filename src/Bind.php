@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use function is_array;
 use Ray\Di\Exception\InvalidToConstructorNameParameter;
+use ReflectionClass;
+use ReflectionMethod;
 
 final class Bind
 {
@@ -48,7 +51,7 @@ final class Bind
         $this->container = $container;
         $this->interface = $interface;
         $this->validate = new BindValidator;
-        $bindUntarget = class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
+        $bindUntarget = class_exists($interface) && ! (new ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
         $this->bound = new NullDependency;
         if ($bindUntarget) {
             assert(class_exists($interface));
@@ -105,13 +108,13 @@ final class Bind
      */
     public function toConstructor(string $class, $name, InjectionPoints $injectionPoints = null, string $postConstruct = null) : self
     {
-        if (\is_array($name)) {
+        if (is_array($name)) {
             $name = $this->getStringName($name);
         }
         $this->untarget = null;
-        $postConstructRef = $postConstruct ? new \ReflectionMethod($class, $postConstruct) : null;
+        $postConstructRef = $postConstruct ? new ReflectionMethod($class, $postConstruct) : null;
         assert(class_exists($class));
-        $this->bound = (new DependencyFactory)->newToConstructor(new \ReflectionClass($class), $name, $injectionPoints, $postConstructRef);
+        $this->bound = (new DependencyFactory)->newToConstructor(new ReflectionClass($class), $name, $injectionPoints, $postConstructRef);
         $this->container->add($this);
 
         return $this;

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use ReflectionMethod;
 
 class NewInstanceTest extends TestCase
 {
@@ -15,11 +17,11 @@ class NewInstanceTest extends TestCase
 
     protected function setUp() : void
     {
-        $class = new \ReflectionClass(FakeCar::class);
+        $class = new ReflectionClass(FakeCar::class);
         $setters = [];
         $name = new Name(Name::ANY);
-        $setters[] = new SetterMethod(new \ReflectionMethod(FakeCar::class, 'setTires'), $name);
-        $setters[] = new SetterMethod(new \ReflectionMethod(FakeCar::class, 'setHardtop'), $name);
+        $setters[] = new SetterMethod(new ReflectionMethod(FakeCar::class, 'setTires'), $name);
+        $setters[] = new SetterMethod(new ReflectionMethod(FakeCar::class, 'setHardtop'), $name);
         $setterMethods = new SetterMethods($setters);
         $this->newInstance = new NewInstance($class, $setterMethods);
     }

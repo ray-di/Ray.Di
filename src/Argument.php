@@ -4,7 +4,15 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-final class Argument implements \Serializable
+use function in_array;
+use ReflectionException;
+use ReflectionMethod;
+use ReflectionNamedType;
+use ReflectionParameter;
+use Serializable;
+use function serialize;
+
+final class Argument implements Serializable
 {
     /**
      * @var string
@@ -27,11 +35,11 @@ final class Argument implements \Serializable
     private $meta;
 
     /**
-     * @var \ReflectionParameter
+     * @var ReflectionParameter
      */
     private $reflection;
 
-    public function __construct(\ReflectionParameter $parameter, string $name)
+    public function __construct(ReflectionParameter $parameter, string $name)
     {
         $type = $this->getType($parameter);
         $isOptional = $parameter->isOptional();
@@ -60,7 +68,7 @@ final class Argument implements \Serializable
     /**
      * Return reflection
      */
-    public function get() : \ReflectionParameter
+    public function get() : ReflectionParameter
     {
         return $this->reflection;
     }
@@ -85,7 +93,7 @@ final class Argument implements \Serializable
 
     public function serialize() : string
     {
-        /** @var \ReflectionMethod $method */
+        /** @var ReflectionMethod $method */
         $method = $this->reflection->getDeclaringFunction();
         $ref = [
             $method->class,
@@ -93,7 +101,7 @@ final class Argument implements \Serializable
             $this->reflection->getName()
         ];
 
-        return \serialize([
+        return serialize([
             $this->index,
             $this->isDefaultAvailable,
             $this->default,
@@ -105,7 +113,7 @@ final class Argument implements \Serializable
     /**
      * @param string $serialized
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function unserialize($serialized) : void
     {
@@ -117,29 +125,29 @@ final class Argument implements \Serializable
             $this->meta,
             $ref
         ] = $unserialized;
-        $this->reflection = new \ReflectionParameter([$ref[0], $ref[1]], $ref[2]);
+        $this->reflection = new ReflectionParameter([$ref[0], $ref[1]], $ref[2]);
     }
 
-    private function setDefaultValue(\ReflectionParameter $parameter) : void
+    private function setDefaultValue(ReflectionParameter $parameter) : void
     {
         if (! $this->isDefaultAvailable) {
             return;
         }
         try {
             $this->default = $parameter->getDefaultValue();
-        }  catch (\ReflectionException $e) {
+        } catch (ReflectionException $e) {
             // probably it is internal class like \PDO
             $this->default = null;
         }
     }
 
-    private function getType(\ReflectionParameter $parameter) : string
+    private function getType(ReflectionParameter $parameter) : string
     {
         $type = $parameter->getType();
-        if (! $type instanceof \ReflectionNamedType) {
+        if (! $type instanceof ReflectionNamedType) {
             return '';
         }
-        if (\in_array($type->getName(), ['bool', 'int', 'string', 'array', 'resource', 'callable'], true)) {
+        if (in_array($type->getName(), ['bool', 'int', 'string', 'array', 'resource', 'callable'], true)) {
             return '';
         }
 

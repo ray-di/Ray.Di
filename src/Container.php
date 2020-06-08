@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use BadMethodCallException;
 use Ray\Aop\Compiler;
 use Ray\Aop\CompilerInterface;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Exception\Untargeted;
+use ReflectionClass;
 
 final class Container
 {
@@ -73,7 +75,7 @@ final class Container
         }
         $dependency = $this->container[$index];
         if (! $dependency instanceof Dependency) {
-            throw new \BadMethodCallException($interface);
+            throw new BadMethodCallException($interface);
         }
 
         return $dependency->injectWithArgs($this, $params);
@@ -120,7 +122,7 @@ final class Container
     public function unbound(string $index)
     {
         [$class, $name] = explode('-', $index);
-        if (class_exists($class) && ! (new \ReflectionClass($class))->isAbstract()) {
+        if (class_exists($class) && ! (new ReflectionClass($class))->isAbstract()) {
             return new Untargeted($class);
         }
 

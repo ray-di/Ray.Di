@@ -7,6 +7,8 @@ namespace Ray\Di;
 use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Di\InjectInterface;
 use Ray\Di\Di\Named;
+use ReflectionClass;
+use ReflectionMethod;
 
 final class AnnotatedClassMethods
 {
@@ -29,7 +31,7 @@ final class AnnotatedClassMethods
     /**
      * @phpstan-param \ReflectionClass<object> $class
      */
-    public function getConstructorName(\ReflectionClass $class) : Name
+    public function getConstructorName(ReflectionClass $class) : Name
     {
         $constructor = $class->getConstructor();
         if (! $constructor) {
@@ -51,7 +53,7 @@ final class AnnotatedClassMethods
     /**
      * @return ?SetterMethod
      */
-    public function getSetterMethod(\ReflectionMethod $method)
+    public function getSetterMethod(ReflectionMethod $method)
     {
         $inject = $this->reader->getMethodAnnotation($method, InjectInterface::class);
         if (! $inject instanceof InjectInterface) {

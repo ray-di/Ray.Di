@@ -6,6 +6,8 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ray\Di\Di\PostConstruct;
+use ReflectionClass;
+use ReflectionMethod;
 
 final class AnnotatedClass
 {
@@ -30,7 +32,7 @@ final class AnnotatedClass
      *
      * @phpstan-param \ReflectionClass<object> $class Target class reflection
      */
-    public function getNewInstance(\ReflectionClass $class) : NewInstance
+    public function getNewInstance(ReflectionClass $class) : NewInstance
     {
         $setterMethods = new SetterMethods([]);
         $methods = $class->getMethods();
@@ -50,7 +52,7 @@ final class AnnotatedClass
      *
      * @phpstan-param \ReflectionClass<object> $class
      */
-    public function getPostConstruct(\ReflectionClass $class) : ?\ReflectionMethod
+    public function getPostConstruct(ReflectionClass $class) : ?ReflectionMethod
     {
         $methods = $class->getMethods();
         foreach ($methods as $method) {

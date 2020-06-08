@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use ReflectionMethod;
+
 final class InjectionPoints
 {
     /**
@@ -42,7 +44,7 @@ final class InjectionPoints
      */
     private function getSetterMethod(string $class, array $point) : SetterMethod
     {
-        $setterMethod = new SetterMethod(new \ReflectionMethod($class, $point[0]), new Name($point[1]));
+        $setterMethod = new SetterMethod(new ReflectionMethod($class, $point[0]), new Name($point[1]));
         if ($point[2]) {
             $setterMethod->setOptional();
         }

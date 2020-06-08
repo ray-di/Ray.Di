@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Exception;
+
 final class SetterMethods
 {
     /**
@@ -21,7 +23,7 @@ final class SetterMethods
 
     /**
      * @throws Exception\Unbound
-     * @throws \Exception
+     * @throws Exception
      */
     public function __invoke(object $instance, Container $container) : void
     {

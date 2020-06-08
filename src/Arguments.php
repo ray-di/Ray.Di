@@ -6,6 +6,7 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ray\Di\Exception\Unbound;
+use ReflectionMethod;
 
 final class Arguments
 {
@@ -14,7 +15,7 @@ final class Arguments
      */
     private $arguments = [];
 
-    public function __construct(\ReflectionMethod $method, Name $name)
+    public function __construct(ReflectionMethod $method, Name $name)
     {
         $parameters = $method->getParameters();
         foreach ($parameters as $parameter) {
