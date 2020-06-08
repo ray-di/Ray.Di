@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use LogicException;
+use PDO;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\InvalidToConstructorNameParameter;
 use Ray\Di\Exception\Unbound;
@@ -236,11 +238,11 @@ class InjectorTest extends TestCase
         $cacheFile = __DIR__ . '/script/aop.php.cache.txt';
         $cache = file_get_contents($cacheFile);
         if (! is_string($cache)) {
-            throw new \LogicException;
+            throw new LogicException;
         }
         $injector = unserialize($cache);
         if (! $injector instanceof Injector) {
-            throw new \LogicException;
+            throw new LogicException;
         }
         $instance = $injector->getInstance(FakeAopInterface::class);
         /* @var $instance FakeAop */
@@ -293,8 +295,8 @@ class InjectorTest extends TestCase
     public function testIsOptionalValue() : void
     {
         if (! defined('HHVM_VERSION')) {
-            $pdo = (new Injector(new FakePdoModule))->getInstance(\PDO::class);
-            $this->assertInstanceOf(\PDO::class, $pdo);
+            $pdo = (new Injector(new FakePdoModule))->getInstance(PDO::class);
+            $this->assertInstanceOf(PDO::class, $pdo);
         }
     }
 
@@ -315,8 +317,8 @@ class InjectorTest extends TestCase
         $module = new class extends AbstractModule {
             protected function configure()
             {
-                $this->bind(\PDO::class)->toConstructor(
-                    \PDO::class,
+                $this->bind(PDO::class)->toConstructor(
+                    PDO::class,
                     [
                         'dsn' => 'pdo_dsn',
                     ]
@@ -325,8 +327,8 @@ class InjectorTest extends TestCase
             }
         };
         $injector = new Injector($module);
-        $pdo = $injector->getInstance(\PDO::class);
-        $this->assertInstanceOf(\PDO::class, $pdo);
+        $pdo = $injector->getInstance(PDO::class);
+        $this->assertInstanceOf(PDO::class, $pdo);
     }
 
     public function testToConstructorInvalidName() : void
@@ -335,8 +337,8 @@ class InjectorTest extends TestCase
         $module = new class extends AbstractModule {
             protected function configure()
             {
-                $this->bind(\PDO::class)->toConstructor( // @phpstan-ignore-line
-                    \PDO::class,
+                $this->bind(PDO::class)->toConstructor( // @phpstan-ignore-line
+                    PDO::class,
                     [
                         ['dsn' => 'pdo_dsn'], // wrong, cause InvalidToConstructorNameParameter exception
                     ]
@@ -345,7 +347,7 @@ class InjectorTest extends TestCase
             }
         };
         $injector = new Injector($module);
-        $pdo = $injector->getInstance(\PDO::class);
-        $this->assertInstanceOf(\PDO::class, $pdo);
+        $pdo = $injector->getInstance(PDO::class);
+        $this->assertInstanceOf(PDO::class, $pdo);
     }
 }

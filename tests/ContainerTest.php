@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use BadMethodCallException;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Ray\Aop\Matcher;
 use Ray\Aop\Pointcut;
@@ -137,7 +138,7 @@ class ContainerTest extends TestCase
     {
         try {
             $this->container->getInstance('_INVALID_INTERFACE_', Name::ANY);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame(Unbound::class, get_class($e));
         }
     }

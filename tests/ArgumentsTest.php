@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
+use ReflectionParameter;
 
 class ArgumentsTest extends TestCase
 {
@@ -15,7 +17,7 @@ class ArgumentsTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->arguments = new Arguments(new \ReflectionMethod(FakeCar::class, 'setTires'), new Name(Name::ANY));
+        $this->arguments = new Arguments(new ReflectionMethod(FakeCar::class, 'setTires'), new Name(Name::ANY));
     }
 
     public function testInject() : void
@@ -29,9 +31,9 @@ class ArgumentsTest extends TestCase
 
     public function testParameterDefaultValue() : void
     {
-        $defaultValue = (new \ReflectionParameter([FakeHandleProvider::class, '__construct'], 'logo'))->getDefaultValue();
+        $defaultValue = (new ReflectionParameter([FakeHandleProvider::class, '__construct'], 'logo'))->getDefaultValue();
         $emptyContainer = new Container;
-        $parameters = new Arguments(new \ReflectionMethod(FakeHandleProvider::class, '__construct'), new Name(Name::ANY));
+        $parameters = new Arguments(new ReflectionMethod(FakeHandleProvider::class, '__construct'), new Name(Name::ANY));
         $parametersValue = $parameters->inject($emptyContainer);
         $this->assertSame($defaultValue, $parametersValue[0]);
     }

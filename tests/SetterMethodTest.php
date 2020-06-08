@@ -6,6 +6,7 @@ namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
+use ReflectionMethod;
 
 class SetterMethodTest extends TestCase
 {
@@ -16,7 +17,7 @@ class SetterMethodTest extends TestCase
 
     protected function setUp() : void
     {
-        $method = new \ReflectionMethod(FakeCar::class, 'setTires');
+        $method = new ReflectionMethod(FakeCar::class, 'setTires');
         $setterMethod = new SetterMethod($method, new Name(Name::ANY));
         $this->setterMethods = new SetterMethods([$setterMethod]);
     }

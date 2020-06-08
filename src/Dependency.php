@@ -9,6 +9,8 @@ use Ray\Aop\CompilerInterface;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\Pointcut;
 use Ray\Aop\WeavedInterface;
+use ReflectionClass;
+use ReflectionMethod;
 
 final class Dependency implements DependencyInterface
 {
@@ -38,9 +40,9 @@ final class Dependency implements DependencyInterface
     private $index = '';
 
     /**
-     * @param \ReflectionMethod $postConstruct
+     * @param ReflectionMethod $postConstruct
      */
-    public function __construct(NewInstance $newInstance, \ReflectionMethod $postConstruct = null)
+    public function __construct(NewInstance $newInstance, ReflectionMethod $postConstruct = null)
     {
         $this->newInstance = $newInstance;
         $this->postConstruct = $postConstruct ? $postConstruct->name : null;
@@ -132,8 +134,8 @@ final class Dependency implements DependencyInterface
         $class = (string) $this->newInstance;
         /**  @psalm-suppress RedundantConditionGivenDocblockType */
         assert(class_exists($class));
-        $isInterceptor = (new \ReflectionClass($class))->implementsInterface(MethodInterceptor::class);
-        $isWeaved = (new \ReflectionClass($class))->implementsInterface(WeavedInterface::class);
+        $isInterceptor = (new ReflectionClass($class))->implementsInterface(MethodInterceptor::class);
+        $isWeaved = (new ReflectionClass($class))->implementsInterface(WeavedInterface::class);
         if ($isInterceptor || $isWeaved) {
             return;
         }

@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use ReflectionClass;
+use ReflectionMethod;
 
 final class DependencyFactory
 {
     /**
      * Create dependency object
      *
-     * @param \ReflectionClass<object> $class
+     * @param ReflectionClass<object> $class
      */
-    public function newAnnotatedDependency(\ReflectionClass $class) : Dependency
+    public function newAnnotatedDependency(ReflectionClass $class) : Dependency
     {
         $annotateClass = new AnnotatedClass(new AnnotationReader);
         $newInstance = $annotateClass->getNewInstance($class);
@@ -25,9 +27,9 @@ final class DependencyFactory
     /**
      * Create Provider binding
      *
-     * @param \ReflectionClass<object> $provider
+     * @param ReflectionClass<object> $provider
      */
-    public function newProvider(\ReflectionClass $provider, string $context) : DependencyProvider
+    public function newProvider(ReflectionClass $provider, string $context) : DependencyProvider
     {
         $dependency = $this->newAnnotatedDependency($provider);
 
@@ -37,13 +39,13 @@ final class DependencyFactory
     /**
      * Create ToConstructor binding
      *
-     * @param \ReflectionClass<object> $class
+     * @param ReflectionClass<object> $class
      */
     public function newToConstructor(
-        \ReflectionClass $class,
+        ReflectionClass $class,
         string $name,
         InjectionPoints $injectionPoints = null,
-        \ReflectionMethod $postConstruct = null
+        ReflectionMethod $postConstruct = null
     ) : Dependency {
         $setterMethods = $injectionPoints ? $injectionPoints($class->name) : new SetterMethods([]);
         $newInstance = new NewInstance($class, $setterMethods, new Name($name));

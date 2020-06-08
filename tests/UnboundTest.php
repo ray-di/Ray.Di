@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
 
@@ -28,7 +29,7 @@ class UnboundTest extends TestCase
 
     public function testNonUnboundPrevious() : void
     {
-        $string = (string) new Unbound('', 0, new \LogicException);
+        $string = (string) new Unbound('', 0, new LogicException);
         $expected = 'LogicException';
         $this->assertStringContainsString($expected, $string);
     }

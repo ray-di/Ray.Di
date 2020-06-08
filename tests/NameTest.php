@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionParameter;
 
 class NameTest extends TestCase
 {
     public function testUnName() : void
     {
         $name = new Name(Name::ANY);
-        $parameter = new \ReflectionParameter([FakeCar::class, '__construct'], 'engine');
+        $parameter = new ReflectionParameter([FakeCar::class, '__construct'], 'engine');
         $boundName = $name($parameter);
         $this->assertSame(Name::ANY, $boundName);
     }
@@ -19,7 +20,7 @@ class NameTest extends TestCase
     public function testSingleName() : void
     {
         $name = new Name('turbo');
-        $parameter = new \ReflectionParameter([FakeCar::class, '__construct'], 'engine');
+        $parameter = new ReflectionParameter([FakeCar::class, '__construct'], 'engine');
         $boundName = $name($parameter);
         $this->assertSame('turbo', $boundName);
     }
@@ -30,7 +31,7 @@ class NameTest extends TestCase
     public function testKeyValuePairName(string $keyPairValueString) : void
     {
         $name = new Name($keyPairValueString);
-        $parameter = new \ReflectionParameter([FakeCar::class, '__construct'], 'engine');
+        $parameter = new ReflectionParameter([FakeCar::class, '__construct'], 'engine');
         $boundName = $name($parameter);
         $this->assertSame('engine_name', $boundName);
     }
@@ -53,7 +54,7 @@ class NameTest extends TestCase
     public function testKeyValuePairButNotFound() : void
     {
         $name = new Name('foo=bar');
-        $parameter = new \ReflectionParameter([FakeCar::class, '__construct'], 'engine');
+        $parameter = new ReflectionParameter([FakeCar::class, '__construct'], 'engine');
         $boundName = $name($parameter);
         $this->assertSame(Name::ANY, $boundName);
     }
@@ -61,7 +62,7 @@ class NameTest extends TestCase
     public function testSetName() : void
     {
         $name = new Name(FakeMirrorRight::class);
-        $parameter = new \ReflectionParameter([FakeHandleBar::class, 'setMirrors'], 'rightMirror');
+        $parameter = new ReflectionParameter([FakeHandleBar::class, 'setMirrors'], 'rightMirror');
         $boundName = $name($parameter);
         $expected = FakeMirrorRight::class;
         $this->assertSame($expected, $boundName);

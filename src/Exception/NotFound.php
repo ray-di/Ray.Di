@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di\Exception;
 
-class NotFound extends \LogicException implements ExceptionInterface
+use LogicException;
+
+class NotFound extends LogicException implements ExceptionInterface
 {
 }

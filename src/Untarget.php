@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use ReflectionClass;
+
 final class Untarget
 {
     /**
-     * @var \ReflectionClass<object>
+     * @var ReflectionClass<object>
      */
     private $class;
 
@@ -21,7 +23,7 @@ final class Untarget
      */
     public function __construct(string $class)
     {
-        $this->class = new \ReflectionClass($class);
+        $this->class = new ReflectionClass($class);
     }
 
     /**

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Aop\Bind as AopBind;
+use ReflectionClass;
+use ReflectionException;
 
 final class NewInstance
 {
@@ -32,7 +34,7 @@ final class NewInstance
      * @phpstan-param \ReflectionClass<object> $class
      */
     public function __construct(
-        \ReflectionClass $class,
+        ReflectionClass $class,
         SetterMethods $setterMethods,
         Name $constructorName = null
     ) {
@@ -46,12 +48,12 @@ final class NewInstance
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __invoke(Container $container) : object
     {
         /** @psalm-suppress MixedMethodCall */
-        $instance = $this->arguments instanceof Arguments ? (new \ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
+        $instance = $this->arguments instanceof Arguments ? (new ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
 
         return $this->postNewInstance($container, $instance);
     }
@@ -67,11 +69,11 @@ final class NewInstance
     /**
      * @param array<int, mixed> $params
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function newInstanceArgs(Container $container, array $params) : object
     {
-        $instance = (new \ReflectionClass($this->class))->newInstanceArgs($params);
+        $instance = (new ReflectionClass($this->class))->newInstanceArgs($params);
 
         return $this->postNewInstance($container, $instance);
     }
