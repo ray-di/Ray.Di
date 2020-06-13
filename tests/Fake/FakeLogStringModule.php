@@ -1,6 +1,8 @@
 <?php
 namespace Ray\Di;
 
+use stdClass;
+
 class FakeLogStringModule extends AbstractModule
 {
     protected function configure()
@@ -10,7 +12,7 @@ class FakeLogStringModule extends AbstractModule
         $this->bind()->annotatedWith('int')->toInstance(1);
         $this->bind()->annotatedWith('string')->toInstance('1');
         $this->bind()->annotatedWith('array')->toInstance([1]);
-        $this->bind()->annotatedWith('object')->toInstance(new \stdClass);
+        $this->bind()->annotatedWith('object')->toInstance(new stdClass);
         $this->bind(FakeAopInterface::class)->to(FakeAop::class);
         $this->bind(FakeRobotInterface::class)->toProvider(FakeRobotProvider::class)->in(Scope::SINGLETON);
         $this->bindInterceptor(

@@ -1,6 +1,8 @@
 <?php
 namespace Ray\Di;
 
+use InvalidArgumentException;
+
 class FakeWalkRobotLegProvider implements ProviderInterface
 {
     /**
@@ -23,6 +25,6 @@ class FakeWalkRobotLegProvider implements ProviderInterface
             return new FakeRightLeg;
         }
 
-        throw new \InvalidArgumentException('Unexpected var name for LegInterface: ' . $varName);
+        throw new InvalidArgumentException('Unexpected var name for LegInterface: ' . $varName);
     }
 }
