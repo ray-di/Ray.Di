@@ -101,7 +101,7 @@ final class Bind
     /**
      * Bind to constructor
      *
-     * @param string                       $class           class name
+     * @param class-string                 $class           class name
      * @param array<string, string>|string $name            "varName=bindName,..." or [[$varName => $bindName],[$varName => $bindName]...]
      * @param InjectionPoints              $injectionPoints injection points
      * @param string                       $postConstruct   method name of initialization after all dependencies are injected*
@@ -113,7 +113,6 @@ final class Bind
         }
         $this->untarget = null;
         $postConstructRef = $postConstruct ? new ReflectionMethod($class, $postConstruct) : null;
-        assert(class_exists($class));
         $this->bound = (new DependencyFactory)->newToConstructor(new ReflectionClass($class), $name, $injectionPoints, $postConstructRef);
         $this->container->add($this);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use function class_exists;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use LogicException;
@@ -71,6 +72,7 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
             throw new LogicException($this->parameter->getName());
         }
         $method = $this->parameter->getDeclaringFunction()->getShortName();
+        assert(class_exists($class->name));
 
         return new ReflectionMethod($class->name, $method);
     }

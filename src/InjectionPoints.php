@@ -15,6 +15,9 @@ final class InjectionPoints
      */
     private $points = [];
 
+    /**
+     * @param class-string $class
+     */
     public function __invoke(string $class) : SetterMethods
     {
         $points = [];
@@ -40,6 +43,7 @@ final class InjectionPoints
     }
 
     /**
+     * @param class-string                         $class
      * @param array{0: string, 1: string, 2: bool} $point
      */
     private function getSetterMethod(string $class, array $point) : SetterMethod
