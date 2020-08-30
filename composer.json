@@ -16,7 +16,7 @@
         "php": ">=7.2.0",
         "doctrine/annotations": "^1.10",
         "ray/aop": "^2.9.8",
-        "ray/compiler": "1.x-dev || ^1.4.1"
+        "ray/compiler": "php8-dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5|^9.3"

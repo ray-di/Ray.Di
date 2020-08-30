@@ -27,8 +27,8 @@ final class UntargetedBind
 
     private function getTypeHint(ReflectionParameter $parameter) : string
     {
-        $typeHintClass = $parameter->getClass();
+        $typeHintClass = $parameter->getType();
 
-        return $typeHintClass ? $typeHintClass->name : '';
+        return $typeHintClass ? $typeHintClass->getName() : '';
     }
 }
