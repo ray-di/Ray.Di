@@ -3,6 +3,10 @@ parameters:
   paths:
     - src
     - tests
+  ignoreErrors:
+    -
+        message: '#Call to an undefined method ReflectionType::getName\(\)#'
+        path: src
   excludes_analyse:
     - %currentWorkingDirectory%/tests/tmp/*
     - %currentWorkingDirectory%/tests/Fake/*
