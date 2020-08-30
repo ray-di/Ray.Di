@@ -19,7 +19,7 @@
         "ray/compiler": "1.x-dev || ^1.4.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^8.5|^9.3"
     },
     "config": {
         "sort-packages": true
