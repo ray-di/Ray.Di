@@ -16,13 +16,10 @@
         "php": ">=7.2.0",
         "doctrine/annotations": "^1.10",
         "ray/aop": "2.x-dev",
-        "ray/compiler": "php8-dev"
+        "ray/compiler": "1.x-dev"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5|^9.3"
-    },
-    "replace": {
-        "ray/di": "self.version"
+        "phpunit/phpunit": "^8.5 || ^9.3"
     },
     "config": {
         "sort-packages": true
