@@ -15,7 +15,7 @@
     "require": {
         "php": ">=7.2.0",
         "doctrine/annotations": "^1.10",
-        "ray/aop": "php8-dev",
+        "ray/aop": "2.x-dev",
         "ray/compiler": "php8-dev"
     },
     "require-dev": {
