@@ -39,12 +39,12 @@ jobs:
     - stage: Code Quality
       name: Code coverage
       php: 7.4
-      before_script:
+      install:
         - pecl install pcov
       script:
         - ./vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml --coverage-text
-      after_script:
-        - wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+      after_success:
+        - bash <(curl -s https://codecov.io/bash) -cF php
 
     - stage: Code Quality
       name: Static analysis
