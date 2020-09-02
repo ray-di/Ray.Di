@@ -1,8 +1,7 @@
 filter:
     paths: ["src/*"]
 tools:
-    external_code_coverage: true
-    php_code_coverage: true
+    php_code_coverage: false
     php_sim: true
     php_pdepend: true
     php_analyzer: true
