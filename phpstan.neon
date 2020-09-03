@@ -5,5 +5,8 @@ parameters:
     - tests
   excludes_analyse:
     - %currentWorkingDirectory%/tests/tmp/*
-    - %currentWorkingDirectory%/tests/Fake/*
+    - %currentWorkingDirectory%/tests/di/tmp/*
+    - %currentWorkingDirectory%/tests/di/Fake/*
+    - %currentWorkingDirectory%/tests/compiler/tmp/*
+    - %currentWorkingDirectory%/tests/compiler/Fake/*
 
