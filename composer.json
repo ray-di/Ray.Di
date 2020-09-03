@@ -27,18 +27,28 @@
     "autoload": {
         "psr-4": {
             "Ray\\Di\\": [
-                "src/",
-                "src-deprecated"
+                "src/di",
+                "src/di-deprecated"
+            ],
+            "Ray\\Compiler\\": [
+                "src/compiler"
             ]
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Ray\\Di\\": [
-                "tests/",
-                "tests/Fake/"
+                "tests/di",
+                "tests/di/Fake/"
+            ],
+            "Ray\\Compiler\\": [
+                "tests/compiler",
+                "tests/compiler/Fake"
             ]
-        }
+        },
+        "files": [
+            "tests/delete_dir.php"
+        ]
     },
     "scripts": {
         "coverage": [

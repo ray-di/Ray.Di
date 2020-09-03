@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-$appRoot = dirname(__DIR__, 2);
+$appRoot = dirname(__DIR__, 3);
 require $appRoot . '/vendor/autoload.php';
 
 $injector = new Injector(new FakeAopModule, $appRoot . '/tests/tmp');
