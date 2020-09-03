@@ -23,6 +23,7 @@ script:
 
 jobs:
   fast_finish: true
+
   include:
     - stage: Test
       name: Lowest dependencies
@@ -50,9 +51,9 @@ jobs:
         - ~/.composer/vendor/bin/psalm --show-info=false
         - ~/.composer/vendor/bin/phpmetrics --exclude=Exception src
 
-    - stage: Code Quality
-      name: Coding standards
-      php: 7.2
-      install: composer global require --dev friendsofphp/php-cs-fixer ^2.0;
-      script:
-        - ~/.composer/vendor/bin/php-cs-fixer --dry-run -v fix;
+#    - stage: Code Quality
+#      name: Coding standards
+#      php: 7.2
+#      install: composer global require --dev friendsofphp/php-cs-fixer ^2.0;
+#      script:
+#        - ~/.composer/vendor/bin/php-cs-fixer --dry-run -v fix;

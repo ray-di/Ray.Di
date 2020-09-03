@@ -69,7 +69,6 @@
             "phpunit"
         ],
         "tests": [
-            "@cs",
             "phpstan analyse -c phpstan.neon --no-progress",
             "psalm",
             "@test"
