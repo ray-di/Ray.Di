@@ -67,7 +67,7 @@ final class AssistedInterceptor implements MethodInterceptor
                 continue;
             }
             /* @var $parameter \ReflectionParameter */
-            $hint = $parameter->getClass();
+            $hint = $parameter->getType();
             $interface = $hint ? $hint->getName() : '';
             $name = $this->getName($method, $parameter);
             $pos = $parameter->getPosition();
