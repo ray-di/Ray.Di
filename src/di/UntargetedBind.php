@@ -29,6 +29,6 @@ final class UntargetedBind
     {
         $typeHintClass = $parameter->getType();
 
-        return $typeHintClass ? $typeHintClass->name : '';
+        return $typeHintClass ? $typeHintClass->getName() : '';
     }
 }
