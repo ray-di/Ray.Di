@@ -13,6 +13,8 @@ class FakeAssistedConsumer
      */
     public function assistOne($a, $b, FakeRobotInterface $robot = null)
     {
+        unset($a, $b);
+
         return $robot;
     }
 
@@ -22,6 +24,8 @@ class FakeAssistedConsumer
      */
     public function assistWithName($a, $var1 = null)
     {
+        unset($a);
+
         return $var1;
     }
 

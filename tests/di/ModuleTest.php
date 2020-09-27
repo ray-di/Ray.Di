@@ -47,7 +47,7 @@ class ModuleTest extends TestCase
         $this->assertInstanceOf(Container::class, $module->getContainer());
     }
 
-    public function test__toString() : void
+    public function testtoString() : void
     {
         $string = (string) new FakeLogStringModule();
         $this->assertSame('-array => (array)
