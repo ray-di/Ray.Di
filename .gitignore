@@ -5,4 +5,4 @@ vendor
 composer.lock
 .php_cs.cache
 .phpunit.result.cache
-tests/script/grapher.php.txt
+tests/di/script/grapher.php.txt
