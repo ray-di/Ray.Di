@@ -6,6 +6,7 @@ namespace Ray\Di;
 
 use ReflectionMethod;
 use ReflectionParameter;
+use ReflectionType;
 
 final class UntargetedBind
 {
@@ -29,6 +30,6 @@ final class UntargetedBind
     {
         $typeHintClass = $parameter->getType();
 
-        return $typeHintClass ? $typeHintClass->getName() : '';
+        return $typeHintClass instanceof ReflectionType ? $typeHintClass->getName() : ''; // @phpstan-ignore-line
     }
 }

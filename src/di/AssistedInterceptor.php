@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use ReflectionType;
 use function in_array;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
@@ -66,9 +67,8 @@ final class AssistedInterceptor implements MethodInterceptor
             if (! in_array($parameter->getName(), $assisted->values, true)) {
                 continue;
             }
-            /* @var $parameter \ReflectionParameter */
             $hint = $parameter->getType();
-            $interface = $hint ? $hint->getName() : '';
+            $interface = $hint instanceof ReflectionType ? $hint->getName() : ''; // @phpstan-ignore-line
             $name = $this->getName($method, $parameter);
             $pos = $parameter->getPosition();
             /** @psalm-suppress MixedAssignment */
