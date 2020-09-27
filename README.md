@@ -865,7 +865,7 @@ $lister = $injector->getInstance(ListerInterface::class);
 
 ### CachedInjectorFactory
 
-The `CachedInejctorFactory` can be used in a hybrid of the two injectors mentioned above to achieve the best performance in both development and production.
+The `CachedInejctorFactory` can be used in a hybrid of the two injectors to achieve the best performance in both development and production.
 
 The injector is able to inject singleton objects **beyond the request**, greatly increasing the speed of testing. Successive PDO connections also do not run out of connection resources in the test.
 
