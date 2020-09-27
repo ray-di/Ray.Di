@@ -30,7 +30,7 @@
         "psr-4": {
             "Ray\\Di\\": [
                 "src/di",
-                "src/di-deprecated"
+                "src-deprecated/di"
             ],
             "Ray\\Compiler\\": [
                 "src/compiler"
