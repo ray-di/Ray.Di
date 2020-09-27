@@ -10,9 +10,9 @@ class FakeHandleBar
     public $leftMirror;
 
     /**
-     * @Inject 
+     * @Inject
      *
-     * @FakeRight 
+     * @FakeRight
      *
      * @return void
      */
@@ -22,9 +22,9 @@ class FakeHandleBar
     }
 
     /**
-     * @Inject 
+     * @Inject
      *
-     * @FakeLeft 
+     * @FakeLeft
      *
      * @return void
      */

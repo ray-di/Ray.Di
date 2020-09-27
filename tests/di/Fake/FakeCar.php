@@ -39,7 +39,7 @@ class FakeCar implements FakeCarInterface
     }
 
     /**
-     * @Inject 
+     * @Inject
      *
      * @return void
      */
@@ -60,7 +60,7 @@ class FakeCar implements FakeCarInterface
     }
 
     /**
-     * @Inject 
+     * @Inject
      *
      * @Named("rightMirror=right,$leftMirror=left")
      *
@@ -73,7 +73,7 @@ class FakeCar implements FakeCarInterface
     }
 
     /**
-     * @Inject 
+     * @Inject
      *
      * @Named("right")
      *
@@ -85,7 +85,7 @@ class FakeCar implements FakeCarInterface
     }
 
     /**
-     * @Inject 
+     * @Inject
      *
      * @return void
      */
@@ -105,7 +105,7 @@ class FakeCar implements FakeCarInterface
     }
 
     /**
-     * @PostConstruct 
+     * @PostConstruct
      *
      * @return void
      */

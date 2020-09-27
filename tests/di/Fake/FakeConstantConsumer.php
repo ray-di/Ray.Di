@@ -27,7 +27,7 @@ class FakeConstantConsumer
     /**
      * @FakeConstant ("constant")
      *
-     * @Inject 
+     * @Inject
      *
      * @return void
      */
@@ -38,9 +38,9 @@ class FakeConstantConsumer
     }
 
     /**
-     * @FakeConstant 
+     * @FakeConstant
      *
-     * @Inject 
+     * @Inject
      *
      * @return void
      */
