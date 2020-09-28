@@ -1,12 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 class FakeToConstructorRobot implements FakeRobotInterface
 {
     public $leg;
-
     public $tmpDir;
-
     public $engine;
 
     public function __construct(FakeLegInterface $leg, $tmpDir)

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Compiler;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use LogicException;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Scalar;
@@ -13,41 +14,38 @@ use Ray\Di\Container;
 use Ray\Di\DependencyInterface;
 use Ray\Di\DependencyProvider;
 use Ray\Di\Di\Qualifier;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionParameter;
+
+use function assert;
 
 final class FunctionCode
 {
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
-    /**
-     * @var PrivateProperty
-     */
+    /** @var PrivateProperty */
     private $privateProperty;
 
-    /**
-     * @var AnnotationReader
-     */
+    /** @var AnnotationReader */
     private $reader;
 
-    /**
-     * @var DependencyCode
-     */
+    /** @var DependencyCode */
     private $compiler;
 
     public function __construct(Container $container, PrivateProperty $privateProperty, DependencyCode $compiler)
     {
         $this->container = $container;
         $this->privateProperty = $privateProperty;
-        $this->reader = new AnnotationReader;
+        $this->reader = new AnnotationReader();
         $this->compiler = $compiler;
     }
 
     /**
      * Return arguments code for "$singleton" and "$prototype"
      */
-    public function __invoke(Argument $argument, DependencyInterface $dependency) : Expr\FuncCall
+    public function __invoke(Argument $argument, DependencyInterface $dependency): Expr\FuncCall
     {
         $prop = $this->privateProperty;
         $isSingleton = $prop($dependency, 'isSingleton');
@@ -65,7 +63,7 @@ final class FunctionCode
      *
      * @return array<int, Node\Arg|Node\Expr\Array_>
      */
-    private function getInjectionFuncParams(Argument $argument) : array
+    private function getInjectionFuncParams(Argument $argument): array
     {
         $dependencyIndex = (string) $argument;
         if ($this->container->getContainer()[$dependencyIndex] instanceof DependencyProvider) {
@@ -82,15 +80,16 @@ final class FunctionCode
      *
      * @return array<int, Expr\Array_|Node\Arg>
      */
-    private function getInjectionProviderParams(Argument $argument) : array
+    private function getInjectionProviderParams(Argument $argument): array
     {
         $param = $argument->get();
         $class = $param->getDeclaringClass();
-        if (! $class instanceof \ReflectionClass) {
-            throw new \LogicException; // @codeCoverageIgnore
+        if (! $class instanceof ReflectionClass) {
+            throw new LogicException(); // @codeCoverageIgnore
         }
+
         $method = $param->getDeclaringFunction();
-        assert($method instanceof \ReflectionMethod);
+        assert($method instanceof ReflectionMethod);
         $this->setQualifiers($method, $param);
 
         return [
@@ -98,17 +97,17 @@ final class FunctionCode
             new Expr\Array_([
                 new Expr\ArrayItem(new Scalar\String_($class->name)),
                 new Expr\ArrayItem(new Scalar\String_($method->name)),
-                new Expr\ArrayItem(new Scalar\String_($param->name))
-            ])
+                new Expr\ArrayItem(new Scalar\String_($param->name)),
+            ]),
         ];
     }
 
-    private function setQualifiers(\ReflectionMethod $method, \ReflectionParameter $param) : void
+    private function setQualifiers(ReflectionMethod $method, ReflectionParameter $param): void
     {
         $annotations = $this->reader->getMethodAnnotations($method);
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(
-                new \ReflectionClass($annotation),
+                new ReflectionClass($annotation),
                 'Ray\Di\Di\Qualifier'
             );
             if ($qualifier instanceof Qualifier) {

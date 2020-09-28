@@ -11,22 +11,20 @@ use ReflectionClass;
 
 class AnnotatedClassTest extends TestCase
 {
-    /**
-     * @var AnnotatedClass
-     */
+    /** @var AnnotatedClass */
     protected $annotatedClass;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->annotatedClass = new AnnotatedClass(new AnnotationReader);
+        $this->annotatedClass = new AnnotatedClass(new AnnotationReader());
     }
 
-    public function testInvoke() : void
+    public function testInvoke(): void
     {
         $newInstance = $this->annotatedClass->getNewInstance(new ReflectionClass(FakeCar::class));
         $this->assertInstanceOf(NewInstance::class, $newInstance);
-        $container = new Container;
+        $container = new Container();
         (new Bind($container, FakeTyreInterface::class))->to(FakeTyre::class);
         (new Bind($container, FakeEngineInterface::class))->to(FakeEngine::class);
         (new Bind($container, FakeHandleInterface::class))->toProvider(FakeHandleProvider::class);
@@ -35,8 +33,9 @@ class AnnotatedClassTest extends TestCase
         (new Bind($container, FakeGearStickInterface::class))->toProvider(FakeGearStickProvider::class);
         $car = $newInstance($container);
         if (! $car instanceof FakeCar) {
-            throw new LogicException;
+            throw new LogicException();
         }
+
         $this->assertInstanceOf(FakeCar::class, $car);
         $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
         $this->assertInstanceOf(FakeTyre::class, $car->rearTyre);
@@ -45,34 +44,34 @@ class AnnotatedClassTest extends TestCase
     }
 
     /**
-     * @dataProvider classProvider
-     *
      * @phpstan-param class-string $class
+     *
+     * @dataProvider classProvider
      */
-    public function testAnnotatedByAnnotation(string $class) : void
+    public function testAnnotatedByAnnotation(string $class): void
     {
         $newInstance = $this->annotatedClass->getNewInstance(new ReflectionClass($class));
-        $container = new Container;
+        $container = new Container();
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeLeft::class)->to(FakeMirrorLeft::class);
         (new Bind($container, FakeMirrorInterface::class))->annotatedWith(FakeRight::class)->to(FakeMirrorRight::class);
         $handleBar = $newInstance($container);
         if (! $handleBar instanceof FakeHandleBar && ! $handleBar instanceof FakeHandleBarQualifier) {
-            throw new LogicException;
+            throw new LogicException();
         }
+
         $this->assertInstanceOf(FakeMirrorLeft::class, $handleBar->leftMirror);
         $this->assertInstanceOf(FakeMirrorRight::class, $handleBar->rightMirror);
     }
 
     /**
      * @return FakeHandleBar::class|FakeHandleBarQualifier::class[][]
-     *
      * @psalm-return array{0: array{0: FakeHandleBar::class}, 1: array{0: FakeHandleBarQualifier::class}}
      */
-    public function classProvider() : array
+    public function classProvider(): array
     {
         return [
             [FakeHandleBar::class],
-            [FakeHandleBarQualifier::class]
+            [FakeHandleBarQualifier::class],
         ];
     }
 }

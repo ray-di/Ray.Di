@@ -10,11 +10,11 @@ use Ray\Di\Injector;
 
 class InjectorFactoryTest extends TestCase
 {
-    public function getInstanceRayDiInjector() : void
+    public function getInstanceRayDiInjector(): void
     {
         $injector = InjectorFactory::getInstance(
-            function () : AbstractModule {
-                return new FakeToBindPrototypeModule;
+            static function (): AbstractModule {
+                return new FakeToBindPrototypeModule();
             },
             __DIR__ . '/tmp/base'
         );
@@ -23,12 +23,12 @@ class InjectorFactoryTest extends TestCase
         $this->assertInstanceOf(Injector::class, $injector);
     }
 
-    public function getInstanceScriptInjector() : void
+    public function getInstanceScriptInjector(): void
     {
         $injector = InjectorFactory::getInstance(
-            function () : AbstractModule {
-                $modue = new FakeToBindPrototypeModule;
-                $modue->install(new FakeProdModule);
+            static function (): AbstractModule {
+                $modue = new FakeToBindPrototypeModule();
+                $modue->install(new FakeProdModule());
 
                 return $modue;
             },
@@ -39,11 +39,11 @@ class InjectorFactoryTest extends TestCase
         $this->assertInstanceOf(ScriptInjector::class, $injector);
     }
 
-    public function testInjectComplexModule() : void
+    public function testInjectComplexModule(): void
     {
         $injector = InjectorFactory::getInstance(
-            function () : AbstractModule {
-                return new FakeCarModule;
+            static function (): AbstractModule {
+                return new FakeCarModule();
             },
             __DIR__ . '/tmp/car'
         );
@@ -51,11 +51,11 @@ class InjectorFactoryTest extends TestCase
         $this->assertInstanceOf(FakeCar::class, $instance);
     }
 
-    public function testInjectionPoint() : void
+    public function testInjectionPoint(): void
     {
         $injector = InjectorFactory::getInstance(
-            function () : AbstractModule {
-                return new FakeLoggerModule;
+            static function (): AbstractModule {
+                return new FakeLoggerModule();
             },
             __DIR__ . '/tmp/logger'
         );

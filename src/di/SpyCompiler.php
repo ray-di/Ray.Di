@@ -8,6 +8,13 @@ use Ray\Aop\BindInterface;
 use Ray\Aop\CompilerInterface;
 use stdClass;
 
+use function array_keys;
+use function assert;
+use function class_exists;
+use function implode;
+use function method_exists;
+use function sprintf;
+
 final class SpyCompiler implements CompilerInterface
 {
     /**
@@ -16,8 +23,9 @@ final class SpyCompiler implements CompilerInterface
     public function newInstance(string $class, array $args, BindInterface $bind)
     {
         unset($class, $args, $bind);
+
         // never called
-        return new stdClass;
+        return new stdClass();
     }
 
     /**
@@ -29,7 +37,7 @@ final class SpyCompiler implements CompilerInterface
      * @psalm-suppress MoreSpecificReturnType
      * @psalm-suppress LessSpecificReturnStatement
      */
-    public function compile(string $class, BindInterface $bind) : string
+    public function compile(string $class, BindInterface $bind): string
     {
         if ($this->hasNoBinding($class, $bind)) {
             return $class;
@@ -38,14 +46,14 @@ final class SpyCompiler implements CompilerInterface
         return $class . $this->getInterceptors($bind);
     }
 
-    private function hasNoBinding(string $class, BindInterface $bind) : bool
+    private function hasNoBinding(string $class, BindInterface $bind): bool
     {
         $hasMethod = $this->hasBoundMethod($class, $bind);
 
         return ! $bind->getBindings() && ! $hasMethod;
     }
 
-    private function hasBoundMethod(string $class, BindInterface $bind) : bool
+    private function hasBoundMethod(string $class, BindInterface $bind): bool
     {
         $bindingMethods = array_keys($bind->getBindings());
         $hasMethod = false;
@@ -59,12 +67,13 @@ final class SpyCompiler implements CompilerInterface
         return $hasMethod;
     }
 
-    private function getInterceptors(BindInterface $bind) : string
+    private function getInterceptors(BindInterface $bind): string
     {
         $bindings = $bind->getBindings();
         if (! $bindings) {
             return '';
         }
+
         $log = ' (aop)';
         foreach ($bindings as $mehtod => $intepceptors) {
             $log .= sprintf(

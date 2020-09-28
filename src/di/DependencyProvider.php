@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use function assert;
+use function sprintf;
+
 final class DependencyProvider implements DependencyInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $context;
 
     /**
@@ -18,14 +19,10 @@ final class DependencyProvider implements DependencyInterface
      */
     private $dependency;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $isSingleton = false;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $instance;
 
     public function __construct(Dependency $dependency, string $context)
@@ -50,7 +47,7 @@ final class DependencyProvider implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function register(array &$container, Bind $bind) : void
+    public function register(array &$container, Bind $bind): void
     {
         $container[(string) $bind] = $bind->getBound();
     }
@@ -63,11 +60,13 @@ final class DependencyProvider implements DependencyInterface
         if ($this->isSingleton && $this->instance) {
             return $this->instance;
         }
+
         $provider = $this->dependency->inject($container);
         assert($provider instanceof ProviderInterface);
         if ($provider instanceof SetContextInterface) {
             $this->setContext($provider);
         }
+
         $this->instance = $provider->get();
 
         return $this->instance;
@@ -76,14 +75,14 @@ final class DependencyProvider implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function setScope($scope) : void
+    public function setScope($scope): void
     {
         if ($scope === Scope::SINGLETON) {
             $this->isSingleton = true;
         }
     }
 
-    public function setContext(SetContextInterface $provider) : void
+    public function setContext(SetContextInterface $provider): void
     {
         $provider->setContext($this->context);
     }

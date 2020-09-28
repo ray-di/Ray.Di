@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ray\Compiler;
 
 use Ray\Di\Di\Inject;
@@ -9,26 +11,16 @@ use Ray\Di\Di\PostConstruct;
 class FakeCar implements FakeCarInterface
 {
     public $engine;
-
     public $hardtop;
-
     public $frontTyre;
-
     public $rearTyre;
-
     public $isConstructed = false;
-
     public $rightMirror;
-
     public $leftMirror;
-
     public $spareMirror;
 
-    /**
-     * @var FakeHandleInterface
-     */
+    /** @var FakeHandleInterface */
     public $handle;
-
     public $null = false;
 
     /**

@@ -8,35 +8,29 @@ use Ray\Aop\Bind as AopBind;
 use ReflectionClass;
 use ReflectionException;
 
+use function assert;
+
 final class NewInstance
 {
-    /**
-     * @var class-string
-     */
+    /** @var class-string */
     private $class;
 
-    /**
-     * @var SetterMethods
-     */
+    /** @var SetterMethods */
     private $setterMethods;
 
-    /**
-     * @var ?Arguments
-     */
+    /** @var ?Arguments */
     private $arguments;
 
-    /**
-     * @var ?AspectBind
-     */
+    /** @var ?AspectBind */
     private $bind;
 
     /**
-     * @phpstan-param \ReflectionClass<object> $class
+     * @phpstan-param ReflectionClass<object> $class
      */
     public function __construct(
         ReflectionClass $class,
         SetterMethods $setterMethods,
-        Name $constructorName = null
+        ?Name $constructorName = null
     ) {
         $constructorName = $constructorName ?: new Name(Name::ANY);
         $this->class = $class->getName();
@@ -44,16 +38,17 @@ final class NewInstance
         if ($constructor) {
             $this->arguments = new Arguments($constructor, $constructorName);
         }
+
         $this->setterMethods = $setterMethods;
     }
 
     /**
      * @throws ReflectionException
      */
-    public function __invoke(Container $container) : object
+    public function __invoke(Container $container): object
     {
         /** @psalm-suppress MixedMethodCall */
-        $instance = $this->arguments instanceof Arguments ? (new ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class;
+        $instance = $this->arguments instanceof Arguments ? (new ReflectionClass($this->class))->newInstanceArgs($this->arguments->inject($container)) : new $this->class();
 
         return $this->postNewInstance($container, $instance);
     }
@@ -71,7 +66,7 @@ final class NewInstance
      *
      * @throws ReflectionException
      */
-    public function newInstanceArgs(Container $container, array $params) : object
+    public function newInstanceArgs(Container $container, array $params): object
     {
         $instance = (new ReflectionClass($this->class))->newInstanceArgs($params);
 
@@ -81,19 +76,20 @@ final class NewInstance
     /**
      * @param class-string $class
      */
-    public function weaveAspects(string $class, AopBind $bind) : void
+    public function weaveAspects(string $class, AopBind $bind): void
     {
         $this->class = $class;
         $this->bind = new AspectBind($bind);
     }
 
-    private function postNewInstance(Container $container, object $instance) : object
+    private function postNewInstance(Container $container, object $instance): object
     {
         // bind dependency injected interceptors
         if ($this->bind instanceof AspectBind) {
             assert(isset($instance->bindings));
             $instance->bindings = $this->bind->inject($container);
         }
+
         // setter injection
         ($this->setterMethods)($instance, $container);
 

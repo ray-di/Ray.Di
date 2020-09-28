@@ -4,39 +4,33 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use function in_array;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use Serializable;
+
+use function assert;
+use function in_array;
 use function serialize;
+use function sprintf;
+use function unserialize;
 
 final class Argument implements Serializable
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $index;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $isDefaultAvailable;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $default;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $meta;
 
-    /**
-     * @var ReflectionParameter
-     */
+    /** @var ReflectionParameter */
     private $reflection;
 
     public function __construct(ReflectionParameter $parameter, string $name)
@@ -47,6 +41,7 @@ final class Argument implements Serializable
         if ($isOptional) {
             $this->default = null;
         }
+
         $this->setDefaultValue($parameter);
         $this->index = $type . '-' . $name;
         $this->reflection = $parameter;
@@ -60,7 +55,7 @@ final class Argument implements Serializable
         );
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->index;
     }
@@ -68,12 +63,12 @@ final class Argument implements Serializable
     /**
      * Return reflection
      */
-    public function get() : ReflectionParameter
+    public function get(): ReflectionParameter
     {
         return $this->reflection;
     }
 
-    public function isDefaultAvailable() : bool
+    public function isDefaultAvailable(): bool
     {
         return $this->isDefaultAvailable;
     }
@@ -86,19 +81,19 @@ final class Argument implements Serializable
         return $this->default;
     }
 
-    public function getMeta() : string
+    public function getMeta(): string
     {
         return $this->meta;
     }
 
-    public function serialize() : string
+    public function serialize(): string
     {
-        /** @var ReflectionMethod $method */
         $method = $this->reflection->getDeclaringFunction();
+        assert($method instanceof ReflectionMethod);
         $ref = [
             $method->class,
             $method->name,
-            $this->reflection->getName()
+            $this->reflection->getName(),
         ];
 
         return serialize([
@@ -106,7 +101,7 @@ final class Argument implements Serializable
             $this->isDefaultAvailable,
             $this->default,
             $this->meta,
-            $ref
+            $ref,
         ]);
     }
 
@@ -115,24 +110,26 @@ final class Argument implements Serializable
      *
      * @throws ReflectionException
      */
-    public function unserialize($serialized) : void
+    public function unserialize($serialized): void
     {
         /** @var array{0: string, 1: bool, 2: string, 3: string, 4: string, 5: array{0: string, 1: string, 2:string}} $unserialized */
         $unserialized = unserialize($serialized, ['allowed_classes' => false]);
-        [$this->index,
+        [
+            $this->index,
             $this->isDefaultAvailable,
             $this->default,
             $this->meta,
-            $ref
+            $ref,
         ] = $unserialized;
         $this->reflection = new ReflectionParameter([$ref[0], $ref[1]], $ref[2]);
     }
 
-    private function setDefaultValue(ReflectionParameter $parameter) : void
+    private function setDefaultValue(ReflectionParameter $parameter): void
     {
         if (! $this->isDefaultAvailable) {
             return;
         }
+
         try {
             $this->default = $parameter->getDefaultValue();
         } catch (ReflectionException $e) {
@@ -141,12 +138,13 @@ final class Argument implements Serializable
         }
     }
 
-    private function getType(ReflectionParameter $parameter) : string
+    private function getType(ReflectionParameter $parameter): string
     {
         $type = $parameter->getType();
         if (! $type instanceof ReflectionNamedType) {
             return '';
         }
+
         if (in_array($type->getName(), ['bool', 'int', 'string', 'array', 'resource', 'callable'], true)) {
             return '';
         }

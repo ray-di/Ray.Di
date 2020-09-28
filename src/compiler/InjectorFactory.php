@@ -10,6 +10,9 @@ use Ray\Di\Exception\Unbound;
 use Ray\Di\Injector as RayInjector;
 use Ray\Di\InjectorInterface;
 
+use function is_dir;
+use function mkdir;
+
 /**
  * @psalm-immutable
  */
@@ -20,9 +23,9 @@ final class InjectorFactory
     }
 
     /**
-     * @param callable():\Ray\Di\AbstractModule $modules
+     * @param callable(): AbstractModule $modules
      */
-    public static function getInstance(callable $modules, string $scriptDir) : InjectorInterface
+    public static function getInstance(callable $modules, string $scriptDir): InjectorInterface
     {
         ! is_dir($scriptDir) && ! @mkdir($scriptDir) && ! is_dir($scriptDir);
         $module = $modules();
@@ -36,9 +39,9 @@ final class InjectorFactory
         return $isProd ? self::getScriptInjector($scriptDir, $module) : $rayInjector;
     }
 
-    private static function getScriptInjector(string $scriptDir, AbstractModule $module) : ScriptInjector
+    private static function getScriptInjector(string $scriptDir, AbstractModule $module): ScriptInjector
     {
-        return new ScriptInjector($scriptDir, function () use ($scriptDir, $module) {
+        return new ScriptInjector($scriptDir, static function () use ($scriptDir, $module) {
             return new ScriptinjectorModule($scriptDir, $module);
         });
     }

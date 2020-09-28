@@ -18,7 +18,7 @@ final class InjectionPoints
     /**
      * @param class-string $class
      */
-    public function __invoke(string $class) : SetterMethods
+    public function __invoke(string $class): SetterMethods
     {
         $points = [];
         foreach ($this->points as $point) {
@@ -28,14 +28,14 @@ final class InjectionPoints
         return new SetterMethods($points);
     }
 
-    public function addMethod(string $method, string $name = Name::ANY) : self
+    public function addMethod(string $method, string $name = Name::ANY): self
     {
         $this->points[] = [$method, $name, false];
 
         return $this;
     }
 
-    public function addOptionalMethod(string $method, string $name = Name::ANY) : self
+    public function addOptionalMethod(string $method, string $name = Name::ANY): self
     {
         $this->points[] = [$method, $name, true];
 
@@ -46,7 +46,7 @@ final class InjectionPoints
      * @param class-string                         $class
      * @param array{0: string, 1: string, 2: bool} $point
      */
-    private function getSetterMethod(string $class, array $point) : SetterMethod
+    private function getSetterMethod(string $class, array $point): SetterMethod
     {
         $setterMethod = new SetterMethod(new ReflectionMethod($class, $point[0]), new Name($point[1]));
         if ($point[2]) {

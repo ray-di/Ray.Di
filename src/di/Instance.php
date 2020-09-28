@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use function get_class;
+use function gettype;
+use function is_object;
+use function is_scalar;
+use function sprintf;
+
 final class Instance implements DependencyInterface
 {
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     public $value;
 
     /**
@@ -39,7 +43,7 @@ final class Instance implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function register(array &$container, Bind $bind) : void
+    public function register(array &$container, Bind $bind): void
     {
         $index = (string) $bind;
         $container[$index] = $bind->getBound();
@@ -60,7 +64,7 @@ final class Instance implements DependencyInterface
      *
      * @codeCoverageIgnore
      */
-    public function setScope($scope) : void
+    public function setScope($scope): void
     {
     }
 }

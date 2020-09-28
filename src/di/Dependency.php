@@ -12,37 +12,30 @@ use Ray\Aop\WeavedInterface;
 use ReflectionClass;
 use ReflectionMethod;
 
+use function assert;
+use function class_exists;
+use function interface_exists;
+use function method_exists;
+use function sprintf;
+
 final class Dependency implements DependencyInterface
 {
-    /**
-     * @var NewInstance
-     */
+    /** @var NewInstance */
     private $newInstance;
 
-    /**
-     * @var ?string
-     */
+    /** @var ?string */
     private $postConstruct;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $isSingleton = false;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $instance;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $index = '';
 
-    /**
-     * @param ReflectionMethod $postConstruct
-     */
-    public function __construct(NewInstance $newInstance, ReflectionMethod $postConstruct = null)
+    public function __construct(NewInstance $newInstance, ?ReflectionMethod $postConstruct = null)
     {
         $this->newInstance = $newInstance;
         $this->postConstruct = $postConstruct ? $postConstruct->name : null;
@@ -64,7 +57,7 @@ final class Dependency implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function register(array &$container, Bind $bind) : void
+    public function register(array &$container, Bind $bind): void
     {
         $this->index = $index = (string) $bind;
         $container[$index] = $bind->getBound();
@@ -119,7 +112,7 @@ final class Dependency implements DependencyInterface
     /**
      * {@inheritdoc}
      */
-    public function setScope($scope) : void
+    public function setScope($scope): void
     {
         if ($scope === Scope::SINGLETON) {
             $this->isSingleton = true;
@@ -129,7 +122,7 @@ final class Dependency implements DependencyInterface
     /**
      * @param array<int,Pointcut> $pointcuts
      */
-    public function weaveAspects(CompilerInterface $compiler, array $pointcuts) : void
+    public function weaveAspects(CompilerInterface $compiler, array $pointcuts): void
     {
         $class = (string) $this->newInstance;
         /**  @psalm-suppress RedundantConditionGivenDocblockType */
@@ -139,13 +132,15 @@ final class Dependency implements DependencyInterface
         if ($isInterceptor || $isWeaved) {
             return;
         }
-        $bind = new AopBind;
+
+        $bind = new AopBind();
         $className = (string) $this->newInstance;
         assert(class_exists($className) || interface_exists((string) $className));
         $bind->bind($className, $pointcuts);
         if (! $bind->getBindings()) {
             return;
         }
+
         $class = $compiler->compile($className, $bind);
         /** @psalm-suppress ArgumentTypeCoercion */
         $this->newInstance->weaveAspects($class, $bind); // @phpstan-ignore-line

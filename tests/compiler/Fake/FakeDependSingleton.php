@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ray\Compiler;
 
 class FakeDependSingleton
 {
-    /**
-     * @var FakeRobotInterface
-     */
+    /** @var FakeRobotInterface */
     public $robot;
 
     public function __construct(FakeRobotInterface $robot)

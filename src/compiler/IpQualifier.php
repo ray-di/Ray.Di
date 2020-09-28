@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Ray\Compiler;
 
+use ReflectionParameter;
+
+use function serialize;
+
 final class IpQualifier
 {
-    /**
-     * @var \ReflectionParameter
-     */
+    /** @var ReflectionParameter */
     public $param;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     public $qualifier;
 
-    public function __construct(\ReflectionParameter $param, object $qualifier)
+    public function __construct(ReflectionParameter $param, object $qualifier)
     {
         $this->param = $param;
         $this->qualifier = $qualifier;
@@ -24,6 +24,6 @@ final class IpQualifier
 
     public function __toString()
     {
-        return \serialize($this->qualifier);
+        return serialize($this->qualifier);
     }
 }

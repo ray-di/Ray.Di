@@ -8,14 +8,10 @@ use ReflectionClass;
 
 final class Untarget
 {
-    /**
-     * @var ReflectionClass<object>
-     */
+    /** @var ReflectionClass<object> */
     private $class;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $scope = Scope::PROTOTYPE;
 
     /**
@@ -29,19 +25,19 @@ final class Untarget
     /**
      * Bind untargeted binding
      */
-    public function __invoke(Container $container, Bind $bind) : void
+    public function __invoke(Container $container, Bind $bind): void
     {
-        $bound = (new DependencyFactory)->newAnnotatedDependency($this->class);
+        $bound = (new DependencyFactory())->newAnnotatedDependency($this->class);
         $bound->setScope($this->scope);
         $bind->setBound($bound);
         $container->add($bind);
         $constructor = $this->class->getConstructor();
         if ($constructor) {
-            (new UntargetedBind)($container, $constructor);
+            (new UntargetedBind())($container, $constructor);
         }
     }
 
-    public function setScope(string $scope) : void
+    public function setScope(string $scope): void
     {
         $this->scope = $scope;
     }

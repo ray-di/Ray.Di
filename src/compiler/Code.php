@@ -9,22 +9,16 @@ use PhpParser\PrettyPrinter\Standard;
 
 final class Code
 {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public $isSingleton;
 
-    /**
-     * @var null|IpQualifier
-     */
+    /** @var IpQualifier|null */
     public $qualifiers;
 
-    /**
-     * @var Node
-     */
+    /** @var Node */
     private $node;
 
-    public function __construct(Node $node, bool $isSingleton = false, IpQualifier $qualifier = null)
+    public function __construct(Node $node, bool $isSingleton = false, ?IpQualifier $qualifier = null)
     {
         $this->node = $node;
         $this->isSingleton = $isSingleton;

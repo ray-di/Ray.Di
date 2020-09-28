@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use function class_exists;
 use Doctrine\Common\Annotations\AnnotationReader;
 use ReflectionClass;
 use ReflectionMethod;
+
+use function assert;
+use function class_exists;
 
 final class DependencyFactory
 {
@@ -16,9 +18,9 @@ final class DependencyFactory
      *
      * @param ReflectionClass<object> $class
      */
-    public function newAnnotatedDependency(ReflectionClass $class) : Dependency
+    public function newAnnotatedDependency(ReflectionClass $class): Dependency
     {
-        $annotateClass = new AnnotatedClass(new AnnotationReader);
+        $annotateClass = new AnnotatedClass(new AnnotationReader());
         $newInstance = $annotateClass->getNewInstance($class);
         $postConstruct = $annotateClass->getPostConstruct($class);
 
@@ -30,7 +32,7 @@ final class DependencyFactory
      *
      * @param ReflectionClass<object> $provider
      */
-    public function newProvider(ReflectionClass $provider, string $context) : DependencyProvider
+    public function newProvider(ReflectionClass $provider, string $context): DependencyProvider
     {
         $dependency = $this->newAnnotatedDependency($provider);
 
@@ -45,9 +47,9 @@ final class DependencyFactory
     public function newToConstructor(
         ReflectionClass $class,
         string $name,
-        InjectionPoints $injectionPoints = null,
-        ReflectionMethod $postConstruct = null
-    ) : Dependency {
+        ?InjectionPoints $injectionPoints = null,
+        ?ReflectionMethod $postConstruct = null
+    ): Dependency {
         assert(class_exists($class->name));
         $setterMethods = $injectionPoints ? $injectionPoints($class->name) : new SetterMethods([]);
         $newInstance = new NewInstance($class, $setterMethods, new Name($name));

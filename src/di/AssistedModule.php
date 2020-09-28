@@ -9,7 +9,7 @@ use Ray\Di\Di\Assisted;
 
 class AssistedModule extends AbstractModule
 {
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->bindInterceptor(
             $this->matcher->any(),

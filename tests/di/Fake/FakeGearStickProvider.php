@@ -1,13 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 use InvalidArgumentException;
 
 class FakeGearStickProvider implements ProviderInterface
 {
-    /**
-     * @var InjectionPointInterface
-     */
+    /** @var InjectionPointInterface */
     private $ip;
 
     public function __construct(InjectionPointInterface $ip)
@@ -30,6 +31,6 @@ class FakeGearStickProvider implements ProviderInterface
             throw new InvalidArgumentException('Invalid Gear Stick Type');
         }
 
-        return new FakeLeatherGearStick;
+        return new FakeLeatherGearStick();
     }
 }

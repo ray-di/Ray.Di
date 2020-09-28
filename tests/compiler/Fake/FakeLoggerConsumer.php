@@ -1,19 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ray\Compiler;
 
-use Ray\Di\Di\Inject;
 use Ray\Di\InjectorInterface;
 
 class FakeLoggerConsumer
 {
-    /**
-     * @var FakeLoggerInterface
-     */
+    /** @var FakeLoggerInterface */
     public $logger;
-
     public $injector;
-
 
     public function __construct(InjectorInterface $injector)
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ray\Compiler;
 
 use Ray\Di\InjectionPointInterface;
@@ -9,9 +11,7 @@ class FakeLoggerPointProvider implements ProviderInterface
 {
     public $qualifiers;
 
-    /**
-     * @var InjectionPointInterface
-     */
+    /** @var InjectionPointInterface */
     private $ip;
 
     public function __construct(InjectionPointInterface $ip)
@@ -24,9 +24,8 @@ class FakeLoggerPointProvider implements ProviderInterface
         $class = $this->ip->getClass()->getName();
         $this->qualifiers = $this->ip->getQualifiers();
         $fakeLoggerInject = $this->qualifiers[0];
-        /* @var $fakeLoggerInject \Ray\Compiler\FakeLoggerInject */
-        $instance = new FakeLogger($class, $fakeLoggerInject->type);
 
-        return $instance;
+        /** @var FakeLoggerInject $fakeLoggerInject */
+        return new FakeLogger($class, $fakeLoggerInject->type);
     }
 }

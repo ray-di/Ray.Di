@@ -7,15 +7,21 @@ namespace Ray\Di;
 use Ray\Compiler\DiCompiler;
 use Ray\Compiler\ScriptInjector;
 
+use function microtime;
+use function printf;
+use function range;
+use function serialize;
+use function unserialize;
+
 require __DIR__ . '/bootstrap.php';
 $n = 20;
 
-$injector = new Injector(new FakeCarModule);
+$injector = new Injector(new FakeCarModule());
 $serialize = serialize($injector);
 
 $timer = microtime(true);
 foreach (range(1, $n) as $i) {
-    $injector = new Injector(new FakeCarModule);
+    $injector = new Injector(new FakeCarModule());
     $injector->getInstance(FakeCarInterface::class);
 }
 
@@ -26,15 +32,17 @@ $injector = unserialize($serialize);
 foreach (range(1, $n) as $i) {
     $injector->getInstance(FakeCarInterface::class);
 }
+
 $timer2 = microtime(true) - $timer;
 
-$compiler = new DiCompiler(new FakeCarModule, $_ENV['TMP_DIR']);
+$compiler = new DiCompiler(new FakeCarModule(), $_ENV['TMP_DIR']);
 $compiler->compile();
 $timer = microtime(true);
 $injector = new ScriptInjector($_ENV['TMP_DIR']);
 foreach (range(1, $n) as $i) {
     $injector->getInstance(FakeCarInterface::class);
 }
+
 $timer3 = microtime(true) - $timer;
 
 // Microsecond per inject

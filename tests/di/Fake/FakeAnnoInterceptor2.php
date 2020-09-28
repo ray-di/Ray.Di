@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 use Ray\Aop\MethodInterceptor;
@@ -8,7 +11,7 @@ class FakeAnnoInterceptor2 implements MethodInterceptor
 {
     public function invoke(MethodInvocation $invocation)
     {
-        FakeAnnoClass::$order[] = __CLASS__;
+        FakeAnnoClass::$order[] = self::class;
 
         return $invocation->proceed();
     }

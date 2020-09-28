@@ -1,11 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 class FakeAssistedDbProvider implements ProviderInterface
 {
-    /**
-     * @var MethodInvocationProvider
-     */
+    /** @var MethodInvocationProvider */
     private $invocationProvider;
 
     public function __construct(MethodInvocationProvider $invocationProvider)
@@ -16,7 +17,7 @@ class FakeAssistedDbProvider implements ProviderInterface
     public function get()
     {
         $parameters = $this->invocationProvider->get()->getArguments()->getArrayCopy();
-        list($id) = $parameters;
+        [$id] = $parameters;
 
         return new FakeAssistedDb($id);
     }

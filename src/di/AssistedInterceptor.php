@@ -4,25 +4,23 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use ReflectionType;
-use function in_array;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\Assisted;
 use Ray\Di\Di\Named;
 use ReflectionParameter;
+use ReflectionType;
+
+use function in_array;
+use function parse_str;
 
 final class AssistedInterceptor implements MethodInterceptor
 {
-    /**
-     * @var InjectorInterface
-     */
+    /** @var InjectorInterface */
     private $injector;
 
-    /**
-     * @var MethodInvocationProvider
-     */
+    /** @var MethodInvocationProvider */
     private $methodInvocationProvider;
 
     public function __construct(InjectorInterface $injector, MethodInvocationProvider $methodInvocationProvider)
@@ -41,13 +39,14 @@ final class AssistedInterceptor implements MethodInterceptor
     {
         $method = $invocation->getMethod();
         $assisted = $method->getAnnotation(Assisted::class);
-        /* @var \Ray\Di\Di\Assisted $assisted */
+        /** @var Assisted $assisted */
         $parameters = $method->getParameters();
         $arguments = $invocation->getArguments()->getArrayCopy();
         if ($assisted instanceof Assisted) {
             $this->methodInvocationProvider->set($invocation);
             $arguments = $this->injectAssistedParameters($method, $assisted, $parameters, $arguments);
         }
+
         $invocation->getArguments()->exchangeArray($arguments);
 
         return $invocation->proceed();
@@ -61,12 +60,13 @@ final class AssistedInterceptor implements MethodInterceptor
      *
      * @internal param int $cntArgs
      */
-    public function injectAssistedParameters(ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments) : array
+    public function injectAssistedParameters(ReflectionMethod $method, Assisted $assisted, array $parameters, array $arguments): array
     {
         foreach ($parameters as $parameter) {
             if (! in_array($parameter->getName(), $assisted->values, true)) {
                 continue;
             }
+
             $hint = $parameter->getType();
             $interface = $hint instanceof ReflectionType ? $hint->getName() : ''; // @phpstan-ignore-line
             $name = $this->getName($method, $parameter);
@@ -81,12 +81,13 @@ final class AssistedInterceptor implements MethodInterceptor
     /**
      * Return dependency "name"
      */
-    private function getName(ReflectionMethod $method, ReflectionParameter $parameter) : string
+    private function getName(ReflectionMethod $method, ReflectionParameter $parameter): string
     {
         $named = $method->getAnnotation(Named::class);
         if (! $named instanceof Named) {
             return Name::ANY;
         }
+
         parse_str($named->value, $names);
         $paramName = $parameter->getName();
         if (isset($names[$paramName])) {

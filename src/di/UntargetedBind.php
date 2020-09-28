@@ -8,9 +8,11 @@ use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionType;
 
+use function class_exists;
+
 final class UntargetedBind
 {
-    public function __invoke(Container $container, ReflectionMethod $method) : void
+    public function __invoke(Container $container, ReflectionMethod $method): void
     {
         $parameters = $method->getParameters();
         foreach ($parameters as $parameter) {
@@ -18,7 +20,7 @@ final class UntargetedBind
         }
     }
 
-    private function addConcreteClass(Container $container, ReflectionParameter $parameter) : void
+    private function addConcreteClass(Container $container, ReflectionParameter $parameter): void
     {
         $class = $this->getTypeHint($parameter);
         if (class_exists($class)) {
@@ -26,7 +28,7 @@ final class UntargetedBind
         }
     }
 
-    private function getTypeHint(ReflectionParameter $parameter) : string
+    private function getTypeHint(ReflectionParameter $parameter): string
     {
         $typeHintClass = $parameter->getType();
 

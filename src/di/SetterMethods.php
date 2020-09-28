@@ -6,11 +6,11 @@ namespace Ray\Di;
 
 use Exception;
 
+use function assert;
+
 final class SetterMethods
 {
-    /**
-     * @var SetterMethod[]
-     */
+    /** @var SetterMethod[] */
     private $setterMethods;
 
     /**
@@ -24,18 +24,15 @@ final class SetterMethods
     /**
      * @throws Exception
      */
-    public function __invoke(object $instance, Container $container) : void
+    public function __invoke(object $instance, Container $container): void
     {
         foreach ($this->setterMethods as $setterMethod) {
-            /* @var SetterMethod $setterMethod */
+            assert($setterMethod instanceof SetterMethod);
             ($setterMethod)($instance, $container);
         }
     }
 
-    /**
-     * @param SetterMethod $setterMethod
-     */
-    public function add(SetterMethod $setterMethod = null) : void
+    public function add(?SetterMethod $setterMethod = null): void
     {
         if ($setterMethod) {
             $this->setterMethods[] = $setterMethod;

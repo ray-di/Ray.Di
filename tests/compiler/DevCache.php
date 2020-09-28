@@ -9,14 +9,10 @@ use Doctrine\Common\Cache\CacheProvider;
 
 class DevCache extends CacheProvider
 {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public static $wasHit = false;
 
-    /**
-     * @var Cache
-     */
+    /** @var Cache */
     private $cache;
 
     public function __construct(CacheProvider $cache)

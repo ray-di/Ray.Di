@@ -8,25 +8,25 @@ use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\Unbound;
 use ReflectionMethod;
 
+use function spl_object_hash;
+
 class SetterMethodTest extends TestCase
 {
-    /**
-     * @var SetterMethods
-     */
+    /** @var SetterMethods */
     protected $setterMethods;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $method = new ReflectionMethod(FakeCar::class, 'setTires');
         $setterMethod = new SetterMethod($method, new Name(Name::ANY));
         $this->setterMethods = new SetterMethods([$setterMethod]);
     }
 
-    public function testInvoke() : void
+    public function testInvoke(): void
     {
-        $container = new Container;
+        $container = new Container();
         (new Bind($container, FakeTyreInterface::class))->to(FakeTyre::class);
-        $car = new FakeCar(new FakeEngine);
+        $car = new FakeCar(new FakeEngine());
         // setter injection
         $this->setterMethods->__invoke($car, $container);
         $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
@@ -34,11 +34,11 @@ class SetterMethodTest extends TestCase
         $this->assertNotSame(spl_object_hash($car->frontTyre), spl_object_hash($car->rearTyre));
     }
 
-    public function testUnbound() : void
+    public function testUnbound(): void
     {
         $this->expectException(Unbound::class);
-        $container = new Container;
-        $car = new FakeCar(new FakeEngine);
+        $container = new Container();
+        $car = new FakeCar(new FakeEngine());
         $this->setterMethods->__invoke($car, $container);
     }
 }

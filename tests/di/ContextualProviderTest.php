@@ -8,10 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 class ContextualProviderTest extends TestCase
 {
-    public function testContextualProviderInjection() : void
+    public function testContextualProviderInjection(): void
     {
         $robot = (new Injector(new FakeContextualModule('main')))->getInstance(FakeRobotInterface::class);
-        /* @var $robot FakeContextualRobot */
+        /** @var FakeContextualRobot $robot */
         $this->assertSame($robot->context, 'main');
     }
 }

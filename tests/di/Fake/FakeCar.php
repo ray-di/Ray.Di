@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 use Ray\Di\Di\Inject;
@@ -8,26 +11,16 @@ use Ray\Di\Di\PostConstruct;
 class FakeCar implements FakeCarInterface
 {
     public $engine;
-
     public $hardtop;
-
     public $frontTyre;
-
     public $rearTyre;
-
     public $isConstructed = false;
-
     public $rightMirror;
-
     public $leftMirror;
-
     public $spareMirror;
 
-    /**
-     * @var FakeHandleInterface
-     */
+    /** @var FakeHandleInterface */
     public $handle;
-
     public $gearStick;
 
     /**
@@ -40,8 +33,6 @@ class FakeCar implements FakeCarInterface
 
     /**
      * @Inject
-     *
-     * @return void
      */
     public function setTires(FakeTyreInterface $frontTyre, FakeTyreInterface $rearTyre): void
     {
@@ -51,8 +42,6 @@ class FakeCar implements FakeCarInterface
 
     /**
      * @Inject (optional=true)
-     *
-     * @return void
      */
     public function setHardtop(FakeHardtopInterface $hardtop): void
     {
@@ -61,10 +50,7 @@ class FakeCar implements FakeCarInterface
 
     /**
      * @Inject
-     *
      * @Named("rightMirror=right,$leftMirror=left")
-     *
-     * @return void
      */
     public function setMirrors(FakeMirrorInterface $rightMirror, FakeMirrorInterface $leftMirror): void
     {
@@ -74,10 +60,7 @@ class FakeCar implements FakeCarInterface
 
     /**
      * @Inject
-     *
      * @Named("right")
-     *
-     * @return void
      */
     public function setSpareMirror(FakeMirrorInterface $rightMirror): void
     {
@@ -86,8 +69,6 @@ class FakeCar implements FakeCarInterface
 
     /**
      * @Inject
-     *
-     * @return void
      */
     public function setHandle(FakeHandleInterface $handle): void
     {
@@ -96,8 +77,6 @@ class FakeCar implements FakeCarInterface
 
     /**
      * @FakeGearStickInject ("leather")
-     *
-     * @return void
      */
     public function setGearStick(FakeGearStickInterface $stick): void
     {
@@ -106,8 +85,6 @@ class FakeCar implements FakeCarInterface
 
     /**
      * @PostConstruct
-     *
-     * @return void
      */
     public function postConstruct(): void
     {

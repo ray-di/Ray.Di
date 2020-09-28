@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 use Ray\Di\Di\Inject;
@@ -6,13 +9,9 @@ use Ray\Di\Di\Inject;
 class FakeConstantConsumer
 {
     public $constantByConstruct;
-
     public $constantBySetter;
-
     public $defaultByConstruct;
-
     public $defaultBySetter;
-
     public $setterConstantWithoutVarName;
 
     /**
@@ -26,10 +25,7 @@ class FakeConstantConsumer
 
     /**
      * @FakeConstant ("constant")
-     *
      * @Inject
-     *
-     * @return void
      */
     public function setFakeConstant($constant, $default = 'default_setter'): void
     {
@@ -39,10 +35,7 @@ class FakeConstantConsumer
 
     /**
      * @FakeConstant
-     *
      * @Inject
-     *
-     * @return void
      */
     public function setFakeConstantWithoutVarName($constant): void
     {

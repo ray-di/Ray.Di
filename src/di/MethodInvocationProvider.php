@@ -9,12 +9,10 @@ use Ray\Di\Exception\MethodInvocationNotAvailable;
 
 class MethodInvocationProvider implements ProviderInterface
 {
-    /**
-     * @var ?MethodInvocation
-     */
+    /** @var ?MethodInvocation */
     private $invocation;
 
-    public function set(MethodInvocation $invocation) : void
+    public function set(MethodInvocation $invocation): void
     {
         $this->invocation = $invocation;
     }
@@ -25,7 +23,7 @@ class MethodInvocationProvider implements ProviderInterface
     public function get()
     {
         if ($this->invocation === null) {
-            throw new MethodInvocationNotAvailable;
+            throw new MethodInvocationNotAvailable();
         }
 
         return $this->invocation;

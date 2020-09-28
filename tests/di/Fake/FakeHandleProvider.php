@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 use Ray\Di\Di\Inject;
@@ -19,7 +22,7 @@ class FakeHandleProvider implements ProviderInterface
 
     public function get()
     {
-        $handle = new FakeHandle;
+        $handle = new FakeHandle();
         $handle->logo = $this->logo;
 
         return $handle;

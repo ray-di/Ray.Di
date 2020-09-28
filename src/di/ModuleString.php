@@ -6,27 +6,38 @@ namespace Ray\Di;
 
 use Ray\Aop\Pointcut;
 
+use function assert;
+use function implode;
+use function serialize;
+use function sort;
+use function sprintf;
+use function unserialize;
+
+use const PHP_EOL;
+
 final class ModuleString
 {
     /**
      * @param array<int, Pointcut> $pointcuts
      */
-    public function __invoke(Container $container, array $pointcuts) : string
+    public function __invoke(Container $container, array $pointcuts): string
     {
         $log = [];
-        /** @var Container $container */
         $container = unserialize(serialize($container), ['allowed_classes' => true]);
-        $spy = new SpyCompiler;
+        assert($container instanceof Container);
+        $spy = new SpyCompiler();
         foreach ($container->getContainer() as $dependencyIndex => $dependency) {
             if ($dependency instanceof Dependency) {
                 $dependency->weaveAspects($spy, $pointcuts);
             }
+
             $log[] = sprintf(
                 '%s => %s',
                 $dependencyIndex,
                 (string) $dependency
             );
         }
+
         sort($log);
 
         return implode(PHP_EOL, $log);

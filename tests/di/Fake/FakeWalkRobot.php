@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 /**
@@ -6,14 +9,10 @@ namespace Ray\Di;
  */
 class FakeWalkRobot
 {
-    /**
-     * @var FakeLegInterface
-     */
+    /** @var FakeLegInterface */
     public $leftLeg;
 
-    /**
-     * @var FakeLegInterface
-     */
+    /** @var FakeLegInterface */
     public $rightLeg;
 
     /**

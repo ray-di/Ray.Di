@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ray\Compiler;
 
 use Ray\Di\AbstractModule;
-use Ray\Di\Scope;
 
 class FakeDevModule extends AbstractModule
 {

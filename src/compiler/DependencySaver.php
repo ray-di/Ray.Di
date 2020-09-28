@@ -4,49 +4,58 @@ declare(strict_types=1);
 
 namespace Ray\Compiler;
 
+use LogicException;
+use ReflectionClass;
+
+use function file_exists;
+use function is_dir;
+use function mkdir;
+use function serialize;
+use function sprintf;
+use function str_replace;
+
+use const PHP_EOL;
+
 final class DependencySaver
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $scriptDir;
 
-    /**
-     * @var FilePutContents
-     */
+    /** @var FilePutContents */
     private $filePutContents;
 
     public function __construct(string $scriptDir)
     {
         $this->scriptDir = $scriptDir;
-        $this->filePutContents = new FilePutContents;
+        $this->filePutContents = new FilePutContents();
     }
 
-    public function __invoke(string $dependencyIndex, Code $code) : void
+    public function __invoke(string $dependencyIndex, Code $code): void
     {
-        $pearStyleName = \str_replace('\\', '_', $dependencyIndex);
-        $instanceScript = \sprintf(ScriptInjector::INSTANCE, $this->scriptDir, $pearStyleName);
+        $pearStyleName = str_replace('\\', '_', $dependencyIndex);
+        $instanceScript = sprintf(ScriptInjector::INSTANCE, $this->scriptDir, $pearStyleName);
         ($this->filePutContents)($instanceScript, (string) $code . PHP_EOL);
         if ($code->qualifiers) {
             $this->saveQualifier($code->qualifiers);
         }
     }
 
-    private function saveQualifier(IpQualifier $qualifer) : void
+    private function saveQualifier(IpQualifier $qualifer): void
     {
         $qualifier = $this->scriptDir . '/qualifer';
-        ! \file_exists($qualifier) && ! @mkdir($qualifier) && ! is_dir($qualifier);
+        ! file_exists($qualifier) && ! @mkdir($qualifier) && ! is_dir($qualifier);
         $class = $qualifer->param->getDeclaringClass();
-        if (! $class instanceof \ReflectionClass) {
-            throw new \LogicException; // @codeCoverageIgnore
+        if (! $class instanceof ReflectionClass) {
+            throw new LogicException(); // @codeCoverageIgnore
         }
-        $fileName = \sprintf(
+
+        $fileName = sprintf(
             ScriptInjector::QUALIFIER,
             $this->scriptDir,
-            \str_replace('\\', '_', $class->name),
+            str_replace('\\', '_', $class->name),
             $qualifer->param->getDeclaringFunction()->name,
             $qualifer->param->name
         );
-        ($this->filePutContents)($fileName, \serialize($qualifer->qualifier) . PHP_EOL);
+        ($this->filePutContents)($fileName, serialize($qualifer->qualifier) . PHP_EOL);
     }
 }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 /**
@@ -7,13 +10,11 @@ namespace Ray\Di;
 class FakeAnnoOrderClass
 {
     /**
-     * @FakeAnnoMethod1
-     *
-     * @FakeAnnoMethod2
-     *
-     * @FakeAnnoMethod3
-     *
      * @return void
+     *
+     * @FakeAnnoMethod1
+     * @FakeAnnoMethod2
+     * @FakeAnnoMethod3
      */
     public function get()
     {
