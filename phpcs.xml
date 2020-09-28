@@ -7,7 +7,6 @@
     <arg name="extensions" value="php"/>
     <arg name="parallel" value="80"/>
     <arg name="cache" value=".phpcs-cache"/>
-    <arg name="colors"/>
 
     <!-- Ignore warnings, show progress of the run and show sniff names -->
     <arg value="nps"/>
@@ -63,5 +62,6 @@
             <property name="maxLinesCountBeforeWithoutComment" value="0"/>
         </properties>
     </rule>
-    <exclude-pattern>*/tests/Fake/*</exclude-pattern>
+    <exclude-pattern>*/tests/di/Fake/*</exclude-pattern>
+    <exclude-pattern>*/tests/compiler/Fake/*</exclude-pattern>
 </ruleset>
