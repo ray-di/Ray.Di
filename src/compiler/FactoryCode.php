@@ -22,9 +22,6 @@ final class FactoryCode
     /** @var Normalizer */
     private $normalizer;
 
-    /** @var InjectorInterface|null */
-    private $injector;
-
     /** @var NodeFactory */
     private $nodeFactory;
 
@@ -39,7 +36,6 @@ final class FactoryCode
     ) {
         $this->container = $container;
         $this->normalizer = $normalizer;
-        $this->injector = $injector;
         $this->nodeFactory = new NodeFactory($normalizer, $this, $injector);
         $this->functionCompiler = new FunctionCode($container, new PrivateProperty(), $compiler);
     }
