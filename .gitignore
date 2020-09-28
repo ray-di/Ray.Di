@@ -3,7 +3,6 @@ build
 vendor
 *.cache.php
 composer.lock
-tmp/
 .php_cs.cache
 .phpunit.result.cache
-tests/script/grapher.php.txt
+tests/di/script/grapher.php.txt

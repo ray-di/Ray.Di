@@ -1,0 +1,3 @@
+<?php
+
+$singleton('FakeInferface-*');

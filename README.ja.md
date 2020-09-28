@@ -621,6 +621,14 @@ $injector = unserialize($cachedInjector);
 $lister = $injector->getInstance(ListerInterface::class);
 ```
 
+### CachedInjectorFactory
+
+CachedInejctorFactory`は、ノーマルのインジェクターとスクリプトインジェクターをハイブリッドで利用する事で開発とプロダクションの両方で最高のパフォーマンスを発揮します。
+
+インジェクターは、リクエストを超えてシングルトンオブジェクトを注入することができ、テストの速度が大幅に向上します。テストでの連続するPDO接続も（再利用されるため）接続リソースを使い果たすことがありません。
+
+詳細は [CachedInjectorFactory](https://github.com/ray-di/Ray.Compiler/issues/75) を参照してください。
+
 ## Grapher
 
 `Grapher`では、コンストラクタの引数は手動で渡しその後のインジェクションを自動で行われます。
