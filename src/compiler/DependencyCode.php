@@ -25,12 +25,6 @@ final class DependencyCode implements SetContextInterface
     /** @var BuilderFactory */
     private $factory;
 
-    /** @var Container */
-    private $container;
-
-    /** @var ScriptInjector|null */
-    private $injector;
-
     /** @var Normalizer */
     private $normalizer;
 
@@ -55,9 +49,7 @@ final class DependencyCode implements SetContextInterface
     public function __construct(Container $container, ?ScriptInjector $injector = null)
     {
         $this->factory = new BuilderFactory();
-        $this->container = $container;
         $this->normalizer = new Normalizer();
-        $this->injector = $injector;
         $this->factoryCompiler = new FactoryCode($container, new Normalizer(), $this, $injector);
         $this->privateProperty = new PrivateProperty();
         $this->aopCode = new AopCode($this->privateProperty);
