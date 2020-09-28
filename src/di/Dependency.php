@@ -32,9 +32,6 @@ final class Dependency implements DependencyInterface
     /** @var mixed */
     private $instance;
 
-    /** @var string */
-    private $index = '';
-
     public function __construct(NewInstance $newInstance, ?ReflectionMethod $postConstruct = null)
     {
         $this->newInstance = $newInstance;
@@ -59,8 +56,7 @@ final class Dependency implements DependencyInterface
      */
     public function register(array &$container, Bind $bind): void
     {
-        $this->index = $index = (string) $bind;
-        $container[$index] = $bind->getBound();
+        $container[(string) $bind] = $bind->getBound();
     }
 
     /**
