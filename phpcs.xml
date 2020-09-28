@@ -1,19 +1,67 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ruleset name="PHP_CodeSniffer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
-    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
-    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
-    <rule ref="Generic.Strings.UnnecessaryStringConcat"/>
-    <rule ref="PSR2">
-        <exclude name="Generic.Files.LineLength"/>
+<?xml version="1.0"?>
+<ruleset
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="bearcs"
+    xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+
+    <arg name="basepath" value="."/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="80"/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+
+    <!-- Ignore warnings, show progress of the run and show sniff names -->
+    <arg value="nps"/>
+
+    <!-- Directories to be checked -->
+    <file>src</file>
+    <file>tests</file>
+    <exclude-pattern>*/tests/tmp/*</exclude-pattern>
+
+    <!-- PSR12 Coding Standard -->
+    <rule ref="PSR12"/>
+
+    <!-- Doctrine Coding Standard -->
+    <rule ref="Doctrine">
+    <!-- Inapplicable for this project -->
+        <!-- Base -->
+        <exclude name="Generic.Formatting.MultipleStatementAlignment.NotSame"/>
+        <exclude name="Squiz.Strings.DoubleQuoteUsage.ContainsVar"/>
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming.SuperfluousPrefix"/>
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix"/>
+        <exclude name="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration.MissingVariable"/>
+        <exclude name="SlevomatCodingStandard.Commenting.UselessInheritDocComment.UselessInheritDocComment"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint"/>
+        <!-- /Base -->
+        <!-- Option -->
+        <exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed"/>
+        <!-- /Option -->
+        <!-- Exclude Fake files form Doctrine CS -->
+        <exclude-pattern>*/tests/Fake/*</exclude-pattern>
     </rule>
-    <rule ref="PEAR.Commenting.FunctionComment">
-        <exclude name="PEAR.Commenting.FunctionComment.MissingReturn"/>
-        <exclude name="PEAR.Commenting.FunctionComment.MissingParamComment"/>
-        <exclude name="PEAR.Commenting.FunctionComment.SpacingBeforeTags"/>
-        <exclude name="PEAR.Commenting.FunctionComment.MissingParamTag"/>
-        <exclude name="PEAR.Commenting.FunctionComment.Missing"/>
-        <exclude name="PEAR.Commenting.FunctionComment.ParameterCommentsNotAligned"/>
-        <exclude name="PEAR.Commenting.FunctionComment.ParamNameNoMatch"/>
+
+    <!-- Additional Rules -->
+    <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
+        <properties>
+            <property name="annotationsGroups" type="array">
+                <element value="@param, @psalm-param, @phpstan-param"/>
+                <element value="@return, @psalm-return, @phpstan-return"/>
+                <element value="@throws"/>
+            </property>
+        </properties>
     </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint">
+        <include-pattern>src/Module/*</include-pattern>
+        <include-pattern>tests/*</include-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Classes.PropertySpacing">
+        <properties>
+            <property name="minLinesCountBeforeWithComment" value="1"/>
+            <property name="maxLinesCountBeforeWithComment" value="1"/>
+            <property name="maxLinesCountBeforeWithoutComment" value="0"/>
+        </properties>
+    </rule>
+    <exclude-pattern>*/tests/Fake/*</exclude-pattern>
 </ruleset>
