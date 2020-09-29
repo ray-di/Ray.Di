@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Compiler;
 
-use LogicException;
 use Ray\Aop\ReflectionMethod;
 use Ray\Di\InjectionPointInterface;
 use ReflectionClass;
@@ -58,9 +57,7 @@ final class InjectionPoint implements InjectionPointInterface
     public function getClass(): ReflectionClass
     {
         $class = $this->parameter->getDeclaringClass();
-        if (! $class instanceof ReflectionClass) {
-            throw new LogicException(); // @codeCoverageIgnore
-        }
+        assert($class instanceof ReflectionClass);
 
         return $class;
     }
@@ -85,9 +82,7 @@ final class InjectionPoint implements InjectionPointInterface
     public function getQualifier()
     {
         $class = $this->parameter->getDeclaringClass();
-        if (! $class instanceof ReflectionClass) {
-            throw new LogicException(); // @codeCoverageIgnore
-        }
+        assert($class instanceof ReflectionClass);
 
         $qualifierFile = sprintf(
             ScriptInjector::QUALIFIER,

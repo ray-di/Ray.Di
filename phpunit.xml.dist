@@ -12,7 +12,7 @@
     </php>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">src/di</directory>
         </whitelist>
     </filter>
 </phpunit>

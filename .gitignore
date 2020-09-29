@@ -11,4 +11,5 @@
 /.php_cs.cache
 /.phpunit.result.cache
 /composer.lock
-.phpcs-cache
+/.phpcs-cache
+/coverage.xml
