@@ -8,7 +8,6 @@
 /tests/di/script/grapher.php.txt
 /tests/tmp/
 /*.cache.php
-/.php_cs.cache
 /.phpunit.result.cache
 /composer.lock
 /.phpcs-cache
