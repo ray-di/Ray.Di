@@ -115,4 +115,26 @@ class DependencyTest extends TestCase
         $this->assertTrue($isWeave);
         $this->assertArrayHasKey('returnSame', $instance->bindings);
     }
+
+    /**
+     * @dataProvider containerProvider
+     * @covers \Ray\Di\Dependency::injectWithArgs
+     */
+    public function testInjectWithArgsPostConstcuct(Container $container): void
+    {
+        $car = $this->dependency->injectWithArgs($container, [new FakeEngine()]);
+        $this->assertInstanceOf(FakeCar::class, $car);
+    }
+
+    /**
+     * @dataProvider containerProvider
+     * @covers \Ray\Di\Dependency::injectWithArgs
+     */
+    public function testInjectWithArgsSingleton(Container $container): void
+    {
+        $this->dependency->setScope(Scope::SINGLETON);
+        $this->dependency->injectWithArgs($container, [new FakeEngine()]);
+        $car = $this->dependency->injectWithArgs($container, [new FakeEngine()]);
+        $this->assertInstanceOf(FakeCar::class, $car);
+    }
 }

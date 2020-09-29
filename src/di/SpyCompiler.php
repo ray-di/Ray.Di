@@ -15,6 +15,9 @@ use function implode;
 use function method_exists;
 use function sprintf;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class SpyCompiler implements CompilerInterface
 {
     /**
@@ -71,7 +74,7 @@ final class SpyCompiler implements CompilerInterface
     {
         $bindings = $bind->getBindings();
         if (! $bindings) {
-            return '';
+            return ''; // @codeCoverageIgnore
         }
 
         $log = ' (aop)';

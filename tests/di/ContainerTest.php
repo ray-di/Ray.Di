@@ -166,4 +166,13 @@ class ContainerTest extends TestCase
         (new Bind($container, FakeEngineInterface::class))->toInstance(new FakeEngine());
         $container->getInstanceWithArgs(FakeEngineInterface::class, []);
     }
+
+    /**
+     * @covers \Ray\Di\Container::getInstanceWithArgs
+     */
+    public function testUnbound(): void
+    {
+        $this->expectException(Unbound::class);
+        (new Container())->getInstanceWithArgs(FakeEngineInterface::class, []);
+    }
 }

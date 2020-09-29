@@ -16,7 +16,6 @@ use function class_exists;
 use function implode;
 use function is_array;
 use function is_string;
-use function print_r;
 
 final class Bind
 {
@@ -203,11 +202,6 @@ final class Bind
                 }
 
                 $varName = $name[$key];
-                /** @psalm-suppress DocblockTypeContradiction */
-                if (! is_string($varName)) {
-                    throw new InvalidToConstructorNameParameter(print_r($varName, true));
-                }
-
                 $carry[] = $key . '=' . (string) $varName;
 
                 return $carry;
