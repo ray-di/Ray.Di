@@ -70,7 +70,7 @@ final class Normalizer
             return new Scalar\DNumber($value);
         }
 
-        return $this->getValueNodeNoScalar($value);
+        return $this->getValueNodeNonAtomic($value);
     }
 
     /**
@@ -80,7 +80,7 @@ final class Normalizer
      *
      * @return Expr\Array_|Expr\FuncCall
      */
-    private function getValueNodeNoScalar($value): Expr
+    private function getValueNodeNonAtomic($value): Expr
     {
         if (is_array($value)) {
             return $this->arrayValue($value);
