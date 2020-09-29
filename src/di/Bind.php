@@ -70,7 +70,7 @@ final class Bind
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->interface . '-' . $this->name;
     }

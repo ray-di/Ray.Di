@@ -22,7 +22,7 @@ final class IpQualifier
         $this->qualifier = $qualifier;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return serialize($this->qualifier);
     }

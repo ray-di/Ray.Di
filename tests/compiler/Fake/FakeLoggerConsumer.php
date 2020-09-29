@@ -10,6 +10,8 @@ class FakeLoggerConsumer
 {
     /** @var FakeLoggerInterface */
     public $logger;
+
+    /** @var InjectorInterface */
     public $injector;
 
     public function __construct(InjectorInterface $injector)

@@ -31,12 +31,15 @@ final class DependencyProvider implements DependencyInterface
         $this->context = $context;
     }
 
+    /**
+     * @return list<string>
+     */
     public function __sleep()
     {
         return ['context', 'dependency', 'isSingleton'];
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf(
             '(provider) %s',

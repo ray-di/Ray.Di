@@ -38,12 +38,15 @@ final class Dependency implements DependencyInterface
         $this->postConstruct = $postConstruct ? $postConstruct->name : null;
     }
 
+    /**
+     * @return array<string>
+     */
     public function __sleep()
     {
         return ['newInstance', 'postConstruct', 'isSingleton'];
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf(
             '(dependency) %s',

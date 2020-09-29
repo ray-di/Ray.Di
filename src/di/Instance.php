@@ -23,7 +23,7 @@ final class Instance implements DependencyInterface
         $this->value = $value;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         if (is_scalar($this->value)) {
             return sprintf(

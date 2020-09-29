@@ -15,7 +15,7 @@ use function sprintf;
 
 class Unbound extends LogicException implements ExceptionInterface
 {
-    public function __toString()
+    public function __toString(): string
     {
         $messages = [sprintf("- %s\n", $this->getMessage())];
         $e = $this->getPrevious();

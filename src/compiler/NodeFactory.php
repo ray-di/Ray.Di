@@ -78,12 +78,12 @@ final class NodeFactory
             $method = ($this->privateProperty)($setterMethod, 'method');
             $argumentsObject = ($this->privateProperty)($setterMethod, 'arguments');
             $arguments = ($this->privateProperty)($argumentsObject, 'arguments');
+            /** @var array<Node\Arg> $args */
             $args = $this->getSetterParams($arguments, $isOptional);
             if (! $args) {
                 continue;
             }
 
-            /** @var array<Node\Arg> $args */
             $setters[] = new Expr\MethodCall($instance, $method, $args); // @phpstan-ignore-line
         }
 

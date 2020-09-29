@@ -24,6 +24,9 @@ final class Container
     /** @var array<int, Pointcut> */
     private $pointcuts = [];
 
+    /**
+     * @return list<string>
+     */
     public function __sleep()
     {
         return ['container', 'pointcuts'];

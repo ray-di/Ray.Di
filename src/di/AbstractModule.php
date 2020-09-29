@@ -34,7 +34,7 @@ abstract class AbstractModule
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (new ModuleString())($this->getContainer(), $this->getContainer()->getPointcuts());
     }
