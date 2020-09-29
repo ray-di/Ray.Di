@@ -35,10 +35,10 @@ final class DiCompiler implements InjectorInterface
     /** @var FilePutContents */
     private $filePutContents;
 
-    public function __construct(?AbstractModule $module = null, string $scriptDir = '')
+    public function __construct(AbstractModule $module, string $scriptDir)
     {
         $this->scriptDir = $scriptDir ?: sys_get_temp_dir();
-        $this->container = $module ? $module->getContainer() : new Container();
+        $this->container = $module->getContainer();
         $this->dependencyCompiler = new DependencyCode($this->container);
         $this->module = $module;
         $this->dependencySaver = new DependencySaver($scriptDir);
