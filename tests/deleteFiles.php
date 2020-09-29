@@ -12,7 +12,7 @@ use function unlink;
 
 function deleteFiles(string $path): void
 {
-    foreach (array_filter((array)glob($path . '/*')) as $file) {
+    foreach (array_filter((array) glob($path . '/*')) as $file) {
         is_dir($file) ? deleteFiles($file) : unlink($file);
         @rmdir($file);
     }

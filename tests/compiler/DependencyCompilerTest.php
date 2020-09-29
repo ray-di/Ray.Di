@@ -7,7 +7,6 @@ namespace Ray\Compiler;
 use DomainException;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Container;
-use Ray\Di\Dependency;
 use Ray\Di\Instance;
 use Ray\Di\Name;
 
@@ -15,9 +14,6 @@ use function str_replace;
 
 class DependencyCompilerTest extends TestCase
 {
-    /** @var Dependency */
-    private $dependency;
-
     protected function setUp(): void
     {
         parent::setUp();
