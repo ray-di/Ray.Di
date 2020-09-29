@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Ray\Compiler;
 
+use Ray\Aop\Compiler;
 use Ray\Di\AbstractModule;
+use Ray\Di\Bind;
 use Ray\Di\Container;
-use Ray\Di\Injector;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Name;
 use ReflectionProperty;
@@ -25,9 +26,6 @@ final class DiCompiler implements InjectorInterface
     /** @var DependencyCode */
     private $dependencyCompiler;
 
-    /** @var Injector */
-    private $injector;
-
     /** @var AbstractModule|null */
     private $module;
 
@@ -41,11 +39,13 @@ final class DiCompiler implements InjectorInterface
     {
         $this->scriptDir = $scriptDir ?: sys_get_temp_dir();
         $this->container = $module ? $module->getContainer() : new Container();
-        $this->injector = new Injector($module, $scriptDir);
         $this->dependencyCompiler = new DependencyCode($this->container);
         $this->module = $module;
         $this->dependencySaver = new DependencySaver($scriptDir);
         $this->filePutContents = new FilePutContents();
+        // Weave AssistedInterceptor and bind InjectorInterface for self
+        $module->getContainer()->weaveAspects(new Compiler($scriptDir));
+        (new Bind($this->container, InjectorInterface::class))->toInstance($this);
     }
 
     /**
