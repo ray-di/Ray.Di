@@ -106,10 +106,10 @@ final class FactoryCode
     }
 
     /**
-     * Return "$injection_point()"
+     * Return "$injectionPoint()"
      */
     private function getInjectionPoint(): Expr
     {
-        return new Expr\FuncCall(new Expr\Variable('injection_point'));
+        return new Expr\FuncCall(new Expr\Variable('injectionPoint'));
     }
 }

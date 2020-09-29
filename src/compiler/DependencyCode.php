@@ -92,7 +92,7 @@ final class DependencyCode implements SetContextInterface
     {
         $bool = new Expr\ConstFetch(new Node\Name([$isSingleton ? 'true' : 'false']));
 
-        return new Expr\Assign(new Expr\Variable('is_singleton'), $bool);
+        return new Expr\Assign(new Expr\Variable('isSingleton'), $bool);
     }
 
     /**

@@ -101,7 +101,7 @@ final class ScriptInjector implements InjectorInterface
              */
             function (string $dependencyIndex, array $injectionPoint = ['', '', '']) {
                 $this->ip = $injectionPoint; // @phpstan-ignore-line
-                [$prototype, $singleton, $injection_point, $injector] = $this->functions;
+                [$prototype, $singleton, $injectionPoint, $injector] = $this->functions;
 
                 return require $this->getInstanceFile($dependencyIndex);
             };
@@ -117,14 +117,14 @@ final class ScriptInjector implements InjectorInterface
                 }
 
                 $this->ip = $injectionPoint;
-                [$prototype, $singleton, $injection_point, $injector] = $this->functions;
+                [$prototype, $singleton, $injectionPoint, $injector] = $this->functions;
 
                 $instance = require $this->getInstanceFile($dependencyIndex);
                 $this->singletons[$dependencyIndex] = $instance;
 
                 return $instance;
             };
-        $injection_point = function () use ($scriptDir): InjectionPoint {
+        $injectionPoint = function () use ($scriptDir): InjectionPoint {
             return new InjectionPoint(
                 new ReflectionParameter([$this->ip[0], $this->ip[1]], $this->ip[2]),
                 $scriptDir
@@ -133,9 +133,12 @@ final class ScriptInjector implements InjectorInterface
         $injector = function (): self {
             return $this;
         };
-        $this->functions = [$prototype, $singleton, $injection_point, $injector];
+        $this->functions = [$prototype, $singleton, $injectionPoint, $injector];
     }
 
+    /**
+     * @return list<string>
+     */
     public function __sleep()
     {
         $this->saveModule();
@@ -163,11 +166,11 @@ final class ScriptInjector implements InjectorInterface
             return $this->singletons[$dependencyIndex];
         }
 
-        [$prototype, $singleton, $injection_point, $injector] = $this->functions;
+        [$prototype, $singleton, $injectionPoint, $injector] = $this->functions;
         /** @psalm-suppress UnresolvableInclude */
         $instance = require $this->getInstanceFile($dependencyIndex);
-        /** @global bool $is_singleton */
-        $isSingleton = isset($is_singleton) && $is_singleton; // @phpstan-ignore-line
+        /** @global bool $isSingleton */
+        $isSingleton = isset($isSingleton) && $isSingleton; // @phpstan-ignore-line
         if ($isSingleton) {
             $this->singletons[$dependencyIndex] = $instance;
         }
