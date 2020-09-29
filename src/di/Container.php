@@ -170,11 +170,9 @@ final class Container
     public function weaveAspects(CompilerInterface $compiler): void
     {
         foreach ($this->container as $dependency) {
-            if (! $dependency instanceof Dependency) {
-                continue;
+            if ($dependency instanceof Dependency) {
+                $dependency->weaveAspects($compiler, $this->pointcuts);
             }
-
-            $dependency->weaveAspects($compiler, $this->pointcuts);
         }
     }
 
