@@ -14,7 +14,7 @@ class AssistedTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->injector = new Injector(new FakeToBindModule(), $_ENV['TMP_DIR']);
+        $this->injector = new Injector(new FakeToBindModule(), __DIR__ . '/tmp');
     }
 
     public function testAssisted(): void
@@ -49,7 +49,7 @@ class AssistedTest extends TestCase
 
     public function testAssistedMethodInvocation(): void
     {
-        $assistedConsumer = (new Injector(new FakeAssistedDbModule(), $_ENV['TMP_DIR']))->getInstance(FakeAssistedParamsConsumer::class);
+        $assistedConsumer = (new Injector(new FakeAssistedDbModule(), __DIR__ . '/tmp'))->getInstance(FakeAssistedParamsConsumer::class);
         /** @var FakeAssistedParamsConsumer $assistedConsumer */
         [$id, $db] = $assistedConsumer->getUser(1);
         /** @var FakeAbstractDb $db */

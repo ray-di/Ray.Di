@@ -17,13 +17,13 @@ class DiCompilerTest extends TestCase
     public function testUnbound(): void
     {
         $this->expectException(Unbound::class);
-        $injector = new ScriptInjector($_ENV['TMP_DIR']);
+        $injector = new ScriptInjector(__DIR__ . '/tmp');
         $injector->getInstance(FakeCarInterface::class);
     }
 
     public function testCompile(): void
     {
-        $compiler = new DiCompiler(new FakeCarModule(), $_ENV['TMP_DIR']);
+        $compiler = new DiCompiler(new FakeCarModule(), __DIR__ . '/tmp');
         $compiler->compile();
         $any = Name::ANY;
         $files = [
@@ -36,25 +36,25 @@ class DiCompilerTest extends TestCase
             "Ray_Compiler_FakeTyreInterface-{$any}.php",
         ];
         foreach ($files as $file) {
-            $filePath = $_ENV['TMP_DIR'] . '/' . $file;
+            $filePath = __DIR__ . '/tmp/' . $file;
             $this->assertFileExists($filePath, $filePath);
         }
 
-        $injector = new ScriptInjector($_ENV['TMP_DIR']);
+        $injector = new ScriptInjector(__DIR__ . '/tmp');
         $car = $injector->getInstance(FakeCarInterface::class);
         $this->assertInstanceOf(FakeCar::class, $car);
     }
 
     public function testsGetInstance(): void
     {
-        $compiler = new DiCompiler(new FakeCarModule(), $_ENV['TMP_DIR']);
+        $compiler = new DiCompiler(new FakeCarModule(), __DIR__ . '/tmp');
         $car = $compiler->getInstance(FakeCarInterface::class);
         $this->assertInstanceOf(FakeCar::class, $car);
     }
 
     public function testAopCompile(): void
     {
-        $compiler = new DiCompiler(new FakeAopModule(), $_ENV['TMP_DIR']);
+        $compiler = new DiCompiler(new FakeAopModule(), __DIR__ . '/tmp');
         $compiler->compile();
         $any = Name::ANY;
         $files = [
@@ -62,7 +62,7 @@ class DiCompilerTest extends TestCase
             "Ray_Compiler_FakeDoubleInterceptor-{$any}.php",
         ];
         foreach ($files as $file) {
-            $this->assertFileExists($_ENV['TMP_DIR'] . '/' . $file);
+            $this->assertFileExists(__DIR__ . '/tmp/' . $file);
         }
 
         $this->testAopCompileFile();
@@ -73,7 +73,7 @@ class DiCompilerTest extends TestCase
      */
     public function testAopCompileFile(): void
     {
-        $script = new ScriptInjector($_ENV['TMP_DIR']);
+        $script = new ScriptInjector(__DIR__ . '/tmp');
         $instance = $script->getInstance(FakeAopInterface::class);
         assert($instance instanceof FakeAop);
         $this->assertInstanceOf(FakeAop::class, $instance);
@@ -85,9 +85,9 @@ class DiCompilerTest extends TestCase
 
     public function testInjectionPoint(): void
     {
-        $compiler = new DiCompiler(new FakeLoggerModule(), $_ENV['TMP_DIR']);
+        $compiler = new DiCompiler(new FakeLoggerModule(), __DIR__ . '/tmp');
         $compiler->compile();
-        $injector = new ScriptInjector($_ENV['TMP_DIR']);
+        $injector = new ScriptInjector(__DIR__ . '/tmp');
         $loggerConsumer = $injector->getInstance(FakeLoggerConsumer::class);
         assert($loggerConsumer->logger instanceof FakeLogger);
         $this->assertSame('Ray\Compiler\FakeLoggerConsumer', $loggerConsumer->logger->name);
@@ -96,10 +96,10 @@ class DiCompilerTest extends TestCase
 
     public function testDump(): void
     {
-        $compiler = new DiCompiler(new FakeCarModule(), $_ENV['TMP_DIR']);
+        $compiler = new DiCompiler(new FakeCarModule(), __DIR__ . '/tmp');
         $compiler->dumpGraph();
         $any = Name::ANY;
-        $this->assertFileExists($_ENV['TMP_DIR'] . '/graph/Ray_Compiler_FakeCarInterface-' . $any . '.html');
+        $this->assertFileExists(__DIR__ . '/tmp/graph/Ray_Compiler_FakeCarInterface-' . $any . '.html');
     }
 
     /**
@@ -125,9 +125,9 @@ class DiCompilerTest extends TestCase
      */
     public function testInstance(string $name, $expected): void
     {
-        $compiler = new DiCompiler(new FakeInstanceModule(), $_ENV['TMP_DIR']);
+        $compiler = new DiCompiler(new FakeInstanceModule(), __DIR__ . '/tmp');
         $compiler->compile();
-        $injector = new ScriptInjector($_ENV['TMP_DIR']);
+        $injector = new ScriptInjector(__DIR__ . '/tmp');
         $result = $injector->getInstance('', $name);
         $this->assertSame($expected, $result);
         $object = $injector->getInstance('', 'object');

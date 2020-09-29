@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-$_ENV['TMP_DIR'] = __DIR__ . '/tmp';
-
 // cleanup tmp directory
 (static function (): void {
     $unlink = static function (string $path) use (&$unlink): callable {
