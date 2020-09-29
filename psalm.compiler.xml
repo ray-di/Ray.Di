@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<psalm
+        errorLevel="3"
+        resolveFromConfigFile="true"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="https://getpsalm.org/schema/config"
+        xsi:schemaLocation="https://getpsalm.org/schema/config https://psalm.dev/schema/config"
+>
+    <projectFiles>
+        <directory name="src/compiler" />
+        <ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
+</psalm>

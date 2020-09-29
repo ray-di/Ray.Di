@@ -59,7 +59,7 @@
         "pcov": ["php -dextension=pcov.so -d pcov.enabled=1 ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage  --coverage-clover=coverage.xml"],
         "cs": ["phpcs --standard=./phpcs.xml src tests"],
         "cs-fix": ["phpcbf src tests"],
-        "sa": ["phpstan analyse -c phpstan.neon", "psalm --show-info=true"],
+        "sa": ["phpstan analyse -c phpstan.neon", "psalm --show-info=true", "psalm -c psalm.compiler.xml --show-info=true"],
         "metrics": ["@test", "phpmetrics --report-html=build/metrics --exclude=Exception --log-junit=build/junit.xml --junit=build/junit.xml src"]
     }
 }
