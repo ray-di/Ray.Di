@@ -62,6 +62,7 @@
             <property name="maxLinesCountBeforeWithoutComment" value="0"/>
         </properties>
     </rule>
-    <exclude-pattern>*/tests/di/Fake/*</exclude-pattern>
-    <exclude-pattern>*/tests/compiler/Fake/*</exclude-pattern>
+    <exclude-pattern>*/Fake/*</exclude-pattern>
+    <exclude-pattern>*/tmp/*/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
 </ruleset>
