@@ -46,6 +46,22 @@ final class Normalizer
             );
         }
 
+        return $this->getValueNode($value);
+    }
+
+    /**
+     * Return array or object node
+     *
+     * @param array<mixed>|mixed|object $value
+     *
+     * @return Scalar\String_|Scalar\LNumber|Scalar\DNumber|Expr\Array_|Expr\FuncCall
+     */
+    private function getValueNode($value): Expr
+    {
+        if (is_string($value)) {
+            return new Scalar\String_($value);
+        }
+
         if (is_int($value)) {
             return new Scalar\LNumber($value);
         }
@@ -54,11 +70,7 @@ final class Normalizer
             return new Scalar\DNumber($value);
         }
 
-        if (is_string($value)) {
-            return new Scalar\String_($value);
-        }
-
-        return $this->noScalar($value);
+        return $this->getValueNodeNoScalar($value);
     }
 
     /**
@@ -68,7 +80,7 @@ final class Normalizer
      *
      * @return Expr\Array_|Expr\FuncCall
      */
-    private function noScalar($value): Expr
+    private function getValueNodeNoScalar($value): Expr
     {
         if (is_array($value)) {
             return $this->arrayValue($value);
