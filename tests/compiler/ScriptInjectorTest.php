@@ -24,7 +24,7 @@ class ScriptInjectorTest extends TestCase
 
     protected function setUp(): void
     {
-        delete_dir(__DIR__ . '/tmp');
+        deleteFiles(__DIR__ . '/tmp');
         $this->injector = new ScriptInjector(__DIR__ . '/tmp');
     }
 

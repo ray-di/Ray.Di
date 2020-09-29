@@ -21,7 +21,7 @@ class DependencyCompilerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        delete_dir(__DIR__ . '/tmp');
+        deleteFiles(__DIR__ . '/tmp');
     }
 
     public function testInstanceCompileString(): void
