@@ -178,6 +178,7 @@ class InjectorTest extends TestCase
         $this->assertInstanceOf(FakeMirrorInterface::class, $car->spareMirror);
         $this->assertSame(spl_object_hash($car->rightMirror), spl_object_hash($car->spareMirror));
         $this->assertInstanceOf(FakeHandle::class, $car->handle);
+        assert($car->handle instanceof FakeHandle);
         $this->assertSame($car->handle->logo, 'momo');
 
         return $injector;

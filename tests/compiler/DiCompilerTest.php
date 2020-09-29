@@ -89,7 +89,7 @@ class DiCompilerTest extends TestCase
         $compiler->compile();
         $injector = new ScriptInjector($_ENV['TMP_DIR']);
         $loggerConsumer = $injector->getInstance(FakeLoggerConsumer::class);
-        /** @var FakeLoggerConsumer $loggerConsumer */
+        assert($loggerConsumer->logger instanceof FakeLogger);
         $this->assertSame('Ray\Compiler\FakeLoggerConsumer', $loggerConsumer->logger->name);
         $this->assertSame('MEMORY', $loggerConsumer->logger->type);
     }

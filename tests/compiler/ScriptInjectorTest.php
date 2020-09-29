@@ -163,7 +163,6 @@ class ScriptInjectorTest extends TestCase
         $diCompiler->compile();
         $factory = $diCompiler->getInstance(FakeFactory::class);
         $this->assertInstanceOf(InjectorInterface::class, $factory->injector);
-        /** @var FakeFactory $optional */
         $injector = new ScriptInjector($_ENV['TMP_DIR']);
         $factory = $injector->getInstance(FakeFactory::class);
         $this->assertInstanceOf(InjectorInterface::class, $factory->injector);

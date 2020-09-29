@@ -42,7 +42,6 @@ class InjectionPointTest extends TestCase
 
     public function testGetQualifiers(): void
     {
-        /** @var FakeConstant $constant */
         $annotations = $this->ip->getQualifiers();
         $this->assertCount(1, $annotations);
         $this->assertInstanceOf(FakeConstant::class, $annotations[0]);

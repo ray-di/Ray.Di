@@ -84,7 +84,7 @@ final class NodeFactory
                 continue;
             }
 
-            $setters[] = new Expr\MethodCall($instance, $method, $args); // @phpstan-ignore-line
+            $setters[] = new Expr\MethodCall($instance, $method, $args);
         }
 
         return $setters;
