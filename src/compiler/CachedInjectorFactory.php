@@ -28,7 +28,7 @@ final class CachedInjectorFactory
             return self::$injectors[$injectorId];
         }
 
-        $cache ??= new VoidCache();
+        $cache = $cache ?? new VoidCache();
         $cache->setNamespace($injectorId);
         $cachedInjector = $cache->fetch(InjectorInterface::class);
         if ($cachedInjector instanceof InjectorInterface) {

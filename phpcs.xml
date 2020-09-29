@@ -3,6 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="bearcs"
     xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
 
+    <!-- php version 7.2 -->
+    <config name="php_version" value="70200"/>
+
     <arg name="basepath" value="."/>
     <arg name="extensions" value="php"/>
     <arg name="parallel" value="80"/>

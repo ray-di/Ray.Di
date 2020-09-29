@@ -30,7 +30,7 @@ class Injector implements InjectorInterface
      */
     public function __construct(?AbstractModule $module = null, string $tmpDir = '')
     {
-        $module ??= new NullModule();
+        $module = $module ?? new NullModule();
         $module->install(new AssistedModule());
         $this->container = $module->getContainer();
         $this->classDir = is_dir($tmpDir) ? $tmpDir : sys_get_temp_dir();
