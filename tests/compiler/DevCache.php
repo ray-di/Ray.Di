@@ -9,14 +9,10 @@ use Doctrine\Common\Cache\CacheProvider;
 
 class DevCache extends CacheProvider
 {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public static $wasHit = false;
 
-    /**
-     * @var Cache
-     */
+    /** @var Cache */
     private $cache;
 
     public function __construct(CacheProvider $cache)
@@ -24,6 +20,11 @@ class DevCache extends CacheProvider
         $this->cache = $cache;
     }
 
+    /**
+     * @param string $id
+     *
+     * @return false|mixed
+     */
     public function doFetch($id)
     {
         $data = $this->cache->fetch($id);
@@ -32,16 +33,33 @@ class DevCache extends CacheProvider
         return $data;
     }
 
+    /**
+     * @param string $id
+     *
+     * @return bool
+     */
     public function doContains($id)
     {
         return $this->cache->contains($id);
     }
 
+    /**
+     * @param string $id
+     * @param string $data
+     * @param int    $lifeTime
+     *
+     * @return bool
+     */
     public function doSave($id, $data, $lifeTime = 0)
     {
         return $this->cache->save($id, $data, $lifeTime);
     }
 
+    /**
+     * @param string $id
+     *
+     * @return bool
+     */
     public function doDelete($id)
     {
         return $this->cache->delete($id);
@@ -55,6 +73,9 @@ class DevCache extends CacheProvider
         return $this->cache->getStats();
     }
 
+    /**
+     * @return bool
+     */
     public function doFlush()
     {
         return true;

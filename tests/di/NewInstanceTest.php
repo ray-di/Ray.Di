@@ -8,14 +8,14 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionMethod;
 
+use function assert;
+
 class NewInstanceTest extends TestCase
 {
-    /**
-     * @var NewInstance
-     */
+    /** @var NewInstance */
     protected $newInstance;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $class = new ReflectionClass(FakeCar::class);
         $setters = [];
@@ -26,14 +26,14 @@ class NewInstanceTest extends TestCase
         $this->newInstance = new NewInstance($class, $setterMethods);
     }
 
-    public function testInvoke() : void
+    public function testInvoke(): void
     {
-        $container = new Container;
+        $container = new Container();
         (new Bind($container, FakeTyreInterface::class))->to(FakeTyre::class);
         (new Bind($container, FakeEngineInterface::class))->to(FakeEngine::class);
         (new Bind($container, FakeHardtopInterface::class))->to(FakeHardtop::class);
-        /** @var \Ray\Di\FakeCar $car */
         $car = $this->newInstance->__invoke($container);
+        assert($car instanceof FakeCar);
         $this->assertInstanceOf(FakeCar::class, $car);
         $this->assertInstanceOf(FakeTyre::class, $car->frontTyre);
         $this->assertInstanceOf(FakeTyre::class, $car->rearTyre);

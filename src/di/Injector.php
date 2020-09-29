@@ -4,29 +4,34 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationException;
 use Ray\Aop\Compiler;
 use Ray\Di\Exception\Untargeted;
 
+use function assert;
+use function file_exists;
+use function is_dir;
+use function spl_autoload_register;
+use function sprintf;
+use function str_replace;
+use function sys_get_temp_dir;
+
 class Injector implements InjectorInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $classDir;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
     /**
      * @param AbstractModule $module Binding module
      * @param string         $tmpDir Temp directory for generated class
      */
-    public function __construct(AbstractModule $module = null, string $tmpDir = '')
+    public function __construct(?AbstractModule $module = null, string $tmpDir = '')
     {
-        $module = $module ?? new NullModule;
-        $module->install(new AssistedModule);
+        $module = $module ?? new NullModule();
+        $module->install(new AssistedModule());
         $this->container = $module->getContainer();
         $this->classDir = is_dir($tmpDir) ? $tmpDir : sys_get_temp_dir();
         $this->container->weaveAspects(new Compiler($this->classDir));
@@ -41,7 +46,7 @@ class Injector implements InjectorInterface
     public function __wakeup()
     {
         spl_autoload_register(
-            function (string $class) : void {
+            function (string $class): void {
                 $file = sprintf('%s/%s.php', $this->classDir, str_replace('\\', '_', $class));
                 if (file_exists($file)) {
                     include $file; //@codeCoverageIgnore
@@ -75,15 +80,13 @@ class Injector implements InjectorInterface
     /**
      * @phpstan-param class-string|string $class
      *
-     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws AnnotationException
      */
-    private function bind(string $class) : void
+    private function bind(string $class): void
     {
         new Bind($this->container, $class);
-        /* @var $bound Dependency */
         $bound = $this->container->getContainer()[$class . '-' . Name::ANY];
-        if ($bound instanceof Dependency) {
-            $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
-        }
+        assert($bound instanceof Dependency);
+        $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
     }
 }

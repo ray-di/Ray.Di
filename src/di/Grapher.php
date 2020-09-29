@@ -6,16 +6,17 @@ namespace Ray\Di;
 
 use Ray\Aop\Compiler;
 
+use function file_exists;
+use function spl_autoload_register;
+use function sprintf;
+use function str_replace;
+
 final class Grapher
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $classDir;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
     /**
@@ -23,7 +24,7 @@ final class Grapher
      */
     public function __construct(AbstractModule $module, string $classDir)
     {
-        $module->install(new AssistedModule);
+        $module->install(new AssistedModule());
         $this->container = $module->getContainer();
         $this->classDir = $classDir;
         $this->container->weaveAspects(new Compiler($this->classDir));
@@ -38,7 +39,7 @@ final class Grapher
     public function __wakeup()
     {
         spl_autoload_register(
-            function (string $class) : void {
+            function (string $class): void {
                 $file = sprintf('%s/%s.php', $this->classDir, str_replace('\\', '_', $class));
                 if (file_exists($file)) {
                     include $file; //@codeCoverageIgnore

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ray\Compiler;
 
 use Doctrine\Common\Annotations\Annotation\Enum;
@@ -13,9 +15,7 @@ use Ray\Di\Di\Qualifier;
  */
 final class FakeLoggerInject implements InjectInterface
 {
-    /**
-     * @Enum({"MEMORY", "FILE", "DB"})
-     */
+    /** @Enum({"MEMORY", "FILE", "DB"}) */
     public $type;
 
     public function isOptional()

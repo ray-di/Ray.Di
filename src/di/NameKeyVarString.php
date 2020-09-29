@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
-use function get_class;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\Qualifier;
 use ReflectionClass;
 use ReflectionMethod;
 
+use function get_class;
+use function implode;
+use function sprintf;
+
 final class NameKeyVarString
 {
-    /**
-     * @var Reader
-     */
+    /** @var Reader */
     private $reader;
 
     public function __construct(Reader $reader)
@@ -23,13 +24,14 @@ final class NameKeyVarString
         $this->reader = $reader;
     }
 
-    public function __invoke(ReflectionMethod $method) : ?string
+    public function __invoke(ReflectionMethod $method): ?string
     {
         $keyVal = [];
         $named = $this->reader->getMethodAnnotation($method, Named::class);
         if ($named instanceof Named) {
             $keyVal[] = $named->value;
         }
+
         $qualifierNamed = $this->getQualifierKeyVarString($method);
         if ($qualifierNamed) {
             $keyVal[] = $qualifierNamed;
@@ -38,7 +40,7 @@ final class NameKeyVarString
         return $keyVal !== [] ? implode(',', $keyVal) : null; // var1=qualifier1,va2=qualifier2
     }
 
-    private function getQualifierKeyVarString(ReflectionMethod $method) : string
+    private function getQualifierKeyVarString(ReflectionMethod $method): string
     {
         /** @var array<object> $annotations */
         $annotations = $this->reader->getMethodAnnotations($method);

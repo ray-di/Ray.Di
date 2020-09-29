@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Ray\Compiler;
 
+use DateTime;
 use Ray\Di\AbstractModule;
 
 class FakeInstanceModule extends AbstractModule
@@ -15,6 +18,6 @@ class FakeInstanceModule extends AbstractModule
         $this->bind()->annotatedWith('string')->toInstance('ray');
         $this->bind()->annotatedWith('no_index_array')->toInstance([1, 2]);
         $this->bind()->annotatedWith('assoc')->toInstance(['a' => 1]);
-        $this->bind()->annotatedWith('object')->toInstance(new \DateTime());
+        $this->bind()->annotatedWith('object')->toInstance(new DateTime());
     }
 }

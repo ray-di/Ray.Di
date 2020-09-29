@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 use Ray\Di\Di\Inject;
@@ -6,15 +9,11 @@ use Ray\Di\Di\Inject;
 class FakeHandleBar
 {
     public $rightMirror;
-
     public $leftMirror;
 
     /**
      * @Inject
-     *
      * @FakeRight
-     *
-     * @return void
      */
     public function setMirrors(FakeMirrorInterface $rightMirror): void
     {
@@ -23,10 +22,7 @@ class FakeHandleBar
 
     /**
      * @Inject
-     *
      * @FakeLeft
-     *
-     * @return void
      */
     public function setLeftMirror(FakeMirrorInterface $leftMirror): void
     {

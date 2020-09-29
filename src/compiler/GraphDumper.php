@@ -8,16 +8,20 @@ use Koriym\Printo\Printo;
 use Ray\Di\Container;
 use Ray\Di\Name;
 
+use function explode;
+use function file_exists;
+use function file_put_contents;
+use function mkdir;
+use function str_replace;
+
+use const LOCK_EX;
+
 final class GraphDumper
 {
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $scriptDir;
 
     public function __construct(Container $container, string $scriptDir)
@@ -26,7 +30,7 @@ final class GraphDumper
         $this->scriptDir = $scriptDir;
     }
 
-    public function __invoke() : void
+    public function __invoke(): void
     {
         $container = $this->container->getContainer();
         foreach ($container as $dependencyIndex => $dependency) {
@@ -37,22 +41,24 @@ final class GraphDumper
         }
     }
 
-    private function write(string $dependencyIndex) : void
+    private function write(string $dependencyIndex): void
     {
         if ($dependencyIndex === 'Ray\Aop\MethodInvocation-') {
             return;
         }
-        list($interface, $name) = \explode('-', $dependencyIndex);
+
+        [$interface, $name] = explode('-', $dependencyIndex);
         $instance = (new ScriptInjector($this->scriptDir))->getInstance($interface, $name);
         $graph = (string) (new Printo($instance))
             ->setRange(Printo::RANGE_ALL)
             ->setLinkDistance(130)
             ->setCharge(-500);
         $graphDir = $this->scriptDir . '/graph/';
-        if (! \file_exists($graphDir)) {
-            \mkdir($graphDir);
+        if (! file_exists($graphDir)) {
+            mkdir($graphDir);
         }
-        $file = $graphDir . \str_replace('\\', '_', $dependencyIndex) . '.html';
-        \file_put_contents($file, $graph, LOCK_EX);
+
+        $file = $graphDir . str_replace('\\', '_', $dependencyIndex) . '.html';
+        file_put_contents($file, $graph, LOCK_EX);
     }
 }

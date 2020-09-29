@@ -10,9 +10,7 @@ use ReflectionMethod;
 
 final class Arguments
 {
-    /**
-     * @var Argument[]
-     */
+    /** @var Argument[] */
     private $arguments = [];
 
     public function __construct(ReflectionMethod $method, Name $name)
@@ -26,11 +24,11 @@ final class Arguments
     /**
      * Return arguments
      *
-     * @throws Exception\Unbound
-     *
      * @return array<int, mixed>
+     *
+     * @throws Exception\Unbound
      */
-    public function inject(Container $container) : array
+    public function inject(Container $container): array
     {
         $parameters = [];
         foreach ($this->arguments as $parameter) {
@@ -42,9 +40,9 @@ final class Arguments
     }
 
     /**
-     * @throws Unbound
-     *
      * @return mixed
+     *
+     * @throws Unbound
      */
     private function getParameter(Container $container, Argument $argument)
     {
@@ -60,12 +58,13 @@ final class Arguments
         }
     }
 
-    private function bindInjectionPoint(Container $container, Argument $argument) : void
+    private function bindInjectionPoint(Container $container, Argument $argument): void
     {
         $isSelf = (string) $argument === InjectionPointInterface::class . '-' . Name::ANY;
         if ($isSelf) {
             return;
         }
-        (new Bind($container, InjectionPointInterface::class))->toInstance(new InjectionPoint($argument->get(), new AnnotationReader));
+
+        (new Bind($container, InjectionPointInterface::class))->toInstance(new InjectionPoint($argument->get(), new AnnotationReader()));
     }
 }

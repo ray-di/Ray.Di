@@ -11,6 +11,14 @@ use PhpParser\Node\Scalar;
 use Ray\Compiler\Exception\InvalidInstance;
 use Ray\Di\InjectorInterface;
 
+use function is_array;
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_object;
+use function is_string;
+use function serialize;
+
 /**
  * Value to code(Node) converter
  */
@@ -24,25 +32,29 @@ final class Normalizer
      *
      * @return Expr The normalized value
      */
-    public function __invoke($value) : Expr
+    public function __invoke($value): Expr
     {
         if ($value === null) {
             return new Expr\ConstFetch(
                 new Node\Name('null')
             );
         }
-        if (\is_bool($value)) {
+
+        if (is_bool($value)) {
             return new Expr\ConstFetch(
                 new Node\Name($value ? 'true' : 'false')
             );
         }
-        if (\is_int($value)) {
+
+        if (is_int($value)) {
             return new Scalar\LNumber($value);
         }
-        if (\is_float($value)) {
+
+        if (is_float($value)) {
             return new Scalar\DNumber($value);
         }
-        if (\is_string($value)) {
+
+        if (is_string($value)) {
             return new Scalar\String_($value);
         }
 
@@ -56,16 +68,17 @@ final class Normalizer
      *
      * @return Expr\Array_|Expr\FuncCall
      */
-    private function noScalar($value) : Expr
+    private function noScalar($value): Expr
     {
-        if (\is_array($value)) {
+        if (is_array($value)) {
             return $this->arrayValue($value);
         }
-        if (\is_object($value)) {
+
+        if (is_object($value)) {
             return $this->normalizeObject($value);
         }
 
-        throw new InvalidInstance;
+        throw new InvalidInstance();
     }
 
     /**
@@ -73,12 +86,13 @@ final class Normalizer
      *
      * @param object $object
      */
-    private function normalizeObject($object) : Expr\FuncCall
+    private function normalizeObject($object): Expr\FuncCall
     {
         if ($object instanceof InjectorInterface) {
             return new Expr\FuncCall(new Expr\Variable('injector'));
         }
-        $serialize = new Scalar\String_(\serialize($object));
+
+        $serialize = new Scalar\String_(serialize($object));
 
         return new Expr\FuncCall(new Node\Name('unserialize'), [new Arg($serialize)]);
     }
@@ -88,13 +102,13 @@ final class Normalizer
      *
      * @param array<int, mixed> $value
      */
-    private function arrayValue($value) : Expr\Array_
+    private function arrayValue($value): Expr\Array_
     {
         $items = [];
         $lastKey = -1;
         foreach ($value as $itemKey => $itemValue) {
             // for consecutive, numeric keys don't generate keys
-            if (null !== $lastKey && ++$lastKey === $itemKey) {
+            if ($lastKey !== null && ++$lastKey === $itemKey) {
                 $items[] = new Expr\ArrayItem(
                     $this->__invoke($itemValue)
                 );

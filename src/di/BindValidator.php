@@ -9,9 +9,12 @@ use Ray\Di\Exception\InvalidType;
 use Ray\Di\Exception\NotFound;
 use ReflectionClass;
 
+use function class_exists;
+use function interface_exists;
+
 final class BindValidator
 {
-    public function constructor(string $interface) : void
+    public function constructor(string $interface): void
     {
         if ($interface && ! interface_exists($interface) && ! class_exists($interface)) {
             throw new NotFound($interface);
@@ -23,11 +26,12 @@ final class BindValidator
      *
      * @return ReflectionClass<object>
      */
-    public function to(string $interface, string $class) : ReflectionClass
+    public function to(string $interface, string $class): ReflectionClass
     {
         if (! class_exists($class)) {
             throw new NotFound($class);
         }
+
         if (interface_exists($interface) && ! (new ReflectionClass($class))->implementsInterface($interface)) {
             throw new InvalidType("[{$class}] is no implemented [{$interface}] interface");
         }
@@ -40,15 +44,16 @@ final class BindValidator
      *
      * @phpstan-param class-string $provider
      *
-     * @throws NotFound
-     *
      * @return ReflectionClass<object>
+     *
+     * @throws NotFound
      */
-    public function toProvider(string $provider) : ReflectionClass
+    public function toProvider(string $provider): ReflectionClass
     {
         if (! class_exists($provider)) {
             throw new NotFound((string) $provider);
         }
+
         if (! (new ReflectionClass($provider))->implementsInterface(ProviderInterface::class)) {
             throw new InvalidProvider($provider);
         }

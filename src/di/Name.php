@@ -5,7 +5,14 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use ReflectionParameter;
+
+use function assert;
+use function class_exists;
+use function explode;
+use function is_string;
+use function preg_match;
 use function substr;
+use function trim;
 
 final class Name
 {
@@ -14,9 +21,7 @@ final class Name
      */
     public const ANY = '';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name = '';
 
     /**
@@ -28,14 +33,14 @@ final class Name
      */
     private $names = [];
 
-    public function __construct(string $name = null)
+    public function __construct(?string $name = null)
     {
         if ($name !== null) {
             $this->setName($name);
         }
     }
 
-    public function __invoke(ReflectionParameter $parameter) : string
+    public function __invoke(ReflectionParameter $parameter): string
     {
         // single variable named binding
         if ($this->name) {
@@ -56,7 +61,7 @@ final class Name
         return self::ANY;
     }
 
-    private function setName(string $name) : void
+    private function setName(string $name): void
     {
         // annotation
         if (class_exists($name, false)) {
@@ -64,6 +69,7 @@ final class Name
 
             return;
         }
+
         // single name
         // @Named(name)
         if ($name === self::ANY || preg_match('/^\w+$/', $name)) {
@@ -71,6 +77,7 @@ final class Name
 
             return;
         }
+
         // name list
         // @Named(varName1=name1, varName2=name2)]
         $this->names = $this->parseName($name);
@@ -79,7 +86,7 @@ final class Name
     /**
      * @return array<string, string>
      */
-    private function parseName(string $name) : array
+    private function parseName(string $name): array
     {
         $names = [];
         $keyValues = explode(',', $name);
@@ -91,6 +98,7 @@ final class Name
                 if (isset($key[0]) && $key[0] === '$') {
                     $key = substr($key, 1);
                 }
+
                 $names[trim($key)] = trim($value);
             }
         }

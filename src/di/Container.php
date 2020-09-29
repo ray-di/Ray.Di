@@ -12,18 +12,21 @@ use Ray\Di\Exception\Unbound;
 use Ray\Di\Exception\Untargeted;
 use ReflectionClass;
 
+use function array_merge;
+use function class_exists;
+use function explode;
+
 final class Container
 {
-    /**
-     * @var DependencyInterface[]
-     */
+    /** @var DependencyInterface[] */
     private $container = [];
 
-    /**
-     * @var array<int, Pointcut>
-     */
+    /** @var array<int, Pointcut> */
     private $pointcuts = [];
 
+    /**
+     * @return list<string>
+     */
     public function __sleep()
     {
         return ['container', 'pointcuts'];
@@ -32,7 +35,7 @@ final class Container
     /**
      * Add binding to container
      */
-    public function add(Bind $bind) : void
+    public function add(Bind $bind): void
     {
         $dependency = $bind->getBound();
         $dependency->register($this->container, $bind);
@@ -41,7 +44,7 @@ final class Container
     /**
      * Add Pointcut to container
      */
-    public function addPointcut(Pointcut $pointcut) : void
+    public function addPointcut(Pointcut $pointcut): void
     {
         $this->pointcuts[] = $pointcut;
     }
@@ -63,9 +66,9 @@ final class Container
      *
      * @param array<int, mixed> $params
      *
-     * @throws Unbound
-     *
      * @return mixed
+     *
+     * @throws Unbound
      */
     public function getInstanceWithArgs(string $interface, array $params)
     {
@@ -73,6 +76,7 @@ final class Container
         if (! isset($this->container[$index])) {
             throw $this->unbound($index);
         }
+
         $dependency = $this->container[$index];
         if (! $dependency instanceof Dependency) {
             throw new BadMethodCallException($interface);
@@ -84,15 +88,16 @@ final class Container
     /**
      * Return dependency injected instance
      *
-     * @throws Unbound
-     *
      * @return mixed
+     *
+     * @throws Unbound
      */
     public function getDependency(string $index)
     {
         if (! isset($this->container[$index])) {
             throw $this->unbound($index);
         }
+
         $dependency = $this->container[$index];
 
         return $dependency->inject($this);
@@ -101,12 +106,13 @@ final class Container
     /**
      * Rename existing dependency interface + name
      */
-    public function move(string $sourceInterface, string $sourceName, string $targetInterface, string $targetName) : void
+    public function move(string $sourceInterface, string $sourceName, string $targetInterface, string $targetName): void
     {
         $sourceIndex = $sourceInterface . '-' . $sourceName;
         if (! isset($this->container[$sourceIndex])) {
             throw $this->unbound($sourceIndex);
         }
+
         $targetIndex = $targetInterface . '-' . $targetName;
         $this->container[$targetIndex] = $this->container[$sourceIndex];
         unset($this->container[$sourceIndex]);
@@ -134,7 +140,7 @@ final class Container
      *
      * @return DependencyInterface[]
      */
-    public function getContainer() : array
+    public function getContainer(): array
     {
         return $this->container;
     }
@@ -144,7 +150,7 @@ final class Container
      *
      * @return array<int, Pointcut>
      */
-    public function getPointcuts() : array
+    public function getPointcuts(): array
     {
         return $this->pointcuts;
     }
@@ -152,7 +158,7 @@ final class Container
     /**
      * Merge container
      */
-    public function merge(self $container) : void
+    public function merge(self $container): void
     {
         $this->container += $container->getContainer();
         $this->pointcuts = array_merge($this->pointcuts, $container->getPointcuts());
@@ -161,20 +167,19 @@ final class Container
     /**
      * Weave aspects to all dependency in container
      */
-    public function weaveAspects(CompilerInterface $compiler) : void
+    public function weaveAspects(CompilerInterface $compiler): void
     {
         foreach ($this->container as $dependency) {
-            if (! $dependency instanceof Dependency) {
-                continue;
+            if ($dependency instanceof Dependency) {
+                $dependency->weaveAspects($compiler, $this->pointcuts);
             }
-            $dependency->weaveAspects($compiler, $this->pointcuts);
         }
     }
 
     /**
      * Weave aspect to single dependency
      */
-    public function weaveAspect(Compiler $compiler, Dependency $dependency) : self
+    public function weaveAspect(Compiler $compiler, Dependency $dependency): self
     {
         $dependency->weaveAspects($compiler, $this->pointcuts);
 

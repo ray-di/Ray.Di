@@ -9,12 +9,10 @@ use Ray\Di\AbstractModule;
 
 class DiCompileModule extends AbstractModule
 {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $doCompile;
 
-    public function __construct(bool $doCompile, AbstractModule $module = null)
+    public function __construct(bool $doCompile, ?AbstractModule $module = null)
     {
         $this->doCompile = $doCompile;
         parent::__construct($module);
@@ -23,7 +21,7 @@ class DiCompileModule extends AbstractModule
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->bind()->annotatedWith(Compile::class)->toInstance($this->doCompile);
     }

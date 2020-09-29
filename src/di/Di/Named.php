@@ -12,8 +12,6 @@ namespace Ray\Di\Di;
  */
 final class Named
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $value = '';
 }

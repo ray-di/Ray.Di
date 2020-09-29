@@ -12,14 +12,10 @@ use ReflectionMethod;
 
 final class AnnotatedClassMethods
 {
-    /**
-     * @var Reader
-     */
+    /** @var Reader */
     private $reader;
 
-    /**
-     * @var NameKeyVarString
-     */
+    /** @var NameKeyVarString */
     private $nameKeyVarString;
 
     public function __construct(Reader $reader)
@@ -29,19 +25,21 @@ final class AnnotatedClassMethods
     }
 
     /**
-     * @phpstan-param \ReflectionClass<object> $class
+     * @phpstan-param ReflectionClass<object> $class
      */
-    public function getConstructorName(ReflectionClass $class) : Name
+    public function getConstructorName(ReflectionClass $class): Name
     {
         $constructor = $class->getConstructor();
         if (! $constructor) {
             return new Name(Name::ANY);
         }
+
         $named = $this->reader->getMethodAnnotation($constructor, Named::class);
         if ($named instanceof Named) {
-            /* @var $named Named */
+            /** @var Named $named */
             return new Name($named->value);
         }
+
         $name = ($this->nameKeyVarString)($constructor);
         if ($name !== null) {
             return new Name($name);
@@ -59,6 +57,7 @@ final class AnnotatedClassMethods
         if (! $inject instanceof InjectInterface) {
             return null;
         }
+
         $nameValue = ($this->nameKeyVarString)($method);
         $setterMethod = new SetterMethod($method, new Name($nameValue));
         if ($inject->isOptional()) {

@@ -1,13 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 use InvalidArgumentException;
 
 class FakeWalkRobotLegProvider implements ProviderInterface
 {
-    /**
-     * @var InjectionPointInterface
-     */
+    /** @var InjectionPointInterface */
     private $ip;
 
     public function __construct(InjectionPointInterface $ip)
@@ -19,10 +20,11 @@ class FakeWalkRobotLegProvider implements ProviderInterface
     {
         $varName = $this->ip->getParameter()->getName();
         if ($varName === 'leftLeg') {
-            return new FakeLeftLeg;
+            return new FakeLeftLeg();
         }
+
         if ($varName === 'rightLeg') {
-            return new FakeRightLeg;
+            return new FakeRightLeg();
         }
 
         throw new InvalidArgumentException('Unexpected var name for LegInterface: ' . $varName);

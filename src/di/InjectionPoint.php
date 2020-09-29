@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use function class_exists;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use LogicException;
@@ -13,6 +12,11 @@ use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
 use Serializable;
+
+use function assert;
+use function class_exists;
+use function serialize;
+use function unserialize;
 
 final class InjectionPoint implements InjectionPointInterface, Serializable
 {
@@ -23,24 +27,16 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
      */
     private $parameter;
 
-    /**
-     * @var Reader
-     */
+    /** @var Reader */
     private $reader;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $pClass;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $pFunction;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $pName;
 
     public function __construct(ReflectionParameter $parameter, Reader $reader)
@@ -56,7 +52,7 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     /**
      * {@inheritdoc}
      */
-    public function getParameter() : ReflectionParameter
+    public function getParameter(): ReflectionParameter
     {
         return $this->parameter ?? new ReflectionParameter([$this->pClass, $this->pFunction], $this->pName);
     }
@@ -64,13 +60,14 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     /**
      * {@inheritdoc}
      */
-    public function getMethod() : ReflectionMethod
+    public function getMethod(): ReflectionMethod
     {
         $this->parameter = $this->getParameter();
         $class = $this->parameter->getDeclaringClass();
         if (! $class instanceof ReflectionClass) {
             throw new LogicException($this->parameter->getName());
         }
+
         $method = $this->parameter->getDeclaringFunction()->getShortName();
         assert(class_exists($class->name));
 
@@ -80,7 +77,7 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     /**
      * {@inheritdoc}
      */
-    public function getClass() : ReflectionClass
+    public function getClass(): ReflectionClass
     {
         $this->parameter = $this->getParameter();
         $class = $this->parameter->getDeclaringClass();
@@ -94,7 +91,7 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     /**
      * {@inheritdoc}
      */
-    public function getQualifiers() : array
+    public function getQualifiers(): array
     {
         $qualifiers = [];
         /** @var array<object> $annotations */
@@ -112,7 +109,7 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
         return $qualifiers;
     }
 
-    public function serialize() : string
+    public function serialize(): string
     {
         return serialize([$this->reader, $this->pClass, $this->pFunction, $this->pName]);
     }
@@ -120,7 +117,7 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     /**
      * @param string $serialized
      */
-    public function unserialize($serialized) : void
+    public function unserialize($serialized): void
     {
         /** @var array{0: Reader, 1: string, 2: string, 3: string} $unserialized */
         $unserialized = unserialize($serialized, ['allowed_classes' => [AnnotationReader::class]]);

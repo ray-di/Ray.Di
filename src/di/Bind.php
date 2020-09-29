@@ -4,61 +4,61 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use function is_array;
+use Ray\Aop\MethodInterceptor;
 use Ray\Di\Exception\InvalidToConstructorNameParameter;
 use ReflectionClass;
 use ReflectionMethod;
 
+use function array_keys;
+use function array_reduce;
+use function assert;
+use function class_exists;
+use function implode;
+use function is_array;
+use function is_string;
+use function print_r;
+
 final class Bind
 {
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
     /**
      * @var string
-     * @phpstan-var class-string<\Ray\Aop\MethodInterceptor>|string
+     * @phpstan-var class-string<MethodInterceptor>|string
      */
     private $interface;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name = Name::ANY;
 
-    /**
-     * @var DependencyInterface
-     */
+    /** @var DependencyInterface */
     private $bound;
 
-    /**
-     * @var BindValidator
-     */
+    /** @var BindValidator */
     private $validate;
 
-    /**
-     * @var ?Untarget
-     */
+    /** @var ?Untarget */
     private $untarget;
 
     /**
-     * @param Container                                       $container dependency container
-     * @param class-string<\Ray\Aop\MethodInterceptor>|string $interface interface or concrete class name
+     * @param Container                              $container dependency container
+     * @param class-string<MethodInterceptor>|string $interface interface or concrete class name
      */
     public function __construct(Container $container, string $interface)
     {
         $this->container = $container;
         $this->interface = $interface;
-        $this->validate = new BindValidator;
+        $this->validate = new BindValidator();
         $bindUntarget = class_exists($interface) && ! (new ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
-        $this->bound = new NullDependency;
+        $this->bound = new NullDependency();
         if ($bindUntarget) {
             assert(class_exists($interface));
             $this->untarget = new Untarget($interface);
 
             return;
         }
+
         $this->validate->constructor($interface);
     }
 
@@ -70,7 +70,7 @@ final class Bind
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->interface . '-' . $this->name;
     }
@@ -78,7 +78,7 @@ final class Bind
     /**
      * Set dependency name
      */
-    public function annotatedWith(string $name) : self
+    public function annotatedWith(string $name): self
     {
         $this->name = $name;
 
@@ -88,11 +88,11 @@ final class Bind
     /**
      * Bind to class
      */
-    public function to(string $class) : self
+    public function to(string $class): self
     {
         $this->untarget = null;
         $refClass = $this->validate->to($this->interface, $class);
-        $this->bound = (new DependencyFactory)->newAnnotatedDependency($refClass);
+        $this->bound = (new DependencyFactory())->newAnnotatedDependency($refClass);
         $this->container->add($this);
 
         return $this;
@@ -106,14 +106,15 @@ final class Bind
      * @param InjectionPoints              $injectionPoints injection points
      * @param string                       $postConstruct   method name of initialization after all dependencies are injected*
      */
-    public function toConstructor(string $class, $name, InjectionPoints $injectionPoints = null, string $postConstruct = null) : self
+    public function toConstructor(string $class, $name, ?InjectionPoints $injectionPoints = null, ?string $postConstruct = null): self
     {
         if (is_array($name)) {
             $name = $this->getStringName($name);
         }
+
         $this->untarget = null;
         $postConstructRef = $postConstruct ? new ReflectionMethod($class, $postConstruct) : null;
-        $this->bound = (new DependencyFactory)->newToConstructor(new ReflectionClass($class), $name, $injectionPoints, $postConstructRef);
+        $this->bound = (new DependencyFactory())->newToConstructor(new ReflectionClass($class), $name, $injectionPoints, $postConstructRef);
         $this->container->add($this);
 
         return $this;
@@ -124,11 +125,11 @@ final class Bind
      *
      * @phpstan-param class-string $provider
      */
-    public function toProvider(string $provider, string $context = '') : self
+    public function toProvider(string $provider, string $context = ''): self
     {
         $this->untarget = null;
         $refClass = $this->validate->toProvider($provider);
-        $this->bound = (new DependencyFactory)->newProvider($refClass, $context);
+        $this->bound = (new DependencyFactory())->newProvider($refClass, $context);
         $this->container->add($this);
 
         return $this;
@@ -139,7 +140,7 @@ final class Bind
      *
      * @param mixed $instance
      */
-    public function toInstance($instance) : self
+    public function toInstance($instance): self
     {
         $this->untarget = null;
         $this->bound = new Instance($instance);
@@ -151,11 +152,12 @@ final class Bind
     /**
      * Set scope
      */
-    public function in(string $scope) : self
+    public function in(string $scope): self
     {
         if ($this->bound instanceof Dependency || $this->bound instanceof DependencyProvider) {
             $this->bound->setScope($scope);
         }
+
         if ($this->untarget) {
             $this->untarget->setScope($scope);
         }
@@ -163,17 +165,17 @@ final class Bind
         return $this;
     }
 
-    public function getBound() : DependencyInterface
+    public function getBound(): DependencyInterface
     {
         return $this->bound;
     }
 
-    public function setBound(DependencyInterface $bound) : void
+    public function setBound(DependencyInterface $bound): void
     {
         $this->bound = $bound;
     }
 
-    private function isRegistered(string $interface) : bool
+    private function isRegistered(string $interface): bool
     {
         return isset($this->container->getContainer()[$interface . '-' . Name::ANY]);
     }
@@ -186,7 +188,7 @@ final class Bind
      *
      * @param array<string, string> $name
      */
-    private function getStringName(array $name) : string
+    private function getStringName(array $name): string
     {
         $keys = array_keys($name);
 
@@ -195,15 +197,17 @@ final class Bind
             /**
              * @param array-key $key
              */
-            function (array $carry, $key) use ($name) : array {
+            static function (array $carry, $key) use ($name): array {
                 if (! is_string($key)) {
                     throw new InvalidToConstructorNameParameter((string) $key);
                 }
+
                 $varName = $name[$key];
                 /** @psalm-suppress DocblockTypeContradiction */
                 if (! is_string($varName)) {
                     throw new InvalidToConstructorNameParameter(print_r($varName, true));
                 }
+
                 $carry[] = $key . '=' . (string) $varName;
 
                 return $carry;

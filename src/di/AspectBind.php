@@ -7,11 +7,12 @@ namespace Ray\Di;
 use Ray\Aop\Bind as AopBind;
 use Ray\Aop\MethodInterceptor;
 
+use function assert;
+use function is_string;
+
 final class AspectBind
 {
-    /**
-     * @var AopBind
-     */
+    /** @var AopBind */
     private $bind;
 
     public function __construct(AopBind $bind)
@@ -24,7 +25,7 @@ final class AspectBind
      *
      * @return array<string, array<MethodInterceptor>>
      */
-    public function inject(Container $container) : array
+    public function inject(Container $container): array
     {
         $bindings = $this->bind->getBindings();
         $instanciatedBindings = [];
@@ -32,10 +33,12 @@ final class AspectBind
             $interceptors = [];
             foreach ($interceptorClassNames as &$interceptorClassName) {
                 assert(is_string($interceptorClassName));
-                /** @var MethodInterceptor $interceptor */
+                /** @psalm-suppress MixedAssignment */
                 $interceptor = $container->getInstance($interceptorClassName, Name::ANY);
+                assert($interceptor instanceof MethodInterceptor);
                 $interceptors[] = $interceptor;
             }
+
             $instanciatedBindings[$methodName] = $interceptors;
         }
 

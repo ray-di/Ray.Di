@@ -8,9 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class NullModuleTest extends TestCase
 {
-    public function testEmpty() : void
+    public function testEmpty(): void
     {
-        $module = new NullModule;
+        $module = new NullModule();
         $container = $module->getContainer();
         $this->assertSame([], $container->getContainer());
     }

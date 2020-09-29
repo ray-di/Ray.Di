@@ -1,14 +1,14 @@
 <?php
-//
+
+declare(strict_types=1);
+
 // Usage:
 //
 // php parse.php dependency.php
-//
-
 require dirname(dirname(dirname(__DIR__))) . '/vendor/autoload.php';
 $file = $argv[1];
 
-$parser = new PhpParser\Parser(new PhpParser\Lexer);
+$parser = new PhpParser\Parser(new PhpParser\Lexer());
 try {
     $stmts = $parser->parse(file_get_contents(__DIR__ . "/{$file}"));
     var_dump($stmts);

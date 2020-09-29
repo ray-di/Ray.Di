@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ray\Di;
 
 class FakeRobotTeam
 {
     public $robot1;
-
     public $robot2;
 
     public function __construct(FakeRobot $robot1, FakeRobot $robot2)

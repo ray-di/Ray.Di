@@ -9,16 +9,14 @@ use Ray\Di\Di\PostConstruct;
 use ReflectionClass;
 use ReflectionMethod;
 
+use function assert;
+
 final class AnnotatedClass
 {
-    /**
-     * @var AnnotationReader
-     */
+    /** @var AnnotationReader */
     private $reader;
 
-    /**
-     * @var AnnotatedClassMethods
-     */
+    /** @var AnnotatedClassMethods */
     private $injectionMethod;
 
     public function __construct(AnnotationReader $reader)
@@ -30,9 +28,9 @@ final class AnnotatedClass
     /**
      * Return factory instance
      *
-     * @phpstan-param \ReflectionClass<object> $class Target class reflection
+     * @phpstan-param ReflectionClass<object> $class Target class reflection
      */
-    public function getNewInstance(ReflectionClass $class) : NewInstance
+    public function getNewInstance(ReflectionClass $class): NewInstance
     {
         $setterMethods = new SetterMethods([]);
         $methods = $class->getMethods();
@@ -40,8 +38,10 @@ final class AnnotatedClass
             if ($method->name === '__construct') {
                 continue;
             }
+
             $setterMethods->add($this->injectionMethod->getSetterMethod($method));
         }
+
         $name = $this->injectionMethod->getConstructorName($class);
 
         return new NewInstance($class, $setterMethods, $name);
@@ -50,14 +50,14 @@ final class AnnotatedClass
     /**
      * Return @-PostConstruct method reflection
      *
-     * @phpstan-param \ReflectionClass<object> $class
+     * @phpstan-param ReflectionClass<object> $class
      */
-    public function getPostConstruct(ReflectionClass $class) : ?ReflectionMethod
+    public function getPostConstruct(ReflectionClass $class): ?ReflectionMethod
     {
         $methods = $class->getMethods();
         foreach ($methods as $method) {
-            /* @var $annotation PostConstruct|null */
             $annotation = $this->reader->getMethodAnnotation($method, PostConstruct::class);
+            assert($annotation instanceof PostConstruct || $annotation === null);
             if ($annotation instanceof PostConstruct) {
                 return $method;
             }

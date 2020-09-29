@@ -10,25 +10,21 @@ use Ray\Aop\MethodInterceptor;
 use Ray\Aop\Pointcut;
 use Ray\Aop\PriorityPointcut;
 
+use function assert;
+
 abstract class AbstractModule
 {
-    /**
-     * @var Matcher
-     */
+    /** @var Matcher */
     protected $matcher;
 
-    /**
-     * @var ?AbstractModule
-     */
+    /** @var ?AbstractModule */
     protected $lastModule;
 
-    /**
-     * @var ?Container
-     */
+    /** @var ?Container */
     private $container;
 
     public function __construct(
-        self $module = null
+        ?self $module = null
     ) {
         $this->lastModule = $module;
         $this->activate();
@@ -38,15 +34,15 @@ abstract class AbstractModule
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return (new ModuleString)($this->getContainer(), $this->getContainer()->getPointcuts());
+        return (new ModuleString())($this->getContainer(), $this->getContainer()->getPointcuts());
     }
 
     /**
      * Install module
      */
-    public function install(self $module) : void
+    public function install(self $module): void
     {
         $this->getContainer()->merge($module->getContainer());
     }
@@ -54,7 +50,7 @@ abstract class AbstractModule
     /**
      * Override module
      */
-    public function override(self $module) : void
+    public function override(self $module): void
     {
         $module->getContainer()->merge($this->getContainer());
         $this->container = $module->getContainer();
@@ -63,7 +59,7 @@ abstract class AbstractModule
     /**
      * Return activated container
      */
-    public function getContainer() : Container
+    public function getContainer(): Container
     {
         if (! $this->container instanceof Container) {
             $this->activate();
@@ -77,7 +73,7 @@ abstract class AbstractModule
      *
      * @param array<class-string<MethodInterceptor>> $interceptors
      */
-    public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
+    public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors): void
     {
         $pointcut = new Pointcut($classMatcher, $methodMatcher, $interceptors);
         $this->getContainer()->addPointcut($pointcut);
@@ -91,7 +87,7 @@ abstract class AbstractModule
      *
      * @param array<class-string<MethodInterceptor>> $interceptors
      */
-    public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors) : void
+    public function bindPriorityInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors): void
     {
         $pointcut = new PriorityPointcut($classMatcher, $methodMatcher, $interceptors);
         $this->getContainer()->addPointcut($pointcut);
@@ -108,7 +104,7 @@ abstract class AbstractModule
      * @param string $sourceName      Original binding name
      * @param string $targetInterface Original interface
      */
-    public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = '') : void
+    public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = ''): void
     {
         $targetInterface = $targetInterface ?: $interface;
         if ($this->lastModule instanceof self) {
@@ -128,7 +124,7 @@ abstract class AbstractModule
      *
      * @phpstan-param class-string|string $interface
      */
-    protected function bind(string $interface = '') : Bind
+    protected function bind(string $interface = ''): Bind
     {
         return new Bind($this->getContainer(), $interface);
     }
@@ -136,10 +132,10 @@ abstract class AbstractModule
     /**
      * Activate bindings
      */
-    private function activate() : void
+    private function activate(): void
     {
-        $this->container = new Container;
-        $this->matcher = new Matcher;
+        $this->container = new Container();
+        $this->matcher = new Matcher();
         $this->configure();
     }
 }
