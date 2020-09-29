@@ -23,6 +23,7 @@ final class ModuleString
     public function __invoke(Container $container, array $pointcuts): string
     {
         $log = [];
+        /** @psalm-suppress MixedAssignment */
         $container = unserialize(serialize($container), ['allowed_classes' => true]);
         assert($container instanceof Container);
         $spy = new SpyCompiler();
