@@ -39,7 +39,6 @@ final class AssistedInterceptor implements MethodInterceptor
     {
         $method = $invocation->getMethod();
         $assisted = $method->getAnnotation(Assisted::class);
-        /** @var Assisted $assisted */
         $parameters = $method->getParameters();
         $arguments = $invocation->getArguments()->getArrayCopy();
         if ($assisted instanceof Assisted) {
