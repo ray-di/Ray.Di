@@ -9,8 +9,8 @@ use Ray\Aop\MethodInvocation;
 use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\Assisted;
 use Ray\Di\Di\Named;
+use ReflectionNamedType;
 use ReflectionParameter;
-use ReflectionType;
 
 use function in_array;
 use function parse_str;
@@ -66,8 +66,8 @@ final class AssistedInterceptor implements MethodInterceptor
                 continue;
             }
 
-            $hint = $parameter->getType();
-            $interface = $hint instanceof ReflectionType ? $hint->getName() : ''; // @phpstan-ignore-line
+            $type = $parameter->getType();
+            $interface = $type instanceof ReflectionNamedType && ! in_array($type->getName(), Argument::UNBOUND_TYPE, true) ? $type->getName() : '';
             $name = $this->getName($method, $parameter);
             $pos = $parameter->getPosition();
             /** @psalm-suppress MixedAssignment */
