@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionParameter;
-use ReflectionType;
 
 use function class_exists;
+use function in_array;
 
 final class UntargetedBind
 {
@@ -22,16 +23,16 @@ final class UntargetedBind
 
     private function addConcreteClass(Container $container, ReflectionParameter $parameter): void
     {
-        $class = $this->getTypeHint($parameter);
+        $class = $this->getType($parameter);
         if (class_exists($class)) {
             new Bind($container, $class);
         }
     }
 
-    private function getTypeHint(ReflectionParameter $parameter): string
+    private function getType(ReflectionParameter $parameter): string
     {
-        $typeHintClass = $parameter->getType();
+        $type = $parameter->getType();
 
-        return $typeHintClass instanceof ReflectionType ? $typeHintClass->getName() : ''; // @phpstan-ignore-line
+        return $type instanceof ReflectionNamedType && ! in_array($type->getName(), Argument::UNBOUND_TYPE, true) ? $type->getName() : '';
     }
 }

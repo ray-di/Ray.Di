@@ -18,6 +18,8 @@ use function unserialize;
 
 final class Argument implements Serializable
 {
+    public const UNBOUND_TYPE = ['bool', 'int', 'float', 'string', 'array', 'resource', 'callable', 'iterable'];
+
     /** @var string */
     private $index;
 
@@ -141,14 +143,7 @@ final class Argument implements Serializable
     private function getType(ReflectionParameter $parameter): string
     {
         $type = $parameter->getType();
-        if (! $type instanceof ReflectionNamedType) {
-            return '';
-        }
 
-        if (in_array($type->getName(), ['bool', 'int', 'string', 'array', 'resource', 'callable'], true)) {
-            return '';
-        }
-
-        return $type->getName();
+        return $type instanceof ReflectionNamedType && ! in_array($type->getName(), self::UNBOUND_TYPE, true) ? $type->getName() : '';
     }
 }
