@@ -284,7 +284,7 @@ class DbalProvider implements ProviderInterface, SetContextInterface
     public function get()
     {
         $config = $this->dbConfigs[$this->context];
-        $conn = DriverManager::getConnection(config);
+        $conn = DriverManager::getConnection($config);
 
         return $conn;
     }
@@ -400,7 +400,7 @@ To depend on the annotated binding, apply the annotation to the injected paramet
 /**
  * @PayPal
  */
-public function __construct(CreditCardProcessorInterface $processor){
+public function __construct(CreditCardProcessorInterface $processor)
 {
 }
 ```
@@ -410,7 +410,7 @@ You can specify parameter name with qualifier. Qualifier applied all parameters 
 /**
  * @PayPal("processor")
  */
-public function __construct(CreditCardProcessorInterface $processor){
+public function __construct(CreditCardProcessorInterface $processor)
 {
  ....
 }
@@ -466,7 +466,7 @@ Now that you have created your custom injector annotation, you can use it on any
 /**
  * @PaymentProcessorInject("type=paypal")
  */
-public setPaymentProcessor(CreditCardProcessorInterface $processor){
+public setPaymentProcessor(CreditCardProcessorInterface $processor)
 {
  ....
 }
@@ -480,6 +480,7 @@ protected function configure()
     $this->bind(CreditCardProcessorInterface::class)
         ->annotatedWith(PaymentProcessorInject::class)
         ->toProvider(PaymentProcessorProvider::class);
+}
 ```
 
 The provider can now use the information supplied in the qualifier annotation in order to instantiate
@@ -496,7 +497,7 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
 /**
- *  @Named("checkout")
+ * @Named("checkout")
  */
 public function __construct(CreditCardProcessorInterface $processor)
 {
@@ -521,7 +522,7 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
 /**
- *  @Named("processor=checkout,subProcessor=backUp")
+ * @Named("processor=checkout,subProcessor=backUp")
  */
 public function __construct(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)
 {
