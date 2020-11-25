@@ -14,4 +14,4 @@ passthru('php ' . __DIR__ . '/05b-constructor-binding-setter-injection.php');
 passthru('php ' . __DIR__ . '/07-assisted-injection.php');
 passthru('php ' . __DIR__ . '/10-cache.php');
 passthru('php ' . __DIR__ . '/11-script-injector.php');
-//passthru('php ' . __DIR__ . '/12-dependency-chain-error-message.php');
+passthru('php ' . __DIR__ . '/12-dependency-chain-error-message.php');

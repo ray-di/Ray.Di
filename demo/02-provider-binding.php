@@ -39,9 +39,7 @@ interface MovieListerInterface
 
 class MovieLister implements MovieListerInterface
 {
-    /**
-     * @var Finder
-     */
+    /** @var Finder */
     public $finder;
 
     public function __construct(FinderInterface $finder)
@@ -59,9 +57,9 @@ class FinderModule extends AbstractModule
     }
 }
 
-$injector = new Injector(new FinderModule);
+$injector = new Injector(new FinderModule());
 $movieLister = $injector->getInstance(MovieListerInterface::class);
-/* @var $movieLister MovieLister */
+/** @var MovieLister $movieLister */
 $works = ($movieLister->finder->datetime instanceof DateTimeImmutable);
 
 echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

@@ -12,3 +12,5 @@
 /composer.lock
 /.phpcs-cache
 /coverage.xml
+/demo/error.log
+demo/10-cache.php.cache.php

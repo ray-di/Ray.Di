@@ -2,43 +2,14 @@
 
 declare(strict_types=1);
 
+use Composer\Autoload\ClassLoader;
 use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Injector;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
-
-class A
-{
-    public function __construct(B $dep)
-    {
-    }
-}
-
-class B
-{
-    public function __construct(C $dep)
-    {
-    }
-}
-
-class C
-{
-    public function __construct(D $dep)
-    {
-    }
-}
-
-class D
-{
-    public function __construct(EInterface $dep)
-    {
-    }
-}
-
-interface EInterface
-{
-}
+$loader = require dirname(__DIR__) . '/vendor/autoload.php';
+/** @var ClassLoader $loader */
+$loader->addPsr4('', __DIR__ . '/chain-error');
 
 class DeepLinkedClassBindingModule extends AbstractModule
 {
@@ -54,12 +25,15 @@ class DeepLinkedClassBindingModule extends AbstractModule
     }
 }
 
-$injector = new Injector(new DeepLinkedClassBindingModule);
+$injector = new Injector(new DeepLinkedClassBindingModule());
 // this will fail with an exception as EInterface is not bound
+
 try {
     $injector->getInstance(A::class);
 } catch (Unbound $e) {
-    echo $e->getMessage();
+    $msg = $e->getMessage();
+    ob_start();
+    // dependency 'B' with name '' used
     //    dependency 'B' with name '' used in12-dependency-chain-error-message.php:11
     echo PHP_EOL . '---------' . PHP_EOL;
     echo $e;
@@ -73,9 +47,17 @@ try {
     do {
         echo get_class($e) . ':' . $e->getMessage() . PHP_EOL;
     } while ($e = $e->getPrevious());
+
 //    Ray\Di\Exception\Unbound:dependency 'B' with name '' used in12-dependency-chain-error-message.php:11
 //    Ray\Di\Exception\Unbound:dependency 'C' with name '' used in12-dependency-chain-error-message.php:16
 //    Ray\Di\Exception\Unbound:dependency 'D' with name '' used in12-dependency-chain-error-message.php:21
 //    Ray\Di\Exception\Unbound:dependency 'EInterface' with name '' used in12-dependency-chain-error-message.php:26
 //    Ray\Di\Exception\Unbound:EInterface-
 }
+
+$log = ob_get_clean();
+$works = strpos($log, "dependency 'B' with name '' used");
+echo $works ? 'It works!' : 'It DOES NOT work!';
+file_put_contents(__DIR__ . '/error.log', $log);
+
+echo '[error log]: ' . __DIR__ . '/error.log' . PHP_EOL;

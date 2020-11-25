@@ -55,9 +55,9 @@ class FinderModule extends AbstractModule
     }
 }
 
-$injector = new Injector(new FinderModule);
+$injector = new Injector(new FinderModule());
 $movieLister = $injector->getInstance(MovieListerInterface::class);
-/* @var $movieLister MovieLister */
+/** @var MovieLister $movieLister */
 $works = ($movieLister->finder instanceof LegacyFinder);
 
 echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

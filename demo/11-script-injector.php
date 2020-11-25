@@ -2,30 +2,32 @@
 
 declare(strict_types=1);
 
+use Composer\Autoload\ClassLoader;
 use Ray\Compiler\DiCompiler;
 use Ray\Compiler\ScriptInjector;
 use Ray\Di\Injector;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
-require __DIR__ . '/finder_module.php';
+$loader = require dirname(__DIR__) . '/vendor/autoload.php';
+/** @var ClassLoader $loader */
+$loader->addPsr4('', __DIR__ . '/finder');
 
 $start = microtime(true);
-$injector = new Injector(new FinderModule);
-/* @var $movieLister MovieLister */
+$injector = new Injector(new FinderModule());
 $movieLister = $injector->getInstance(MovieListerInterface::class);
+assert($movieLister instanceof MovieLister);
 $time1 = microtime(true) - $start;
 
 // compile
 $tmpDir = __DIR__ . '/tmp';
-$compiler = new DiCompiler(new FinderModule, $tmpDir);
+$compiler = new DiCompiler(new FinderModule(), $tmpDir);
 $compiler->compile();
 $scriptInjector = new ScriptInjector($tmpDir);
 $movieLister2 = $scriptInjector->getInstance(MovieListerInterface::class);
 
 // script injector
 $start = microtime(true);
-/* @var $movieLister2 MovieLister */
 $movieLister2 = $scriptInjector->getInstance(MovieListerInterface::class);
+assert($movieLister2 instanceof MovieLister);
 $time2 = microtime(true) - $start;
 
 $works = $movieLister instanceof MovieListerInterface;
