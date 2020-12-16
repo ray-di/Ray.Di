@@ -23,6 +23,14 @@ final class Inject implements InjectInterface
     public $optional = false;
 
     /**
+     * @param array{optional?: bool} $values
+     */
+    public function __construct(array $values)
+    {
+        $this->optional = $values['optional'] ?? false;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function isOptional(): bool
