@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Ray\Compiler;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\Reader;
+use Koriym\Attributes\AttributesReader;
+use Koriym\Attributes\DualReader;
 use LogicException;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
@@ -28,7 +31,7 @@ final class FunctionCode
     /** @var PrivateProperty */
     private $privateProperty;
 
-    /** @var AnnotationReader */
+    /** @var Reader */
     private $reader;
 
     /** @var DependencyCode */
@@ -38,7 +41,7 @@ final class FunctionCode
     {
         $this->container = $container;
         $this->privateProperty = $privateProperty;
-        $this->reader = new AnnotationReader();
+        $this->reader = new DualReader(new AnnotationReader(), new AttributesReader());
         $this->compiler = $compiler;
     }
 
@@ -108,7 +111,7 @@ final class FunctionCode
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(
                 new ReflectionClass($annotation),
-                'Ray\Di\Di\Qualifier'
+                Qualifier::class
             );
             if ($qualifier instanceof Qualifier) {
                 $this->compiler->setQaulifier(new IpQualifier($param, $annotation));
