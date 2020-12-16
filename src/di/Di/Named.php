@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Ray\Di\Di;
 
+use Attribute;
+
+#[Attribute]
 /**
  * Annotates named things
  *
