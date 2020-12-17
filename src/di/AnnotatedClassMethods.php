@@ -14,6 +14,7 @@ use function version_compare;
 
 use const PHP_VERSION;
 use const PHP_VERSION_ID;
+use Reflection;
 
 final class AnnotatedClassMethods
 {
@@ -37,6 +38,12 @@ final class AnnotatedClassMethods
         $constructor = $class->getConstructor();
         if (! $constructor) {
             return new Name(Name::ANY);
+        }
+        if (PHP_VERSION_ID >= 80000) {
+            $name = (new Name())->createFromAttributes(new \ReflectionMethod($class->getName(), '__construct'));
+            if ($name) {
+                return $name;
+            }
         }
 
         $named = $this->reader->getMethodAnnotation($constructor, Named::class);
