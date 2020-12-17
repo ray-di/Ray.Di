@@ -33,4 +33,12 @@ class DualReaderTest extends TestCase
     {
         $this->assertInstanceOf(FakeMirrorRight::class, $car->constructerInjectedRightMirror);
     }
+
+    /**
+     * @depends testPhp8Attribute
+     */
+    public function testPostConstruct(FakePhp8Car $car): void
+    {
+        $this->assertTrue($car->isConstructed);
+    }
 }
