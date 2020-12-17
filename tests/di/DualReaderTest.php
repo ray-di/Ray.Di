@@ -20,9 +20,17 @@ class DualReaderTest extends TestCase
     /**
      * @depends testPhp8Attribute
      */
-    public function testNameParameter(FakePhp8Car $car): void
+    public function testNamedParameterInMethod(FakePhp8Car $car): void
     {
         $this->assertInstanceOf(FakeMirrorRight::class, $car->rightMirror);
         $this->assertInstanceOf(FakeMirrorLeft::class, $car->leftMirror);
+    }
+
+    /**
+     * @depends testPhp8Attribute
+     */
+    public function testNamedParameterInConstructor(FakePhp8Car $car): void
+    {
+        $this->assertInstanceOf(FakeMirrorRight::class, $car->constructerInjectedRightMirror);
     }
 }

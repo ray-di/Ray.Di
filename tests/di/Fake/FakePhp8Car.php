@@ -16,6 +16,7 @@ class FakePhp8Car implements FakeCarInterface
     public $rearTyre;
     public $isConstructed = false;
     public $rightMirror;
+    public $constructerInjectedRightMirror;
     public $leftMirror;
     public $spareMirror;
 
@@ -23,12 +24,10 @@ class FakePhp8Car implements FakeCarInterface
     public $handle;
     public $gearStick;
 
-    /**
-     * Inject annotation at constructor is just for human, not mandatory.
-     */
-    public function __construct(FakeEngineInterface $engine)
+    public function __construct(FakeEngineInterface $engine, #[Named('right')] FakeMirrorInterface $rightMirror)
     {
         $this->engine = $engine;
+        $this->constructerInjectedRightMirror = $rightMirror;
     }
 
     #[Inject]
@@ -49,12 +48,6 @@ class FakePhp8Car implements FakeCarInterface
     {
         $this->rightMirror = $rightMirror;
         $this->leftMirror = $leftMirror;
-    }
-
-    #[Inject]
-    public function setHandle(FakeHandleInterface $handle): void
-    {
-        $this->handle = $handle;
     }
 
     /**
