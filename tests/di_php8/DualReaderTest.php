@@ -10,7 +10,7 @@ class DualReaderTest extends TestCase
 {
     public function testPhp8Attribute(): FakePhp8Car
     {
-        $injector = new Injector(new FakeCarModule());
+        $injector = new Injector(new FakePhp8CarModule());
         $car = $injector->getInstance(FakePhp8Car::class);
         $this->assertInstanceOf(FakePhp8Car::class, $car);
 
@@ -40,5 +40,13 @@ class DualReaderTest extends TestCase
     public function testPostConstruct(FakePhp8Car $car): void
     {
         $this->assertTrue($car->isConstructed);
+    }
+
+    /**
+     * @depends testPhp8Attribute
+     */
+    public function testCunstomInjectAnnotation(FakePhp8Car $car): void
+    {
+        $this->assertInstanceOf(FakeGearStickInterface::class, $car->gearStick);
     }
 }
