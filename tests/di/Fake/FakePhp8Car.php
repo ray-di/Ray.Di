@@ -8,7 +8,7 @@ use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
 
-class FakeAttributeCar implements FakeCarInterface
+class FakePhp8Car implements FakeCarInterface
 {
     public $engine;
     public $hardtop;
@@ -38,29 +38,17 @@ class FakeAttributeCar implements FakeCarInterface
         $this->rearTyre = $rearTyre;
     }
 
-    #[Inject(['optional' => true])]
+    #[Inject(optional: true)]
     public function setHardtop(FakeHardtopInterface $hardtop): void
     {
         $this->hardtop = $hardtop;
     }
 
-    #[Inject(['optional' => true])]
-    /**
-     * @Named("rightMirror=right,$leftMirror=left")
-     */
-    public function setMirrors(FakeMirrorInterface $rightMirror, FakeMirrorInterface $leftMirror): void
+    #[Inject]
+    public function setMirrors(#[Named('right')] FakeMirrorInterface $rightMirror, #[Named('left')] FakeMirrorInterface $leftMirror): void
     {
         $this->rightMirror = $rightMirror;
         $this->leftMirror = $leftMirror;
-    }
-
-    #[Inject]
-    /**
-     * @Named("right")
-     */
-    public function setSpareMirror(FakeMirrorInterface $rightMirror): void
-    {
-        $this->spareMirror = $rightMirror;
     }
 
     #[Inject]
@@ -70,7 +58,7 @@ class FakeAttributeCar implements FakeCarInterface
     }
 
     /**
-     * @FakeGearStickInject ("leather")
+     * @FakeGearStickInject("leather")
      */
     public function setGearStick(FakeGearStickInterface $stick): void
     {
