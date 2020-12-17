@@ -6,7 +6,7 @@ namespace Ray\Di\Di;
 
 use Attribute;
 
-#[Attribute]
+#[Attribute(Attribute::TARGET_METHOD)]
 /**
  * Annotates your class methods into which the Injector should inject values
  *
@@ -25,9 +25,9 @@ final class Inject implements InjectInterface
     /**
      * @param array{optional?: bool} $values
      */
-    public function __construct(array $values)
+    public function __construct(array $values = [], bool $optional = false)
     {
-        $this->optional = $values['optional'] ?? false;
+        $this->optional = $values['optional'] ?? $optional;
     }
 
     /**
