@@ -8,6 +8,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Koriym\Attributes\AttributesReader;
 use Koriym\Attributes\DualReader;
 use Ray\Di\Exception\Unbound;
+use Ray\ServiceLocator\ServiceLocator;
 use ReflectionMethod;
 
 final class Arguments
@@ -67,6 +68,6 @@ final class Arguments
             return;
         }
 
-        (new Bind($container, InjectionPointInterface::class))->toInstance(new InjectionPoint($argument->get(), new DualReader(new AnnotationReader(), new AttributesReader())));
+        (new Bind($container, InjectionPointInterface::class))->toInstance(new InjectionPoint($argument->get(), ServiceLocator::getReader()));
     }
 }

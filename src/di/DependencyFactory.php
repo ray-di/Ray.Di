@@ -7,6 +7,7 @@ namespace Ray\Di;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Koriym\Attributes\AttributesReader;
 use Koriym\Attributes\DualReader;
+use Ray\ServiceLocator\ServiceLocator;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -22,7 +23,7 @@ final class DependencyFactory
      */
     public function newAnnotatedDependency(ReflectionClass $class): Dependency
     {
-        $annotateClass = new AnnotatedClass(new DualReader(new AnnotationReader(), new AttributesReader()));
+        $annotateClass = new AnnotatedClass(ServiceLocator::getReader());
         $newInstance = $annotateClass->getNewInstance($class);
         $postConstruct = $annotateClass->getPostConstruct($class);
 
