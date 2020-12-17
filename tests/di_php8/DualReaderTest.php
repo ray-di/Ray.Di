@@ -6,6 +6,8 @@ namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
 
+use function assert;
+
 class DualReaderTest extends TestCase
 {
     public function testPhp8Attribute(): FakePhp8Car
