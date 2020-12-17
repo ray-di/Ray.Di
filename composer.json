@@ -43,7 +43,7 @@
             "Ray\\Di\\": [
                 "tests/di",
                 "tests/di/Fake/"
-            ]
+            ],
             "Ray\\Compiler\\": [
                 "tests/compiler",
                 "tests/compiler/Fake"
