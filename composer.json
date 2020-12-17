@@ -18,6 +18,7 @@
         "doctrine/cache": "^1.10",
         "ray/aop": "^2.9.8",
         "koriym/printo": "^1.0",
+        "koriym/attributes": "dev-master",
         "nikic/php-parser": "^4.5"
     },
     "require-dev": {
@@ -42,7 +43,7 @@
             "Ray\\Di\\": [
                 "tests/di",
                 "tests/di/Fake/"
-            ],
+            ]
             "Ray\\Compiler\\": [
                 "tests/compiler",
                 "tests/compiler/Fake"
