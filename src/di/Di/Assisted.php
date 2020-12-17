@@ -7,7 +7,7 @@ namespace Ray\Di\Di;
 use Attribute;
 use Ray\Aop\Annotation\AbstractAssisted;
 
-#[Attribute(\Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PARAMETER)]
 /**
  * Annotates your class methods into which the Injector should pass the values on method invocation
  *

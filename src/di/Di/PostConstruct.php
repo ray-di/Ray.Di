@@ -6,7 +6,7 @@ namespace Ray\Di\Di;
 
 use Attribute;
 
-#[Attribute(\Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_METHOD)]
 /**
  * PostConstruct
  *
