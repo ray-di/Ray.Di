@@ -18,10 +18,7 @@ class FakePhp8Car implements FakeCarInterface
     public $rightMirror;
     public $constructerInjectedRightMirror;
     public $leftMirror;
-    public $spareMirror;
-
-    /** @var FakeHandleInterface */
-    public $handle;
+    /** @var FakeHandleInterface */public $handle;
     public $gearStick;
 
     public function __construct(FakeEngineInterface $engine, #[Named('right')] FakeMirrorInterface $rightMirror)
@@ -51,8 +48,19 @@ class FakePhp8Car implements FakeCarInterface
     }
 
     /**
-     * @FakeGearStickInject("leather")
+     * Test provider attribute
+     *
+     * @see FakeHandleProvider
      */
+    #[Inject]
+    public function setHandle(FakeHandleInterface $handle){
+        $this->handle = $handle;
+    }
+
+    /**
+     * Custom inject annotation
+     */
+    #[FakeGearStickInject('leather')]
     public function setGearStick(FakeGearStickInterface $stick): void
     {
         $this->gearStick = $stick;

@@ -49,4 +49,12 @@ class DualReaderTest extends TestCase
     {
         $this->assertInstanceOf(FakeGearStickInterface::class, $car->gearStick);
     }
+
+    /**
+     * @depends testPhp8Attribute
+     */
+    public function testProviderAttribute(FakePhp8Car $car): void
+    {
+        $this->assertSame('momo', $car->handle->logo);
+    }
 }

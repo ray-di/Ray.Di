@@ -7,6 +7,7 @@ namespace Ray\Di;
 use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Di\InjectInterface;
 use Ray\Di\Di\Named;
+use Reflection;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -14,7 +15,6 @@ use function version_compare;
 
 use const PHP_VERSION;
 use const PHP_VERSION_ID;
-use Reflection;
 
 final class AnnotatedClassMethods
 {
@@ -39,8 +39,9 @@ final class AnnotatedClassMethods
         if (! $constructor) {
             return new Name(Name::ANY);
         }
+
         if (PHP_VERSION_ID >= 80000) {
-            $name = (new Name())->createFromAttributes(new \ReflectionMethod($class->getName(), '__construct'));
+            $name = (new Name())->createFromAttributes(new ReflectionMethod($class->getName(), '__construct'));
             if ($name) {
                 return $name;
             }
