@@ -5,7 +5,7 @@
     <testsuites>
         <testsuite name="Ray.Di Test Suite">
             <directory>tests/di/</directory>
-            <file phpVersion="8.0.0" phpVersionOperator=">=">tests/di_php8</file>
+            <directory phpVersion="8.0.0" phpVersionOperator=">=">tests/di_php8</directory>
         </testsuite>
     </testsuites>
     <php>
