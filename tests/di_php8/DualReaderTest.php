@@ -55,6 +55,7 @@ class DualReaderTest extends TestCase
      */
     public function testProviderAttribute(FakePhp8Car $car): void
     {
+        assert($car->handle instanceof FakeHandle);
         $this->assertSame('momo', $car->handle->logo);
     }
 }
