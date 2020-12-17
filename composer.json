@@ -16,7 +16,7 @@
         "php": "^7.2 || ^8.0",
         "doctrine/annotations": "^1.10",
         "doctrine/cache": "^1.10",
-        "ray/aop": "^2.9.8",
+        "ray/aop": "2.x-dev",
         "koriym/printo": "^1.0",
         "koriym/attributes": "dev-master",
         "nikic/php-parser": "^4.5"
