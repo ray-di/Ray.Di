@@ -126,5 +126,5 @@ jobs:
           composer global require --dev maglnet/composer-require-checker ^2.0
       - name: Run composer-require-checker
         run: >-
-          composer global exec -v -- composer-require-checker check
+          composer global exec -v -- composer-require-checker check --config-file=php-require-checker.config.json
           ./composer.json
