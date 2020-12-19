@@ -11,7 +11,6 @@ use ReflectionMethod;
 
 use function array_keys;
 use function array_reduce;
-use function assert;
 use function class_exists;
 use function implode;
 use function is_array;
@@ -52,8 +51,7 @@ final class Bind
         $bindUntarget = class_exists($interface) && ! (new ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
         $this->bound = new NullDependency();
         if ($bindUntarget) {
-            assert(class_exists($interface));
-            $this->untarget = new Untarget($interface);
+            $this->untarget = new Untarget($interface); // @phpstan-ignore-line
 
             return;
         }
@@ -101,7 +99,7 @@ final class Bind
      * Bind to constructor
      *
      * @param class-string                 $class           class name
-     * @param array<string, string>|string $name            "varName=bindName,..." or [[$varName => $bindName],[$varName => $bindName]...]
+     * @param array<string, string>|string $name            "varName=bindName,..." or [$varName => $bindName, $varName => $bindName...]
      * @param InjectionPoints              $injectionPoints injection points
      * @param string                       $postConstruct   method name of initialization after all dependencies are injected*
      */
@@ -202,7 +200,7 @@ final class Bind
                 }
 
                 $varName = $name[$key];
-                $carry[] = $key . '=' . (string) $varName;
+                $carry[] = $key . '=' . $varName;
 
                 return $carry;
             },

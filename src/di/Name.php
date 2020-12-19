@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use phpDocumentor\Reflection\Types\ClassString;
+use Ray\Aop\ReflectionMethod;
+use Ray\Di\Di\Named;
+use Reflection;
+use ReflectionAttribute;
 use ReflectionParameter;
 
 use function assert;
@@ -27,9 +32,9 @@ final class Name
     /**
      * Named database
      *
-     * [named => varName][]
+     * format: array<varName, NamedName>
      *
-     * @var string[]
+     * @var array<string, string>
      */
     private $names = [];
 
@@ -38,6 +43,35 @@ final class Name
         if ($name !== null) {
             $this->setName($name);
         }
+    }
+
+    /**
+     * Create instance from PHP8 attributes
+     *
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress UndefinedMethod
+     * @psalm-suppress MixedMethodCall
+     * @psalm-suppress MixedArrayAccess
+     *
+     * psalm does not know ReflectionAttribute?? PHPStan produces no type error here.
+     */
+    public function createFromAttributes(\ReflectionMethod $method): ?self
+    {
+        $params = $method->getParameters();
+        foreach ($params as $param) {
+            $attribue = $param->getAttributes(Named::class);
+            if ($attribue) {
+                $name = $attribue[0]->newInstance();
+                assert($name instanceof Named);
+                $this->names[$param->getName()] = $name->value;
+            }
+        }
+
+        if ($this->names) {
+            return clone $this;
+        }
+
+        return null;
     }
 
     public function __invoke(ReflectionParameter $parameter): string
