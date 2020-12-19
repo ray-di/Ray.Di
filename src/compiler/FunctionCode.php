@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Compiler;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Koriym\Attributes\AttributesReader;
-use Koriym\Attributes\DualReader;
 use LogicException;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
@@ -17,11 +15,13 @@ use Ray\Di\Container;
 use Ray\Di\DependencyInterface;
 use Ray\Di\DependencyProvider;
 use Ray\Di\Di\Qualifier;
+use Ray\ServiceLocator\ServiceLocator;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
 
 use function assert;
+use function is_bool;
 
 final class FunctionCode
 {
@@ -41,7 +41,7 @@ final class FunctionCode
     {
         $this->container = $container;
         $this->privateProperty = $privateProperty;
-        $this->reader = new DualReader(new AnnotationReader(), new AttributesReader());
+        $this->reader = ServiceLocator::getReader();
         $this->compiler = $compiler;
     }
 
@@ -52,6 +52,7 @@ final class FunctionCode
     {
         $prop = $this->privateProperty;
         $isSingleton = $prop($dependency, 'isSingleton');
+        assert(is_bool($isSingleton));
         $func = $isSingleton ? 'singleton' : 'prototype';
         $args = $this->getInjectionFuncParams($argument);
 
