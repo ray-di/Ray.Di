@@ -18,7 +18,7 @@
         "doctrine/cache": "^1.10",
         "ray/aop": "2.x-dev",
         "koriym/printo": "^1.0",
-        "koriym/attributes": "dev-master",
+        "koriym/attributes": "^0.2",
         "nikic/php-parser": "^4.5"
     },
     "require-dev": {
