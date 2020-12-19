@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Ray\Di\Di;
 
+use Attribute;
+
 /**
  * Annotates your class methods into which the Injector should inject values
  *
  * @Annotation
  * @Target("METHOD")
  */
+#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PARAMETER)]
 final class Inject implements InjectInterface
 {
     /**
@@ -25,5 +28,10 @@ final class Inject implements InjectInterface
     public function isOptional(): bool
     {
         return $this->optional;
+    }
+
+    public function __construct(array $value = [], bool $optional = false)
+    {
+        $this->optional = $value['optional'] ?? $optional;
     }
 }
