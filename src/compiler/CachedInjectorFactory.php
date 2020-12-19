@@ -6,7 +6,6 @@ namespace Ray\Compiler;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Cache\VoidCache;
-use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
 
 final class CachedInjectorFactory
