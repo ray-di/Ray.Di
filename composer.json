@@ -16,12 +16,13 @@
         "php": "^7.2 || ^8.0",
         "doctrine/annotations": "^1.10",
         "doctrine/cache": "^1.10",
-        "ray/aop": "^2.9.8",
+        "ray/aop": "2.x-dev",
         "koriym/printo": "^1.0",
+        "koriym/attributes": "^0.2",
         "nikic/php-parser": "^4.5"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^9.5"
     },
     "config": {
         "sort-packages": true
@@ -59,7 +60,9 @@
         "pcov": ["php -dextension=pcov.so -d pcov.enabled=1 ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage  --coverage-clover=coverage.xml"],
         "cs": ["phpcs --standard=./phpcs.xml src tests"],
         "cs-fix": ["phpcbf src tests"],
-        "sa": ["phpstan analyse -c phpstan.neon", "psalm --show-info=true", "psalm -c psalm.compiler.xml --show-info=true"],
+        "sa": ["@sa-di", "@sa-compiler"],
+        "sa-di": ["phpstan analyse -c phpstan.neon", "psalm --show-info=true"],
+        "sa-compiler": ["psalm -c psalm.compiler.xml --show-info=true"],
         "metrics": ["@test", "phpmetrics --report-html=build/metrics --exclude=Exception --log-junit=build/junit.xml --junit=build/junit.xml src"]
     }
 }
