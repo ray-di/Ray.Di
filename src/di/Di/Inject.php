@@ -12,6 +12,7 @@ use Attribute;
  * @Annotation
  * @Target("METHOD")
  */
+
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PARAMETER)]
 final class Inject implements InjectInterface
 {
