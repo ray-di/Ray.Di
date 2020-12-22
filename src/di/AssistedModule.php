@@ -6,6 +6,7 @@ namespace Ray\Di;
 
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Assisted;
+
 use const PHP_VERSION_ID;
 
 class AssistedModule extends AbstractModule
