@@ -12,7 +12,6 @@ use Attribute;
  * @Annotation
  * @Target("METHOD")
  */
-
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PARAMETER)]
 final class Inject implements InjectInterface
 {
@@ -31,6 +30,9 @@ final class Inject implements InjectInterface
         return $this->optional;
     }
 
+    /**
+     * @param array{optional?: bool} $value
+     */
     public function __construct(array $value = [], bool $optional = false)
     {
         $this->optional = $value['optional'] ?? $optional;

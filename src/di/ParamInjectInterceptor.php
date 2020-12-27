@@ -8,10 +8,12 @@ use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use ReflectionNamedType;
 use ReflectionParameter;
 
 use function assert;
 use function call_user_func_array;
+use function is_callable;
 
 final class ParamInjectInterceptor implements MethodInterceptor
 {
@@ -27,35 +29,34 @@ final class ParamInjectInterceptor implements MethodInterceptor
         $this->methodInvocationProvider = $methodInvocationProvider;
     }
 
+    /**
+     * @return mixed
+     */
     public function invoke(MethodInvocation $invocation)
     {
+        $this->methodInvocationProvider->set($invocation);
         $params = $invocation->getMethod()->getParameters();
         $namedArguments = $invocation->getNamedArguments()->getArrayCopy();
-        $injectedParams = [];
         foreach ($params as $param) {
             $attributes = $param->getAttributes(Inject::class);
             if (isset($attributes[0])) {
-                $injectedParams[$param->getName()] = $this->getDependency($param);
+                $namedArguments[$param->getName()] = $this->getDependency($param);
             }
         }
-
-        $args = $injectedParams + $params;
-
-        return call_user_func_array([$invocation->getThis(), $invocation->getMethod()->getName()], $args);
+        $callable = [$invocation->getThis(), $invocation->getMethod()->getName()];
+        assert(is_callable($callable));
+        return call_user_func_array($callable, $namedArguments); // @phpstan-ignore-line PHP8 named arguments
     }
 
-    private function getDependencies(array $params)
-    {
-        $params = [];
-        foreach ($params as $param) {
-            $dependecy = $this->getDependency($param);
-        }
-    }
-
+    /**
+     * @return mixed
+     */
     private function getDependency(ReflectionParameter $param)
     {
         $named = $this->getName($param);
-        $interface = $param->getType()->getName();
+        $type = $param->getType();
+        assert($type instanceof ReflectionNamedType || $type === null);
+        $interface = $type ? $type->getName() : '';
 
         return $this->injector->getInstance($interface, $named);
     }

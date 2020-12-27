@@ -171,7 +171,7 @@ final class ScriptInjector implements InjectorInterface
         $instance = require $this->getInstanceFile($dependencyIndex);
         /** @global bool $isSingleton */
         $isSingleton = isset($isSingleton) && $isSingleton; // @phpstan-ignore-line
-        if ($isSingleton) {
+        if ($isSingleton) { // @phpstan-ignore-line
             $this->singletons[$dependencyIndex] = $instance;
         }
 
