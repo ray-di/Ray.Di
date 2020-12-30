@@ -108,7 +108,7 @@ final class FunctionCode
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(
                 new ReflectionClass($annotation),
-                'Ray\Di\Di\Qualifier'
+                Qualifier::class
             );
             if ($qualifier instanceof Qualifier) {
                 $this->compiler->setQaulifier(new IpQualifier($param, $annotation));

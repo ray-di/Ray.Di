@@ -11,7 +11,6 @@ use ReflectionMethod;
 
 use function array_keys;
 use function array_reduce;
-use function assert;
 use function class_exists;
 use function implode;
 use function is_array;
@@ -52,8 +51,7 @@ final class Bind
         $bindUntarget = class_exists($interface) && ! (new ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
         $this->bound = new NullDependency();
         if ($bindUntarget) {
-            assert(class_exists($interface));
-            $this->untarget = new Untarget($interface);
+            $this->untarget = new Untarget($interface); // @phpstan-ignore-line
 
             return;
         }
@@ -202,7 +200,7 @@ final class Bind
                 }
 
                 $varName = $name[$key];
-                $carry[] = $key . '=' . (string) $varName;
+                $carry[] = $key . '=' . $varName;
 
                 return $carry;
             },

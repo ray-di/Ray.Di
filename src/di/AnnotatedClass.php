@@ -9,8 +9,6 @@ use Ray\Di\Di\PostConstruct;
 use ReflectionClass;
 use ReflectionMethod;
 
-use function assert;
-
 final class AnnotatedClass
 {
     /** @var AnnotationReader */
@@ -57,7 +55,6 @@ final class AnnotatedClass
         $methods = $class->getMethods();
         foreach ($methods as $method) {
             $annotation = $this->reader->getMethodAnnotation($method, PostConstruct::class);
-            assert($annotation instanceof PostConstruct || $annotation === null);
             if ($annotation instanceof PostConstruct) {
                 return $method;
             }
