@@ -99,7 +99,7 @@ final class Bind
      * Bind to constructor
      *
      * @param class-string                 $class           class name
-     * @param array<string, string>|string $name            "varName=bindName,..." or [[$varName => $bindName],[$varName => $bindName]...]
+     * @param array<string, string>|string $name            "varName=bindName,..." or [$varName => $bindName, $varName => $bindName...]
      * @param InjectionPoints              $injectionPoints injection points
      * @param string                       $postConstruct   method name of initialization after all dependencies are injected*
      */

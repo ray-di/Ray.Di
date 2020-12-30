@@ -7,8 +7,14 @@ namespace Ray\Di;
 use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Di\InjectInterface;
 use Ray\Di\Di\Named;
+use Reflection;
 use ReflectionClass;
 use ReflectionMethod;
+
+use function version_compare;
+
+use const PHP_VERSION;
+use const PHP_VERSION_ID;
 
 final class AnnotatedClassMethods
 {
@@ -32,6 +38,13 @@ final class AnnotatedClassMethods
         $constructor = $class->getConstructor();
         if (! $constructor) {
             return new Name(Name::ANY);
+        }
+
+        if (PHP_VERSION_ID >= 80000) {
+            $name = (new Name())->createFromAttributes(new ReflectionMethod($class->getName(), '__construct'));
+            if ($name) {
+                return $name;
+            }
         }
 
         $named = $this->reader->getMethodAnnotation($constructor, Named::class);
@@ -58,12 +71,26 @@ final class AnnotatedClassMethods
             return null;
         }
 
-        $nameValue = ($this->nameKeyVarString)($method);
-        $setterMethod = new SetterMethod($method, new Name($nameValue));
+        $name = $this->getName($method);
+        $setterMethod = new SetterMethod($method, $name);
         if ($inject->isOptional()) {
             $setterMethod->setOptional();
         }
 
         return $setterMethod;
+    }
+
+    private function getName(ReflectionMethod $method): Name
+    {
+        if (PHP_VERSION_ID >= 80000) {
+            $name = (new Name())->createFromAttributes($method);
+            if ($name) {
+                return $name;
+            }
+        }
+
+        $nameValue = ($this->nameKeyVarString)($method);
+
+        return new Name($nameValue);
     }
 }
