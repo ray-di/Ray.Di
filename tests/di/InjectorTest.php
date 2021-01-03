@@ -350,9 +350,8 @@ class InjectorTest extends TestCase
             {
                 $this->bind(PDO::class)->toConstructor(
                     PDO::class,
-                    [
-                        ['dsn' => 'pdo_dsn'], // wrong, cause InvalidToConstructorNameParameter exception
-                    ]
+                    /** @phpstan-ignore-next-line */
+                    [['dsn' => 'pdo_dsn']] // wrong, cause InvalidToConstructorNameParameter exception
                 )->in(Scope::SINGLETON);
                 $this->bind()->annotatedWith('pdo_dsn')->toInstance('sqlite::memory:');
             }
