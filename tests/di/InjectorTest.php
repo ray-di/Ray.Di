@@ -342,7 +342,7 @@ class InjectorTest extends TestCase
         $this->assertInstanceOf(PDO::class, $pdo);
     }
 
-    public function g(): void
+    public function testToConstructorInvalidName(): void
     {
         $this->expectException(InvalidToConstructorNameParameter::class);
         $module = new class extends AbstractModule {
