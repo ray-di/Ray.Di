@@ -38,12 +38,4 @@ final class Inject implements InjectInterface
     {
         return $this->optional;
     }
-
-    /**
-     * @param array{optional?: bool} $value
-     */
-    public function __construct(array $value = [], bool $optional = false)
-    {
-        $this->optional = $value['optional'] ?? $optional;
-    }
 }
