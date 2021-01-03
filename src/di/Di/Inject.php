@@ -6,13 +6,13 @@ namespace Ray\Di\Di;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_METHOD)]
 /**
  * Annotates your class methods into which the Injector should inject values
  *
  * @Annotation
  * @Target("METHOD")
  */
+#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PARAMETER)]
 final class Inject implements InjectInterface
 {
     /**
