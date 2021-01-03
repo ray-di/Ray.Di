@@ -8,6 +8,7 @@ use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
+use ReflectionAttribute;
 use ReflectionNamedType;
 use ReflectionParameter;
 
@@ -38,8 +39,10 @@ final class ParamInjectInterceptor implements MethodInterceptor
         $params = $invocation->getMethod()->getParameters();
         $namedArguments = $invocation->getNamedArguments()->getArrayCopy();
         foreach ($params as $param) {
+            /** @var list<ReflectionAttribute> $attributes */
             $attributes = $param->getAttributes(Inject::class);
             if (isset($attributes[0])) {
+                /** @psalm-suppress MixedAssignment */
                 $namedArguments[$param->getName()] = $this->getDependency($param);
             }
         }
@@ -65,6 +68,7 @@ final class ParamInjectInterceptor implements MethodInterceptor
 
     private function getName(ReflectionParameter $param): string
     {
+        /** @var list<ReflectionAttribute> $attributes */
         $attributes = $param->getAttributes(Named::class);
         if (isset($attributes[0])) {
             $named = $attributes[0]->newInstance();

@@ -6,6 +6,7 @@ namespace Ray\Di\Matcher;
 
 use Ray\Aop\AbstractMatcher;
 use Ray\Di\Di\Inject;
+use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -26,6 +27,7 @@ final class ParamInjectMatcher extends AbstractMatcher
     {
         $params = $method->getParameters();
         foreach ($params as $param) {
+            /** @var list<ReflectionAttribute> $attributes */
             $attributes = $param->getAttributes(Inject::class);
             if (isset($attributes[0])) {
                 return true;
