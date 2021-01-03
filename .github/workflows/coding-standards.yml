@@ -34,4 +34,4 @@ jobs:
           composer install --no-interaction --no-progress --prefer-dist
           composer global require --dev doctrine/coding-standard ^8.1
       - name: Run PHP_CodeSniffer
-        run: phpcs --standard=./phpcs.xml --report=checkstyle -q src tests | cs2pr
+        run: composer global exec -v -- phpcs --standard=./phpcs.xml --report=checkstyle -q src tests | cs2pr
