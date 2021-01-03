@@ -44,6 +44,8 @@
         <!-- Option -->
         <exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed"/>
         <!-- /Option -->
+        <!-- exclude PHP8 attribute in PHP7.x -->
+        <exclude name="PEAR.Commenting.InlineComment.WrongStyle" />
         <!-- Exclude Fake files form Doctrine CS -->
         <exclude-pattern>*/tests/Fake/*</exclude-pattern>
     </rule>
