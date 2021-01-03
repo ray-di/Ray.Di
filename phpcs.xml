@@ -38,6 +38,8 @@
         <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint"/>
         <exclude name="Squiz.PHP.GlobalKeyword.NotAllowed"/>
         <exclude name="SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse"/>
+        <!-- PHP8 attribute -->
+        <exclude name="PSR12.Files.FileHeader.IncorrectOrder"/>
         <!-- /Base -->
         <!-- Option -->
         <exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed"/>
