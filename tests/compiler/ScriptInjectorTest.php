@@ -241,7 +241,7 @@ class ScriptInjectorTest extends TestCase
         $count = count((array) glob(__DIR__ . '/tmp/*.php'));
         $this->assertGreaterThan(1, $count);
         $injector->clear();
-        $countAfterClear = count((array) glob('/tmp/*.php'));
+        $countAfterClear = count((array) glob(__DIR__ . '/tmp/*.php'));
         $this->assertSame(0, $countAfterClear);
     }
 }
