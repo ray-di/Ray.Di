@@ -14,10 +14,11 @@ final class ParamInjectMatcher extends AbstractMatcher
 {
     /**
      * {@inheritdoc}
+     * @codeCoverageIgnore
      */
     public function matchesClass(ReflectionClass $class, array $arguments): bool
     {
-        return true;
+        throw new \LogicException('Should not used in class matcher');
     }
 
     /**
