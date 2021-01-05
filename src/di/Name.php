@@ -40,11 +40,22 @@ final class Name
      */
     private $names = [];
 
-    public function __construct(?string $name = null)
+    /**
+     * @param string|array<string, string>|null $name
+     */
+    public function __construct($name = null)
     {
-        if ($name !== null) {
-            $this->setName($name);
+        if ($name === null) {
+            return;
         }
+
+        if (is_string($name)) {
+            $this->setName($name);
+
+            return;
+        }
+
+        $this->names = $name;
     }
 
     /**
@@ -57,19 +68,20 @@ final class Name
      *
      * psalm does not know ReflectionAttribute?? PHPStan produces no type error here.
      */
-    public function createFromAttributes(ReflectionMethod $method): ?self
+    public static function withAttributes(ReflectionMethod $method): ?self
     {
         $params = $method->getParameters();
+        $names = [];
         foreach ($params as $param) {
             /** @var array{0: ReflectionAttribute}|null $attributes */
             $attributes = $param->getAttributes();
             if ($attributes) {
-                $this->setNames($attributes, $param);
+                $names[$param->name] = self::getName($attributes);
             }
         }
 
-        if ($this->names) {
-            return clone $this;
+        if ($names) {
+            return new self($names);
         }
 
         return null;
@@ -78,21 +90,21 @@ final class Name
     /**
      * @param array{0: ReflectionAttribute} $attributes
      */
-    private function setNames(array $attributes, ReflectionParameter $param): void
+    private static function getName(array $attributes): string
     {
         $refAttribute = $attributes[0];
         $attribute = $refAttribute->newInstance();
         assert(is_object($attribute));
         if ($attribute instanceof Named) {
-            $this->names[$param->getName()] = $attribute->value;
-
-            return;
+            return $attribute->value;
         }
 
         $isQualifer = (bool) (new ReflectionClass($attribute))->getAttributes(Qualifier::class);
         if ($isQualifer) {
-            $this->names[$param->getName()] = get_class($attribute);
+            return get_class($attribute);
         }
+
+        return '';
     }
 
     public function __invoke(ReflectionParameter $parameter): string
