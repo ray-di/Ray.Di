@@ -11,7 +11,7 @@
 
 **Ray.Di** was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google.
 
-Note: For PHP 7.x users, please see [README.php7.md](README.php7.md).
+Note: For PHP 8.x users, please see [README.md](README.md).
 
 ## Overview
 
@@ -31,6 +31,8 @@ with the following features:
 - injection point meta data
 
 - instance factories
+
+- annotation is optionable
 
 - AOP integration
 
@@ -84,7 +86,7 @@ By building the billingService, we've constructed a small object graph using Ray
 
 ## Constructor Injection
 
-Constructor injection combines instantiation with injection. This constructor should accept class dependencies as parameters. Most constructors will then assign the parameters to properties. You do not need `#[Inject]` attribute in constructor.
+Constructor injection combines instantiation with injection. This constructor should accept class dependencies as parameters. Most constructors will then assign the parameters to properties. You do not need `@Inject` annotation in constructor.
 
 ```php
     public function __construct(DbInterface $db)
@@ -95,14 +97,16 @@ Constructor injection combines instantiation with injection. This constructor sh
     
 ## Setter Injection
 
-Ray.Di can inject methods that have the `#[Inject]` attribute. Dependencies take the form of parameters, which the injector resolves before invoking the method. Injected methods may have any number of parameters, and the method name does not impact injection.
+Ray.Di can inject methods that have the `@Inject` annotation. Dependencies take the form of parameters, which the injector resolves before invoking the method. Injected methods may have any number of parameters, and the method name does not impact injection.
 
 ```php
 use Ray\Di\Di\Inject;
 ```
 
 ```php
-    #[Inject]
+    /**
+     * @Inject
+     */
     public function setDb(DbInterface $db)
     {
         $this->db = $db;
@@ -115,14 +119,17 @@ Ray.Di does not support property injection.
 
 ## Assisted Injection
 
-It is also possible to inject dependencies directly in the invoke method parameter(s). When doing this, add the dependency to the end of the arguments and add `#[Inject]` to the parameter with having assisted parameter(s). You need `null` default for that parameter.
+It is also possible to inject dependencies directly in the invoke method parameter(s). When doing this, add the dependency to the end of the arguments and annotate the method with `@Assisted` with having assisted parameter(s). You need `null` default for that parameter.
 
 ```php
-use Ray\Di\Di\Inject;
+use Ray\Di\Di\Assisted;
 ```
 
 ```php
-    public function doSomething($id, #[Inject] DbInterface $db = null)
+    /**
+     * @Assisted({"db"})
+     */
+    public function doSomething($id, DbInterface $db = null)
     {
         $this->db = $db;
     }
@@ -133,14 +140,20 @@ You can also provide dependency which depends on other dynamic parameter in meth
 ```php
 class HorizontalScaleDbProvider implements ProviderInterface
 {
-    public function __construct(
-        private MethodInvocationProvider $invocationProvider)
-    ){}
+    /**
+     * @var MethodInvocationProvider
+     */
+    private $invocationProvider;
+
+    public function __construct(MethodInvocationProvider $invocationProvider)
+    {
+        $this->invocationProvider = $invocationProvider;
+    }
 
     public function get()
     {
         $methodInvocation = $this->invocationProvider->get();
-        [$id] = methodInvocation->getArguments()->getArrayCopy();
+        list($id) = methodInvocation->getArguments()->getArrayCopy();
         
         return new UserDb($id); // $id for database choice.
     }
@@ -211,9 +224,12 @@ use Ray\Di\ProviderInterface;
 
 class DatabaseTransactionLogProvider implements ProviderInterface
 {
-    public function __construct(
-        private ConnectionInterface $connection)
-    ){}
+    private $connection;
+
+    public function __construct(ConnectionInterface $connection)
+    {
+        $this->connection = $connection;
+    }
 
     public function get()
     {
@@ -247,9 +263,6 @@ $this->bind(Connection::class)->annotatedWith('log_db')->toProvider(DbalProvider
 Providers are created for each context.
 
 ```php
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
-
 class DbalProvider implements ProviderInterface, SetContextInterface
 {
     private $dbConfigs;
@@ -259,7 +272,10 @@ class DbalProvider implements ProviderInterface, SetContextInterface
         $this->context = $context;
     }
 
-    public function __construct(#[Named('db_config') array $dbConfigs)
+    /**
+     * @Named("db_config")
+     */
+    public function __construct(array $dbConfigs)
     {
         $this->dbConfigs = $dbConfigs;
     }
@@ -280,7 +296,10 @@ class DbalProvider implements ProviderInterface, SetContextInterface
 It is the same interface, but you can receive different connections made by `Provider`.
 
 ```php
-public function __construct(#[Named('user')] Connection $userDb, #[Named('job')] Connection $jobDb, #[Named('log') Connection $logDb)
+/**
+ * @Named("userDb=user,jobDb=job,logDb=log")
+ */
+public function __construct(Connection $userDb, Connection $jobDb, Connection $logDb)
 {
   //...
 }
@@ -289,16 +308,22 @@ public function __construct(#[Named('user')] Connection $userDb, #[Named('job')]
 ## Injection Point
 
 An **InjectionPoint** is a class that has information about an injection point. 
-It provides access to metadata via `\ReflectionParameter` or an attribute in `Provider`.
+It provides access to metadata via `\ReflectionParameter` or an annotation in `Provider`.
 
 For example, the following `get()` method of `Psr3LoggerProvider` class creates injectable Loggers. The log category of a Logger depends upon the class of the object into which it is injected.
 
 ```php
 class Psr3LoggerProvider implements ProviderInterface
 {
-    public function __construct(
-        private InjectionPointInterface $ip
-    ){}
+    /**
+     * @var InjectionPoint
+     */
+    private $ip;
+
+    public function __construct(InjectionPointInterface $ip)
+    {
+        $this->ip = $ip;
+    }
 
     public function get()
     {
@@ -353,35 +378,46 @@ note: annotations are not supported for Untargeted Bindings
 ## Binding Annotations ##
 
 Occasionally you'll want multiple bindings for a same type. For example, you might want both a PayPal credit card processor and a Google Checkout processor.
-To enable this, bindings support an optional binding attribute. The attribute and type together uniquely identify a binding. This pair is called a key.
+To enable this, bindings support an optional binding annotation. The annotation and type together uniquely identify a binding. This pair is called a key.
 
-Define qualifier attribute first. It needs to be annotated with `Qualifier` attribute.
+Define qualifier annotation first. It needs to be annotated with `@Qualifier` annotation.
 
 ```php
+
 use Ray\Di\Di\Qualifier;
 
-#[Attribute(Attribute::TARGET_METHOD), Qualifier]
+/**
+ * @Annotation
+ * @Target("METHOD")
+ * @Qualifier
+ */
 final class PayPal
 {
 }
 ```
 
-To depend on the annotated binding, apply the attribute to the injected parameter:
+To depend on the annotated binding, apply the annotation to the injected parameter:
 
 ```php
-public function __construct(#[Paypal] CreditCardProcessorInterface $processor)
+/**
+ * @PayPal
+ */
+public function __construct(CreditCardProcessorInterface $processor)
 {
 }
 ```
 You can specify parameter name with qualifier. Qualifier applied all parameters without it.
 
 ```php
-public function __construct(#[Paypal('processor')] CreditCardProcessorInterface $processor)
+/**
+ * @PayPal("processor")
+ */
+public function __construct(CreditCardProcessorInterface $processor)
 {
  ....
 }
 ```
-Lastly we create a binding that uses the attribute. This uses the optional `annotatedWith` clause in the bind() statement:
+Lastly we create a binding that uses the annotation. This uses the optional `annotatedWith` clause in the bind() statement:
 
 ```php
 protected function configure()
@@ -391,40 +427,47 @@ protected function configure()
         ->to(PayPalCreditCardProcessor::class);
 ```
 
-By default your custom `#[Attribute]` annotations will only help injecting dependencies in constructors on when
-you annotate you also annotate your methods with `#[Inject]`.
+By default your custom `@Qualifier` annotations will only help injecting dependencies in constructors on when
+you annotate you also annotate your methods with `@Inject`.
 
 ### Binding Annotations in Setters ###
 
-In order to make your custom `Qualifier` attribute inject dependencies by default in any method the
-attribute is added, you need to implement the `Ray\Di\Di\InjectInterface`:
+In order to make your custom `@Qualifier` annotations inject dependencies by default in any method the
+annotation is added, you need to implement the `Ray\Di\Di\InjectInterface`:
 
 ```php
+
 use Ray\Di\Di\InjectInterface;
 use Ray\Di\Di\Qualifier;
 
-#[Attribute(Attribute::TARGET_METHOD), Qualifier]
+/**
+ * @Annotation
+ * @Target("METHOD")
+ * @Qualifier
+ */
 final class PaymentProcessorInject implements InjectInterface
 {
+
+    public $optional = true;
+
+    public $type;
+
     public function isOptional()
     {
         return $this->optional;
     }
-    
-    public function __construct(
-        public bool $optional = true
-        public string $type;
-    ){}
 }
 ```
 
 The interface requires that you implement the `isOptional()` method. It will be used to determine whether
 or not the injection should be performed based on whether there is a known binding for it.
 
-Now that you have created your custom injector attribute, you can use it on any method.
+Now that you have created your custom injector annotation, you can use it on any method.
 
 ```php
-#[PaymentProcessorInject(type: 'paypal')]
+/**
+ * @PaymentProcessorInject("type=paypal")
+ */
 public setPaymentProcessor(CreditCardProcessorInterface $processor)
 {
  ....
@@ -442,20 +485,23 @@ protected function configure()
 }
 ```
 
-The provider can now use the information supplied in the qualifier attribute in order to instantiate
+The provider can now use the information supplied in the qualifier annotation in order to instantiate
 the most appropriate class.
 
-### #[Named] ###
+### @Named ###
 
-The most common use of a Qualifier attribute is tagging arguments in a function with a certain label,
+The most common use of a Qualifier annotation is tagging arguments in a function with a certain label,
 the label can be used in the bindings in order to select the right class to be instantiated. For those
-cases, Ray.Di comes with a built-in binding attribute `#[Named]` that takes a string.
+cases, Ray.Di comes with a built-in binding annotation `@Named` that takes a string.
 
 ```php
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-public function __construct(#[Named('checkout')] CreditCardProcessorInterface $processor)
+/**
+ * @Named("checkout")
+ */
+public function __construct(CreditCardProcessorInterface $processor)
 {
 ...
 ```
@@ -477,14 +523,17 @@ You need to specify in case of multiple parameters.
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-public function __construct(#[Named('checkout')] CreditCardProcessorInterface $processor, #[Named('backup')] CreditCardProcessorInterface $subProcessor)
+/**
+ * @Named("processor=checkout,subProcessor=backUp")
+ */
+public function __construct(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)
 {
 ...
 ```
 
 ## Constructor Bindings ##
 
-When `#[Inject]` attribute cannot be applied to the target constructor or setter method because it is a third party class, Or you simply don't like to use annotations. `Constructor Binding` provide the solution to this problem. By calling your target constructor explicitly, you don't need reflection and its associated pitfalls. But there are limitations of that approach: manually constructed instances do not participate in AOP.
+When `@Inject` annotation cannot be applied to the target constructor or setter method because it is a third party class, Or you simply don't like to use annotations. `Constructor Binding` provide the solution to this problem. By calling your target constructor explicitly, you don't need reflection and its associated pitfalls. But there are limitations of that approach: manually constructed instances do not participate in AOP.
 
 To address this, Ray.Di has `toConstructor` bindings.
 
@@ -497,31 +546,41 @@ class WebApi implements WebApiInterface
     private $client;
     private $token;
 
-    public function __construct(#[Named('user_id')] string $id, #[Named('user_password')] string $password)
+    /**
+     * @Named("id=user_id,password=user_password")
+     */
+    public function __construct(string $id, string $password)
     {
         $this->id = $id;
         $this->password = $password;
     }
     
-    #[Inject]
+    /**
+     * @Inject
+     */
     public function setGuzzle(ClientInterface $client)
     {
         $this->client = $client;
     }
 
-    #[Inject(optional: true)] 
-    public function setOptionalToken(#[Named('token') string $token)
+    /**
+     * @Inect(optional=true)
+     * @Named("token")
+     */
+    public function setOptionalToken(string $token)
     {
         $this->token = $token;
     }
 
-    #[PostConstruct]
+    /**
+     * @PostConstruct
+     */
     public function initialize()
     {
     }
 ```
 
-All attributes in dependent above can be removed by following `toConstructor` binding.
+All annotation in dependent above can be removed by following `toConstructor` binding.
 
 ```php
 <?php
@@ -595,6 +654,7 @@ Since no argument of PDO has a type, it binds with the `Name Binding` of the sec
 ## Scopes ##
 
 By default, Ray returns a new instance each time it supplies a value. This behaviour is configurable via scopes.
+You can also configure scopes with the `@Scope` annotation.
 
 ```php
 use Ray\Di\Scope;
@@ -607,13 +667,15 @@ protected function configure()
 
 ## Object life cycle
 
-`#[PostConstruct]` is used on methods that need to get executed after dependency injection has finalized to perform any extra initialization.
+`@PostConstruct` is used on methods that need to get executed after dependency injection has finalized to perform any extra initialization.
 
 ```php
 
 use Ray\Di\Di\PostConstruct;
 
-#[PostConstruct]
+/**
+ * @PostConstruct
+ */
 public function init()
 {
     //....
@@ -625,10 +687,15 @@ public function init()
 
 To compliment dependency injection, Ray.Di supports method interception. This feature enables you to write code that is executed each time a matching method is invoked. It's suited for cross cutting concerns ("aspects"), such as transactions, security and logging. Because interceptors divide a problem into aspects rather than objects, their use is called Aspect Oriented Programming (AOP).
 
-To mark select methods as weekdays-only, we define an attribute.
+To mark select methods as weekdays-only, we define an annotation .
 
 ```php
-#[Attribute(Attribute::TARGET_METHOD)]
+/**
+ * NotOnWeekends
+ *
+ * @Annotation
+ * @Target("METHOD")
+ */
 final class NotOnWeekends
 {
 }
@@ -639,7 +706,9 @@ final class NotOnWeekends
 ```php
 class BillingService
 {
-    #[NotOnWeekends]
+    /**
+     * @NotOnWeekends
+     */
     chargeOrder(PizzaOrder $order, CreditCard $creditCard)
     {
 ```
@@ -666,7 +735,7 @@ class WeekendBlocker implements MethodInterceptor
 }
 ```
 
-Finally, we configure everything. In this case we match any class, but only the methods with our `#[NotOnWeekends]` attribute:
+Finally, we configure everything. In this case we match any class, but only the methods with our `@NotOnWeekends` annotation:
 
 ```php
 
@@ -678,7 +747,7 @@ class WeekendModule extends AbstractModule
     {
         $this->bindInterceptor(
             $this->matcher->any(),                           // any class
-            $this->matcher->annotatedWith('NotOnWeekends'),  // #[NotOnWeekends] attributed method
+            $this->matcher->annotatedWith('NotOnWeekends'),  // @NotOnWeekends method
             [WeekendBlocker::class]                          // apply WeekendBlocker interceptor
         );
     }

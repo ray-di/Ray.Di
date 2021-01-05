@@ -11,6 +11,8 @@
 
 **Ray.Di**はGoogleの[Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6)の主要な機能を持つPHPのDIフレームワークです。
 
+Note: For PHP 8.x users, please see [README.md](README.md).
+
 ## 概要
 
 Ray.Diには以下の機能があります。
