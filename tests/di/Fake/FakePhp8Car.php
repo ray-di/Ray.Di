@@ -7,6 +7,8 @@ namespace Ray\Di;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
+use Ray\Di\Annotation\FakeLeft;
+use Ray\Di\Annotation\FakeRight;
 
 class FakePhp8Car implements FakeCarInterface
 {
@@ -18,6 +20,9 @@ class FakePhp8Car implements FakeCarInterface
     public $rightMirror;
     public $constructerInjectedRightMirror;
     public $leftMirror;
+    public $qualfiedRightMirror;
+    public $qualfiedLeftMirror;
+
     /** @var FakeHandleInterface */public $handle;
     public $gearStick;
 
@@ -45,6 +50,13 @@ class FakePhp8Car implements FakeCarInterface
     {
         $this->rightMirror = $rightMirror;
         $this->leftMirror = $leftMirror;
+    }
+
+    #[Inject]
+    public function setQualiferMirrors(#[FakeRight] FakeMirrorInterface $rightMirror, #[FakeLeft] FakeMirrorInterface $leftMirror): void
+    {
+        $this->qualfiedRightMirror = $rightMirror;
+        $this->qualfiedLeftMirror = $leftMirror;
     }
 
     /**
