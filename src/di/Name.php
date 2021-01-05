@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use phpDocumentor\Reflection\Types\ClassString;
-use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\Named;
-use Reflection;
+use Ray\Di\Di\Qualifier;
 use ReflectionAttribute;
+use ReflectionClass;
+use ReflectionMethod;
 use ReflectionParameter;
 
 use function assert;
 use function class_exists;
 use function explode;
+use function get_class;
+use function is_object;
 use function is_string;
 use function preg_match;
 use function substr;
@@ -55,15 +57,14 @@ final class Name
      *
      * psalm does not know ReflectionAttribute?? PHPStan produces no type error here.
      */
-    public function createFromAttributes(\ReflectionMethod $method): ?self
+    public function createFromAttributes(ReflectionMethod $method): ?self
     {
         $params = $method->getParameters();
         foreach ($params as $param) {
-            $attribue = $param->getAttributes(Named::class);
-            if ($attribue) {
-                $name = $attribue[0]->newInstance();
-                assert($name instanceof Named);
-                $this->names[$param->getName()] = $name->value;
+            /** @var array{0: ReflectionAttribute}|null $attributes */
+            $attributes = $param->getAttributes();
+            if ($attributes) {
+                $this->setNames($attributes, $param);
             }
         }
 
@@ -72,6 +73,26 @@ final class Name
         }
 
         return null;
+    }
+
+    /**
+     * @param array{0: ReflectionAttribute} $attributes
+     */
+    private function setNames(array $attributes, ReflectionParameter $param): void
+    {
+        $refAttribute = $attributes[0];
+        $attribute = $refAttribute->newInstance();
+        assert(is_object($attribute));
+        if ($attribute instanceof Named) {
+            $this->names[$param->getName()] = $attribute->value;
+
+            return;
+        }
+
+        $isQualifer = (bool) (new ReflectionClass($attribute))->getAttributes(Qualifier::class);
+        if ($isQualifer) {
+            $this->names[$param->getName()] = get_class($attribute);
+        }
     }
 
     public function __invoke(ReflectionParameter $parameter): string

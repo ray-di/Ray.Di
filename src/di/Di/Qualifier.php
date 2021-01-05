@@ -12,7 +12,7 @@ use Attribute;
  * @Annotation
  * @Target("CLASS")
  */
-#[Attribute]
+#[Attribute(Attribute::TARGET_CLASS)]
 final class Qualifier
 {
 }
