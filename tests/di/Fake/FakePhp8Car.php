@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Ray\Di\Annotation\FakeNotQualifer;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\PostConstruct;
@@ -57,6 +58,11 @@ class FakePhp8Car implements FakeCarInterface
     {
         $this->qualfiedRightMirror = $rightMirror;
         $this->qualfiedLeftMirror = $leftMirror;
+    }
+
+    #[Inject]
+    public function notQualifer(#[FakeNotQualifer] FakeMirrorInterface $rightMirror =  null): void
+    {
     }
 
     /**
