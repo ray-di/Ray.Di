@@ -37,7 +37,7 @@ final class ParamInjectInterceptor implements MethodInterceptor
     {
         $this->methodInvocationProvider->set($invocation);
         $params = $invocation->getMethod()->getParameters();
-        $namedArguments = $invocation->getNamedArguments()->getArrayCopy();
+        $namedArguments = $this->getNamedArguments($invocation);
         foreach ($params as $param) {
             /** @var list<ReflectionAttribute> $attributes */
             $attributes = $param->getAttributes(Inject::class);
@@ -51,6 +51,25 @@ final class ParamInjectInterceptor implements MethodInterceptor
         assert(is_callable($callable));
 
         return call_user_func_array($callable, $namedArguments); // @phpstan-ignore-line PHP8 named arguments
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getNamedArguments(MethodInvocation $invocation): array
+    {
+        $args = $invocation->getArguments();
+        $params = $invocation->getMethod()->getParameters();
+        $namedParams = [];
+        foreach ($params as $param) {
+            $pos = $param->getPosition();
+            if (isset($args[$pos])) {
+                /** @psalm-suppress MixedAssignment */
+                $namedParams[$param->getName()] = $args[$pos];
+            }
+        }
+
+        return $namedParams;
     }
 
     /**
