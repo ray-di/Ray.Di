@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di\Matcher;
 
+use LogicException;
 use Ray\Aop\AbstractMatcher;
 use Ray\Di\Di\Inject;
 use ReflectionAttribute;
@@ -14,11 +15,12 @@ final class ParamInjectMatcher extends AbstractMatcher
 {
     /**
      * {@inheritdoc}
+     *
      * @codeCoverageIgnore
      */
     public function matchesClass(ReflectionClass $class, array $arguments): bool
     {
-        throw new \LogicException('Should not used in class matcher');
+        throw new LogicException('Should not used in class matcher');
     }
 
     /**
