@@ -6,7 +6,6 @@ namespace Ray\Di\Di;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_METHOD)]
 /**
  * PostConstruct
  *
@@ -22,6 +21,7 @@ use Attribute;
  * @Annotation
  * @Target("METHOD")
  */
+#[Attribute(Attribute::TARGET_METHOD)]
 final class PostConstruct
 {
 }
