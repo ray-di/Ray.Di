@@ -32,6 +32,6 @@ jobs:
       - name: Install dependencies with Composer
         run: |
           composer install --no-interaction --no-progress --prefer-dist
-          composer global require --dev doctrine/coding-standard ^8.1
+          composer require --dev doctrine/coding-standard ^8.1
       - name: Run PHP_CodeSniffer
-        run: phpcs --standard=./phpcs.xml --report=checkstyle -q src tests | cs2pr
+        run: vendor/bin/phpcs -q --no-colors --report=checkstyle | cs2pr

@@ -9,13 +9,13 @@ use Attribute;
 use function is_array;
 use function is_string;
 
-#[Attribute(Attribute::TARGET_PARAMETER)]
 /**
  * Annotates named things
  *
  * @Annotation
  * @Target("METHOD")
  */
+#[Attribute(Attribute::TARGET_PARAMETER)]
 final class Named
 {
     /** @var string */

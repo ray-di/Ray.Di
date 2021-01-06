@@ -25,7 +25,9 @@ class DualReaderTest extends TestCase
     public function testNamedParameterInMethod(FakePhp8Car $car): void
     {
         $this->assertInstanceOf(FakeMirrorRight::class, $car->rightMirror);
+        $this->assertInstanceOf(FakeMirrorRight::class, $car->qualfiedRightMirror);
         $this->assertInstanceOf(FakeMirrorLeft::class, $car->leftMirror);
+        $this->assertInstanceOf(FakeMirrorLeft::class, $car->qualfiedLeftMirror);
     }
 
     /**
@@ -59,5 +61,13 @@ class DualReaderTest extends TestCase
     {
         assert($car->handle instanceof FakeHandle);
         $this->assertSame('momo', $car->handle->logo);
+    }
+
+    /**
+     * @depends testPhp8Attribute
+     */
+    public function testCumstomInject(FakePhp8Car $car): void
+    {
+        $this->assertSame(1, $car->one);
     }
 }

@@ -41,7 +41,7 @@ final class AnnotatedClassMethods
         }
 
         if (PHP_VERSION_ID >= 80000) {
-            $name = (new Name())->createFromAttributes(new ReflectionMethod($class->getName(), '__construct'));
+            $name = Name::withAttributes(new ReflectionMethod($class->getName(), '__construct'));
             if ($name) {
                 return $name;
             }
@@ -83,7 +83,7 @@ final class AnnotatedClassMethods
     private function getName(ReflectionMethod $method): Name
     {
         if (PHP_VERSION_ID >= 80000) {
-            $name = (new Name())->createFromAttributes($method);
+            $name = Name::withAttributes($method);
             if ($name) {
                 return $name;
             }

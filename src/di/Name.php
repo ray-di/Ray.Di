@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use phpDocumentor\Reflection\Types\ClassString;
-use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\Named;
-use Reflection;
+use Ray\Di\Di\Qualifier;
 use ReflectionAttribute;
+use ReflectionClass;
+use ReflectionMethod;
 use ReflectionParameter;
 
 use function assert;
 use function class_exists;
 use function explode;
+use function get_class;
+use function is_object;
 use function is_string;
 use function preg_match;
 use function substr;
@@ -38,11 +40,22 @@ final class Name
      */
     private $names = [];
 
-    public function __construct(?string $name = null)
+    /**
+     * @param string|array<string, string>|null $name
+     */
+    public function __construct($name = null)
     {
-        if ($name !== null) {
-            $this->setName($name);
+        if ($name === null) {
+            return;
         }
+
+        if (is_string($name)) {
+            $this->setName($name);
+
+            return;
+        }
+
+        $this->names = $name;
     }
 
     /**
@@ -55,23 +68,43 @@ final class Name
      *
      * psalm does not know ReflectionAttribute?? PHPStan produces no type error here.
      */
-    public function createFromAttributes(\ReflectionMethod $method): ?self
+    public static function withAttributes(ReflectionMethod $method): ?self
     {
         $params = $method->getParameters();
+        $names = [];
         foreach ($params as $param) {
-            $attribue = $param->getAttributes(Named::class);
-            if ($attribue) {
-                $name = $attribue[0]->newInstance();
-                assert($name instanceof Named);
-                $this->names[$param->getName()] = $name->value;
+            /** @var array{0: ReflectionAttribute}|null $attributes */
+            $attributes = $param->getAttributes();
+            if ($attributes) {
+                $names[$param->name] = self::getName($attributes);
             }
         }
 
-        if ($this->names) {
-            return clone $this;
+        if ($names) {
+            return new self($names);
         }
 
         return null;
+    }
+
+    /**
+     * @param array{0: ReflectionAttribute} $attributes
+     */
+    private static function getName(array $attributes): string
+    {
+        $refAttribute = $attributes[0];
+        $attribute = $refAttribute->newInstance();
+        assert(is_object($attribute));
+        if ($attribute instanceof Named) {
+            return $attribute->value;
+        }
+
+        $isQualifer = (bool) (new ReflectionClass($attribute))->getAttributes(Qualifier::class);
+        if ($isQualifer) {
+            return get_class($attribute);
+        }
+
+        return '';
     }
 
     public function __invoke(ReflectionParameter $parameter): string

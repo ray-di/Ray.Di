@@ -15,6 +15,9 @@ use ReflectionParameter;
 use function in_array;
 use function parse_str;
 
+/**
+ * Assisted injection interceptor for @Assisted annotated parameter
+ */
 final class AssistedInterceptor implements MethodInterceptor
 {
     /** @var InjectorInterface */

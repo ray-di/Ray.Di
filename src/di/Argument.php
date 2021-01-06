@@ -134,9 +134,10 @@ final class Argument implements Serializable
 
         try {
             $this->default = $parameter->getDefaultValue();
+            // @codeCoverageIgnoreStart
         } catch (ReflectionException $e) {
-            // probably it is internal class like \PDO
             $this->default = null;
+            // @codeCoverageIgnoreEnd
         }
     }
 
