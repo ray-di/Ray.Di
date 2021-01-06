@@ -231,60 +231,6 @@ Finally we bind to the provider using the `toProvider()` method:
 $this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider::class);
 ```
 
-## Contextual Provider Bindings
-
-You may want to create an object using the context when binding with Provider. For example, you want to inject different connection destinations on the same DB interface. In such a case, we bind it by specifying the context (string) with `toProvider ()`.
-
-
-```php
-$dbConfig = ['user' => $userDsn, 'job'=> $jobDsn, 'log' => $logDsn];
-$this->bind()->annotatedWith('db_config')->toInstance(dbConfig);
-$this->bind(Connection::class)->annotatedWith('usr_db')->toProvider(DbalProvider::class, 'user');
-$this->bind(Connection::class)->annotatedWith('job_db')->toProvider(DbalProvider::class, 'job');
-$this->bind(Connection::class)->annotatedWith('log_db')->toProvider(DbalProvider::class, 'log');
-```
-
-Providers are created for each context.
-
-```php
-use Ray\Di\Di\Inject;
-use Ray\Di\Di\Named;
-
-class DbalProvider implements ProviderInterface, SetContextInterface
-{
-    private $dbConfigs;
-
-    public function setContext($context)
-    {
-        $this->context = $context;
-    }
-
-    public function __construct(#[Named('db_config') array $dbConfigs)
-    {
-        $this->dbConfigs = $dbConfigs;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get()
-    {
-        $config = $this->dbConfigs[$this->context];
-        $conn = DriverManager::getConnection($config);
-
-        return $conn;
-    }
-}
-```
-
-It is the same interface, but you can receive different connections made by `Provider`.
-
-```php
-public function __construct(#[Named('user')] Connection $userDb, #[Named('job')] Connection $jobDb, #[Named('log') Connection $logDb)
-{
-  //...
-}
-```
 
 ## Injection Point
 
@@ -742,6 +688,12 @@ class AopMatcherModule extends AbstractModule
 }
 ```
 
+## More Docs
+
+ * [Contextual binding](docs/contextual_binding.md)
+ * [Performance Boost](docs/performance_boost.md)
+ * [Grapher](docs/grapher.md)
+
 ## Installation ##
 
 A module can install other modules to configure more bindings.
@@ -756,74 +708,6 @@ protected function configure()
     $this->override(new CustomiseModule);
 }
 ```
-
-## Performance boost ##
-
-### Script injector
-
-`ScriptInjector` generates raw factory code for better performance and to clarify how the instance is created.
- 
-```php
-
-use Ray\Di\ScriptInjector;
-use Ray\Compiler\DiCompiler;
-use Ray\Compiler\Exception\NotCompiled;
-
-try {
-    $injector = new ScriptInjector($tmpDir);
-    $instance = $injector->getInstance(ListerInterface::class);
-} catch (NotCompiled $e) {
-    $compiler = new DiCompiler(new ListerModule, $tmpDir);
-    $compiler->compile();
-    $instance = $injector->getInstance(ListerInterface::class);
-}
-```
-Once an instance has been created, You can view the generated factory files in `$tmpDir`
-
-### Cache injector
-
-The injector is serializable.
-It also boosts the performance.
-
-```php
-
-// save
-$injector = new Injector(new ListerModule);
-$cachedInjector = serialize($injector);
-
-// load
-$injector = unserialize($cachedInjector);
-$lister = $injector->getInstance(ListerInterface::class);
-
-```
-
-### CachedInjectorFactory
-
-The `CachedInejctorFactory` can be used in a hybrid of the two injectors to achieve the best performance in both development and production.
-
-The injector is able to inject singleton objects **beyond the request**, greatly increasing the speed of testing. Successive PDO connections also do not run out of connection resources in the test.
-
-See [CachedInjectorFactory](https://github.com/ray-di/Ray.Compiler/issues/75) for more information.
-
-## Grapher
-
-In `Grapher`, constructor arguments are passed manually and subsequent injections are done automatically.
-It is useful to introduce Ray.Di into an existing system (where only root objects have an object generation mechanism). 
-
-```php
-// ...
-$grapher = new Grapher(new Module, __DIR__ . '/tmp');
-$instance = $grapher->newInstanceArgs(FooController::class, [$param1, $param2]);
-```
-
-## Graphing Ray.Di Applications
-
-When you've written a sophisticated application, Ray.Di rich introspection API can describe the object graph in detail. The object-visual-grapher exposes this data as an easily understandable visualization. It can show the bindings and dependencies from several classes in a complex application in a unified diagram.
-
-![fake](https://user-images.githubusercontent.com/529021/72650686-866ec100-39c4-11ea-8b49-2d86d991dc6d.png)
-
-See more at https://github.com/koriym/Ray.ObjectGrapher
-
 ## Frameworks integration ##
 
  * [CakePHP3 PipingBag](https://github.com/lorenzo/piping-bag) by [@jose_zap](https://twitter.com/jose_zap)
