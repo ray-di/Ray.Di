@@ -21,7 +21,7 @@ class AssistedModule extends AbstractModule
         $this->bind(MethodInvocation::class)->toProvider(MethodInvocationProvider::class)->in(Scope::SINGLETON);
         $this->bind(MethodInvocationProvider::class)->in(Scope::SINGLETON);
         if (PHP_VERSION_ID >= 80000) {
-            $this->install(new ParamInjectModule());
+            $this->install(new AssistedInjectModule());
         }
     }
 }

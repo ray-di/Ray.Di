@@ -11,7 +11,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
 
-final class ParamInjectMatcher extends AbstractMatcher
+final class AssistedInjectMatcher extends AbstractMatcher
 {
     /**
      * {@inheritdoc}

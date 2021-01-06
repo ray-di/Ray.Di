@@ -16,7 +16,7 @@ use function assert;
 use function call_user_func_array;
 use function is_callable;
 
-final class ParamInjectInterceptor implements MethodInterceptor
+final class AssistedInjectInterceptor implements MethodInterceptor
 {
     /** @var InjectorInterface */
     private $injector;

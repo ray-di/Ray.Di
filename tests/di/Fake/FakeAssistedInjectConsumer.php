@@ -8,7 +8,7 @@ use Ray\Di\Di\Assisted;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 
-class FakeParamInjectConsumer
+class FakeAssistedInjectConsumer
 {
     public function assistOne($a, $b, #[Inject] ?FakeRobotInterface $robot = null): ?FakeRobotInterface
     {

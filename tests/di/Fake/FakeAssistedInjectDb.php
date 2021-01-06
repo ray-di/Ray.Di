@@ -7,7 +7,7 @@ namespace Ray\Di;
 use Ray\Di\Di\Assisted;
 use Ray\Di\Di\Inject;
 
-class FakeAssistedParamsParamInjectConsumer
+class FakeAssistedInjectDb
 {
     /**
      * @return array [int, FakeAbstractDb]

@@ -7,7 +7,7 @@ namespace Ray\Di;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\MethodInvocationNotAvailable;
 
-class ParamInjectTest extends TestCase
+class AssistedInjectTest extends TestCase
 {
     /** @var InjectorInterface */
     private $injector;
@@ -19,7 +19,7 @@ class ParamInjectTest extends TestCase
 
     public function testAssisted(): void
     {
-        $consumer = $this->injector->getInstance(FakeParamInjectConsumer::class);
+        $consumer = $this->injector->getInstance(FakeAssistedInjectConsumer::class);
         /** @var FakeAssistedConsumer $consumer */
         $assistedDependency = $consumer->assistOne('a', 'b');
         $expecetd = FakeRobot::class;
@@ -29,7 +29,7 @@ class ParamInjectTest extends TestCase
     public function testAssistedWithName(): void
     {
         $this->injector = new Injector(new FakeInstanceBindModule());
-        $consumer = $this->injector->getInstance(FakeParamInjectConsumer::class);
+        $consumer = $this->injector->getInstance(FakeAssistedInjectConsumer::class);
         /** @var FakeAssistedConsumer $consumer */
         $assistedDependency = $consumer->assistWithName('a7');
         $expecetd = 1;
@@ -39,7 +39,7 @@ class ParamInjectTest extends TestCase
     public function testAssistedAnyWithName(): void
     {
         $injector = new Injector(new FakeToBindModule(new FakeInstanceBindModule()));
-        $consumer = $injector->getInstance(FakeParamInjectConsumer::class);
+        $consumer = $injector->getInstance(FakeAssistedInjectConsumer::class);
         /** @var FakeAssistedConsumer $consumer */
         [$assistedDependency1, $assistedDependency2] = $consumer->assistAny();
         $expected1 = 1;
@@ -49,7 +49,7 @@ class ParamInjectTest extends TestCase
 
     public function testAssistedMethodInvocation(): void
     {
-        $assistedConsumer = (new Injector(new FakeAssistedDbModule(), __DIR__ . '/tmp'))->getInstance(FakeAssistedParamsParamInjectConsumer::class);
+        $assistedConsumer = (new Injector(new FakeAssistedDbModule(), __DIR__ . '/tmp'))->getInstance(FakeAssistedInjectDb::class);
         /** @var FakeAssistedParamsConsumer $assistedConsumer */
         [$id, $db] = $assistedConsumer->getUser(1);
         /** @var FakeAbstractDb $db */
