@@ -29,7 +29,7 @@ jobs:
           key: '${{ runner.os }}-composer-${{ hashFiles(''**/composer.json'') }}'
           restore-keys: '${{ runner.os }}-composer-'
 
-      - name: Install dependencies with Composer
+      - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
 
       - name: Run PHPStan
@@ -55,7 +55,7 @@ jobs:
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: Install dependencies with Composer
+      - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
 
       - name: Run Psalm
@@ -78,7 +78,7 @@ jobs:
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: Install dependencies with Composer
+      - name: Install dependencies
         run: |
           composer install --no-interaction --no-progress --prefer-dist
           composer require --dev phpmetrics/phpmetrics ^2.6
@@ -103,10 +103,10 @@ jobs:
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: Install dependencies with Composer
+      - name: Install dependencies
         run: |
           composer install --no-interaction --no-progress --prefer-dist
-          composer global require --dev maglnet/composer-require-checker ^2.0
+          composer require --dev maglnet/composer-require-checker ^2.0
 
       - name: Run composer-require-checker
         run: ./vendor/bin/composer-require-checker check --config-file=php-require-checker.config.json ./composer.json
