@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/ray-di/Ray.Di/branch/2.x/graph/badge.svg?token=KCQXtu01zc)](https://codecov.io/gh/ray-di/Ray.Di)
 [![Type Coverage](https://shepherd.dev/github/ray-di/Ray.Di/coverage.svg)](https://shepherd.dev/github/ray-di/Ray.Di)
 [![Build Status](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/build.png?b=2.x)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/build-status/2.x)
-[![Build Status](https://travis-ci.org/ray-di/Ray.Di.svg?branch=2.x)](https://travis-ci.org/ray-di/Ray.Di)
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/ray-di/Ray.Di/Continuous%20Integration/2.x)](https://github.com/ray-di/Ray.Di/actions)
 [![Total Downloads](https://poser.pugx.org/ray/di/downloads)](https://packagist.org/packages/ray/di)
 
 **Ray.Di** was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google.
