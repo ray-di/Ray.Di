@@ -103,16 +103,23 @@ final class AssistedInjectInterceptor implements MethodInterceptor
             return $named->value;
         }
 
-        /** @var list<ReflectionAttribute> $injects */
-        $injects = $param->getAttributes(InjectInterface::class, ReflectionAttribute::IS_INSTANCEOF);
-        if ($injects) {
-            $inject = $injects[0]->newInstance();
-            assert($inject instanceof InjectInterface);
-            $injectClass = get_class($inject);
-
-            return $injectClass === Inject::class ? '' : get_class($inject);
+        if ($param->getAttributes(Inject::class)) {
+            return '';
         }
 
-        return '';
+        return $this->getCustomeInject($param);
+    }
+
+    /**
+     * @return class-string
+     */
+    private function getCustomeInject(ReflectionParameter $param): string
+    {
+        /** @var list<ReflectionAttribute> $injects */
+        $injects = $param->getAttributes(InjectInterface::class, ReflectionAttribute::IS_INSTANCEOF);
+        $inject = $injects[0]->newInstance();
+        assert($inject instanceof InjectInterface);
+
+        return get_class($inject);
     }
 }
