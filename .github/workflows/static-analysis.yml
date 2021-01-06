@@ -59,7 +59,7 @@ jobs:
         run: composer install --no-interaction --no-progress --prefer-dist
 
       - name: Run Psalm
-        run: psalm --show-info=false --output-format=checkstyle | cs2pr
+        run: psalm --show-info=false --output-format=checkstyle --shepherd | cs2pr
 
   static-analysis-php-metrics:
     name: Static Analysis with PhpMetrics

@@ -12,6 +12,8 @@
             <directory name="vendor" />
             <directory name="tests" />
             <directory name="tests-php8" />
+            <directory name="demo" />
+            <directory name="demo-php8" />
         </ignoreFiles>
     </projectFiles>
 </psalm>
