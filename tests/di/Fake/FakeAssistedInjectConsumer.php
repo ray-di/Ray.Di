@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Ray\Di\Annotation\FakeInjectOne;
 use Ray\Di\Di\Assisted;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
@@ -33,4 +34,8 @@ class FakeAssistedInjectConsumer
         return [$var2, $robot];
     }
 
+    public function assistCustomeAssistedInject(#[FakeInjectOne] int $one = 0): int
+    {
+        return $one;
+    }
 }

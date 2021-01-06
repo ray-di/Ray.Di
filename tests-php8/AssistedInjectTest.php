@@ -56,4 +56,14 @@ class AssistedInjectTest extends TestCase
         $this->assertSame(1, $id);
         $this->assertSame(1, $db->dbId);
     }
+
+    public function testAssistedCustomeInject(): void
+    {
+        $injector = new Injector(new FakeInstanceBindModule());
+
+        $assistedConsumer = $injector->getInstance(FakeAssistedInjectConsumer::class);
+        /** @var FakeAssistedInjectConsumer $assistedConsumer */
+        $i = $assistedConsumer->assistCustomeAssistedInject();
+        $this->assertSame(1, $i);
+    }
 }

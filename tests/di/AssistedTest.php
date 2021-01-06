@@ -64,4 +64,13 @@ class AssistedTest extends TestCase
         /** @var FakeAssistedDbProvider $assistedDbProvider */
         $assistedDbProvider->get();
     }
+
+    public function testAssistedCustomeInject(): void
+    {
+        $assistedConsumer = (new Injector(new FakeAssistedDbModule(), __DIR__ . '/tmp'))->getInstance(FakeAssistedParamsConsumer::class);
+        /** @var FakeAssistedParamsConsumer $assistedConsumer */
+        [$id, $db] = $assistedConsumer->getUser(1);
+        /** @var FakeAbstractDb $db */
+        $this->assertSame(1, $id);
+    }
 }
