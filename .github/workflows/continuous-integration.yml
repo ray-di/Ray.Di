@@ -54,4 +54,4 @@ jobs:
         with:
           file: ./coverage.xml
       - name: Run Demo
-        run: demo/run.php
+        run: php demo/run.php
