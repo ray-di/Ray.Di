@@ -55,3 +55,6 @@ jobs:
           file: ./coverage.xml
       - name: Run Demo
         run: php demo/run.php
+      - name: Run PHP8 Demo
+        if: '${{ matrix.php-version == ''8.0'' }}'
+        run: php demo-php8/run.php
