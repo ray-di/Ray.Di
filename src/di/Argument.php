@@ -134,8 +134,8 @@ final class Argument implements Serializable
 
         try {
             $this->default = $parameter->getDefaultValue();
+            // @codeCoverageIgnoreStart
         } catch (ReflectionException $e) {
-            // @codeCoverageIgnoreStart (in earlier PHP version)
             $this->default = null;
             // @codeCoverageIgnoreEnd
         }
