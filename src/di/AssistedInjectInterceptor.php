@@ -16,6 +16,9 @@ use function assert;
 use function call_user_func_array;
 use function is_callable;
 
+/**
+ * Assisted injection interceptor for #[Inject] attributed parameter
+ */
 final class AssistedInjectInterceptor implements MethodInterceptor
 {
     /** @var InjectorInterface */

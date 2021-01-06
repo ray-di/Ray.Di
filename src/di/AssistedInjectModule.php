@@ -6,6 +6,9 @@ namespace Ray\Di;
 
 use Ray\Di\Matcher\AssistedInjectMatcher;
 
+/**
+ * Assisted module for php8 attributes
+ */
 class AssistedInjectModule extends AbstractModule
 {
     protected function configure(): void

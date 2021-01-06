@@ -55,7 +55,6 @@ final class AnnotatedClass
         $methods = $class->getMethods();
         foreach ($methods as $method) {
             $annotation = $this->reader->getMethodAnnotation($method, PostConstruct::class);
-//            assert($annotation instanceof PostConstruct || $annotation === null);
             if ($annotation instanceof PostConstruct) {
                 return $method;
             }
