@@ -7,6 +7,7 @@ namespace Ray\Di\Matcher;
 use LogicException;
 use Ray\Aop\AbstractMatcher;
 use Ray\Di\Di\Inject;
+use Ray\Di\Di\InjectInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
@@ -31,7 +32,7 @@ final class AssistedInjectMatcher extends AbstractMatcher
         $params = $method->getParameters();
         foreach ($params as $param) {
             /** @var list<ReflectionAttribute> $attributes */
-            $attributes = $param->getAttributes(Inject::class);
+            $attributes = $param->getAttributes(InjectInterface::class, ReflectionAttribute::IS_INSTANCEOF);
             if (isset($attributes[0])) {
                 return true;
             }

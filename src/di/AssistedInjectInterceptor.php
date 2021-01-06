@@ -7,6 +7,7 @@ namespace Ray\Di;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Di\Inject;
+use Ray\Di\Di\InjectInterface;
 use Ray\Di\Di\Named;
 use ReflectionAttribute;
 use ReflectionNamedType;
@@ -14,6 +15,8 @@ use ReflectionParameter;
 
 use function assert;
 use function call_user_func_array;
+use function get_class;
+use function in_array;
 use function is_callable;
 
 /**
@@ -43,7 +46,7 @@ final class AssistedInjectInterceptor implements MethodInterceptor
         $namedArguments = $this->getNamedArguments($invocation);
         foreach ($params as $param) {
             /** @var list<ReflectionAttribute> $attributes */
-            $attributes = $param->getAttributes(Inject::class);
+            $attributes = $param->getAttributes(InjectInterface::class, ReflectionAttribute::IS_INSTANCEOF);
             if (isset($attributes[0])) {
                 /** @psalm-suppress MixedAssignment */
                 $namedArguments[$param->getName()] = $this->getDependency($param);
@@ -83,20 +86,31 @@ final class AssistedInjectInterceptor implements MethodInterceptor
         $named = $this->getName($param);
         $type = $param->getType();
         assert($type instanceof ReflectionNamedType || $type === null);
-        $interface = $type ? $type->getName() : '';
+        $typeName = $type ? $type->getName() : '';
+        $interface = in_array($typeName, Argument::UNBOUND_TYPE) ? '' : $typeName;
 
         return $this->injector->getInstance($interface, $named);
     }
 
     private function getName(ReflectionParameter $param): string
     {
-        /** @var list<ReflectionAttribute> $attributes */
-        $attributes = $param->getAttributes(Named::class);
-        if (isset($attributes[0])) {
-            $named = $attributes[0]->newInstance();
+        /** @var list<ReflectionAttribute> $nameds */
+        $nameds = $param->getAttributes(Named::class);
+        if (isset($nameds[0])) {
+            $named = $nameds[0]->newInstance();
             assert($named instanceof Named);
 
             return $named->value;
+        }
+
+        /** @var list<ReflectionAttribute> $injects */
+        $injects = $param->getAttributes(InjectInterface::class, ReflectionAttribute::IS_INSTANCEOF);
+        if ($injects) {
+            $inject = $injects[0]->newInstance();
+            assert($inject instanceof InjectInterface);
+            $injectClass = get_class($inject);
+
+            return $injectClass === Inject::class ? '' : get_class($inject);
         }
 
         return '';
