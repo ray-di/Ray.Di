@@ -26,15 +26,9 @@ interface MovieListerInterface
 
 class MovieLister implements MovieListerInterface
 {
-    public $finder;
-
-    /**
-     * @Named("legacy")
-     */
-    public function __construct(FinderInterface $finder)
-    {
-        $this->finder = $finder;
-    }
+    public function __construct(
+        #[Named('legacy')] public FinderInterface $finder
+    ){}
 }
 
 class FinderModule extends AbstractModule

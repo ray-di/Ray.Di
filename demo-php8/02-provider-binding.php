@@ -39,12 +39,9 @@ interface MovieListerInterface
 
 class MovieLister implements MovieListerInterface
 {
-    /** @var Finder */
-    public $finder;
-
-    public function __construct(FinderInterface $finder)
-    {
-        $this->finder = $finder;
+    public function __construct(
+        public FinderInterface $finder
+    ){
     }
 }
 

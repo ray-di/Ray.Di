@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Ray\Di\AbstractModule;
+use Ray\Di\InjectionPointInterface;
 use Ray\Di\Injector;
 use Ray\Di\ProviderInterface;
 
@@ -12,39 +13,50 @@ interface FinderInterface
 {
 }
 
+interface MovieListerInterface
+{
+}
+
 class Finder implements FinderInterface
 {
-    public $datetime;
+    private string $className;
 
-    public function __construct(DateTimeInterface $dateTime)
+    public function __construct(string $className)
     {
-        $this->datetime = $dateTime;
+        $this->className = $className;
+    }
+
+    public function find(): string
+    {
+        return sprintf('search for [%s]', $this->className);
+    }
+}
+
+class MovieLister implements MovieListerInterface
+{
+    public FinderInterface $finder;
+
+    public function __construct(FinderInterface $finder)
+    {
+        $this->finder = $finder;
     }
 }
 
 class FinderProvider implements ProviderInterface
 {
+    public function __construct(
+        public InjectionPointInterface $ip
+    )
+    {}
+
     /**
      * {@inheritdoc}
      */
     public function get()
     {
-        return new Finder(new DateTimeImmutable('now'));
-    }
-}
+        $className = $this->ip->getClass()->getName();
 
-interface MovieListerInterface
-{
-}
-
-class MovieLister implements MovieListerInterface
-{
-    /** @var Finder */
-    public $finder;
-
-    public function __construct(FinderInterface $finder)
-    {
-        $this->finder = $finder;
+        return new Finder($className);
     }
 }
 
@@ -60,6 +72,7 @@ class FinderModule extends AbstractModule
 $injector = new Injector(new FinderModule());
 $movieLister = $injector->getInstance(MovieListerInterface::class);
 /** @var MovieLister $movieLister */
-$works = ($movieLister->finder->datetime instanceof DateTimeImmutable);
+$result = $movieLister->finder->find();
+$works = ($result === 'search for [MovieLister]');
 
 echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;

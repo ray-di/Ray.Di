@@ -27,7 +27,7 @@ class Finder implements FinderInterface
 
 class MovieLister implements MovieListerInterface
 {
-    public $finder;
+    public FinderInterface $finder;
 
     /**
      * Setter Injection with no Inject annotation

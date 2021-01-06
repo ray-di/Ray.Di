@@ -34,9 +34,7 @@ class Finder implements FinderInterface
 
 class MovieLister implements MovieListerInterface
 {
-    /**
-     * @var Finder
-     */
+    /** @var Finder */
     public $finder;
 
     public function __construct(FinderInterface $finder)
@@ -74,9 +72,9 @@ class FinderModule extends AbstractModule
     }
 }
 
-$injector = new Injector(new FinderModule);
+$injector = new Injector(new FinderModule());
 $movieLister = $injector->getInstance(MovieListerInterface::class);
-/* @var $movieLister MovieLister */
+/** @var MovieLister $movieLister */
 $result = $movieLister->finder->find();
 $works = ($result === 'search for [MovieLister]');
 

@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Ray\Di\AbstractModule;
+use Ray\Di\Di\Qualifier;
 use Ray\Di\Injector;
-use Ray\Di\ProviderInterface;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -12,25 +12,8 @@ interface FinderInterface
 {
 }
 
-class Finder implements FinderInterface
+class LegacyFinder implements FinderInterface
 {
-    public $datetime;
-
-    public function __construct(DateTimeInterface $dateTime)
-    {
-        $this->datetime = $dateTime;
-    }
-}
-
-class FinderProvider implements ProviderInterface
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function get()
-    {
-        return new Finder(new DateTimeImmutable('now'));
-    }
 }
 
 interface MovieListerInterface
@@ -39,20 +22,24 @@ interface MovieListerInterface
 
 class MovieLister implements MovieListerInterface
 {
-    /** @var Finder */
-    public $finder;
+    public FinderInterface $finder;
 
-    public function __construct(FinderInterface $finder)
+    public function __construct(#[Legacy] FinderInterface $finder)
     {
         $this->finder = $finder;
     }
+}
+
+#[Attribute(Attribute::TARGET_PARAMETER), Qualifier]
+class Legacy
+{
 }
 
 class FinderModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind(FinderInterface::class)->toProvider(FinderProvider::class);
+        $this->bind(FinderInterface::class)->annotatedWith(Legacy::class)->to(LegacyFinder::class);
         $this->bind(MovieListerInterface::class)->to(MovieLister::class);
     }
 }
@@ -60,6 +47,6 @@ class FinderModule extends AbstractModule
 $injector = new Injector(new FinderModule());
 $movieLister = $injector->getInstance(MovieListerInterface::class);
 /** @var MovieLister $movieLister */
-$works = ($movieLister->finder->datetime instanceof DateTimeImmutable);
+$works = ($movieLister->finder instanceof LegacyFinder);
 
 echo($works ? 'It works!' : 'It DOES NOT work!') . PHP_EOL;
