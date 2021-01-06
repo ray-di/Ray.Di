@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Ray\Di\Annotation\FakeInjectOne;
 use Ray\Di\Annotation\FakeLeft;
 use Ray\Di\Annotation\FakeRight;
 
@@ -21,5 +22,6 @@ class FakePhp8CarModule extends AbstractModule
         $this->bind('')->annotatedWith('logo')->toInstance('momo');
         $this->bind(FakeHandleInterface::class)->toProvider(FakeHandleProvider::class);
         $this->bind(FakeGearStickInterface::class)->toProvider(FakeGearStickProvider::class);
+        $this->bind()->annotatedWith(FakeInjectOne::class)->toInstance(1);
     }
 }

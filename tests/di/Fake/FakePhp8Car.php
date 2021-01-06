@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Ray\Di\Annotation\FakeInjectOne;
 use Ray\Di\Annotation\FakeNotQualifer;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
@@ -23,6 +24,7 @@ class FakePhp8Car implements FakeCarInterface
     public $leftMirror;
     public $qualfiedRightMirror;
     public $qualfiedLeftMirror;
+    public $one;
 
     /** @var FakeHandleInterface */public $handle;
     public $gearStick;
@@ -92,5 +94,11 @@ class FakePhp8Car implements FakeCarInterface
         if ($isEngineInstalled && $isTyreInstalled) {
             $this->isConstructed = true;
         }
+    }
+
+    #[FakeInjectOne]
+    public function setOne(int $one)
+    {
+        $this->one = $one;
     }
 }
