@@ -9,30 +9,25 @@
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/ray-di/Ray.Di/Continuous%20Integration/2.x)](https://github.com/ray-di/Ray.Di/actions)
 [![Total Downloads](https://poser.pugx.org/ray/di/downloads)](https://packagist.org/packages/ray/di)
 
-**Ray.Di** was created in order to get Guice style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. [Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6) is a Java dependency injection framework developed by Google.
-
-Note: For PHP 7.x users, please see [README.php7.md](README.php7.md).
+**Ray.Di** was created in order to get [Guice](https://github.com/google/guice/wiki) style dependency injection in PHP projects. It tries to mirror Guice's behavior and style. 
 
 ## Overview
 
 The Ray.Di package provides a dependency injector
 with the following features:
 
-- constructor and setter injection
-
+- constructor injection and setter injection
 - automatic injection 
-
 - post-construct initialization
-
 - raw PHP factory code compiler
-
-- dependency naming
-
+- binding attributes
 - injection point meta data
-
-- instance factories
-
 - AOP integration
+- assisted injection
+
+## Compatibility
+
+Note: For PHP 7 users, please see [README.php7.md](README.php7.md). PHP8 users can use both PHP8 attributes and PHP7 annotations at same time.
 
 # Getting Started
 
@@ -47,8 +42,8 @@ To illustrate, we'll start the BillingService class that accepts its dependent i
 ```php
 class BillingService
 {
-    private $processor;
-    private $logger
+    private ProcessorInterface $processor;
+    private LoggerInterface $logger;
     
     public function __construct(ProcessorInterface $processor, LoggerInterface $logger)
     {
@@ -140,9 +135,9 @@ class HorizontalScaleDbProvider implements ProviderInterface
     public function get()
     {
         $methodInvocation = $this->invocationProvider->get();
-        [$id] = methodInvocation->getArguments()->getArrayCopy();
+        [$id] = $methodInvocation->getArguments()->getArrayCopy();
         
-        return new UserDb($id); // $id for database choice.
+        return UserDb::withId($id); // $id for database choice.
     }
 }
 ```
@@ -296,7 +291,7 @@ protected function configure()
 
 note: annotations are not supported for Untargeted Bindings
 
-## Binding Annotations ##
+## Binding Attributes ##
 
 Occasionally you'll want multiple bindings for a same type. For example, you might want both a PayPal credit card processor and a Google Checkout processor.
 To enable this, bindings support an optional binding attribute. The attribute and type together uniquely identify a binding. This pair is called a key.
@@ -391,7 +386,7 @@ protected function configure()
 The provider can now use the information supplied in the qualifier attribute in order to instantiate
 the most appropriate class.
 
-### #[Named] ###
+### Qualifier ###
 
 The most common use of a Qualifier attribute is tagging arguments in a function with a certain label,
 the label can be used in the bindings in order to select the right class to be instantiated. For those
@@ -417,7 +412,7 @@ protected function configure()
 }
 ```
 
-You need to specify in case of multiple parameters.
+You need to put the `#[Named()]' attribuet in order to specify the parameter.
 
 ```php
 use Ray\Di\Di\Inject;
@@ -719,7 +714,7 @@ protected function configure()
 
 ## Other Modules ##
 
-Various modules for `Ray.Di` are available at https://github.com/Ray-Di.
+More modules for `Ray.Di` are available at [https://github.com/ray-di](https://github.com/ray-di)
 
 ## Installation ##
 
