@@ -26,7 +26,7 @@ final class Named
      */
     public function __construct($value)
     {
-        if (is_array($value)) {
+        if (is_array($value) && isset($value['value'])) {
             // doctrine/annotations
             $this->value = $value['value'];
         }
