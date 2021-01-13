@@ -68,7 +68,7 @@
         "sa-di": ["./vendor/bin/phpstan analyse -c phpstan.neon", "./vendor/bin/psalm --show-info=true"],
         "sa-compiler": ["./vendor/bin/psalm -c psalm.compiler.xml --show-info=true"],
         "metrics": ["@test", "./vendor/bin/phpmetrics --report-html=build/metrics --exclude=Exception --log-junit=build/junit.xml --junit=build/junit.xml src"],
-        "phpmd": "./vendor/bin/phpmd src/di text ./phpmd.xml",
+        "phpmd": ["./vendor/bin/phpmd src/di text ./phpmd.xml"],
         "build": ["@cs", "@sa", "@pcov", "@metrics"]
     }
 }
