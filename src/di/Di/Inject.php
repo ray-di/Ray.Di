@@ -24,6 +24,8 @@ final class Inject implements InjectInterface
 
     /**
      * @param array{optional?: bool} $values
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function __construct(array $values = [], bool $optional = false)
     {
