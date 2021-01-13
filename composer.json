@@ -1,10 +1,7 @@
 {
     "name": "ray/di",
     "description": "Guice style annotation-driven dependency injection framework",
-    "keywords": [
-        "di",
-        "aop"
-    ],
+    "keywords": ["di", "aop"],
     "license": "MIT",
     "authors": [
         {
@@ -30,29 +27,16 @@
     },
     "autoload": {
         "psr-4": {
-            "Ray\\Di\\": [
-                "src/di",
-                "src-deprecated/di"
-            ],
-            "Ray\\Compiler\\": [
-                "src/compiler"
-            ]
+            "Ray\\Di\\": ["src/di", "src-deprecated/di"],
+            "Ray\\Compiler\\": ["src/compiler"]
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Ray\\Di\\": [
-                "tests/di",
-                "tests/di/Fake/"
-            ],
-            "Ray\\Compiler\\": [
-                "tests/compiler",
-                "tests/compiler/Fake"
-            ]
+            "Ray\\Di\\": ["tests/di", "tests/di/Fake/"],
+            "Ray\\Compiler\\": ["tests/compiler", "tests/compiler/Fake"]
         },
-        "files": [
-            "tests/deleteFiles.php"
-        ]
+        "files": ["tests/deleteFiles.php"]
     },
     "scripts": {
         "post-install-cmd": ["@composer bin all install --ansi"],
