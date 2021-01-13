@@ -78,10 +78,10 @@ By building the billingService, we've constructed a small object graph using Ray
 Constructor injection combines instantiation with injection. This constructor should accept class dependencies as parameters. Most constructors will then assign the parameters to properties. You do not need `#[Inject]` attribute in constructor.
 
 ```php
-    public function __construct(DbInterface $db)
-    {
-        $this->db = $db;
-    }
+public function __construct(DbInterface $db)
+{
+    $this->db = $db;
+}
 ```
     
 ## Setter Injection
@@ -93,11 +93,11 @@ use Ray\Di\Di\Inject;
 ```
 
 ```php
-    #[Inject]
-    public function setDb(DbInterface $db)
-    {
-        $this->db = $db;
-    }
+#[Inject]
+public function setDb(DbInterface $db)
+{
+    $this->db = $db;
+}
 ```
 
 ## Property Injection
@@ -113,10 +113,10 @@ use Ray\Di\Di\Inject;
 ```
 
 ```php
-    public function doSomething($id, #[Inject] DbInterface $db = null)
-    {
-        $this->db = $db;
-    }
+public function doSomething($id, #[Inject] DbInterface $db = null)
+{
+    $this->db = $db;
+}
 ```
 
 You can also provide dependency which depends on other dynamic parameter in method invocation. `MethodInvocationProvider` provides [MethodInvocation](https://github.com/ray-di/Ray.Aop/blob/2.x/src/MethodInvocation.php) object.
