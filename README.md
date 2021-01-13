@@ -16,14 +16,14 @@
 The Ray.Di package provides a dependency injector
 with the following features:
 
-- constructor injection and setter injection
-- automatic injection 
-- post-construct initialization
-- raw PHP factory code compiler
-- binding attributes
-- injection point meta data
-- AOP integration
-- assisted injection
+- Constructor injection and setter injection
+- Automatic injection 
+- Post-construct initialization
+- Raw PHP factory code compiler
+- Binding annotations / attributes
+- Contextual injection with injection point meta data
+- Aspect oriented programming (AOP)
+- Assisted injection
 
 # Getting Started
 
@@ -701,16 +701,9 @@ protected function configure()
 ```
 ## Frameworks integration ##
 
- * [CakePHP3 PipingBag](https://github.com/lorenzo/piping-bag) by [@jose_zap](https://twitter.com/jose_zap)
- * [Symfony QckRayDiBundle](https://github.com/qckanemoto/QckRayDiBundle) and [sample project](https://github.com/qckanemoto/symfony-raydi-sample) by [@qckanemoto](https://twitter.com/qckanemoto)
- * [Radar](https://github.com/ray-di/Ray.Adr)
  * [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday)
+ * [CakePHP 3/4 PipingBag](https://github.com/lorenzo/piping-bag) by [@jose_zap](https://twitter.com/jose_zap)
  * [Yii 1](https://github.com/koriym/Ray.Dyii)
-
-
-## Other Modules ##
-
-More modules for `Ray.Di` are available at [https://github.com/ray-di](https://github.com/ray-di)
 
 ## Annotation / Attribute
 
