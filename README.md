@@ -25,10 +25,6 @@ with the following features:
 - AOP integration
 - assisted injection
 
-## Compatibility
-
-Note: For PHP 7 users, please see [README.php7.md](README.php7.md). PHP8 users can use both PHP8 attributes and PHP7 annotations at same time.
-
 # Getting Started
 
 ## Creating Object graph 
@@ -715,6 +711,11 @@ protected function configure()
 ## Other Modules ##
 
 More modules for `Ray.Di` are available at [https://github.com/ray-di](https://github.com/ray-di)
+
+## Annotation / Attribute
+
+Ray.Di can be used either with [doctrine/annotation](https://github.com/doctrine/annotations) in PHP 7/8 or with an [Attributes](https://www.php.net/manual/en/language.attributes.overview.php) in PHP8.
+See the annotation code examples in the older [README(v2.10)](https://github.com/ray-di/Ray.Di/tree/2.10.5/README.md).
 
 ## Installation ##
 
