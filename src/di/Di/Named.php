@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di\Di;
 
 use Attribute;
+use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
 
 use function is_array;
 use function is_string;
@@ -15,25 +16,14 @@ use function is_string;
  * @Annotation
  * @Target("METHOD")
  */
-#[Attribute(Attribute::TARGET_PARAMETER)]
-final class Named
+#[Attribute(Attribute::TARGET_PARAMETER | Attribute::TARGET_METHOD)]
+final class Named implements NamedArgumentConstructorAnnotation
 {
     /** @var string */
     public $value = '';
 
-    /**
-     * @param array{value: string}|string $value
-     */
-    public function __construct($value)
+    public function __construct(string $value)
     {
-        if (is_array($value) && isset($value['value'])) {
-            // doctrine/annotations
-            $this->value = $value['value'];
-        }
-
-        if (is_string($value)) {
-            // php8 attribute
-            $this->value = $value;
-        }
+        $this->value = $value;
     }
 }
