@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di\Di;
 
 use Attribute;
+use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
 
 /**
  * Annotates your class methods into which the Injector should inject values
@@ -13,7 +14,7 @@ use Attribute;
  * @Target("METHOD")
  */
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PARAMETER)]
-final class Inject implements InjectInterface
+final class Inject implements InjectInterface, NamedArgumentConstructorAnnotation
 {
     /**
      * If true, and the appropriate binding is not found, the Injector will skip injection of this method or field rather than produce an error.
@@ -23,13 +24,11 @@ final class Inject implements InjectInterface
     public $optional = false;
 
     /**
-     * @param array{optional?: bool} $values
-     *
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    public function __construct(array $values = [], bool $optional = false)
+    public function __construct(bool $optional = false)
     {
-        $this->optional = $values['optional'] ?? $optional;
+        $this->optional = $optional;
     }
 
     /**
