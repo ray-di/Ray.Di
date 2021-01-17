@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Ray\Di\Di;
 
 use Attribute;
-
 use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
+
 use function is_array;
 use function is_string;
 

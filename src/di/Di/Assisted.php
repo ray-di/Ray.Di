@@ -17,10 +17,13 @@ use Ray\Aop\Annotation\AbstractAssisted;
 #[Attribute(Attribute::TARGET_METHOD)]
 final class Assisted extends AbstractAssisted implements NamedArgumentConstructorAnnotation
 {
-    /** @var array */
+    /** @var array<string> */
     public $values;
 
-    public function __construct(array $value)
+    /**
+     * @param array<string> $value
+     */
+    public function __construct($value)
     {
         $this->values = $value;
     }
