@@ -6,6 +6,7 @@ namespace Ray\Di;
 
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
+use Ray\Di\Di\Assisted;
 use Ray\Di\Di\Inject;
 use Ray\Di\Di\InjectInterface;
 use Ray\Di\Di\Named;
@@ -45,9 +46,11 @@ final class AssistedInjectInterceptor implements MethodInterceptor
         $params = $invocation->getMethod()->getParameters();
         $namedArguments = $this->getNamedArguments($invocation);
         foreach ($params as $param) {
-            /** @var list<ReflectionAttribute> $attributes */
-            $attributes = $param->getAttributes(InjectInterface::class, ReflectionAttribute::IS_INSTANCEOF);
-            if (isset($attributes[0])) {
+            /** @var list<ReflectionAttribute> $inject */
+            $inject = $param->getAttributes(InjectInterface::class, ReflectionAttribute::IS_INSTANCEOF);
+            /** @var list<ReflectionAttribute> $assisted */
+            $assisted = $param->getAttributes(Assisted::class);
+            if (isset($assisted[0]) || isset($inject[0])) {
                 /** @psalm-suppress MixedAssignment */
                 $namedArguments[$param->getName()] = $this->getDependency($param);
             }
@@ -83,7 +86,7 @@ final class AssistedInjectInterceptor implements MethodInterceptor
      */
     private function getDependency(ReflectionParameter $param)
     {
-        $named = $this->getName($param);
+        $named = (string) $this->getName($param);
         $type = $param->getType();
         assert($type instanceof ReflectionNamedType || $type === null);
         $typeName = $type ? $type->getName() : '';
@@ -92,7 +95,7 @@ final class AssistedInjectInterceptor implements MethodInterceptor
         return $this->injector->getInstance($interface, $named);
     }
 
-    private function getName(ReflectionParameter $param): string
+    private function getName(ReflectionParameter $param): ?string
     {
         /** @var list<ReflectionAttribute> $nameds */
         $nameds = $param->getAttributes(Named::class);
@@ -104,19 +107,23 @@ final class AssistedInjectInterceptor implements MethodInterceptor
         }
 
         if ($param->getAttributes(Inject::class)) {
-            return '';
+            return null;
         }
 
         return $this->getCustomeInject($param);
     }
 
     /**
-     * @return class-string
+     * @return ?class-string
      */
-    private function getCustomeInject(ReflectionParameter $param): string
+    private function getCustomeInject(ReflectionParameter $param): ?string
     {
         /** @var list<ReflectionAttribute> $injects */
         $injects = $param->getAttributes(InjectInterface::class, ReflectionAttribute::IS_INSTANCEOF);
+        if (! $injects) {
+            return null;
+        }
+
         $inject = $injects[0]->newInstance();
         assert($inject instanceof InjectInterface);
 

@@ -14,7 +14,7 @@ use Ray\Aop\Annotation\AbstractAssisted;
  * @Annotation
  * @Target("METHOD")
  */
-#[Attribute(Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PARAMETER)]
 final class Assisted extends AbstractAssisted implements NamedArgumentConstructorAnnotation
 {
     /** @var array<string> */
@@ -23,7 +23,7 @@ final class Assisted extends AbstractAssisted implements NamedArgumentConstructo
     /**
      * @param array<string> $value
      */
-    public function __construct($value)
+    public function __construct($value = [])
     {
         $this->values = $value;
     }
