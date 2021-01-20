@@ -11,14 +11,14 @@ use Ray\Di\Di\Named;
 
 class FakeAssistedInjectConsumer
 {
-    public function assistOne($a, $b, #[Inject] ?FakeRobotInterface $robot = null): ?FakeRobotInterface
+    public function assistOne($a, $b, #[Assisted] ?FakeRobotInterface $robot = null): ?FakeRobotInterface
     {
         unset($a, $b);
 
         return $robot;
     }
 
-    public function assistWithName($a, #[Inject, Named('one')] $var1 = null)
+    public function assistWithName($a, #[Assisted, Named('one')] $var1 = null)
     {
         unset($a);
 
@@ -29,7 +29,7 @@ class FakeAssistedInjectConsumer
      * @return (FakeRobotInterface|mixed|null)[]
      * @psalm-return array{0: mixed, 1: FakeRobotInterface|null}
      */
-    public function assistAny(#[Inject, Named('one')] $var2 = null, #[Inject] ?FakeRobotInterface $robot = null)
+    public function assistAny(#[Assisted, Named('one')] $var2 = null, #[Inject] ?FakeRobotInterface $robot = null)
     {
         return [$var2, $robot];
     }

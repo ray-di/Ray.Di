@@ -106,14 +106,14 @@ Ray.Di does not support property injection.
 
 ## Assisted Injection
 
-It is also possible to inject dependencies directly in the invoke method parameter(s). When doing this, add the dependency to the end of the arguments and add `#[Inject]` to the parameter with having assisted parameter(s). You need `null` default for that parameter.
+It is also possible to inject dependencies directly in the invoke method parameter(s). When doing this, add the dependency to the end of the arguments and add `#[Assisted]` to the parameter(s). You need `null` default for that parameter.
 
 ```php
-use Ray\Di\Di\Inject;
+use Ray\Di\Di\Assisted;
 ```
 
 ```php
-public function doSomething($id, #[Inject] DbInterface $db = null)
+public function doSomething($id, #[Assisted] DbInterface $db = null)
 {
     $this->db = $db;
 }
