@@ -154,4 +154,13 @@ class BindTest extends TestCase
         $instance = $container->getInstance(ProviderInterface::class, Name::ANY);
         $this->assertSame('context_string', $instance->context);
     }
+
+    public function testToNull(): void
+    {
+        $container = new Container();
+        $bind = new Bind($container, FakeTyreInterface::class);
+        $bind->toNull();
+        $fakeTyre = $container->getInstance(FakeTyreInterface::class, Name::ANY);
+        $this->assertInstanceOf(FakeTyreInterface::class, $fakeTyre);
+    }
 }

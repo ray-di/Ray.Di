@@ -147,6 +147,16 @@ final class Bind
     }
 
     /**
+     * Bind to instance
+     *
+     * @param mixed $instance
+     */
+    public function toNull(): self
+    {
+        return $this;
+    }
+
+    /**
      * Set scope
      */
     public function in(string $scope): self
