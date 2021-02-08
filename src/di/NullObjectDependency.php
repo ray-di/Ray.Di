@@ -5,12 +5,24 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Koriym\NullObject\NullObject;
+use ReflectionClass;
 
 /**
  * @codeCoverageIgnore
  */
-final class NullDependency implements DependencyInterface
+final class NullObjectDependency implements DependencyInterface
 {
+    /** @var string */
+    private $interface;
+
+    /**
+     * @param class-string $interface
+     */
+    public function __construct(string $interface)
+    {
+        $this->interface = $interface;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -21,11 +33,15 @@ final class NullDependency implements DependencyInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
     public function inject(Container $container)
     {
+        /** @var string $scriptDir */
+        $scriptDir = $container->getInstance('', 'scriptDir');
+        assert(interface_exists($this->interface));
+        $class = (new NullObject($scriptDir))($this->interface);
+
+        return (new ReflectionClass($class))->newInstanceWithoutConstructor();
     }
 
     /**
