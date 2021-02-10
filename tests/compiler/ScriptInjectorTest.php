@@ -6,6 +6,7 @@ namespace Ray\Compiler;
 
 use PHPUnit\Framework\TestCase;
 use Ray\Aop\WeavedInterface;
+use Ray\Di\AbstractModule;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\InjectorInterface;
 use Ray\Di\NullModule;
@@ -243,5 +244,17 @@ class ScriptInjectorTest extends TestCase
         $injector->clear();
         $countAfterClear = count((array) glob(__DIR__ . '/tmp/*.php'));
         $this->assertSame(0, $countAfterClear);
+    }
+
+    public function testNullObjectCompile(): void
+    {
+        $injector = new ScriptInjector(
+            __DIR__ . '/tmp',
+            static function () {
+                return new FakeNullObjectModule();
+            }
+        );
+        $instance = $injector->getInstance(FakeTyreInterface::class);
+        $this->assertInstanceOf(FakeTyreInterface::class, $instance);
     }
 }
