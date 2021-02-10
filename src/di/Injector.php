@@ -33,8 +33,15 @@ class Injector implements InjectorInterface
     {
         $module = $module ?? new NullModule();
         $module->install(new AssistedModule());
-        $this->container = $module->getContainer();
         $this->classDir = is_dir($tmpDir) ? $tmpDir : sys_get_temp_dir();
+        $this->container = $module->getContainer();
+        $this->container->map(function (DependencyInterface $dependency) {
+            if ($dependency instanceof NullObjectDependency) {
+                return $dependency->toNull($this->classDir);
+            }
+
+            return $dependency;
+        });
         $this->container->weaveAspects(new Compiler($this->classDir));
 
         // builtin injection

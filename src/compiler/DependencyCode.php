@@ -59,7 +59,7 @@ final class DependencyCode implements SetContextInterface
     /**
      * Return compiled dependency code
      */
-    public function getCode(DependencyInterface $dependency, ?Container $container = null): Code
+    public function getCode(DependencyInterface $dependency, string $scriptDir = ''): Code
     {
         if ($dependency instanceof Dependency) {
             return $this->getDependencyCode($dependency);
@@ -74,10 +74,7 @@ final class DependencyCode implements SetContextInterface
         }
 
         if ($dependency instanceof NullObjectDependency) {
-            assert($container instanceof Container);
-            $dependency->inject($container);
-
-            return $this->getDependencyCode($dependency->toNull());
+            return $this->getDependencyCode($dependency->toNull($scriptDir));
         }
 
         throw new DomainException(get_class($dependency));

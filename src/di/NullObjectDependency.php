@@ -11,6 +11,7 @@ use ReflectionClass;
 use function assert;
 use function class_exists;
 use function interface_exists;
+use function is_dir;
 use function is_string;
 
 /**
@@ -18,7 +19,7 @@ use function is_string;
  */
 final class NullObjectDependency implements DependencyInterface
 {
-    /** @var string */
+    /** @var class-string */
     private $interface;
 
     /**
@@ -42,12 +43,7 @@ final class NullObjectDependency implements DependencyInterface
      */
     public function inject(Container $container)
     {
-        $scriptDir = $container->getInstance('', ScriptDir::class);
-        assert(is_string($scriptDir));
-        assert(interface_exists($this->interface));
-        $class = (new NullObject($scriptDir))($this->interface);
-
-        return (new ReflectionClass($class))->newInstanceWithoutConstructor();
+        return null;
     }
 
     /**
@@ -67,12 +63,11 @@ final class NullObjectDependency implements DependencyInterface
     {
     }
 
-    public function toNull(): Dependency
+    public function toNull(string $scriptDir): Dependency
     {
-        $nullObjectClass = $this->interface . 'Null';
-        assert(class_exists($nullObjectClass));
-        $class = new ReflectionClass($nullObjectClass);
+        assert(is_dir($scriptDir));
+        $nullClass = (new NullObject($scriptDir))($this->interface);
 
-        return new Dependency(new NewInstance($class, new SetterMethods([])));
+        return new Dependency(new NewInstance(new ReflectionClass($nullClass), new SetterMethods([])));
     }
 }

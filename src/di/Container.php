@@ -185,4 +185,14 @@ final class Container
 
         return $this;
     }
+
+    /**
+     * @param callable(DependencyInterface): DependencyInterface $f
+     */
+    public function map(callable $f): void
+    {
+        foreach ($this->container as &$index) {
+            $index = $f($index);
+        }
+    }
 }

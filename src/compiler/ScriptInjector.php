@@ -289,6 +289,6 @@ final class ScriptInjector implements InjectorInterface
 
         assert($this->module instanceof AbstractModule);
         (new Bind($this->module->getContainer(), ''))->annotatedWith(ScriptDir::class)->toInstance($this->scriptDir);
-        (new OnDemandCompiler($this, $this->scriptDir, $this->module))($dependencyIndex);
+        (new OnDemandCompiler($this, $this->scriptDir, $this->module))($dependencyIndex, $this->scriptDir);
     }
 }

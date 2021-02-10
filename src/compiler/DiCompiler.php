@@ -13,6 +13,8 @@ use Ray\Di\InjectorInterface;
 use Ray\Di\Name;
 use ReflectionProperty;
 
+use function assert;
+use function is_string;
 use function serialize;
 use function sys_get_temp_dir;
 
@@ -66,8 +68,10 @@ final class DiCompiler implements InjectorInterface
     public function compile(): void
     {
         $container = $this->container->getContainer();
+        $scriptDir = $this->container->getInstance('', ScriptDir::class);
+        assert(is_string($scriptDir));
         foreach ($container as $dependencyIndex => $dependency) {
-            $code = $this->dependencyCompiler->getCode($dependency, $this->container);
+            $code = $this->dependencyCompiler->getCode($dependency, $scriptDir);
             ($this->dependencySaver)($dependencyIndex, $code);
         }
 
