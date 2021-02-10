@@ -74,7 +74,9 @@ final class DependencyCode implements SetContextInterface
         }
 
         if ($dependency instanceof NullObjectDependency) {
+            assert($container instanceof Container);
             $dependency->inject($container);
+
             return $this->getDependencyCode($dependency->toNull());
         }
 
