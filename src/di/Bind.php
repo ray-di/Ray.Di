@@ -12,8 +12,10 @@ use ReflectionMethod;
 
 use function array_keys;
 use function array_reduce;
+use function assert;
 use function class_exists;
 use function implode;
+use function interface_exists;
 use function is_array;
 use function is_string;
 
