@@ -6,6 +6,7 @@ namespace Ray\Compiler;
 
 use Ray\Compiler\Exception\Unbound;
 use Ray\Di\AbstractModule;
+use Ray\Di\Annotation\ScriptDir;
 use Ray\Di\Bind;
 use Ray\Di\Dependency;
 use Ray\Di\DependencyInterface;
@@ -287,7 +288,7 @@ final class ScriptInjector implements InjectorInterface
         }
 
         assert($this->module instanceof AbstractModule);
-        (new Bind($this->module->getContainer(), ''))->annotatedWith('scriptDir')->toInstance($this->scriptDir);
+        (new Bind($this->module->getContainer(), ''))->annotatedWith(ScriptDir::class)->toInstance($this->scriptDir);
         (new OnDemandCompiler($this, $this->scriptDir, $this->module))($dependencyIndex);
     }
 }

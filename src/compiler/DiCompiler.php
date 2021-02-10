@@ -6,6 +6,7 @@ namespace Ray\Compiler;
 
 use Ray\Aop\Compiler;
 use Ray\Di\AbstractModule;
+use Ray\Di\Annotation\ScriptDir;
 use Ray\Di\Bind;
 use Ray\Di\Container;
 use Ray\Di\InjectorInterface;
@@ -46,7 +47,7 @@ final class DiCompiler implements InjectorInterface
         // Weave AssistedInterceptor and bind InjectorInterface for self
         $module->getContainer()->weaveAspects(new Compiler($scriptDir));
         (new Bind($this->container, InjectorInterface::class))->toInstance($this);
-        (new Bind($this->container, ''))->annotatedWith('scriptDir')->toInstance($scriptDir);
+        (new Bind($this->container, ''))->annotatedWith(ScriptDir::class)->toInstance($scriptDir);
     }
 
     /**

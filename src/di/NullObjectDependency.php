@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Koriym\NullObject\NullObject;
+use Ray\Di\Annotation\ScriptDir;
 use ReflectionClass;
 
 use function assert;
@@ -41,7 +42,7 @@ final class NullObjectDependency implements DependencyInterface
      */
     public function inject(Container $container)
     {
-        $scriptDir = $container->getInstance('', 'scriptDir');
+        $scriptDir = $container->getInstance('', ScriptDir::class);
         assert(is_string($scriptDir));
         assert(interface_exists($this->interface));
         $class = (new NullObject($scriptDir))($this->interface);

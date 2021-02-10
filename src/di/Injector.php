@@ -6,6 +6,7 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationException;
 use Ray\Aop\Compiler;
+use Ray\Di\Annotation\ScriptDir;
 use Ray\Di\Exception\Untargeted;
 
 use function assert;
@@ -38,7 +39,7 @@ class Injector implements InjectorInterface
 
         // builtin injection
         (new Bind($this->container, InjectorInterface::class))->toInstance($this);
-        (new Bind($this->container, ''))->annotatedWith('scriptDir')->toInstance($this->classDir);
+        (new Bind($this->container, ''))->annotatedWith(ScriptDir::class)->toInstance($this->classDir);
     }
 
     /**
