@@ -65,7 +65,7 @@ final class OnDemandCompiler
             $dependency->weaveAspects(new Compiler($this->scriptDir), $pointCuts);
         }
 
-        $code = (new DependencyCode($containerObject, $this->injector))->getCode($dependency);
+        $code = (new DependencyCode($containerObject, $this->injector))->getCode($dependency, $this->module->getContainer());
         (new DependencySaver($this->scriptDir))($dependencyIndex, $code);
     }
 

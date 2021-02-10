@@ -46,6 +46,7 @@ final class DiCompiler implements InjectorInterface
         // Weave AssistedInterceptor and bind InjectorInterface for self
         $module->getContainer()->weaveAspects(new Compiler($scriptDir));
         (new Bind($this->container, InjectorInterface::class))->toInstance($this);
+        (new Bind($this->container, ''))->annotatedWith('scriptDir')->toInstance($scriptDir);
     }
 
     /**
@@ -65,7 +66,7 @@ final class DiCompiler implements InjectorInterface
     {
         $container = $this->container->getContainer();
         foreach ($container as $dependencyIndex => $dependency) {
-            $code = $this->dependencyCompiler->getCode($dependency);
+            $code = $this->dependencyCompiler->getCode($dependency, $this->container);
             ($this->dependencySaver)($dependencyIndex, $code);
         }
 

@@ -7,7 +7,6 @@ namespace Ray\Di\Matcher;
 use LogicException;
 use Ray\Aop\AbstractMatcher;
 use Ray\Di\Di\Assisted;
-use Ray\Di\Di\Inject;
 use Ray\Di\Di\InjectInterface;
 use ReflectionAttribute;
 use ReflectionClass;

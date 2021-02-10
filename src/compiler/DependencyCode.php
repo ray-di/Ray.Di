@@ -15,6 +15,7 @@ use Ray\Di\Dependency;
 use Ray\Di\DependencyInterface;
 use Ray\Di\DependencyProvider;
 use Ray\Di\Instance;
+use Ray\Di\NullObjectDependency;
 use Ray\Di\SetContextInterface;
 
 use function assert;
@@ -58,7 +59,7 @@ final class DependencyCode implements SetContextInterface
     /**
      * Return compiled dependency code
      */
-    public function getCode(DependencyInterface $dependency): Code
+    public function getCode(DependencyInterface $dependency, ?Container $container = null): Code
     {
         if ($dependency instanceof Dependency) {
             return $this->getDependencyCode($dependency);
@@ -70,6 +71,11 @@ final class DependencyCode implements SetContextInterface
 
         if ($dependency instanceof DependencyProvider) {
             return $this->getProviderCode($dependency);
+        }
+
+        if ($dependency instanceof NullObjectDependency) {
+            $dependency->inject($container);
+            return $this->getDependencyCode($dependency->toNull());
         }
 
         throw new DomainException(get_class($dependency));

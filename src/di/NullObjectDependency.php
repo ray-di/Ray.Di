@@ -7,6 +7,11 @@ namespace Ray\Di;
 use Koriym\NullObject\NullObject;
 use ReflectionClass;
 
+use function assert;
+use function class_exists;
+use function interface_exists;
+use function is_string;
+
 /**
  * @codeCoverageIgnore
  */
@@ -36,8 +41,8 @@ final class NullObjectDependency implements DependencyInterface
      */
     public function inject(Container $container)
     {
-        /** @var string $scriptDir */
         $scriptDir = $container->getInstance('', 'scriptDir');
+        assert(is_string($scriptDir));
         assert(interface_exists($this->interface));
         $class = (new NullObject($scriptDir))($this->interface);
 
@@ -59,5 +64,14 @@ final class NullObjectDependency implements DependencyInterface
      */
     public function setScope($scope)
     {
+    }
+
+    public function toNull(): Dependency
+    {
+        $nullObjectClass = $this->interface . 'Null';
+        assert(class_exists($nullObjectClass));
+        $class = new ReflectionClass($nullObjectClass);
+
+        return new Dependency(new NewInstance($class, new SetterMethods([])));
     }
 }
