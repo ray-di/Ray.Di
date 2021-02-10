@@ -502,7 +502,7 @@ Setter Injection
  
 Ray.Di will invoke that constructor and setter method to satisfy the binding and invoke in `$postCosntruct` method after all dependencies are injected.
 
-## PDO Example
+### PDO Example
 
 Here is the example for the native [PDO](http://php.net/manual/ja/pdo.construct.php) class. 
 
@@ -528,6 +528,19 @@ protected function configure()
 ```
 
 Since no argument of PDO has a type, it binds with the `Name Binding` of the second argument of the `toConstructor()` method.
+
+## Null Object Binding
+
+A Null Object is an object that implements an interface but does not do anything in its methods.
+When bound with toNull(), the code of the Null Object is generated from the interface and bound to the generated instance.
+This is useful for testing and AOP.
+
+```php
+protected function configure()
+{
+    $this->bind(CreditCardProcessorInterface::class)->toNull();
+}
+```
 
 ## Scopes ##
 
@@ -556,7 +569,6 @@ public function init()
     //....
 }
 ```
-
 
 ## Aspect Oriented Programing ##
 

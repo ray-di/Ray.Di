@@ -507,6 +507,18 @@ protected function configure()
 
 PDOのどのインターフェイスがないので`toConstructor()`メソッドの二番目の引数の名前束縛でP束縛しています
 
+## Nullオブジェクト束縛
+
+Null Objectはインターフェイスを実装していてもメソッドの中で何もしないオブジェクトです。
+`toNull()`で束縛するとインターフェイスからNullオブジェクトのコード生成され、そのインスタンスにバインドされます。
+
+```php
+protected function configure()
+{
+    $this->bind(CreditCardProcessorInterface::class)->toNull();
+}
+```
+
 ## スコープ
 
 デフォルトでは、Rayは毎回新しいインスタンスを生成しますが、これはスコープの設定で変更することができます。
