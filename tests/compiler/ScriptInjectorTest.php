@@ -246,7 +246,7 @@ class ScriptInjectorTest extends TestCase
         $this->assertSame(0, $countAfterClear);
     }
 
-    public function testNullObjectCompile(): void
+    public function testNullObjectCompile(): ScriptInjector
     {
         $injector = new ScriptInjector(
             __DIR__ . '/tmp',
@@ -254,6 +254,18 @@ class ScriptInjectorTest extends TestCase
                 return new FakeNullObjectModule();
             }
         );
+        $instance = $injector->getInstance(FakeTyreInterface::class);
+        $this->assertInstanceOf(FakeTyreInterface::class, $instance);
+
+        return $injector;
+    }
+
+    /**
+     * @runTestsInSeparateProcesses
+     * @depends testNullObjectCompile
+     */
+    public function testNullObjectCompileCodeRead(ScriptInjector $injector): void
+    {
         $instance = $injector->getInstance(FakeTyreInterface::class);
         $this->assertInstanceOf(FakeTyreInterface::class, $instance);
     }
