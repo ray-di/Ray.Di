@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Koriym\NullObject\NullObject;
+use Ray\Compiler\FilePutContents;
 use Ray\Di\Annotation\ScriptDir;
 use ReflectionClass;
 
@@ -13,6 +14,8 @@ use function class_exists;
 use function interface_exists;
 use function is_dir;
 use function is_string;
+use function sprintf;
+use function str_replace;
 
 /**
  * @codeCoverageIgnore
@@ -66,8 +69,12 @@ final class NullObjectDependency implements DependencyInterface
     public function toNull(string $scriptDir): Dependency
     {
         assert(is_dir($scriptDir));
-        $nullClass = (new NullObject($scriptDir))($this->interface);
+        $nullObject = new NullObject($scriptDir);
+        $code = $nullObject->getCode($this->interface);
+        $nullObjectClass = $this->interface . 'Null';
+        $file = sprintf('%s/%s.php', $scriptDir, str_replace('\\', '_', $nullObjectClass));
+        (new FilePutContents())($file, $code);
 
-        return new Dependency(new NewInstance(new ReflectionClass($nullClass), new SetterMethods([])));
+        return new Dependency(new NewInstance(new ReflectionClass($nullObjectClass), new SetterMethods([])));
     }
 }
