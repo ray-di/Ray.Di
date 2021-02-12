@@ -65,7 +65,9 @@ abstract class AbstractModule
             $this->activate();
         }
 
-        return $this->container; // @phpstan-ignore-line
+        assert($this->container instanceof Container);
+
+        return $this->container;
     }
 
     /**
