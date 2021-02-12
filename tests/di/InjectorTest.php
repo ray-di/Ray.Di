@@ -360,4 +360,16 @@ class InjectorTest extends TestCase
         $pdo = $injector->getInstance(PDO::class);
         $this->assertInstanceOf(PDO::class, $pdo);
     }
+
+    public function testNullObject(): void
+    {
+        $injector = (new Injector(new class extends AbstractModule {
+            protected function configure()
+            {
+                $this->bind(FakeTyreInterface::class)->toNull();
+            }
+        }));
+        $nullObject = $injector->getInstance(FakeTyreInterface::class);
+        $this->assertInstanceOf(FakeTyreInterface::class, $nullObject);
+    }
 }

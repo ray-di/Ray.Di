@@ -6,12 +6,15 @@ namespace Ray\Compiler;
 
 use Ray\Aop\Compiler;
 use Ray\Di\AbstractModule;
+use Ray\Di\Annotation\ScriptDir;
 use Ray\Di\Bind;
 use Ray\Di\Container;
 use Ray\Di\InjectorInterface;
 use Ray\Di\Name;
 use ReflectionProperty;
 
+use function assert;
+use function is_string;
 use function serialize;
 use function sys_get_temp_dir;
 
@@ -46,6 +49,7 @@ final class DiCompiler implements InjectorInterface
         // Weave AssistedInterceptor and bind InjectorInterface for self
         $module->getContainer()->weaveAspects(new Compiler($scriptDir));
         (new Bind($this->container, InjectorInterface::class))->toInstance($this);
+        (new Bind($this->container, ''))->annotatedWith(ScriptDir::class)->toInstance($scriptDir);
     }
 
     /**
@@ -64,8 +68,10 @@ final class DiCompiler implements InjectorInterface
     public function compile(): void
     {
         $container = $this->container->getContainer();
+        $scriptDir = $this->container->getInstance('', ScriptDir::class);
+        assert(is_string($scriptDir));
         foreach ($container as $dependencyIndex => $dependency) {
-            $code = $this->dependencyCompiler->getCode($dependency);
+            $code = $this->dependencyCompiler->getCode($dependency, $scriptDir);
             ($this->dependencySaver)($dependencyIndex, $code);
         }
 

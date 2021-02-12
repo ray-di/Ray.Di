@@ -6,6 +6,7 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationException;
 use Ray\Aop\Compiler;
+use Ray\Di\Annotation\ScriptDir;
 use Ray\Di\Exception\Untargeted;
 
 use function assert;
@@ -32,12 +33,20 @@ class Injector implements InjectorInterface
     {
         $module = $module ?? new NullModule();
         $module->install(new AssistedModule());
-        $this->container = $module->getContainer();
         $this->classDir = is_dir($tmpDir) ? $tmpDir : sys_get_temp_dir();
+        $this->container = $module->getContainer();
+        $this->container->map(function (DependencyInterface $dependency) {
+            if ($dependency instanceof NullObjectDependency) {
+                return $dependency->toNull($this->classDir);
+            }
+
+            return $dependency;
+        });
         $this->container->weaveAspects(new Compiler($this->classDir));
 
         // builtin injection
         (new Bind($this->container, InjectorInterface::class))->toInstance($this);
+        (new Bind($this->container, ''))->annotatedWith(ScriptDir::class)->toInstance($this->classDir);
     }
 
     /**

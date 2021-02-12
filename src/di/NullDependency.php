@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Koriym\NullObject\NullObject;
+
 /**
  * @codeCoverageIgnore
  */
@@ -24,6 +26,7 @@ final class NullDependency implements DependencyInterface
      */
     public function inject(Container $container)
     {
+        unset($container);
     }
 
     /**
@@ -33,6 +36,7 @@ final class NullDependency implements DependencyInterface
      */
     public function register(array &$container, Bind $bind)
     {
+        $container[(string) $bind] = $bind->getBound();
     }
 
     /**
@@ -40,5 +44,6 @@ final class NullDependency implements DependencyInterface
      */
     public function setScope($scope)
     {
+        unset($scope);
     }
 }

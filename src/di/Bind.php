@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Koriym\NullObject\NullObject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Di\Exception\InvalidToConstructorNameParameter;
 use ReflectionClass;
@@ -11,8 +12,10 @@ use ReflectionMethod;
 
 use function array_keys;
 use function array_reduce;
+use function assert;
 use function class_exists;
 use function implode;
+use function interface_exists;
 use function is_array;
 use function is_string;
 
@@ -22,7 +25,7 @@ final class Bind
     private $container;
 
     /**
-     * @var string
+     * @var string|class-string
      * @phpstan-var class-string<MethodInterceptor>|string
      */
     private $interface;
@@ -141,6 +144,19 @@ final class Bind
     {
         $this->untarget = null;
         $this->bound = new Instance($instance);
+        $this->container->add($this);
+
+        return $this;
+    }
+
+    /**
+     * Bind to NullObject
+     */
+    public function toNull(): self
+    {
+        $this->untarget = null;
+        assert(interface_exists($this->interface));
+        $this->bound = new NullObjectDependency($this->interface);
         $this->container->add($this);
 
         return $this;

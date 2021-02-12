@@ -7,6 +7,7 @@
 /tests/di/tmp/
 /tests/di/script/grapher.php.txt
 /tests/tmp/
+/tests/compiler/tmp/
 /*.cache.php
 /.phpunit.result.cache
 /composer.lock
