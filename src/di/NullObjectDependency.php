@@ -69,12 +69,10 @@ final class NullObjectDependency implements DependencyInterface
     public function toNull(string $scriptDir): Dependency
     {
         assert(is_dir($scriptDir));
-        $nullObject = new NullObject($scriptDir);
-        $code = $nullObject->getCode($this->interface);
-        $nullObjectClass = $this->interface . 'Null';
-        $file = sprintf('%s/%s.php', $scriptDir, str_replace('\\', '_', $nullObjectClass));
-        (new FilePutContents())($file, $code);
+        $nullObject = new NullObject();
+        $class = $nullObject->save($this->interface, $scriptDir);
+        $file = sprintf('%s/%s.php', $scriptDir, str_replace('\\', '_', $class));
 
-        return new Dependency(new NewInstance(new ReflectionClass($nullObjectClass), new SetterMethods([])));
+        return new Dependency(new NewInstance(new ReflectionClass($class), new SetterMethods([])));
     }
 }
