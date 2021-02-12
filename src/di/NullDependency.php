@@ -26,6 +26,7 @@ final class NullDependency implements DependencyInterface
      */
     public function inject(Container $container)
     {
+        unset($container);
     }
 
     /**
@@ -43,5 +44,6 @@ final class NullDependency implements DependencyInterface
      */
     public function setScope($scope)
     {
+        unset($scope);
     }
 }

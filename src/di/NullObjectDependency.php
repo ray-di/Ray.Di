@@ -71,7 +71,6 @@ final class NullObjectDependency implements DependencyInterface
         assert(is_dir($scriptDir));
         $nullObject = new NullObject();
         $class = $nullObject->save($this->interface, $scriptDir);
-        $file = sprintf('%s/%s.php', $scriptDir, str_replace('\\', '_', $class));
 
         return new Dependency(new NewInstance(new ReflectionClass($class), new SetterMethods([])));
     }
