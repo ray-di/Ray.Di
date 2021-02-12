@@ -531,8 +531,8 @@ Since no argument of PDO has a type, it binds with the `Name Binding` of the sec
 
 ## Null Object Binding
 
-A Null Object is an object that implements an interface but does not do anything in its methods.
-When bound with toNull(), the code of the Null Object is generated from the interface and bound to the generated instance.
+A Null Object is an object that implements an interface but whose methods do nothing.
+When bound with `toNull()`, the code of the Null Object is generated from the interface and bound to the generated instance.
 This is useful for testing and AOP.
 
 ```php
