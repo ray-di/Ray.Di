@@ -27,14 +27,14 @@ final class Instance implements DependencyInterface
     {
         if (is_scalar($this->value)) {
             return sprintf(
-                '(%s) %s',
+                '(instance: %s) %s',
                 gettype($this->value),
                 (string) $this->value
             );
         }
 
         if (is_object($this->value)) {
-            return '(object) ' . get_class($this->value);
+            return '(instance: object) ' . get_class($this->value);
         }
 
         return '(' . gettype($this->value) . ')';
