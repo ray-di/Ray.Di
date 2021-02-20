@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Koriym\Attributes\AttributesReader;
-use Koriym\Attributes\DualReader;
 use Ray\ServiceLocator\ServiceLocator;
 use ReflectionClass;
 use ReflectionMethod;

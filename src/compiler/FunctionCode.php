@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ray\Compiler;
 
 use Doctrine\Common\Annotations\Reader;
-use Koriym\Attributes\AttributesReader;
 use LogicException;
 use PhpParser\Node;
 use PhpParser\Node\Expr;

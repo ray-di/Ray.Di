@@ -5,17 +5,10 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Koriym\NullObject\NullObject;
-use Ray\Compiler\FilePutContents;
-use Ray\Di\Annotation\ScriptDir;
 use ReflectionClass;
 
 use function assert;
-use function class_exists;
-use function interface_exists;
 use function is_dir;
-use function is_string;
-use function sprintf;
-use function str_replace;
 
 /**
  * @codeCoverageIgnore
