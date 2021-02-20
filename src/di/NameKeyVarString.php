@@ -42,7 +42,6 @@ final class NameKeyVarString
 
     private function getQualifierKeyVarString(ReflectionMethod $method): string
     {
-        /** @var array<object> $annotations */
         $annotations = $this->reader->getMethodAnnotations($method);
         $names = [];
         foreach ($annotations as $annotation) {
