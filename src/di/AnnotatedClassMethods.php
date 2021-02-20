@@ -7,13 +7,9 @@ namespace Ray\Di;
 use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Di\InjectInterface;
 use Ray\Di\Di\Named;
-use Reflection;
 use ReflectionClass;
 use ReflectionMethod;
 
-use function version_compare;
-
-use const PHP_VERSION;
 use const PHP_VERSION_ID;
 
 final class AnnotatedClassMethods

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Koriym\NullObject\NullObject;
-
 /**
  * @codeCoverageIgnore
  */

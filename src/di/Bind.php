@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Koriym\NullObject\NullObject;
 use Ray\Aop\MethodInterceptor;
 use Ray\Di\Exception\InvalidToConstructorNameParameter;
 use ReflectionClass;
