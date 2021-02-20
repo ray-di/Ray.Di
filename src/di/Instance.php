@@ -37,7 +37,10 @@ final class Instance implements DependencyInterface
             return '(instance: object) ' . get_class($this->value);
         }
 
-        return '(' . gettype($this->value) . ')';
+        return sprintf(
+            '(instance: %s)',
+            gettype($this->value)
+        );
     }
 
     /**
