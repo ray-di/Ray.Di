@@ -24,6 +24,7 @@ with the following features:
 - Contextual injection with injection point meta data
 - Aspect oriented programming (AOP)
 - Assisted injection
+- Null object
 
 # Getting Started
 
