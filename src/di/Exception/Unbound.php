@@ -9,7 +9,6 @@ use LogicException;
 
 use function array_pop;
 use function array_reverse;
-use function explode;
 use function get_class;
 use function implode;
 use function sprintf;
