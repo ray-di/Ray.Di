@@ -9,6 +9,7 @@ use LogicException;
 
 use function array_pop;
 use function array_reverse;
+use function explode;
 use function get_class;
 use function implode;
 use function sprintf;
@@ -51,7 +52,7 @@ class Unbound extends LogicException implements ExceptionInterface
     private function getMainMessage(self $e): string
     {
         return sprintf(
-            "exception '%s' with message '%s'\n",
+            "'%s': Unresolvable dependency: %s\n",
             get_class($e),
             $e->getMessage()
         );
