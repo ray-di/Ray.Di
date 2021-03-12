@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di\Di;
 
 use Attribute;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
 
 /**
@@ -12,9 +13,10 @@ use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
  *
  * @Annotation
  * @Target("METHOD")
+ * @NamedArgumentConstructor
  */
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PARAMETER)]
-final class Inject implements InjectInterface, NamedArgumentConstructorAnnotation
+final class Inject implements InjectInterface
 {
     /**
      * If true, and the appropriate binding is not found, the Injector will skip injection of this method or field rather than produce an error.

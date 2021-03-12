@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di\Di;
 
 use Attribute;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
 
 /**
@@ -12,9 +13,10 @@ use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
  *
  * @Annotation
  * @Target("METHOD")
+ * @NamedArgumentConstructor
  */
 #[Attribute(Attribute::TARGET_PARAMETER | Attribute::TARGET_METHOD)]
-final class Named implements NamedArgumentConstructorAnnotation
+final class Named
 {
     /** @var string */
     public $value = '';

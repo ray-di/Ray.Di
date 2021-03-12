@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^7.2 || ^8.0",
-        "doctrine/annotations": "^1.11",
+        "doctrine/annotations": "^1.12",
         "doctrine/cache": "^1.10",
         "koriym/attributes": "^1.0",
         "koriym/null-object": "^0.1",
