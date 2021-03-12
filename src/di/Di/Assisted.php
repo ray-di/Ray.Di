@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di\Di;
 
 use Attribute;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
 use Ray\Aop\Annotation\AbstractAssisted;
 
@@ -13,9 +14,10 @@ use Ray\Aop\Annotation\AbstractAssisted;
  *
  * @Annotation
  * @Target("METHOD")
+ * @NamedArgumentConstructor
  */
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PARAMETER)]
-final class Assisted extends AbstractAssisted implements NamedArgumentConstructorAnnotation
+final class Assisted extends AbstractAssisted
 {
     /** @var array<string> */
     public $values;
