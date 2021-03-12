@@ -6,7 +6,6 @@ namespace Ray\Di\Di;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
-use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
 use Ray\Aop\Annotation\AbstractAssisted;
 
 /**

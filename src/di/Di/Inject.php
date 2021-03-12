@@ -6,7 +6,6 @@ namespace Ray\Di\Di;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
-use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
 
 /**
  * Annotates your class methods into which the Injector should inject values
