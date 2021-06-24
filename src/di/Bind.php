@@ -53,7 +53,7 @@ final class Bind
         $bindUntarget = class_exists($interface) && ! (new ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
         $this->bound = new NullDependency();
         if ($bindUntarget) {
-            $this->untarget = new Untarget($interface); // @phpstan-ignore-line
+            $this->untarget = new Untarget($interface);
 
             return;
         }

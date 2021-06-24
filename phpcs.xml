@@ -37,7 +37,6 @@
         <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint"/>
         <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint"/>
         <exclude name="Squiz.PHP.GlobalKeyword.NotAllowed"/>
-        <exclude name="SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse"/>
         <!-- PHP8 attribute -->
         <exclude name="PSR12.Files.FileHeader.IncorrectOrder"/>
         <!-- /Base -->
@@ -52,6 +51,11 @@
     </rule>
 
     <!-- Additional Rules -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+        <properties>
+            <property name="searchAnnotations" value="true"/>
+        </properties>
+    </rule>
     <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
         <properties>
             <property name="annotationsGroups" type="array">

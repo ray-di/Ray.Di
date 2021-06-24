@@ -88,7 +88,6 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     public function getQualifiers(): array
     {
         $qualifiers = [];
-        /** @var array<object> $annotations */
         $annotations = $this->reader->getMethodAnnotations($this->getMethod());
         foreach ($annotations as $annotation) {
             $qualifier = $this->reader->getClassAnnotation(
