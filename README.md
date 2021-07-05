@@ -409,7 +409,7 @@ protected function configure()
 }
 ```
 
-You need to put the `#[Named()]' attribuet in order to specify the parameter.
+You need to put the `#[Named()]` attribuet in order to specify the parameter.
 
 ```php
 use Ray\Di\Di\Inject;
