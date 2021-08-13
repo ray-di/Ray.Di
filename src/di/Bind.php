@@ -207,6 +207,7 @@ final class Bind
         $names = array_reduce(
             $keys,
             /**
+             * @param list<string> $carry
              * @param array-key $key
              */
             static function (array $carry, $key) use ($name): array {

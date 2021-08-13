@@ -63,9 +63,8 @@ abstract class AbstractModule
     {
         if (! $this->container instanceof Container) {
             $this->activate();
+            assert($this->container instanceof Container);
         }
-
-        assert($this->container instanceof Container);
 
         return $this->container;
     }

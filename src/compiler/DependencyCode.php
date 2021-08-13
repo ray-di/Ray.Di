@@ -18,7 +18,6 @@ use Ray\Di\Instance;
 use Ray\Di\NullObjectDependency;
 use Ray\Di\SetContextInterface;
 
-use function assert;
 use function get_class;
 
 final class DependencyCode implements SetContextInterface
@@ -122,7 +121,6 @@ final class DependencyCode implements SetContextInterface
         $node[] = $this->getIsSingletonCode($isSingleton);
         $node[] = new Node\Stmt\Return_(new Node\Expr\Variable('instance'));
         $namespace = $this->factory->namespace('Ray\Di\Compiler')->addStmts($node)->getNode();
-        assert($namespace instanceof Stmt\Namespace_);
         $qualifer = $this->qualifier;
         $this->qualifier = null;
 
