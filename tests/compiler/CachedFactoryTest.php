@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Ray\Compiler;
 
-use Doctrine\Common\Cache\PhpFileCache;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
+use Ray\Di\NullCache;
 
 use function spl_object_hash;
 
@@ -54,7 +54,7 @@ class CachedFactoryTest extends TestCase
 
                 return $module;
             },
-            new DevCache(new PhpFileCache(__DIR__ . '/tmp/injector_cache')),
+            new DevCache(new NullCache()),
             [FakeRobotInterface::class] // FakeRobotInterface object is cached in an injector.
         );
     }

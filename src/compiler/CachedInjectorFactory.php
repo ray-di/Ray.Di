@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Ray\Compiler;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\Common\Cache\VoidCache;
 use Ray\Di\AbstractModule;
 use Ray\Di\InjectorInterface;
+use Ray\Di\NullCache;
 
 final class CachedInjectorFactory
 {
@@ -28,7 +28,8 @@ final class CachedInjectorFactory
             return self::$injectors[$injectorId];
         }
 
-        $cache = $cache ?? new VoidCache();
+        /** @psalm-suppress DeprecatedClass */
+        $cache = $cache ?? new NullCache();
         $cache->setNamespace($injectorId);
         $cachedInjector = $cache->fetch(InjectorInterface::class);
         if ($cachedInjector instanceof InjectorInterface) {
