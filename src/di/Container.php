@@ -15,6 +15,7 @@ use ReflectionClass;
 use function array_merge;
 use function class_exists;
 use function explode;
+use function ksort;
 
 final class Container
 {
@@ -194,5 +195,10 @@ final class Container
         foreach ($this->container as &$index) {
             $index = $f($index);
         }
+    }
+
+    public function sort(): void
+    {
+        ksort($this->container);
     }
 }
