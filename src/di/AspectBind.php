@@ -28,10 +28,10 @@ final class AspectBind
     public function inject(Container $container): array
     {
         $bindings = $this->bind->getBindings();
-        $instanciatedBindings = [];
+        $instantiatedBindings = [];
         foreach ($bindings as $methodName => $interceptorClassNames) {
             $interceptors = [];
-            foreach ($interceptorClassNames as &$interceptorClassName) {
+            foreach ($interceptorClassNames as $interceptorClassName) {
                 assert(is_string($interceptorClassName));
                 /** @psalm-suppress MixedAssignment */
                 $interceptor = $container->getInstance($interceptorClassName, Name::ANY);
@@ -39,9 +39,9 @@ final class AspectBind
                 $interceptors[] = $interceptor;
             }
 
-            $instanciatedBindings[$methodName] = $interceptors;
+            $instantiatedBindings[$methodName] = $interceptors;
         }
 
-        return $instanciatedBindings;
+        return $instantiatedBindings;
     }
 }
