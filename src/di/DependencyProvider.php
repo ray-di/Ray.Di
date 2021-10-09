@@ -22,7 +22,7 @@ final class DependencyProvider implements DependencyInterface
     /** @var bool */
     private $isSingleton = false;
 
-    /** @var mixed */
+    /** @var ?mixed */
     private $instance;
 
     public function __construct(Dependency $dependency, string $context)

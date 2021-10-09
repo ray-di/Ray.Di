@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use ReflectionException;
 use ReflectionMethod;
 
 final class InjectionPoints
@@ -17,6 +18,8 @@ final class InjectionPoints
 
     /**
      * @param class-string $class
+     *
+     * @throws ReflectionException
      */
     public function __invoke(string $class): SetterMethods
     {
@@ -45,6 +48,8 @@ final class InjectionPoints
     /**
      * @param class-string                         $class
      * @param array{0: string, 1: string, 2: bool} $point
+     *
+     * @throws ReflectionException
      */
     private function getSetterMethod(string $class, array $point): SetterMethod
     {

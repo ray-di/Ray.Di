@@ -14,7 +14,6 @@ use ReflectionMethod;
 
 use function assert;
 use function class_exists;
-use function interface_exists;
 use function method_exists;
 use function sprintf;
 
@@ -134,7 +133,6 @@ final class Dependency implements DependencyInterface
 
         $bind = new AopBind();
         $className = (string) $this->newInstance;
-        assert(class_exists($className) || interface_exists((string) $className));
         $bind->bind($className, $pointcuts);
         if (! $bind->getBindings()) {
             return;

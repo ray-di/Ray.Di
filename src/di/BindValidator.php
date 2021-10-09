@@ -55,7 +55,8 @@ final class BindValidator
     public function toProvider(string $provider): ReflectionClass
     {
         if (! class_exists($provider)) {
-            throw new NotFound((string) $provider);
+            /** @psalm-suppress MixedArgument -- should be string */
+            throw new NotFound($provider);
         }
 
         if (! (new ReflectionClass($provider))->implementsInterface(ProviderInterface::class)) {

@@ -9,6 +9,7 @@ use Ray\Di\Exception\InvalidProvider;
 use Ray\Di\Exception\InvalidType;
 use Ray\Di\Exception\NotFound;
 
+use function assert;
 use function spl_object_hash;
 
 class BindTest extends TestCase
@@ -95,7 +96,7 @@ class BindTest extends TestCase
         $container->add((new Bind($container, FakeLegInterface::class))->annotatedWith('left')->to(FakeLeftLeg::class));
         $container->add((new Bind($container, FakeRobotInterface::class))->toConstructor(FakeToConstructorRobot::class, $name));
         $instance = $container->getInstance(FakeRobotInterface::class, Name::ANY);
-        /** @var FakeToConstructorRobot $instance */
+        assert($instance instanceof FakeToConstructorRobot);
         $this->assertInstanceOf(FakeLeftLeg::class, $instance->leg);
         $this->assertSame('/tmp', $instance->tmpDir);
     }
@@ -114,7 +115,7 @@ class BindTest extends TestCase
             )
         );
         $instance = $container->getInstance(FakeRobotInterface::class, Name::ANY);
-        /** @var FakeToConstructorRobot $instance */
+        assert($instance instanceof FakeToConstructorRobot);
         $this->assertInstanceOf(FakeEngine::class, $instance->engine);
     }
 

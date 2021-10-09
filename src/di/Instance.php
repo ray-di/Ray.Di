@@ -54,8 +54,6 @@ final class Instance implements DependencyInterface
      */
     public function inject(Container $container)
     {
-        unset($container);
-
         return $this->value;
     }
 

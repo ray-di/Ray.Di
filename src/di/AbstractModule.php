@@ -117,6 +117,8 @@ abstract class AbstractModule
      * Configure binding
      *
      * @return void
+     *
+     * @noinspection ReturnTypeCanBeDeclaredInspection
      */
     abstract protected function configure();
 

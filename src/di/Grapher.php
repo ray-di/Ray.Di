@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Doctrine\Common\Annotations\AnnotationException;
 use Ray\Aop\Compiler;
 
 use function file_exists;
@@ -21,6 +22,8 @@ final class Grapher
 
     /**
      * @param AbstractModule $module Binding module
+     *
+     * @throws AnnotationException
      */
     public function __construct(AbstractModule $module, string $classDir)
     {
