@@ -28,13 +28,13 @@ final class Dependency implements DependencyInterface
     /** @var bool */
     private $isSingleton = false;
 
-    /** @var mixed */
+    /** @var ?mixed */
     private $instance;
 
     public function __construct(NewInstance $newInstance, ?ReflectionMethod $postConstruct = null)
     {
         $this->newInstance = $newInstance;
-        $this->postConstruct = $postConstruct ? $postConstruct->name : null;
+        $this->postConstruct = $postConstruct->name ?? null;
     }
 
     /**
