@@ -9,4 +9,5 @@ parameters:
     - %currentWorkingDirectory%/tests/di/Fake/*
     - %currentWorkingDirectory%/tests/compiler/tmp/*
     - %currentWorkingDirectory%/tests/compiler/Fake/*
+  checkGenericClassInNonGenericObjectType: false
 
