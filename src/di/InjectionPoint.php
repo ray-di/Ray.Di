@@ -19,11 +19,7 @@ use function unserialize;
 
 final class InjectionPoint implements InjectionPointInterface, Serializable
 {
-    /**
-     * @var ?ReflectionParameter
-     *
-     * this may lost on wakeUp
-     */
+    /** @var ?ReflectionParameter */
     private $parameter;
 
     /** @var Reader */

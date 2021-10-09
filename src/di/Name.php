@@ -8,6 +8,7 @@ use Ray\Di\Di\Named;
 use Ray\Di\Di\Qualifier;
 use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use ReflectionParameter;
 
@@ -38,7 +39,7 @@ final class Name
      *
      * @var array<string, string>
      */
-    private $names = [];
+    private $names;
 
     /**
      * @param string|array<string, string>|null $name
@@ -89,6 +90,8 @@ final class Name
 
     /**
      * @param array{0: ReflectionAttribute} $attributes
+     *
+     * @throws ReflectionException
      */
     private static function getName(array $attributes): string
     {
@@ -115,17 +118,7 @@ final class Name
         }
 
         // multiple variable named binding
-        if (isset($this->names[$parameter->name])) {
-            return $this->names[$parameter->name];
-        }
-
-        // ANY match
-        if (isset($this->names[self::ANY])) {
-            return $this->names[self::ANY];
-        }
-
-        // not matched
-        return self::ANY;
+        return $this->names[$parameter->name] ?? $this->names[self::ANY] ?? self::ANY;
     }
 
     private function setName(string $name): void

@@ -9,8 +9,6 @@ use Ray\Aop\CompilerInterface;
 use stdClass;
 
 use function array_keys;
-use function assert;
-use function class_exists;
 use function implode;
 use function method_exists;
 use function sprintf;
@@ -25,8 +23,6 @@ final class SpyCompiler implements CompilerInterface
      */
     public function newInstance(string $class, array $args, BindInterface $bind)
     {
-        unset($class, $args, $bind);
-
         // never called
         return new stdClass();
     }
@@ -49,6 +45,9 @@ final class SpyCompiler implements CompilerInterface
         return $class . $this->getInterceptors($bind);
     }
 
+    /**
+     * @param class-string $class
+     */
     private function hasNoBinding(string $class, BindInterface $bind): bool
     {
         $hasMethod = $this->hasBoundMethod($class, $bind);
@@ -56,12 +55,14 @@ final class SpyCompiler implements CompilerInterface
         return ! $bind->getBindings() && ! $hasMethod;
     }
 
+    /**
+     * @param class-string $class
+     */
     private function hasBoundMethod(string $class, BindInterface $bind): bool
     {
         $bindingMethods = array_keys($bind->getBindings());
         $hasMethod = false;
         foreach ($bindingMethods as $bindingMethod) {
-            assert(class_exists($class));
             if (method_exists($class, $bindingMethod)) {
                 $hasMethod = true;
             }
@@ -78,11 +79,11 @@ final class SpyCompiler implements CompilerInterface
         }
 
         $log = ' (aop)';
-        foreach ($bindings as $mehtod => $intepceptors) {
+        foreach ($bindings as $method => $interceptors) {
             $log .= sprintf(
                 ' +%s(%s)',
-                $mehtod,
-                implode(', ', $intepceptors)
+                $method,
+                implode(', ', $interceptors)
             );
         }
 
