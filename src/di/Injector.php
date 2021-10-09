@@ -47,6 +47,7 @@ class Injector implements InjectorInterface
         // builtin injection
         (new Bind($this->container, InjectorInterface::class))->toInstance($this);
         (new Bind($this->container, ''))->annotatedWith(ScriptDir::class)->toInstance($this->classDir);
+        $this->container->sort();
     }
 
     /**
