@@ -37,7 +37,7 @@ class BindTest extends TestCase
     public function testInvalidToTest(): void
     {
         $this->expectException(NotFound::class);
-        $this->bind->to('invalid-class');
+        $this->bind->to('invalid-class'); // @phpstan-ignore-line
     }
 
     public function testInvalidToProviderTest(): void

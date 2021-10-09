@@ -7,6 +7,7 @@ namespace Ray\Di;
 use Ray\Aop\MethodInterceptor;
 use Ray\Di\Exception\InvalidToConstructorNameParameter;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 
 use function array_keys;
@@ -86,6 +87,8 @@ final class Bind
 
     /**
      * Bind to class
+     *
+     * @param class-string $class
      */
     public function to(string $class): self
     {
@@ -100,10 +103,10 @@ final class Bind
     /**
      * Bind to constructor
      *
-     * @param class-string                 $class           class name
-     * @param array<string, string>|string $name            "varName=bindName,..." or [$varName => $bindName, $varName => $bindName...]
-     * @param InjectionPoints              $injectionPoints injection points
-     * @param string                       $postConstruct   method name of initialization after all dependencies are injected*
+     * @param class-string                 $class class name
+     * @param array<string, string>|string $name  "varName=bindName,..." or [$varName => $bindName, $varName => $bindName...]
+     *
+     * @throws ReflectionException
      */
     public function toConstructor(string $class, $name, ?InjectionPoints $injectionPoints = null, ?string $postConstruct = null): self
     {

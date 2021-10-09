@@ -24,7 +24,11 @@ final class BindValidator
     /**
      * To validator
      *
-     * @return ReflectionClass<object>
+     * @param class-string<T> $class
+     *
+     * @return ReflectionClass<T>
+     *
+     * @template T of object
      */
     public function to(string $interface, string $class): ReflectionClass
     {
