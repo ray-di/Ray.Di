@@ -169,7 +169,7 @@ final class Bind
      */
     public function in(string $scope): self
     {
-        if ($this->bound instanceof Dependency || $this->bound instanceof DependencyProvider) {
+        if ($this->bound instanceof Dependency || $this->bound instanceof DependencyProvider || $this->bound instanceof NullDependency) {
             $this->bound->setScope($scope);
         }
 
