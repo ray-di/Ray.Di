@@ -656,7 +656,7 @@ Call Stack:
     0.0056     318784   5. Ray\Aop\Sample\WeekendBlocker->invoke() /libs/Ray.Aop/src/ReflectiveMethodInvocation.php:65
 ```
 
-You can bind interceptors in variouas ways as follows.
+You can bind interceptors in various ways as follows.
 
 ```php
 
@@ -677,18 +677,32 @@ class TaxModule extends AbstractModule
 
 ```php
 
-use Ray\Di\AbstractModule;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;use Ray\Aop\NullInterceptor;use Ray\Di\AbstractModule;
 
 class AopMatcherModule extends AbstractModule
 {
     protected function configure()
     {
+        $this->bind(LoggerInterface::class)->to(DatabeseLogger::class);
         $this->bindInterceptor(
             $this->matcher->any(),                 // In any class and
             $this->matcher->startWith('delete'),   // ..the method start with "delete"
-            [Logger::class]
+            [LoggerInterface::class]
         );
     }
+}
+```
+
+To disable the interceptor, bind NullInterceptor.
+
+```php
+use Ray\Aop\NullInterceptor;
+
+protected function configure()
+{
+    // ...
+    $this->bind(LoggerInterface::class)->to(NullInterceptor::class);
 }
 ```
 

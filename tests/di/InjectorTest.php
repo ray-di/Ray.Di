@@ -7,6 +7,7 @@ namespace Ray\Di;
 use LogicException;
 use PDO;
 use PHPUnit\Framework\TestCase;
+use Ray\Aop\NullInterceptor;
 use Ray\Di\Exception\InvalidToConstructorNameParameter;
 use Ray\Di\Exception\Unbound;
 
@@ -203,6 +204,27 @@ class InjectorTest extends TestCase
         $this->assertSame(4, $result);
     }
 
+    public function testIntefaceBindingAop(): void
+    {
+        $module = new class extends AbstractModule{
+            protected function configure()
+            {
+                $this->bind(FakeAopInterface::class)->to(FakeAop::class);
+                $this->bind(FakeDoubleInterceptorInterface::class)->to(FakeDoubleInterceptor::class);
+                $this->bindInterceptor(
+                    $this->matcher->any(),
+                    $this->matcher->any(),
+                    [FakeDoubleInterceptorInterface::class]
+                );
+            }
+        };
+        $injector = new Injector($module, __DIR__ . '/tmp');
+        $instance = $injector->getInstance(FakeAopInterface::class);
+        /** @var FakeAop $instance */
+        $result = $instance->returnSame(2);
+        $this->assertSame(4, $result);
+    }
+
     public function testBuiltinBinding(): void
     {
         $instance = (new Injector())->getInstance(FakeBuiltin::class);
@@ -371,5 +393,48 @@ class InjectorTest extends TestCase
         }));
         $nullObject = $injector->getInstance(FakeTyreInterface::class);
         $this->assertInstanceOf(FakeTyreInterface::class, $nullObject);
+    }
+
+    public function testBindInterfeceInterceptor(): void
+    {
+        $injector = (new Injector(new class extends AbstractModule {
+            protected function configure()
+            {
+                $this->bind(FakeAop::class);
+                $this->bind(FakeDoubleInterceptorInterface::class)->to(FakeDoubleInterceptor::class);
+                $this->bindInterceptor(
+                    $this->matcher->any(),
+                    $this->matcher->any(),
+                    [FakeDoubleInterceptorInterface::class]
+                );
+            }
+        }));
+        $instance = $injector->getInstance(FakeAop::class);
+        /** @var FakeAop $instance */
+        $result = $instance->returnSame(2);
+        $this->assertSame(4, $result);
+    }
+
+    public function testBindInterfeceNullInterceptor(): void
+    {
+        $injector = (new Injector(new class extends AbstractModule {
+            protected function configure()
+            {
+                $this->bind(FakeAop::class);
+                $this->bind(FakeDoubleInterceptorInterface::class)->to(NullInterceptor::class);
+                $this->bindInterceptor(
+                    $this->matcher->any(),
+                    $this->matcher->any(),
+                    [FakeDoubleInterceptorInterface::class]
+                );
+            }
+        }));
+        $instance = $injector->getInstance(FakeAop::class);
+        /** @var FakeAop $instance */
+        $result = $instance->returnSame(2);
+        $this->assertSame(2, $result);
+        assert(isset($instance->bindings));
+        assert(isset($instance->bindings['returnSame'][0]));
+        $this->assertInstanceOf(NullInterceptor::class, $instance->bindings['returnSame'][0]);
     }
 }

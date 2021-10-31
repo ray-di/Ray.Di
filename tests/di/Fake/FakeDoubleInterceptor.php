@@ -7,7 +7,7 @@ namespace Ray\Di;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\MethodInvocation;
 
-class FakeDoubleInterceptor implements MethodInterceptor
+class FakeDoubleInterceptor implements MethodInterceptor, FakeDoubleInterceptorInterface
 {
     public function invoke(MethodInvocation $invocation)
     {

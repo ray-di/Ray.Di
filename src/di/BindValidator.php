@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Ray\Aop\MethodInterceptor;
+use Ray\Aop\NullInterceptor;
 use Ray\Di\Exception\InvalidProvider;
 use Ray\Di\Exception\InvalidType;
 use Ray\Di\Exception\NotFound;
@@ -36,7 +38,7 @@ final class BindValidator
             throw new NotFound($class);
         }
 
-        if (interface_exists($interface) && ! (new ReflectionClass($class))->implementsInterface($interface)) {
+        if (! $this->isNullInterceptorBinding($class, $interface) && interface_exists($interface) && ! (new ReflectionClass($class))->implementsInterface($interface)) {
             throw new InvalidType("[{$class}] is no implemented [{$interface}] interface");
         }
 
@@ -64,5 +66,10 @@ final class BindValidator
         }
 
         return new ReflectionClass($provider);
+    }
+
+    private function isNullInterceptorBinding(string $class, string $interface): bool
+    {
+        return $class === NullInterceptor::class && interface_exists($interface) && (new ReflectionClass($interface))->implementsInterface(MethodInterceptor::class);
     }
 }

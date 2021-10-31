@@ -11,6 +11,8 @@ use Ray\Aop\Pointcut;
 use Ray\Aop\PriorityPointcut;
 
 use function assert;
+use function class_exists;
+use function interface_exists;
 
 abstract class AbstractModule
 {
@@ -79,7 +81,14 @@ abstract class AbstractModule
         $pointcut = new Pointcut($classMatcher, $methodMatcher, $interceptors);
         $this->getContainer()->addPointcut($pointcut);
         foreach ($interceptors as $interceptor) {
-            (new Bind($this->getContainer(), $interceptor))->to($interceptor)->in(Scope::SINGLETON);
+            if (class_exists($interceptor)) {
+                (new Bind($this->getContainer(), $interceptor))->to($interceptor)->in(Scope::SINGLETON);
+
+                return;
+            }
+
+            assert(interface_exists($interceptor));
+            (new Bind($this->getContainer(), $interceptor))->in(Scope::SINGLETON);
         }
     }
 
