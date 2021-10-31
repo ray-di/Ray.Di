@@ -594,6 +594,18 @@ class AopMatcherModule extends AbstractModule
 }
 ```
 
+インターセプターを無効にするにはNullInterceptorを束縛します。
+
+```php
+use Ray\Aop\NullInterceptor;
+
+protected function configure()
+{
+    // ...
+    $this->bind(LoggerInterface::class)->to(NullInterceptor::class);
+}
+```
+
 # ベストプラクティス
 
 可能な限りインジェクターを直接使わないコードにします。その代わりアプリケーションのbootstrapで **ルートオブジェクト** をインジェクトするようにします。
