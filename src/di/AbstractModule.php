@@ -12,6 +12,7 @@ use Ray\Aop\PriorityPointcut;
 
 use function assert;
 use function class_exists;
+use function interface_exists;
 
 abstract class AbstractModule
 {
@@ -73,7 +74,7 @@ abstract class AbstractModule
     /**
      * Bind interceptor
      *
-     * @param array<class-string<MethodInterceptor>> $interceptors
+     * @param array<class-string<MethodInterceptor>|interface-string<MethodInterceptor>> $interceptors
      */
     public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors): void
     {
@@ -86,6 +87,7 @@ abstract class AbstractModule
                 return;
             }
 
+            assert(interface_exists($interceptor));
             (new Bind($this->getContainer(), $interceptor))->in(Scope::SINGLETON);
         }
     }
