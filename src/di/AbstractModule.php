@@ -74,7 +74,7 @@ abstract class AbstractModule
     /**
      * Bind interceptor
      *
-     * @param array<class-string<MethodInterceptor>|interface-string<MethodInterceptor>> $interceptors
+     * @param array<class-string<MethodInterceptor>> $interceptors
      */
     public function bindInterceptor(AbstractMatcher $classMatcher, AbstractMatcher $methodMatcher, array $interceptors): void
     {
