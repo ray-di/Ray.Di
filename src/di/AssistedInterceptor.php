@@ -12,7 +12,10 @@ use Ray\Di\Di\Named;
 use ReflectionNamedType;
 use ReflectionParameter;
 
+use function assert;
+use function class_exists;
 use function in_array;
+use function interface_exists;
 use function parse_str;
 
 /**
@@ -73,6 +76,7 @@ final class AssistedInterceptor implements MethodInterceptor
             $interface = $type instanceof ReflectionNamedType && ! in_array($type->getName(), Argument::UNBOUND_TYPE, true) ? $type->getName() : '';
             $name = $this->getName($method, $parameter);
             $pos = $parameter->getPosition();
+            assert(class_exists($interface) || interface_exists($interface) || $interface === '');
             /** @psalm-suppress MixedAssignment */
             $arguments[$pos] = $this->injector->getInstance($interface, $name);
         }

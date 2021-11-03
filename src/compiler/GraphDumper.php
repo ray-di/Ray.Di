@@ -8,9 +8,12 @@ use Koriym\Printo\Printo;
 use Ray\Di\Container;
 use Ray\Di\Name;
 
+use function assert;
+use function class_exists;
 use function explode;
 use function file_exists;
 use function file_put_contents;
+use function interface_exists;
 use function mkdir;
 use function str_replace;
 
@@ -48,6 +51,8 @@ final class GraphDumper
         }
 
         [$interface, $name] = explode('-', $dependencyIndex);
+        assert(class_exists($interface) || interface_exists($interface) || $interface === '');
+        /** @var object $instance */
         $instance = (new ScriptInjector($this->scriptDir))->getInstance($interface, $name);
         $graph = (string) (new Printo($instance))
             ->setRange(Printo::RANGE_ALL)

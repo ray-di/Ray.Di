@@ -82,6 +82,7 @@ final class OnDemandCompiler
         $serialized = file_get_contents($pointcutsPath);
         assert(! is_bool($serialized));
         $er = error_reporting(error_reporting() ^ E_NOTICE);
+        /** @var array<Pointcut> $pointcuts */
         $pointcuts = unserialize($serialized, ['allowed_classes' => true]);
         error_reporting($er);
 

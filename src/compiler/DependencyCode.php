@@ -10,13 +10,18 @@ use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Stmt;
+use Ray\Di\Argument;
+use Ray\Di\Arguments;
 use Ray\Di\Container;
 use Ray\Di\Dependency;
 use Ray\Di\DependencyInterface;
 use Ray\Di\DependencyProvider;
 use Ray\Di\Instance;
+use Ray\Di\NewInstance;
 use Ray\Di\NullObjectDependency;
 use Ray\Di\SetContextInterface;
+use Ray\Di\SetterMethod;
+use Ray\Di\SetterMethods;
 
 use function get_class;
 
@@ -117,6 +122,7 @@ final class DependencyCode implements SetContextInterface
         $prop = $this->privateProperty;
         $node = $this->getFactoryNode($dependency);
         ($this->aopCode)($dependency, $node);
+        /** @var bool $isSingleton */
         $isSingleton = $prop($dependency, 'isSingleton');
         $node[] = $this->getIsSingletonCode($isSingleton);
         $node[] = new Node\Stmt\Return_(new Node\Expr\Variable('instance'));
@@ -133,6 +139,7 @@ final class DependencyCode implements SetContextInterface
     private function getProviderCode(DependencyProvider $provider): Code
     {
         $prop = $this->privateProperty;
+        /** @var DependencyInterface $dependency */
         $dependency = $prop($provider, 'dependency');
         $node = $this->getFactoryNode($dependency);
         $provider->setContext($this);
@@ -140,6 +147,7 @@ final class DependencyCode implements SetContextInterface
             $node[] = $this->getSetContextCode($this->context); // $instance->setContext($this->context);
         }
 
+        /** @var bool $isSingleton */
         $isSingleton = $prop($provider, 'isSingleton');
         $node[] = $this->getIsSingletonCode($isSingleton);
         $node[] = new Stmt\Return_(new MethodCall(new Expr\Variable('instance'), 'get'));
@@ -167,13 +175,22 @@ final class DependencyCode implements SetContextInterface
     private function getFactoryNode(DependencyInterface $dependency): array
     {
         $prop = $this->privateProperty;
+        /** @var NewInstance $newInstance */
         $newInstance = $prop($dependency, 'newInstance');
         // class name
+        /** @var class-string $class */
         $class = $prop($newInstance, 'class');
-        $setterMethods = (array) $prop($prop($newInstance, 'setterMethods'), 'setterMethods');
-        $arguments = (array) $prop($prop($newInstance, 'arguments'), 'arguments');
-        $postConstruct = (string) $prop($dependency, 'postConstruct');
+        /** @var SetterMethods $setterMethodsObject */
+        $setterMethodsObject = $prop($newInstance, 'setterMethods');
+        /** @var array<SetterMethod> $setterMethods */
+        $setterMethods = (array) $prop($setterMethodsObject, 'setterMethods');
+        /** @var Arguments $argumentsObject */
+        $argumentsObject = $prop($newInstance, 'arguments');
+        /** @var array<Argument> $arguments */
+        $arguments = (array) $prop($argumentsObject, 'arguments');
+        /** @var ?string $postConstruct */
+        $postConstruct = $prop($dependency, 'postConstruct');
 
-        return $this->factoryCompiler->getFactoryCode($class, $arguments, $setterMethods, $postConstruct);
+        return $this->factoryCompiler->getFactoryCode($class, $arguments, $setterMethods, (string) $postConstruct);
     }
 }

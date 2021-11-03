@@ -14,8 +14,10 @@ use Ray\Di\Exception\Unbound;
 use function assert;
 use function defined;
 use function file_get_contents;
+use function is_object;
 use function is_string;
 use function passthru;
+use function property_exists;
 use function serialize;
 use function spl_object_hash;
 use function unlink;
@@ -108,6 +110,7 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToBindModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
+        assert(is_object($instance1) && is_object($instance2));
         $this->assertNotSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -116,6 +119,7 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToBindSingletonModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
+        assert(is_object($instance1) && is_object($instance2));
         $this->assertSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -124,6 +128,7 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToProviderBindModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
+        assert(is_object($instance1) && is_object($instance2));
         $this->assertNotSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -139,6 +144,7 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToProviderSingletonBindModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
+        assert(is_object($instance1) && is_object($instance2));
         $this->assertSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -191,6 +197,7 @@ class InjectorTest extends TestCase
     public function testSerialize(Injector $injector): void
     {
         $extractedInjector = unserialize(serialize($injector));
+        assert($extractedInjector instanceof InjectorInterface);
         $car = $extractedInjector->getInstance(FakeCarInterface::class);
         $this->assertInstanceOf(FakeCar::class, $car);
     }
@@ -234,7 +241,11 @@ class InjectorTest extends TestCase
 
     public function testSerializeBuiltinBinding(): void
     {
-        $instance = unserialize(serialize(new Injector()))->getInstance(FakeBuiltin::class);
+        $injector = unserialize(serialize(new Injector()));
+        assert($injector instanceof InjectorInterface);
+        $instance = $injector->getInstance(FakeBuiltin::class);
+        assert(is_object($instance));
+        assert(property_exists($instance, 'injector'));
         $this->assertInstanceOf(Injector::class, $instance->injector);
     }
 

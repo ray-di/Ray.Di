@@ -12,6 +12,9 @@ use Ray\Aop\WeavedInterface;
 use ReflectionClass;
 use ReflectionMethod;
 
+use function assert;
+use function is_object;
+use function property_exists;
 use function spl_object_hash;
 
 class DependencyTest extends TestCase
@@ -89,6 +92,7 @@ class DependencyTest extends TestCase
         $this->dependency->setScope(Scope::PROTOTYPE);
         $car1 = $this->dependency->inject($container);
         $car2 = $this->dependency->inject($container);
+        assert(is_object($car1) && is_object($car2));
         $this->assertNotSame(spl_object_hash($car1), spl_object_hash($car2));
     }
 
@@ -100,6 +104,7 @@ class DependencyTest extends TestCase
         $this->dependency->setScope(Scope::SINGLETON);
         $car1 = $this->dependency->inject($container);
         $car2 = $this->dependency->inject($container);
+        assert(is_object($car1) && is_object($car2));
         $this->assertSame(spl_object_hash($car1), spl_object_hash($car2));
     }
 
@@ -111,8 +116,10 @@ class DependencyTest extends TestCase
         $container = new Container();
         $container->add((new Bind($container, FakeDoubleInterceptor::class))->to(FakeDoubleInterceptor::class));
         $instance = $dependency->inject($container);
+        assert(is_object($instance));
         $isWeave = (new ReflectionClass($instance))->implementsInterface(WeavedInterface::class);
         $this->assertTrue($isWeave);
+        assert(property_exists($instance, 'bindings'));
         $this->assertArrayHasKey('returnSame', $instance->bindings);
     }
 

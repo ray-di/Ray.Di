@@ -21,7 +21,7 @@ final class SpyCompiler implements CompilerInterface
     /**
      * {@inheritdoc}
      */
-    public function newInstance(string $class, array $args, BindInterface $bind)
+    public function newInstance(string $class, array $args, BindInterface $bind): object
     {
         // never called
         return new stdClass();
@@ -80,6 +80,10 @@ final class SpyCompiler implements CompilerInterface
 
         $log = ' (aop)';
         foreach ($bindings as $method => $interceptors) {
+            /**
+             * @phpstan-var array<string> $interceptors
+             * @psalm-ignore-var
+             */
             $log .= sprintf(
                 ' +%s(%s)',
                 $method,
