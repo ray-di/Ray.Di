@@ -66,12 +66,7 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * Return instance
-     *
-     * @param class-string|string $interface
-     * @param string              $name
-     *
-     * @return mixed instance
+     * {@inheritDoc}
      */
     public function getInstance($interface, $name = Name::ANY)
     {
@@ -84,6 +79,7 @@ class Injector implements InjectorInterface
             $instance = $this->getInstance($interface, $name);
         }
 
+        /** @psalm-suppress MixedReturnStatement */
         return $instance;
     }
 
