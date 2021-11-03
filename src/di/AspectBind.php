@@ -31,6 +31,7 @@ final class AspectBind
         foreach ($bindings as $methodName => $interceptorClassNames) {
             $interceptors = [];
             foreach ($interceptorClassNames as $interceptorClassName) {
+                /** @var class-string $interceptorClassName */
                 /** @psalm-suppress MixedAssignment */
                 $interceptor = $container->getInstance($interceptorClassName, Name::ANY);
                 assert($interceptor instanceof MethodInterceptor);

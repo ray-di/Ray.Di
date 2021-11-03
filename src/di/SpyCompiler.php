@@ -63,7 +63,7 @@ final class SpyCompiler implements CompilerInterface
         $bindingMethods = array_keys($bind->getBindings());
         $hasMethod = false;
         foreach ($bindingMethods as $bindingMethod) {
-            if (method_exists($class, $bindingMethod)) { // @phpstan-ignore-line
+            if (method_exists($class, $bindingMethod)) {
                 $hasMethod = true;
             }
         }
@@ -80,6 +80,10 @@ final class SpyCompiler implements CompilerInterface
 
         $log = ' (aop)';
         foreach ($bindings as $method => $interceptors) {
+            /**
+             * @phpstan-var array<string> $interceptors
+             * @psalm-ignore-var
+             */
             $log .= sprintf(
                 ' +%s(%s)',
                 $method,

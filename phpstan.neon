@@ -1,8 +1,10 @@
 parameters:
   level: max
   paths:
-    - src/Di
-#    - tests/Di
+    - src/di
+    - src/compiler
+    - tests/di
+    - tests/compiler
   excludePaths:
     - tests/tmp/*
     - tests/di/tmp/*

@@ -95,11 +95,14 @@ final class InjectionPoint implements InjectionPointInterface
             return null;
         }
 
-        $qualifier = file_get_contents($qualifierFile);
-        if (is_bool($qualifier)) {
+        $qualifierString = file_get_contents($qualifierFile);
+        if (is_bool($qualifierString)) {
             throw new RuntimeException(); // @codeCoverageIgnore
         }
 
-        return unserialize($qualifier, ['allowed_classes' => true]);
+        /** @var ?object $qualifier */
+        $qualifier = unserialize($qualifierString, ['allowed_classes' => true]);
+
+        return $qualifier;
     }
 }

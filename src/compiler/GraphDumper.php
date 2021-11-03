@@ -52,6 +52,7 @@ final class GraphDumper
 
         [$interface, $name] = explode('-', $dependencyIndex);
         assert(class_exists($interface) || interface_exists($interface) || $interface === '');
+        /** @var object $instance */
         $instance = (new ScriptInjector($this->scriptDir))->getInstance($interface, $name);
         $graph = (string) (new Printo($instance))
             ->setRange(Printo::RANGE_ALL)

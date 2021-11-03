@@ -8,8 +8,10 @@ use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Scalar;
+use Ray\Di\Bind;
 use Ray\Di\Dependency;
 use Ray\Di\Name;
+use Ray\Di\NewInstance;
 
 use function array_merge;
 use function array_splice;
@@ -35,11 +37,14 @@ final class AopCode
     public function __invoke(Dependency $dependency, array &$node): void
     {
         $prop = $this->privateProperty;
+        /** @var ?NewInstance */
         $newInstance = $prop($dependency, 'newInstance');
+        /** @var ?Bind */
         $bind = $prop($newInstance, 'bind');
-        $bind = $prop($bind, 'bind');
+        /** @var ?Bind */
+        $aspectBind = $prop($bind, 'bind');
         /** @var string[][]|null $bindings */
-        $bindings = $prop($bind, 'bindings', null);
+        $bindings = $prop($aspectBind, 'bindings', null);
         if (! is_array($bindings)) {
             return;
         }

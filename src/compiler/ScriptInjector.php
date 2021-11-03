@@ -206,7 +206,7 @@ final class ScriptInjector implements InjectorInterface
 
         $dependency = $this->container[$dependencyIndex];
 
-        return $dependency instanceof Dependency ? (new PrivateProperty())($dependency, 'isSingleton') : false;
+        return $dependency instanceof Dependency ? (bool) (new PrivateProperty())($dependency, 'isSingleton') : false;
     }
 
     private function getModule(): AbstractModule
