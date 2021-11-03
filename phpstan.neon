@@ -1,13 +1,14 @@
 parameters:
   level: max
   paths:
-    - src
-    - tests
-  excludes_analyse:
-    - %currentWorkingDirectory%/tests/tmp/*
-    - %currentWorkingDirectory%/tests/di/tmp/*
-    - %currentWorkingDirectory%/tests/di/Fake/*
-    - %currentWorkingDirectory%/tests/compiler/tmp/*
-    - %currentWorkingDirectory%/tests/compiler/Fake/*
+    - src/Di
+#    - tests/Di
+  excludePaths:
+    - tests/tmp/*
+    - tests/di/tmp/*
+    - tests/Di/tmp/*
+    - tests/di/Fake/*
+    - tests/compiler/tmp/*
+    - tests/compiler/Fake/*
   checkGenericClassInNonGenericObjectType: false
 
