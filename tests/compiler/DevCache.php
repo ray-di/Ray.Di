@@ -70,7 +70,7 @@ class DevCache extends CacheProvider
      */
     public function doGetStats()
     {
-        return $this->cache->getStats();
+        return $this->cache->getStats(); // @phpstan-ignore-line
     }
 
     /**

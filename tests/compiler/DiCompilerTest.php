@@ -11,6 +11,7 @@ use Ray\Compiler\Exception\Unbound;
 use Ray\Di\Name;
 
 use function assert;
+use function property_exists;
 
 class DiCompilerTest extends TestCase
 {
@@ -88,7 +89,9 @@ class DiCompilerTest extends TestCase
         $compiler = new DiCompiler(new FakeLoggerModule(), __DIR__ . '/tmp');
         $compiler->compile();
         $injector = new ScriptInjector(__DIR__ . '/tmp');
+        /** @var FakeLoggerConsumer $loggerConsumer */
         $loggerConsumer = $injector->getInstance(FakeLoggerConsumer::class);
+        assert(property_exists($loggerConsumer, 'logger'));
         assert($loggerConsumer->logger instanceof FakeLogger);
         $this->assertSame('Ray\Compiler\FakeLoggerConsumer', $loggerConsumer->logger->name);
         $this->assertSame('MEMORY', $loggerConsumer->logger->type);

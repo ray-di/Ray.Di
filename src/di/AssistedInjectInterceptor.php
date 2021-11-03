@@ -92,7 +92,7 @@ final class AssistedInjectInterceptor implements MethodInterceptor
         $typeName = $type ? $type->getName() : '';
         $interface = in_array($typeName, Argument::UNBOUND_TYPE) ? '' : $typeName;
 
-        /** @var interface-string $interface */
+        /** @var class-string $interface */
         return $this->injector->getInstance($interface, $named);
     }
 

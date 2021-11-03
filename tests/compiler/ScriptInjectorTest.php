@@ -13,6 +13,8 @@ use Ray\Di\NullModule;
 use function assert;
 use function count;
 use function glob;
+use function is_object;
+use function property_exists;
 use function serialize;
 use function spl_object_hash;
 use function unserialize;
@@ -32,6 +34,7 @@ class ScriptInjectorTest extends TestCase
     {
         $diCompiler = new DiCompiler(new FakeCarModule(), __DIR__ . '/tmp');
         $diCompiler->compile();
+        /** @var FakeCar $car */
         $car = $this->injector->getInstance(FakeCarInterface::class);
         $this->assertInstanceOf(FakeCar::class, $car);
 
@@ -58,6 +61,7 @@ class ScriptInjectorTest extends TestCase
         (new DiCompiler(new FakeToBindPrototypeModule(), __DIR__ . '/tmp'))->compile();
         $instance1 = $this->injector->getInstance(FakeRobotInterface::class);
         $instance2 = $this->injector->getInstance(FakeRobotInterface::class);
+        assert(is_object($instance1) && is_object($instance2));
         $this->assertNotSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -106,6 +110,7 @@ class ScriptInjectorTest extends TestCase
         $diCompiler = new DiCompiler(new FakeCarModule(), __DIR__ . '/tmp');
         $diCompiler->compile();
         $injector = unserialize(serialize($this->injector));
+        assert($injector instanceof InjectorInterface);
         $car = $injector->getInstance(FakeCarInterface::class);
         $this->assertInstanceOf(ScriptInjector::class, $injector);
         $this->assertInstanceOf(FakeCar::class, $car);
@@ -161,9 +166,12 @@ class ScriptInjectorTest extends TestCase
     {
         $diCompiler = new DiCompiler(new NullModule(), __DIR__ . '/tmp');
         $diCompiler->compile();
+        /** @var FakeFactory $factory */
         $factory = $diCompiler->getInstance(FakeFactory::class);
+        assert(property_exists($factory, 'injector'));
         $this->assertInstanceOf(InjectorInterface::class, $factory->injector);
         $injector = new ScriptInjector(__DIR__ . '/tmp');
+        /** @var FakeFactory $factory */
         $factory = $injector->getInstance(FakeFactory::class);
         $this->assertInstanceOf(InjectorInterface::class, $factory->injector);
     }
@@ -211,6 +219,7 @@ class ScriptInjectorTest extends TestCase
             }
         ));
         $injector = unserialize($serialize);
+        assert($injector instanceof InjectorInterface);
         $car = $injector->getInstance(FakeCar::class);
         $this->assertTrue($car instanceof FakeCar);
     }
@@ -223,8 +232,9 @@ class ScriptInjectorTest extends TestCase
                 return new FakeAopModule();
             }
         )));
+        assert($injector instanceof ScriptInjector);
+        /** @var FakeAopInterface $aop */
         $aop = $injector->getInstance(FakeAopInterface::class);
-        assert($aop instanceof FakeAopInterface);
         $result = $aop->returnSame(1);
         $this->assertSame(2, $result);
     }
