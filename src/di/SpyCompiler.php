@@ -21,7 +21,7 @@ final class SpyCompiler implements CompilerInterface
     /**
      * {@inheritdoc}
      */
-    public function newInstance(string $class, array $args, BindInterface $bind)
+    public function newInstance(string $class, array $args, BindInterface $bind): object
     {
         // never called
         return new stdClass();
@@ -63,7 +63,7 @@ final class SpyCompiler implements CompilerInterface
         $bindingMethods = array_keys($bind->getBindings());
         $hasMethod = false;
         foreach ($bindingMethods as $bindingMethod) {
-            if (method_exists($class, $bindingMethod)) {
+            if (method_exists($class, $bindingMethod)) { // @phpstan-ignore-line
                 $hasMethod = true;
             }
         }

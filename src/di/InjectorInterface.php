@@ -9,10 +9,13 @@ interface InjectorInterface
     /**
      * Return instance by interface + name (interface namespace)
      *
-     * @param string $interface
-     * @param string $name
+     * @param ''|class-string<T> $interface
+     * @param string             $name
      *
      * @return mixed
+     * @psalm-return (T is class-string ? T : mixed)
+     *
+     * @template T
      */
     public function getInstance($interface, $name = Name::ANY);
 }

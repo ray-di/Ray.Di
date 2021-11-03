@@ -64,7 +64,7 @@ class AnnotatedClassTest extends TestCase
     }
 
     /**
-     * @psalm-return array{0: array{0: FakeHandleBar::class}, 1: array{0: FakeHandleBarQualifier::class}}
+     * @return array<array<class-string>>
      */
     public function classProvider(): array
     {

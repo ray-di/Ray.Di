@@ -7,6 +7,7 @@ namespace Ray\Di;
 use Ray\Compiler\DiCompiler;
 use Ray\Compiler\ScriptInjector;
 
+use function assert;
 use function microtime;
 use function printf;
 use function range;
@@ -29,6 +30,7 @@ $timer1 = microtime(true) - $timer;
 
 $timer = microtime(true);
 $injector = unserialize($serialize);
+assert($injector instanceof InjectorInterface);
 foreach (range(1, $n) as $i) {
     $injector->getInstance(FakeCarInterface::class);
 }
