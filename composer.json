@@ -20,6 +20,7 @@
         "ray/aop": "^2.10"
     },
     "require-dev": {
+        "ext-pdo": "*",
         "phpunit/phpunit": "^9.5.10",
         "bamarni/composer-bin-plugin": "^1.4"
     },
