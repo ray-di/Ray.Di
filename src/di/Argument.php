@@ -88,7 +88,30 @@ final class Argument implements Serializable
         return $this->meta;
     }
 
-    public function serialize(): string
+    /**
+     * {@inheritDoc}
+     */
+    public function serialize()
+    {
+        return serialize($this->__serialize());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @psalm-param string $serializedData
+     */
+    public function unserialize($serializedData)
+    {
+        /** @var array{0: string, 1: bool, 2: string, 3: string, 4: string, 5: array{0: string, 1: string, 2:string}} $array */
+        $array = unserialize($serializedData, ['allowed_classes' => false]);
+        $this->__unserialize($array);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function __serialize(): array
     {
         $method = $this->reflection->getDeclaringFunction();
         assert($method instanceof ReflectionMethod);
@@ -98,24 +121,20 @@ final class Argument implements Serializable
             $this->reflection->getName(),
         ];
 
-        return serialize([
+        return [
             $this->index,
             $this->isDefaultAvailable,
             $this->default,
             $this->meta,
             $ref,
-        ]);
+        ];
     }
 
     /**
-     * @param string $serialized
-     *
-     * @throws ReflectionException
+     * @param array{0: string, 1: bool, 2: string, 3: string, 4: string, 5: array{0: string, 1: string, 2:string}} $unserialized
      */
-    public function unserialize($serialized): void
+    public function __unserialize(array $unserialized): void
     {
-        /** @var array{0: string, 1: bool, 2: string, 3: string, 4: string, 5: array{0: string, 1: string, 2:string}} $unserialized */
-        $unserialized = unserialize($serialized, ['allowed_classes' => false]);
         [
             $this->index,
             $this->isDefaultAvailable,
