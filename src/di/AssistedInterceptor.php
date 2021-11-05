@@ -11,6 +11,7 @@ use Ray\Di\Di\Assisted;
 use Ray\Di\Di\Named;
 use ReflectionNamedType;
 use ReflectionParameter;
+use ReflectionType;
 
 use function assert;
 use function class_exists;
@@ -73,7 +74,7 @@ final class AssistedInterceptor implements MethodInterceptor
             }
 
             $type = $parameter->getType();
-            $interface = $type instanceof ReflectionNamedType && ! in_array($type->getName(), Argument::UNBOUND_TYPE, true) ? $type->getName() : '';
+            $interface = $this->getInterface($type);
             $name = $this->getName($method, $parameter);
             $pos = $parameter->getPosition();
             assert(class_exists($interface) || interface_exists($interface) || $interface === '');
@@ -101,5 +102,10 @@ final class AssistedInterceptor implements MethodInterceptor
         }
 
         return Name::ANY;
+    }
+
+    private function getInterface(?ReflectionType $type): string
+    {
+        return $type instanceof ReflectionNamedType && ! in_array($type->getName(), Argument::UNBOUND_TYPE, true) ? $type->getName() : '';
     }
 }
