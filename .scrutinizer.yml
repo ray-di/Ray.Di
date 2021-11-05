@@ -1,21 +1,8 @@
-filter:
-    paths: ["src/*"]
-
-tools:
-    php_sim: true
-    php_pdepend: true
-    php_analyzer: true
-    php_mess_detector:
-        enabled: true
-        config:
-            ruleset: ./phpmd.xml
-    php_code_sniffer:
-        enabled: true
-        config:
-            ruleset: ./phpcs.xml
 build:
     nodes:
         analysis:
             tests:
                 override:
-                    - php-scrutinizer-run --enable-security-analysis
+                    - php-scrutinizer-run
+filter:
+    paths: ["src/*"]
