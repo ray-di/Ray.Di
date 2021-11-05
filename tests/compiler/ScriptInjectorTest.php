@@ -53,7 +53,7 @@ class ScriptInjectorTest extends TestCase
     {
         $this->expectException(Unbound::class);
         $script = new ScriptInjector(__DIR__ . '/tmp');
-        $script->getInstance('invalid-class');
+        $script->getInstance('invalid-class'); // @phpstan-ignore-line
     }
 
     public function testToPrototype(): void
@@ -181,7 +181,7 @@ class ScriptInjectorTest extends TestCase
         $this->expectException(Unbound::class);
         $this->expectExceptionMessage('NOCLASS-NONAME');
         $injector = new ScriptInjector(__DIR__ . '/tmp');
-        $injector->getInstance('NOCLASS', 'NONAME');
+        $injector->getInstance('NOCLASS', 'NONAME'); // @phpstan-ignore-line
     }
 
     public function testCompileOnDemand(): void

@@ -7,13 +7,7 @@
 >
     <projectFiles>
         <directory name="src/di" />
-        <ignoreFiles>
-            <directory name="vendor" />
-            <directory name="tests" />
-            <directory name="tests-php8" />
-            <directory name="demo" />
-            <directory name="demo-php8" />
-        </ignoreFiles>
+        <directory name="tests/type" />
     </projectFiles>
     <stubs>
         <file name="tests/stub/BindInterface.phpstub"/>

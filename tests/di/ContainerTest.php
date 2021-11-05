@@ -137,7 +137,7 @@ class ContainerTest extends TestCase
     public function testAbstractClassUnbound(): void
     {
         try {
-            $this->container->getInstance('_INVALID_INTERFACE_', Name::ANY);
+            $this->container->getInstance('_INVALID_INTERFACE_', Name::ANY); // @phpstan-ignore-line
         } catch (Throwable $e) {
             $this->assertSame(Unbound::class, get_class($e));
         }

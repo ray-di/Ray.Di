@@ -5,6 +5,7 @@ parameters:
     - src/compiler
     - tests/di
     - tests/compiler
+    - tests/type
   excludePaths:
     - tests/tmp/*
     - tests/di/tmp/*
