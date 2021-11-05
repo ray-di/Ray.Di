@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
 use Ray\Di\Di\Qualifier;
 use ReflectionClass;
@@ -98,18 +97,41 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
         return $qualifiers;
     }
 
-    public function serialize(): string
+    /**
+     * @return array{0: Reader, 1: string, 2: string, 3: string}
+     */
+    public function __serialize(): array
     {
-        return serialize([$this->reader, $this->pClass, $this->pFunction, $this->pName]);
+        return [$this->reader, $this->pClass, $this->pFunction, $this->pName];
     }
 
     /**
-     * @param string $serialized
+     * {@inheritDoc}
+     *
+     * @param array{0: Reader, 1: string, 2: string, 3: string} $array
      */
-    public function unserialize($serialized): void
+    public function __unserialize(array $array): void
     {
-        /** @var array{0: Reader, 1: string, 2: string, 3: string} $unserialized */
-        $unserialized = unserialize($serialized, ['allowed_classes' => [AnnotationReader::class]]);
-        [$this->reader, $this->pClass, $this->pFunction, $this->pName] = $unserialized;
+        [$this->reader, $this->pClass, $this->pFunction, $this->pName] = $array;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function serialize()
+    {
+        return serialize($this->__serialize());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @psalm-param string $serializedData
+     */
+    public function unserialize($serializedData)
+    {
+        /** @var array{0: Reader, 1: string, 2: string, 3: string} $array */
+        $array = unserialize($serializedData, ['allowed_classes' => [Reader::class]]);
+        $this->__unserialize($array);
     }
 }
