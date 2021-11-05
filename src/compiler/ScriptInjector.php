@@ -177,6 +177,10 @@ final class ScriptInjector implements InjectorInterface
             $this->singletons[$dependencyIndex] = $instance;
         }
 
+        /**
+         * @psalm-var T $instance
+         * @phpstan-var mixed $instance
+         */
         return $instance;
     }
 

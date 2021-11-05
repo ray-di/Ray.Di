@@ -74,6 +74,7 @@ class Injector implements InjectorInterface
             /** @psalm-suppress MixedAssignment */
             $instance = $this->container->getInstance($interface, $name);
         } catch (Untargeted $e) {
+            /** @psalm-var class-string $interface */
             $this->bind($interface);
             /** @psalm-suppress MixedAssignment */
             $instance = $this->getInstance($interface, $name);
@@ -84,7 +85,7 @@ class Injector implements InjectorInterface
     }
 
     /**
-     * @phpstan-param class-string|string $class
+     * @param class-string $class
      *
      * @throws AnnotationException
      */
