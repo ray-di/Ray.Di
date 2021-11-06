@@ -7,16 +7,20 @@ namespace Ray\Di;
 interface InjectorInterface
 {
     /**
-     * Return instance by interface + name (interface namespace)
+     * Return object graph
      *
-     * @param string $name
-     * @psalm-param ''|class-string<T> $interface
-     * @phpstan-param string $interface
+     * @param class-string<T> $interface interface name|class name|empty-string
+     * @param string          $name      interface name space
+     * @psalm-param ''|class-string<T>   $interface
+     * @phpstan-param ''|class-string    $interface
      *
-     * @return mixed
-     * @psalm-return (T is class-string ? T : mixed)
+     * @return T
+     * @psalm-return   (T is object ? T : mixed)
+     * @phpstan-return mixed
      *
      * @psalm-template T of object
+     *
+     * @see https://github.com/ray-di/Ray.Di
      */
     public function getInstance($interface, $name = Name::ANY);  // @phpstan-ignore-line
 }

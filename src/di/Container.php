@@ -17,7 +17,7 @@ use function class_exists;
 use function explode;
 use function ksort;
 
-final class Container
+final class Container implements InjectorInterface
 {
     /** @var DependencyInterface[] */
     private $container = [];
@@ -51,14 +51,14 @@ final class Container
     }
 
     /**
-     * Return instance by interface + name(interface namespace)
-     *
-     * @param class-string|string $interface
-     *
-     * @return mixed
+     * {@inheritDoc}
      */
-    public function getInstance(string $interface, string $name)
+    public function getInstance($interface, $name = Name::ANY)
     {
+        /**
+         * @psalm-var T is object ? T : mixed
+         * @phpstan-var mixed
+         */
         return $this->getDependency($interface . '-' . $name);
     }
 
