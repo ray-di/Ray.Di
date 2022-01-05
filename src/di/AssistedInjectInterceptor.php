@@ -59,7 +59,7 @@ final class AssistedInjectInterceptor implements MethodInterceptor
         $callable = [$invocation->getThis(), $invocation->getMethod()->getName()];
         assert(is_callable($callable));
 
-        return call_user_func_array($callable, $namedArguments); // @phpstan-ignore-line PHP8 named arguments
+        return call_user_func_array($callable, $namedArguments);
     }
 
     /**
