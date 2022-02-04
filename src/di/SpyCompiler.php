@@ -6,7 +6,6 @@ namespace Ray\Di;
 
 use Ray\Aop\BindInterface;
 use Ray\Aop\CompilerInterface;
-use stdClass;
 
 use function array_keys;
 use function implode;
@@ -19,12 +18,14 @@ use function sprintf;
 final class SpyCompiler implements CompilerInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @psalm-suppress InvalidReturnType
+     * @template T of object
      */
-    public function newInstance(string $class, array $args, BindInterface $bind): object
+    public function newInstance(string $class, array $args, BindInterface $bind)
     {
-        // never called
-        return new stdClass();
+        // never called  // @phpstan-ignore-line
     }
 
     /**

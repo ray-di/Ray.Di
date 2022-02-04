@@ -7,5 +7,10 @@
         "psalm/plugin-phpunit": "^0.13",
         "squizlabs/php_codesniffer": "^3.5",
         "vimeo/psalm": "^4.2"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

@@ -25,7 +25,10 @@
         "bamarni/composer-bin-plugin": "^1.4"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true
+        }
     },
     "autoload": {
         "psr-4": {
