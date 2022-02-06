@@ -2,6 +2,8 @@
 
 ## Dependency Injection framework #
 
+[English](README.md) | Japanese
+
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/quality-score.png?b=2.x)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/?branch=2.x)
 [![codecov](https://codecov.io/gh/ray-di/Ray.Di/branch/2.x/graph/badge.svg?token=KCQXtu01zc)](https://codecov.io/gh/ray-di/Ray.Di)
 [![Type Coverage](https://shepherd.dev/github/ray-di/Ray.Di/coverage.svg)](https://shepherd.dev/github/ray-di/Ray.Di)
@@ -10,7 +12,7 @@
 
 ![fake](https://user-images.githubusercontent.com/529021/72650686-866ec100-39c4-11ea-8b49-2d86d991dc6d.png)
 
-**Ray.Di**はGoogleの[Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6)の主要な機能を持つPHPのDIフレームワークです。
+**Ray.Di**はGoogleの[Guice](https://github.com/google/guice/wiki)の主要な機能を持つPHPのDIフレームワークです。
 
 ## 概要
 
