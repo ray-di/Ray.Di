@@ -14,7 +14,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
  * @Target("METHOD")
  * @NamedArgumentConstructor
  */
-#[Attribute(Attribute::TARGET_PARAMETER | Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_PARAMETER | Attribute::TARGET_METHOD | Attribute::TARGET_PROPERTY)]
 final class Named
 {
     /** @var string */
