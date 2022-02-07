@@ -356,7 +356,7 @@ protected function configure()
 
 ### セッターアトリビュートの束縛
 
-カスタムの `Qualifier`属性を、どのメソッドでもデフォルトで依存性を注入するようにするには、次のようにしますが属性を追加するには、 `RayDi⇄InjectInterface` を実装する必要があります。
+カスタムの `Qualifier`属性を、どのメソッドでもデフォルトで依存性を注入するようにするには、次のようにしますが属性を追加するには、 `Ray\Di\Di\InjectInterface` を実装する必要があります。
 
 ```php
 use Ray\Di\Di\InjectInterface;
