@@ -317,7 +317,7 @@ protected function configure()
 
 まず、識別子(Qualifier)属性を定義します。この属性は `Qualifier` 属性のアトリビュートを付与する必要があります。
 
-### 束縛トリビュートの定義
+### 束縛アトリビュートの定義
 
 ```php
 use Ray\Di\Di\Qualifier;
