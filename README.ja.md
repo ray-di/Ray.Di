@@ -2,18 +2,23 @@
 
 ## Dependency Injection framework #
 
+[English](README.md) | Japanese
+
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/quality-score.png?b=2.x)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/?branch=2.x)
 [![codecov](https://codecov.io/gh/ray-di/Ray.Di/branch/2.x/graph/badge.svg?token=KCQXtu01zc)](https://codecov.io/gh/ray-di/Ray.Di)
 [![Type Coverage](https://shepherd.dev/github/ray-di/Ray.Di/coverage.svg)](https://shepherd.dev/github/ray-di/Ray.Di)
-[![Build Status](https://scrutinizer-ci.com/g/ray-di/Ray.Di/badges/build.png?b=2.x)](https://scrutinizer-ci.com/g/ray-di/Ray.Di/build-status/2.x)
-[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/ray-di/Ray.Di/Continuous%20Integration/2.x)](https://github.com/ray-di/Ray.Di/actions)
+[![Continuous Integration](https://github.com/ray-di/Ray.Di/actions/workflows/continuous-integration.yml/badge.svg?branch=2.x)](https://github.com/ray-di/Ray.Di/actions/workflows/continuous-integration.yml)
 [![Total Downloads](https://poser.pugx.org/ray/di/downloads)](https://packagist.org/packages/ray/di)
 
-**Ray.Di**はGoogleの[Guice](http://code.google.com/p/google-guice/wiki/Motivation?tm=6)の主要な機能を持つPHPのDIフレームワークです。
+![fake](https://user-images.githubusercontent.com/529021/72650686-866ec100-39c4-11ea-8b49-2d86d991dc6d.png)
 
-Note: For PHP 8.x users, please see [README.md](README.md).
+**Ray.Di**はGoogleの[Guice](https://github.com/google/guice/wiki)の主要な機能を持つPHPのDIフレームワークです。
 
 ## 概要
+
+依存性注入を使用することには多くの利点がありますが、手作業でそれを行うと、しばしば大量の定型的なコードを書かなければならなくなります。Ray.Diは、依存性注入を使用するコードを、そのような定型的なコードの多くを書く手間なしに書くことができるようにするフレームワークです。
+
+Ray.DiはあなたのPHPコードにファクトリーや`new`を使用する必要性を軽減します。ファクトリーを書く必要がある場合もありますが、あなたのコードはファクトリーに直接依存することはありません。あなたのコードは、変更、ユニットテスト、他のコンテキストでの再利用がより簡単になります。
 
 Ray.Diには以下の機能があります。
 
@@ -37,6 +42,8 @@ Ray.Diには以下の機能があります。
 
 - Nullオブジェクト
 
+Ray.Di 2.0は最初に2015年にリリースされました。以来、最新のPHPに対応を続けていますが非推奨になったPHPのサポートを落とすことはあっても、後方互換性を破壊することはありません。
+
 # 始めよう
 
 ## オブジェクトグラフの作成
@@ -50,14 +57,10 @@ DIではそのオブジェクトを作るのに必要なオブジェクトや値
 ```php
 class BillingService
 {
-    private $processor;
-    private $logger
-    
-    public function __construct(ProcessorInterface $processor, LoggerInterface $logger)
-    {
-        $this->processor = $processor;
-        $this->logger = $logger;
-    }
+    public function __construct(
+        private readonly ProcessorInterface $processor,
+        private readonly LoggerInterface $logger
+    ){}
 }
 ```
 
@@ -85,27 +88,28 @@ $billingService = $injector->getInstance(BillingService::class);
 
 ## コンストラクタインジェクション
 
-コンストラクタインジェクションはインジェクションとオブジェクトの生成を一緒にします。そこで使われるコンストラクタは依存を引数として受け取ります。ほとんどの場合コンストラクタはプロパティにその依存オブジェクトを割り当てます。コンストラクタインジェクションには`@Inject`アノテーションは必要ありません。
+コンストラクタインジェクションはインジェクションとオブジェクトの生成を一緒にします。そこで使われるコンストラクタは依存を引数として受け取ります。ほとんどの場合コンストラクタはプロパティにその依存オブジェクトを割り当てます。コンストラクタインジェクションには`#[Inject]`アトリビュートは必要ありません。
 
 ```php
-    public function __construct(DbInterface $db)
-    {
-        $this->db = $db;
-    }
+public function __construct(DbInterface $db)
+{
+    $this->db = $db;
+}
 ```
 
 ## セッターインジェクション
 
-`@Inject` アノテーションを持つメソッドでメソッドインジェクションをすることができます。依存は引数の形を取り、メソッド実行前にインジェクタに解決されます。メソッドインジェクションでは任意の引数を取ることができます。メソッド名は注入には影響しません。
+`#[Inject]`アトリビュートを与えたメソッドでメソッドインジェクションをすることができます。依存は引数の形を取り、メソッド実行前にインジェクタに解決されます。メソッドインジェクションでは任意の引数を取ることができます。メソッド名は注入には影響しません。
 
 ```php
-    /**
-     * @Inject
-     */
-    public function setDb(DbInterface $db)
-    {
-        $this->db = $db;
-    }
+use Ray\Di\Di\Inject;
+```
+```php
+#[Inject]
+public function setDb(DbInterface $db)
+{
+    $this->db = $db;
+}
 ```
 
 ## プロパティインジェクション
@@ -114,36 +118,26 @@ $billingService = $injector->getInstance(BillingService::class);
 
 ## アシスティッドインジェクション
 
-メソッドが実行されるタイミングでメソッドの引数に依存を渡すことができます。そのためには依存を受け取る引数を`@Assisted`で指定し、引数リストの終わり（右）に移動して`null`をデフォルトとして与える必要があります。
+メソッドが実行されるタイミングでメソッドの引数に依存を渡すことができます。そのためには依存を受け取る引数を`#[Assisted]`で指定してデフォルトを`null`にする必要があります。
 
 ```php
 use Ray\Di\Di\Assisted;
 ```
 
 ```php
-    /**
-     * @Assisted({"db"})
-     */
-    public function doSomething($id, DbInterface $db = null)
-    {
-        $this->db = $db;
-    }
+public function doSomething($id, #[Assisted] DbInterface $db = null)
+{
+    $this->db = $db;
+}
 ```
 
-`@Assisted`で提供される依存は、その時に渡された他の引数を参照して決定することもできます。そのためには依存を`プロバイダーバインディング`で束縛して、その[プロバイダー束縛](#provider-bidning)は`MethodInvocationProvider`を依存として受け取るようにします。`get()`メソッドでメソッド実行オブジェクト [MethodInvocation](https://github.com/ray-di/Ray.Aop/blob/2.x/src/MethodInvocation.php) を取得することができ、引数の値や対象のメソッドのプロパティにアクセスすることができます。
+`@Assisted`で提供される依存は、その時に渡された他の引数を参照して決定することもできます。そのためには依存を`プロバイダー束縛`で束縛して、その[プロバイダー束縛](#プロバイダ束縛)は`MethodInvocationProvider`を依存として受け取るようにします。`get()`メソッドでメソッド実行オブジェクト [MethodInvocation](https://github.com/ray-di/Ray.Aop/blob/2.x/src/MethodInvocation.php) を取得することができ、引数の値や対象のメソッドのプロパティにアクセスすることができます。
 
 ```php
 class HorizontalScaleDbProvider implements ProviderInterface
 {
-    /**
-     * @var MethodInvocationProvider
-     */
-    private $invocationProvider;
-
-    public function __construct(MethodInvocationProvider $invocationProvider)
-    {
-        $this->invocationProvider = $invocationProvider;
-    }
+    public function __construct(private MethodInvocationProvider $invocationProvider)
+    {}
 
     public function get()
     {
@@ -157,71 +151,57 @@ class HorizontalScaleDbProvider implements ProviderInterface
 
 # 束縛
 
-インジェクタの役目はオブジェクトグラフの構築です。インスタンスを型で要求されると生成すべきものを見つけて依存解決し、それらを結びつけます。依存解決の方法を指定するにはインジェクタに束縛で設定を行います。
+* [リンク束縛](#リンク束縛)
+* [プロバイダ束縛](#プロバイダ束縛)
+* [インスタンス束縛](#インスタンス束縛)
+* [アンターゲット束縛](#アンターゲット束縛)
+* [アトリビュート束縛](#アトリビュート束縛)
+* [コンストラクタ束縛](#コンストラクタ束縛)
+* [ヌルオブジェクト束縛](#ヌルオブジェクト束縛)
+
+
+インジェクタの仕事は、オブジェクトのグラフを組み立てることです。指定された型のインスタンスを要求すると、何を構築すべきかを判断し、依存関係を解決し、すべてを一緒に配線します。依存関係を解決する方法を指定するには、束縛を使用してインジェクタを設定します。
+
+# 束縛の作成
+
+束縛を作成するには、AbstractModuleを拡張しconfigureメソッドをオーバーライドします。メソッド本体でbind()をコールし各束縛を指定します。
+これらのメソッドはコンパイル時に型チェックが行われ、間違った型を使用した場合はエラーが報告されます。モジュールを作成したら、Injectorに引数として渡してインジェクタを構築します。
+
+モジュールを使って、リンク束縛、インスタンス束縛、プロバイダ束縛、コンストラクタ束縛、アンターゲット束縛を作成します。
+
+```php
+class TweetModule extends AbstractModule
+{
+    protected function configure()
+    {
+        $this->bind(TweetClient::class);
+        $this->bind(TweeterInterface::class)->to(SmsTweeter::class)->in(Scope::SINGLETON);
+        $this->bind(UrlShortenerInterface)->toProvider(TinyUrlShortener::class)
+        $this->bind('')->annotatedWith(Username::class)->toInstance("koriym")
+    }
+}
+```
 
 ## リンク束縛 ##
 
-**Linked Bindings** はインターフェイスとその実装クラスを束縛します。
+**Linked Bindings**は、タイプをその実装にマッピングします。この例では、インターフェース TransactionLogInterface を実装 DatabaseTransactionLog にマップしています。
 
 ```php
-namespace MovieApp;
-
-use Ray\Di\AbstractModule;
-use Ray\Di\Di\Inject;
-use Ray\Di\Injector;
-use MovieApp\FinderInterface;
-use MovieApp\Finder;
-
-interface FinderInterface
+class BillingModule extends AbstractModule
 {
-}
-
-interface ListerInterface
-{
-}
-
-class Finder implements FinderInterface
-{
-}
-
-class Lister implements ListerInterface
-{
-    public $finder;
-
-    /**
-     * @Inject
-     */
-    public function setFinder(FinderInterface $finder)
+    protected function configure()
     {
-        $this->finder = $finder;
+        $this->bind(TransactionLogInterface::class)->to(DatabaseTransactionLog::class);
     }
 }
-
-class ListerModule extends AbstractModule
-{
-    public function configure()
-    {
-        $this->bind(FinderInterface::class)->to(Finder::class);
-        $this->bind(ListerInterface::class)->to(Lister::class);
-    }
-}
-
-$injector = new Injector(new ListerModule);
-$lister = $injector->getInstance(ListerInterface::class);
-$works = ($lister->finder instanceof Finder::class);
-echo(($works) ? 'It works!' : 'It DOES NOT work!');
-
-// It works!
 ```
-
-Linked Bindings はチェーンさせることができます。
 
 <a name="provider-bidning"></a>
 ## プロバイダ束縛
 
-[Provider bindings](http://code.google.com/p/rayphp/wiki/ProviderBindings) はインターフェイスと実装クラスの**プロバイダー**を束縛します。
+プロバイダ束縛は、タイプをそのプロバイダにマッピングします。
 
-プロバイダーは依存のインスタンスを`get`メソッドで返します。
+プロバイダクラスはRayの`ProviderInterface`を実装していて、これは値を供給するためのシンプルで一般的なインタフェースです。
 
 ```php
 use Ray\Di\ProviderInterface;
@@ -232,18 +212,15 @@ interface ProviderInterface
 }
 ```
 
-プロバイダーにも依存が注入されます。
-インスタンス生成にファクトリーコードが必要な時に **Provider Bindings**を使います。
+プロバイダ実装クラスは、それ自身の依存性を持っており、それはコンストラクタを介して受け取ります。
+`ProviderInterface`を実装し、完全に型安全で返されるものを定義しています。
 
 ```php
 class DatabaseTransactionLogProvider implements Provider
 {
-    private $connection;
-
-    public function __construct(ConnectionInterface $connection)
-    {
-        $this->connection = $connection;
-    }
+    public function __construct(
+        private readonly ConnectionInterface $connection
+    ){}
 
     public function get()
     {
@@ -254,109 +231,50 @@ class DatabaseTransactionLogProvider implements Provider
     }
 }
 ```
-
-このようにして `toProvider()` メソッドを使ってプロバイダに束縛します。
+最後に、`toProvider()`メソッドを使用してプロバイダに束縛します。
 
 ```php
 $this->bind(TransactionLogInterface::class)->toProvider(DatabaseTransactionLogProvider:class);
 ```
-## コンテンキストプロバイダ束縛
 
-同じプロバイダーでコンテキスト別にオブジェクトを生成したい場合があります。例えば接続先の違う複数のDBオブジェクトを同じインターフェイスでインジェクトしたい場合などです。そういう場合には`toProvider()`でコンテキスト（文字列）を指定して束縛をします。
+## インジェクションポイント
 
-```php
-$dbConfig = ['user' => $userDsn, 'job'=> $jobDsn, 'log' => $logDsn];
-$this->bind()->annotatedWith('db_config')->toInstance(dbConfig);
-$this->bind(Connection::class)->annotatedWith('usr_db')->toProvider(DbalProvider::class, 'user');
-$this->bind(Connection::class)->annotatedWith('job_db')->toProvider(DbalProvider::class, 'job');
-$this->bind(Connection::class)->annotatedWith('log_db')->toProvider(DbalProvider::class, 'log');
-```
+**InjectionPoint** は、インジェクションポイントの情報を持つクラスです。
+メタデータへのアクセスは インジェクションされるメソッドや引数のリフレクションやアトリビュートで提供されます。
 
-プロバイダーはコンテキスト別に生成します。
+例えば、下記の`Psr3LoggerProvider`クラスの`get()`メソッドは、インジェクトする対象クラスのクラス名を利用してインジェクション可能なLoggerを生成します。
 
 ```php
-class DbalProvider implements ProviderInterface, SetContextInterface
+class Psr3LoggerProvider implements ProviderInterface
 {
-    private $dbConfigs;
+    public function __construct(
+        private InjectionPointInterface $ip
+    ){}
 
-    public function setContext($context)
-    {
-        $this->context = $context;
-    }
-
-    /**
-     * @Named("db_config")
-     */
-    public function __construct(array $dbConfigs)
-    {
-        $this->dbConfigs = $dbConfigs;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function get()
     {
-        $config = $this->dbConfigs[$this->context];
-        $conn = DriverManager::getConnection(config);
+        $logger = new \Monolog\Logger($this->ip->getClass()->getName());
+        $logger->pushHandler(new StreamHandler('path/to/your.log', Logger::WARNING));
 
-        return $conn;
+        return $logger;
     }
 }
+
 ```
-同じインターフェイスですが、接続先の違う別々のDBオブジェクトを受け取ります。
+
+`InjectionPointInterface` は以下のメソッドが利用できます。
 
 ```php
-/**
- * @Named("userDb=user_db,jobDb=job_db,logDb=log_db")
- */
-public function __construct(Connection $userDb, Connection $jobDb, Connection $logDb)
-{
-  //...
-}
+$ip->getClass();      // \ReflectionClass
+$ip->getMethod();     // \ReflectionMethod
+$ip->getParameter();  // \ReflectionParameter
+$ip->getQualifiers(); // (array) $qualifierAnnotations
 ```
 
-
-## 名前束縛
-
-Rayには`@Named`という文字列で`名前`を指定できるビルトインアノテーションがあります。同じインターフェイスの依存を`名前`で区別します。
-
-メソッドの引数が１つの場合
-
-```php
-/**
- *  @Inject
- *  @Named("checkout")
- */
-public RealBillingService(CreditCardProcessorInterface $processor)
-{
-...
-```
-
-メソッドの引数が複数の場合は`変数名=名前`のペアでカンマ区切りの文字列を指定します。
-
-```php
-/**
- *  @Inject
- *  @Named("processonr=checkout,subProcessor=backup")
- */
-public RealBillingService(CreditCardProcessorInterface $processor, CreditCardProcessorInterface $subProcessor)
-{
-...
-```
-
-名前を使って束縛するために`annotatedWith()`メソッドを使います。
-
-```php
-protected function configure()
-{
-    $this->bind(CreditCardProcessorInterface::class)->annotatedWith('checkout')->to(CheckoutCreditCardProcessor::class)
-}
-```
 
 ## インスタンス束縛
 
-`toInstance`は値を直接束縛します。
+`toInstance()`メソッドは値を直接束縛します。
 
 ```php
 protected function configure()
@@ -365,12 +283,14 @@ protected function configure()
 }
 ```
 
-定数は`@Named`を使って束縛します。
+ある型をその型のインスタンスにバインドすることができます。これは通常、値オブジェクトのようなそれ自体に依存性を持たないオブジェクトにのみに用いるべきです。
+
+スカラー値の定数は`#Named`を使って束縛します。
 
 ```php
 protected function configure()
 {
-    $this->bind()->annotatedWith("login_id")->toInstance('bear');
+    $this->bind()->annotatedWith('login_id')->toInstance('bear');
 }
 ```
 
@@ -388,71 +308,166 @@ protected function configure()
 }
 ```
 
-## コンストラクタ束縛
+## アトリビュート束縛
 
-`@Inject`アノテーションのないサードパーティーのクラスやアノテーションを使いたくない時には`Provider`束縛を使うこともできますが、その場合インスタンスをユーザーコードが作成する事になりAOPが利用できません。
+場合によっては、同じタイプで複数の束縛が必要になることがあります。たとえば、PayPal のクレジットカード決済と Google Checkout の決済の両方を行いたい場合などです。
+このような場合に備えて、束縛ではオプションの束縛属性を用意しています。この属性と型を組み合わせることで、束縛を一意に識別します。このペアをキーと呼びます。
 
-この問題は`toConstructor`束縛で解決できます。インターフェイスにクラスを束縛するのは`to()`と同じですが、`@Named`やセッターメソッドの`@Inject`の指定をアノテートする事なしに指定できます。
+まず、識別子(Qualifier)属性を定義します。この属性は `Qualifier` 属性のアトリビュートを付与する必要があります。
+
+### 束縛アトリビュートの定義
 
 ```php
-<?php
-class WebApi implements WebApiInterface
+use Ray\Di\Di\Qualifier;
+
+#[Attribute, Qualifier]
+final class PayPal
 {
-    private $id;
-    private $password;
-    private $client;
-    private $token;
-
-    /**
-     * @Named("id=user_id,password=user_password")
-     */
-    public function __construct(string $id, string $password)
-    {
-        $this->id = $id;
-        $this->password = $password;
-    }
-    
-    /**
-     * @Inject
-     */
-    public function setGuzzle(ClientInterface $client)
-    {
-        $this->client = $client;
-    }
-
-    /**
-     * @Inect(optional=true)
-     * @Named("token")
-     */
-    public function setOptionalToken(string $token)
-    {
-        $this->token = $token;
-    }
-
-    /**
-     * @PostConstruct
-     */
-    public function initialize()
-    {
-    }
+}
 ```
 
-上記のWebApiクラスをアノテーションを使わないでコンストラクタ束縛するにはこのようにします。
-    
+インジェクションされるパラメータにその属性を適用します。
 
 ```php
-<?php
+public function __construct(
+    #[Paypal] private readonly CreditCardProcessorInterface $processor
+){}
+```
+
+識別子に引数を指定することもできます。
+
+```php
+public function __construct(
+    #[Paypal('processor')] private readonly CreditCardProcessorInterface $processor
+){}
+```
+
+最後に、その属性を使用する束縛を作成します。これは bind() 文のオプションである `annotatedWith` 節を使用します。
+
+```php
+protected function configure()
+{
+    $this->bind(CreditCardProcessorInterface::class)
+        ->annotatedWith(PayPal::class)
+        ->to(PayPalCreditCardProcessor::class);
+```
+
+### セッターアトリビュートの束縛
+
+カスタムの `Qualifier`属性を、どのメソッドでもデフォルトで依存性を注入するようにするには、次のようにしますが属性を追加するには、 `Ray\Di\Di\InjectInterface` を実装する必要があります。
+
+```php
+use Ray\Di\Di\InjectInterface;
+use Ray\Di\Di\Qualifier;
+
+#[Attribute, Qualifier]
+final class PaymentProcessorInject implements InjectInterface
+{
+    public function isOptional()
+    {
+        return $this->optional;
+    }
+    
+    public function __construct(
+        public readonly bool $optional = true
+        public readonly string $type;
+    ){}
+}
+```
+
+このインターフェースでは、`isOptional()` メソッドを実装することが必須です。
+このメソッドは束縛がオプショナルかどうかを決定します。
+
+これでカスタムインジェクタ属性が作成できたので、任意のメソッドで使用することができます。
+
+```php
+#[PaymentProcessorInject(type: 'paypal')]
+public setPaymentProcessor(CreditCardProcessorInterface $processor)
+{
+ ....
+}
+```
+
+新しいアトリビュートを使って、インターフェイスを実装に束縛します。
+
+```php
+protected function configure()
+{
+    $this->bind(CreditCardProcessorInterface::class)
+        ->annotatedWith(PaymentProcessorInject::class)
+        ->toProvider(PaymentProcessorProvider::class);
+}
+```
+
+プロバイダは、qualifier 属性で指定された情報を使用して適切なインスタンスを生成することができます。
+
+## Qualifier
+
+Qualifier属性の最も一般的な使用法は、関数内の引数に特定のラベルを付けることです。
+このラベルは、インスタンス化されるクラスを正しく選択するために束縛で使用されます。このような場合Ray.Diには、文字列を受け取るビルトイン・束縛属性`#[Named]`が用意されています。
+
+```php
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+
+public function __construct(
+    #[Named('checkout')] private CreditCardProcessorInterface $processor
+){}
+```
+
+特定の名前をバインドするには、`annotatedWith()` メソッドを用いてその文字列を渡します。
+
+```php
+protected function configure()
+{
+    $this->bind(CreditCardProcessorInterface::class)
+        ->annotatedWith('checkout')
+        ->to(CheckoutCreditCardProcessor::class);
+}
+```
+
+パラメータを指定するには、`#[Named()]`アトリビュートを付ける必要があります。
+
+```php
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+
+public function __construct(
+    #[Named('checkout')] private CreditCardProcessorInterface $processor,
+    #[Named('backup')] private CreditCardProcessorInterface $subProcessor
+){}
+```
+
+パラメータを指定するには、`#[Named]`アトリビュートを付ける必要があります。
+
+```php
+use Ray\Di\Di\Inject;
+use Ray\Di\Di\Named;
+
+public function __construct(
+    #[Named('checkout')] private CreditCardProcessorInterface $processor,
+    #[Named('backup')] private CreditCardProcessorInterface $subProcessor
+){}
+```
+
+## コンストラクタ束縛
+
+`#[Inject]`アトリビュートのないサードパーティーのクラスやアトリビュートを使いたくない時には`Provider`束縛を使うこともできますが、その場合インスタンスをユーザーコードが作成する事になりAOPが利用できません。
+この問題は`toConstructor`束縛で解決できます。インターフェイスにクラスを束縛するのは`to()`と同じですが、`#[Named]`やセッターメソッドの`#[Inject]`の属性を追加する事なしに指定できます。
+
+```php
 protected function configure()
 {
     $this
-        ->bind(WebApiInterface::class)
+        ->bind($interfaceName)
         ->toConstructor(
-            WebApi::class,                              // string $class_name
-            [
-                'id' => 'user_id',                    // array $name
-                'passowrd' => 'user_password'
-            ],
-            (new InjectionPoints)                       // InjectionPoints　$setter_injection
+            $className,
+            $name,
+            $injectionPoint,
+            $postConstruct
+        );
+        
+        (new InjectionPoints)                       // InjectionPoints　$setter_injection
                 ->addMethod('setGuzzle', 'token')
                 ->addOptionalMethod('setOptionalToken'),
             'initialize'                                // string $postCostruct
@@ -470,24 +485,40 @@ protected function configure()
 
 **name**
 
-名前束縛。配列か文字列で`引数名`と`束縛名の名前`をペアにして指定します。
+引数に識別子を追加する場合は、変数名をキー、値を識別子の名前とする配列を指定します。
 
-array `[[$parame_name => $binding_name],...]` or string `"param_name=binding_name&..."`
+
+```
+[
+	[$param_name1 => $binding_name1],
+	...
+]
+```
+
+以下のストリングフォーマットもサポートされています。
+`'param_name1=binding_name1&...'`
 
 **setter_injection**
 
-セッターインジェクションのメソッド名と`束縛名の名前`を指定したインジェクとポイントオブジェクト
+`InjectionPoints`オブジェクトでセッターインジェクトのメソッド名($methodName)とQualifier($named)を指定します。
+
+```php
+(new InjectionPoints)
+	->addMethod($methodName1)
+	->addMethod($methodName2, $named)
+  ->addOptionalMethod($methodName, $named)
+```
 
 **postCosntruct**
- 
-`＠postCosntruct`と同じく全てのインジェクションが終わった後に呼ばれる初期化メソッド名。
+
+Ray.Diは、そのコンストラクタとセッタメソッドを呼び出して束縛を満たし、すべての依存関係が注入された後に`$postCosntruct`メソッドを呼び出します。
 
 ## PDO Example
 
 [PDO](http://php.net/manual/ja/pdo.construct.php)クラスの束縛の例です. 
 
 ```php
-public PDO::__construct ( string $dsn [, string $username [, string $password [, array $options ]]] )
+public PDO::__construct (string $dsn [, string $username [, string $password [, array $options ]]] )
 ```
 
 ```php
@@ -509,7 +540,7 @@ protected function configure()
 
 PDOのどのインターフェイスがないので`toConstructor()`メソッドの二番目の引数の名前束縛でP束縛しています
 
-## Nullオブジェクト束縛
+## ヌルオブジェクト束縛
 
 Null Objectはインターフェイスを実装していてもメソッドの中で何もしないオブジェクトです。
 `toNull()`で束縛するとインターフェイスからNullオブジェクトのコード生成され、そのインスタンスにバインドされます。
@@ -539,16 +570,132 @@ protected function configure()
 このメソッドは全ての依存がインジェクトされた後に呼ばれます。
 セッターインジェクションがある場合などでも全ての必要な依存が注入された前提にすることができます。
 
+``php
+use Ray\Di\Di\PostConstruct;
+```
 ```php
-/**
- * @PostConstruct
- */
+#[PostConstruct]
 public function onInit()
 {
     //....
 }
 ```
-## インストール
+
+# アスペクト指向プログラミング
+
+依存性注入を補完するために、Ray.Diはメソッドインターセプションをサポートしています。この機能により、一致するメソッドが呼び出されるたびに実行されるコードを書くことができます。これは、トランザクション、セキュリティ、ロギングなど、横断的な関心事（アスペクト）に適しています。インターセプターは問題をオブジェクトではなくアスペクトに分割するため、その利用はアスペクト指向プログラミング（AOP）と呼ばれています。
+
+選択したメソッドを平日のみとするために、アトリビュートを定義します。
+
+```php
+#[Attribute(Attribute::TARGET_METHOD)]
+final class NotOnWeekends
+{
+}
+```
+
+...そして、必要なメソッドに適用します。
+
+```php
+class BillingService
+{
+    #[NotOnWeekends]
+    chargeOrder(PizzaOrder $order, CreditCard $creditCard)
+    {
+```
+
+次に `MethodInterceptor`インターフェイスを実装し、インターセプターを定義します。メソッドを呼び出す必要がある場合は、`$invocation->proceed()` を呼び出すことで呼び出します。
+
+```php
+
+use Ray\Aop\MethodInterceptor;
+use Ray\Aop\MethodInvocation;
+
+class WeekendBlocker implements MethodInterceptor
+{
+    public function invoke(MethodInvocation $invocation)
+    {
+        $today = getdate();
+        if ($today['weekday'][0] === 'S') {
+            throw new \RuntimeException(
+                $invocation->getMethod()->getName() . " not allowed on weekends!"
+            );
+        }
+        return $invocation->proceed();
+    }
+}
+```
+
+最後に、すべての設定を行います。この場合、どのクラスにもマッチしますが、`#[NotOnWeekends]` 属性を持つメソッドにのみマッチします。
+
+```php
+
+use Ray\Di\AbstractModule;
+
+class WeekendModule extends AbstractModule
+{
+    protected function configure()
+    {
+        $this->bindInterceptor(
+            $this->matcher->any(),                           // any class
+            $this->matcher->annotatedWith('NotOnWeekends'),  // #[NotOnWeekends] attributed method
+            [WeekendBlocker::class]                          // apply WeekendBlocker interceptor
+        );
+    }
+}
+
+$injector = new Injector(new WeekendModule);
+$billing = $injector->getInstance(BillingServiceInterface::class);
+try {
+    echo $billing->chargeOrder();
+} catch (\RuntimeException $e) {
+    echo $e->getMessage() . "\n";
+    exit(1);
+}
+```
+
+それをすべてまとめると、（土曜日まで待つとして）メソッドがインターセプトされ、注文が拒否されたことがわかります。
+
+```php
+RuntimeException: chargeOrder not allowed on weekends! in /apps/pizza/WeekendBlocker.php on line 14
+
+Call Stack:
+    0.0022     228296   1. {main}() /apps/pizza/main.php:0
+    0.0054     317424   2. Ray\Aop\Weaver->chargeOrder() /apps/pizza/main.php:14
+    0.0054     317608   3. Ray\Aop\Weaver->__call() /libs/Ray.Aop/src/Weaver.php:14
+    0.0055     318384   4. Ray\Aop\ReflectiveMethodInvocation->proceed() /libs/Ray.Aop/src/Weaver.php:68
+    0.0056     318784   5. Ray\Aop\Sample\WeekendBlocker->invoke() /libs/Ray.Aop/src/ReflectiveMethodInvocation.php:65
+```
+
+インターセプターを無効にするには、NullInterceptorをバインドします。
+
+```php
+use Ray\Aop\NullInterceptor;
+
+protected function configure()
+{
+    // ...
+    $this->bind(LoggerInterface::class)->to(NullInterceptor::class);
+}
+```
+
+
+# More Docs
+
+* [Contextual binding](docs/contextual_binding.md)
+* [Performance Boost](docs/performance_boost.md)
+
+## Ray.Diアプリケーションをグラフに
+
+高度なアプリケーションを作成した場合、Ray.Diの豊富なイントロスペクションAPIでオブジェクトグラフを詳細に記述することができます。オブジェクトビジュアルグラファーは、このデータを理解しやすいビジュアライゼーションとして公開します。複雑なアプリケーションの複数のクラスの束縛や依存関係を、統一されたダイアグラムで表示することができます。
+
+詳細は [Ray.ObjectGrapher](https://github.com/koriym/Ray.ObjectGrapher)をご覧ください。
+
+## アノテーション / アトリビュート
+
+Ray.Di は、PHP 7/8 では [doctrine/annotation](https://github.com/doctrine/annotations)を使用して、PHP8では[Attributes](https://www.php.net/manual/en/language.attributes.overview.php)を使用して使用することができます。アノテーションコードの例は古い[README(v2.10)](https://github.com/ray-di/Ray.Di/tree/2.10.5/README.md)をご覧ください。属性に対する前方互換性のあるアノテーションを作成するには、 [カスタムアノテーションクラス](https://github.com/kerveros12v/sacinta4/blob/e976c143b3b7d42497334e76c00fdf38717af98e/vendor/doctrine/annotations/docs/en/custom.rst#optional-constructors-with-named-parameters) を参照してください。
+
+## モジュールインストール
 
 モジュールは他のモジュールの束縛をインストールして使う事ができます。
 
@@ -562,134 +709,11 @@ protected function configure()
 }
 ```
 
-## アスペクト指向プログラミング
-
-Ray.Aopのアスペクト指向プログラミングが利用できます。
-
-```php
-class TaxModule extends AbstractModule
-{
-    protected function configure()
-    {
-        $this->bindInterceptor(
-            $this->matcher->subclassesOf(RealBillingService::class),
-            $this->matcher->annotatedWith('Tax'),
-            [TaxCharger::class]
-        );
-    }
-}
-```
-
-```php
-class AopMatcherModule extends AbstractModule
-{
-    protected function configure()
-    {
-        $this->bindInterceptor(
-            $this->matcher->any(),                 // In any class and
-            $this->matcher->startWith('delete'),   // ..the method start with "delete"
-            [Logger::class]
-        );
-    }
-}
-```
-
-インターセプターを無効にするにはNullInterceptorを束縛します。
-
-```php
-use Ray\Aop\NullInterceptor;
-
-protected function configure()
-{
-    // ...
-    $this->bind(LoggerInterface::class)->to(NullInterceptor::class);
-}
-```
-
-# ベストプラクティス
-
-可能な限りインジェクターを直接使わないコードにします。その代わりアプリケーションのbootstrapで **ルートオブジェクト** をインジェクトするようにします。
-このルートオブジェクトのクラスは依存する他のオブジェクトのインジェクションに使われます。その先のオブジェクトも同じで、依存が依存を必要として最終的にオブジェクトグラフが作られます。
-
-## パフォーマンスの向上
-
-### スクリプトインジェクタ
-
-`ScriptInjector` はパフォーマンス改善のためにファクトリーコードそれ自体を生成し、インスタンス生成の方法を分かりやすくします。
- 
-```php
-
-use Ray\Di\ScriptInjector;
-use Ray\Compiler\DiCompiler;
-use Ray\Compiler\Exception\NotCompiled;
-
-try {
-    $injector = new ScriptInjector($tmpDir);
-    $instance = $injector->getInstance(ListerInterface::class);
-} catch (NotCompiled $e) {
-    $compiler = new DiCompiler(new ListerModule, $tmpDir);
-    $compiler->compile();
-    $instance = $injector->getInstance(ListerInterface::class);
-}
-```
-
-インスタンスが生成されれば、生成されたファクトリーファイルを `$tmpDir` で見ることができるようになります。
-
-### キャッシュインジェクタ
-
-シリアライズをして高速にインジェクションを行うようにすることもできます。
-
-```php
-
-// save
-$injector = new Injector(new ListerModule);
-$cachedInjector = serialize($injector);
-
-// load
-$injector = unserialize($cachedInjector);
-$lister = $injector->getInstance(ListerInterface::class);
-```
-
-### CachedInjectorFactory
-
-CachedInejctorFactory`は、ノーマルのインジェクターとスクリプトインジェクターをハイブリッドで利用する事で開発とプロダクションの両方で最高のパフォーマンスを発揮します。
-
-インジェクターは、リクエストを超えてシングルトンオブジェクトを注入することができ、テストの速度が大幅に向上します。テストでの連続するPDO接続も（再利用されるため）接続リソースを使い果たすことがありません。
-
-詳細は [CachedInjectorFactory](https://github.com/ray-di/Ray.Compiler/issues/75) を参照してください。
-
-## Grapher
-
-`Grapher`では、コンストラクタの引数は手動で渡しその後のインジェクションを自動で行われます。
-（ルートオブジェクトのみオブジェクトの生成の仕組みをもつような）既存のシステムにRay.Diを導入するために便利です。AOPなども同様に使えます。
-
-```php
-// ...
-$grapher = new Grapher(new Module, __DIR__ . '/tmp');
-$instance = $grapher->newInstanceArgs(FooController::class, [$param1, $param2]);
-```
-
-Ray.Compilerは使用できません。パフォーマンス向上にはインジェクタをシリアライズして使います。
-
-## フレームワーク
-
- * [CakePHP3 PipingBag](https://github.com/lorenzo/piping-bag) by [@jose_zap](https://twitter.com/jose_zap)
- * [Symfony QckRayDiBundle](https://github.com/qckanemoto/QckRayDiBundle) and [sample project](https://github.com/qckanemoto/symfony-raydi-sample) by [@qckanemoto](https://twitter.com/qckanemoto)
- * [Radar](https://github.com/ray-di/Ray.Adr)
- * [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday)
- * [Yii 1](https://github.com/koriym/Ray.Dyii)
- 
- 
-## モジュール
-
-`Ray.Di` のためのさまざまなモジュールが利用可能です。 https://github.com/Ray-Di
-
-## インストール
+# インストール
 
 Ray.Diをインストールにするには [Composer](http://getcomposer.org)を利用します。
 
 ```bash
-# Add Ray.Di as a dependency
 $ composer require ray/di ^2.0
 ```
 
@@ -703,3 +727,11 @@ $ cd Ray.Di
 $ ./vendor/bin/phpunit
 $ php demo/run.php
 ```
+
+## フレームワーク統合
+
+ * [BEAR.Sunday](https://github.com/koriym/BEAR.Sunday)
+ * [CakePHP3 PipingBag](https://github.com/lorenzo/piping-bag) by [@jose_zap](https://twitter.com/jose_zap)
+ * [Yii 1](https://github.com/koriym/Ray.Dyii)
+
+*このドキュメントの大部分は、[Google Guice](https://github.com/google/guice/)のサイトから翻訳引用しています。*
