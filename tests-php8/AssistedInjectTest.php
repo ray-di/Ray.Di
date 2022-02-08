@@ -66,4 +66,22 @@ class AssistedInjectTest extends TestCase
         $i = $assistedConsumer->assistCustomeAssistedInject();
         $this->assertSame(1, $i);
     }
+
+    /**
+     * @requires PHP 8.1
+     */
+    public function testConstructorPropertyPromotion(): void
+    {
+        $injector = new Injector(
+            new class extends AbstractModule
+            {
+                protected function configure()
+                {
+                    $this->bind()->annotatedWith('abc')->toInstance('abc');
+                }
+            }
+        );
+        $fake = $injector->getInstance(FakePropConstruct::class);
+        $this->assertSame('abc', $fake->abc);
+    }
 }
