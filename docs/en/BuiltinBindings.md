@@ -15,4 +15,3 @@ sparingly.
 
 For every type Guice knows about, it can also inject a Provider of that type.
 [Injecting Providers](InjectingProviders.md) describes this in detail.
-
