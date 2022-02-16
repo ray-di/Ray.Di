@@ -25,5 +25,5 @@
 
 # Documentation
 
-* [English](docs/en/index.md)
-* [Japanese](docs/ja/index.md)
+* [English](docs/en/README.md)
+* [Japanese](docs/ja/README.md)
