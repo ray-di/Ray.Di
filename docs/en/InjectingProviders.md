@@ -103,7 +103,7 @@ class LogFileTransactionLog implements TransactionLogInterface
         $this->connectionProvider = $connectionProvider;
     }
     
-    public void logChargeResult(ChargeResult $result) {
+    public function logChargeResult(ChargeResult $result) {
         /* only write failed charges to the database */
         if (! $result->wasSuccessful()) {
             $connection = $connectionProvider->get();

@@ -6,17 +6,17 @@ another. To contrast these approaches, we'll write the billing code for a pizza
 ordering website:
 
 ```php
-public interface BillingServiceInterface {
-
+interface BillingServiceInterface
+{
     /**
     * Attempts to charge the order to the credit card. Both successful and
     * failed transactions will be recorded.
     *
-    * @return a receipt of the transaction. If the charge was successful, the
-    *      receipt will be successful. Otherwise, the receipt will contain a
+    * @return Receipt a receipt of the transaction. If the charge was successful,
+    *      the receipt will be successful. Otherwise, the receipt will contain a
     *      decline note describing why the charge failed.
     */
-    public chargeOrder(PizzaOrder order, CreditCard creditCard): Receipt;
+    public function chargeOrder(PizzaOrder order, CreditCard creditCard): Receipt;
 }
 ```
 
@@ -45,6 +45,7 @@ public class RealBillingService implements BillingServiceInterface
             : Receipt::forDeclinedCharge($result->getDeclineMessage());
        } catch (UnreachableException $e) {
             $transactionLog->logConnectException($e);
+
             return ReceiptforSystemFailure($e->getMessage());
       }
     }
@@ -118,7 +119,7 @@ public class RealBillingServiceTest extends TestCase
     private InMemoryTransactionLog $transactionLog
     private FakeCreditCardProcessor $processor;
     
-    public void setUp(): void
+    public function setUp(): void
     {
         $this->order = new PizzaOrder(100);
         $this->creditCard = new CreditCard('1234', 11, 2010);
@@ -127,13 +128,13 @@ public class RealBillingServiceTest extends TestCase
         CreditCardProcessorFactory::setInstance($this->processor);
     }
     
-    public void tearDown(): void
+    public function tearDown(): void
     {
         TransactionLogFactory::setInstance(null);
         CreditCardProcessorFactory::setInstance(null);
     }
     
-    public void testSuccessfulCharge()
+    public function testSuccessfulCharge()
     {
         $billingService = new RealBillingService();
         $receipt = $billingService->chargeOrder($this->order, $this->creditCard);
@@ -173,21 +174,15 @@ and `CreditCardProcessor`. Instead, they're passed in as constructor parameters:
 ```php
 public class RealBillingService implements BillingServiceInterface
 {
-    private CreditCardProcessor $processor;
-    private TransactionLog $transactionLog;
-    
-    public RealBillingService(
-        CreditCardProcessor $processor,
-        TransactionLog $transactionLog
-    ) {
-        $this->processor = $processor;
-        $this->transactionLog = $transactionLog;
-    }
+    public function __construct(
+        private readonly CreditCardProcessor $processor,
+        private readonly TransactionLog $transactionLog
+    ) {}
     
     public chargeOrder(PizzaOrder $order, CreditCard $creditCard): Receipt
     {
         try {
-            $result = processor.charge($creditCard, $order->getAmount());
+            $result = $this->processor->charge($creditCard, $order->getAmount());
             $this->transactionLog->logChargeResult(result);
         
             return $result->wasSuccessful()
@@ -196,7 +191,7 @@ public class RealBillingService implements BillingServiceInterface
         } catch (UnreachableException $e) {
             $this->transactionLog->logConnectException($e);
 
-            return Receipt::forSystemFailure($e.getMessage());
+            return Receipt::forSystemFailure($e->getMessage());
         }
     }
 }
@@ -213,7 +208,7 @@ public class RealBillingServiceTest extends TestCase
     private InMemoryTransactionLog $transactionLog;
     private FakeCreditCardProcessor $processor;
 
-    public void setUp(): void
+    public function setUp(): void
     {
         $this->order = new PizzaOrder(100);
         $this->$creditCard = new CreditCard("1234", 11, 2010);
@@ -221,7 +216,7 @@ public class RealBillingServiceTest extends TestCase
         $this->$processor = new FakeCreditCardProcessor();      
     }
 
-  public void testSuccessfulCharge()
+  public function testSuccessfulCharge()
   {
         $billingService= new RealBillingService($this->processor, $this->transactionLog);
         $receipt = $billingService->chargeOrder($this->order, $this->creditCard);
@@ -267,7 +262,7 @@ public class BillingModule extends AbstractModule
     {
         $this->bind(TransactionLog::class)->to(DatabaseTransactionLog::class);
         $this->bind(CreditCardProcessor::class)->(PaypalCreditCardProcessor::class);
-        $this->bind(BillingService;;class)->(RealBillingService::class);
+        $this->bind(BillingServiceInterface::class)->(RealBillingService::class);
       }
 }
 ```
@@ -275,19 +270,13 @@ public class BillingModule extends AbstractModule
 Ray.Di will inspect the  constructor, and lookup values for each parameter.
 
 ```php
-public class RealBillingService implements BillingService
+public class RealBillingService implements BillingServiceInterface
 {
-    private readonly CreditCardProcessor $processor;
-    private readonly TransactionLog $transactionLog;
+    public function __construct(
+        private readonly CreditCardProcessor $processor,
+        private readonly TransactionLog $transactionLog
+    ) {}
 
-    public RealBillingService(
-        CreditCardProcessor $processor,
-        TransactionLog $transactionLog
-    ) {
-        $this->processor = $processor;
-        $this->transactionLog = $transactionLog;
-    }
-    
     public chargeOrder(PizzaOrder $order, CreditCard $creditCard): Receipt
     {
         try {
@@ -312,7 +301,7 @@ instance of any of the bound classes.
 ```php
 <?php
 $injector = new Injector(new BillingModule());
-$billingService = $injector->getInstance(BillingService.class);
+$billingService = $injector->getInstance(BillingServiceInterface::class);
 //...
 
 ```
