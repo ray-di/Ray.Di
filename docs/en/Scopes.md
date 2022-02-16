@@ -4,10 +4,8 @@ By default, Ray returns a new instance each time it supplies a value. This behav
 
 ```php
 use Ray\Di\Scope;
-
-protected function configure()
-{
-    $this->bind(TransactionLogInterface::class)->to(InMemoryTransactionLog::class)->in(Scope::SINGLETON);
-}
+```
+```php
+$this->bind(TransactionLogInterface::class)->to(InMemoryTransactionLog::class)->in(Scope::SINGLETON);
 ```
     

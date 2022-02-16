@@ -6,25 +6,22 @@ To address this, Ray.Di has `toConstructor` bindings.
 
 
 ```php
-protected function configure()
-{
-    $this
-        ->bind($interfaceName)
-        ->toConstructor(
-            $className,
-            $name,
-            $injectionPoint,
-            $postConstruct
-        );
-        
-        (new InjectionPoints)                       // InjectionPoints　$setter_injection
-                ->addMethod('setGuzzle', 'token')
-                ->addOptionalMethod('setOptionalToken'),
-            'initialize'                                // string $postCostruct
-        );
-    $this->bind()->annotated('user_id')->toInstance($_ENV['user_id']);
-    $this->bind()->annotated('user_password')->toInstance($_ENV['user_password']);
-}
+$this->bind($interfaceName)
+    ->toConstructor(
+        $className,
+        $name,
+        $injectionPoint,
+        $postConstruct
+    );
+
+(new InjectionPoints)                       // InjectionPoints　$setter_injection
+    ->addMethod('setGuzzle', 'token')
+    ->addOptionalMethod('setOptionalToken'),
+    'initialize'                                // string $postCostruct
+      );
+$this->bind()->annotated('user_id')->toInstance($_ENV['user_id']);
+$this->bind()->annotated('user_password')->toInstance($_ENV['user_password']);
+
 ```
 
 
@@ -75,20 +72,17 @@ public PDO::__construct ( string $dsn [, string $username [, string $password [,
 ```
 
 ```php
-protected function configure()
-{       
-    $this->bind(\PDO::class)->toConstructor(
-        \PDO::class,
-        [
-            'dsn' => 'pdo_dsn',
-            'username' => 'pdo_username',
-            'password' => 'pdo_password'
-        ]
-    )->in(Scope::SINGLETON);
-    $this->bind()->annotatedWith('pdo_dsn')->toInstance($dsn);
-    $this->bind()->annotatedWith('pdo_username')->toInstance(getenv('db_user'));
-    $this->bind()->annotatedWith('pdo_password')->toInstance(getenv('db_password'));
-}
+$this->bind(\PDO::class)->toConstructor(
+  \PDO::class,
+  [
+    'dsn' => 'pdo_dsn',
+    'username' => 'pdo_username',
+    'password' => 'pdo_password'
+  ]
+)->in(Scope::SINGLETON);
+$this->bind()->annotatedWith('pdo_dsn')->toInstance($dsn);
+$this->bind()->annotatedWith('pdo_username')->toInstance(getenv('db_user'));
+$this->bind()->annotatedWith('pdo_password')->toInstance(getenv('db_password'));
 ```
 
 Since no argument of PDO has a type, it binds with the `Name Binding` of the second argument of the `toConstructor()` method.

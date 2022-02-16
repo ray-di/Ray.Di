@@ -13,7 +13,7 @@
   * [Untargeted Bindings](UntargetedBindings.md)
   * [Binding Attributes](BindingAttributes.md)
   * [Constructor Bindings](ConstructorBindings.md)
-  * [Built-in Bindings](ConstructorBindings.md)
+  * [Built-in Bindings](BuiltinBindings.md)
   * [Null Object Binding](NullObjectBindings.md)
   * [Contextual binding](ContextualBiindings.md)
 * [Scopes](Scopes.md)

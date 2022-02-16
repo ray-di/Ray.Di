@@ -5,8 +5,5 @@ When bound with `toNull()`, the code of the Null Object is generated from the in
 This is useful for testing and AOP.
 
 ```php
-protected function configure()
-{
-    $this->bind(CreditCardProcessorInterface::class)->toNull();
-}
+$this->bind(CreditCardProcessorInterface::class)->toNull();
 ```

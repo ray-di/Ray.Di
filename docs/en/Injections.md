@@ -52,7 +52,7 @@ You can also provide dependency which depends on other dynamic parameter in meth
 class HorizontalScaleDbProvider implements ProviderInterface
 {
     public function __construct(
-        private MethodInvocationProvider $invocationProvider)
+        private readonly MethodInvocationProvider $invocationProvider
     ){}
 
     public function get()

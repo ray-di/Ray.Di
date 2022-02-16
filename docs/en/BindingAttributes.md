@@ -33,11 +33,9 @@ public function __construct(
 Lastly we create a binding that uses the attribute. This uses the optional `annotatedWith` clause in the bind() statement:
 
 ```php
-protected function configure()
-{
-    $this->bind(CreditCardProcessorInterface::class)
-        ->annotatedWith(PayPal::class)
-        ->to(PayPalCreditCardProcessor::class);
+$this->bind(CreditCardProcessorInterface::class)
+  ->annotatedWith(PayPal::class)
+  ->to(PayPalCreditCardProcessor::class);
 ```
 
 ### Binding Attributes in Setters
@@ -80,12 +78,9 @@ public setPaymentProcessor(CreditCardProcessorInterface $processor)
 Finally, you can bind the interface to an implementation by using your new annotated information:
 
 ```php
-protected function configure()
-{
-    $this->bind(CreditCardProcessorInterface::class)
-        ->annotatedWith(PaymentProcessorInject::class)
-        ->toProvider(PaymentProcessorProvider::class);
-}
+$this->bind(CreditCardProcessorInterface::class)
+    ->annotatedWith(PaymentProcessorInject::class)
+    ->toProvider(PaymentProcessorProvider::class);
 ```
 
 The provider can now use the information supplied in the qualifier attribute in order to instantiate
@@ -109,12 +104,9 @@ public function __construct(
 To bind a specific name, pass that string using the `annotatedWith()` method.
 
 ```php
-protected function configure()
-{
-    $this->bind(CreditCardProcessorInterface::class)
-        ->annotatedWith('checkout')
-        ->to(CheckoutCreditCardProcessor::class);
-}
+$this->bind(CreditCardProcessorInterface::class)
+    ->annotatedWith('checkout')
+    ->to(CheckoutCreditCardProcessor::class);
 ```
 
 You need to put the `#[Named]` attribuet in order to specify the parameter.

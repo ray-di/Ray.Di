@@ -21,7 +21,7 @@ class TweetModule extends AbstractModule
 }
 ```
 
-More Bindings
+## More Bindings
 
 In addition to the bindings you specify the injector includes [built-in bindings](BuiltinBindings.md). When a dependency is requested but not found it attempts to create a just-in-time binding. The injector also includes bindings for the providers of its other bindings.
 
