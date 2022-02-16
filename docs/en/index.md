@@ -30,4 +30,3 @@
 # Integration
 
 * [Framework Integration](FrameworkIntegration.md)
-* [Backward Compatibility](BackwardCompatibility.md)
