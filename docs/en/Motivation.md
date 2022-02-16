@@ -137,6 +137,7 @@ public class RealBillingServiceTest extends TestCase
     {
         $billingService = new RealBillingService();
         $receipt = $billingService->chargeOrder($this->order, $this->creditCard);
+
         $this->assertTrue($receipt->hasSuccessfulCharge());
         $this->assertEquals(100, $receipt->getAmountOfCharge());
         $this->assertEquals($creditCard, $processor->getCardOfOnlyCharge());
@@ -194,6 +195,7 @@ public class RealBillingService implements BillingServiceInterface
                 : Receipt::forDeclinedCharge($result->getDeclineMessage());
         } catch (UnreachableException $e) {
             $this->transactionLog->logConnectException($e);
+
             return Receipt::forSystemFailure($e.getMessage());
         }
     }
@@ -261,7 +263,7 @@ the `Module` interface:
 ```php
 public class BillingModule extends AbstractModule
 {
-    protected void configure(): void
+    protected function configure(): void
     {
         $this->bind(TransactionLog::class)->to(DatabaseTransactionLog::class);
         $this->bind(CreditCardProcessor::class)->(PaypalCreditCardProcessor::class);
@@ -290,14 +292,15 @@ public class RealBillingService implements BillingService
     {
         try {
           $result = $this->processor->charge($creditCard, $order->getAmount());
-          $this->transactionLog->logChargeResult(result);
+          $this->transactionLog->logChargeResult($result);
         
           return $result->wasSuccessful()
               ? Receipt::forSuccessfulCharge($order->getAmount())
               : Receipt::forDeclinedCharge($result->getDeclineMessage());
          } catch (UnreachableException $e) {
-            $this->transactionLog->logConnectException(e);
-            return Receipt::forSystemFailure(e.getMessage());
+            $this->transactionLog->logConnectException($e);
+
+            return Receipt::forSystemFailure($e->getMessage());
         }
     }
 }
