@@ -449,7 +449,7 @@ class InjectorTest extends TestCase
         $this->assertInstanceOf(NullInterceptor::class, $instance->bindings['returnSame'][0]);
     }
 
-    public function moduleArrayTest(): void
+    public function testModuleArray(): void
     {
         $modules = [
             new class extends AbstractModule
