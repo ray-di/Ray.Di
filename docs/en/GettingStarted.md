@@ -106,30 +106,38 @@ In a real application, the dependency graph for objects will be much more compli
 
 ### Ray.Di injectors
 
-To bootstrap your application, you'll need to create a Ray.Di # [`Injector`] withone or more modules in it. For example, a web server application might have a`main` method that looks like this:
+To bootstrap your application, you'll need to create a Ray.Di `Injector` withone or more modules in it. For example, a web server script might that looks like this:
 
 ```php
-public final class MyWebServer {
-  public function start(): void
-  {
-    //　...
-  }
+final class MyWebServer {
+    public function __construct(
+        private readonyly RequestLoggingInterface $requestLogging,
+        private readonyly RequestHandlerInterface $requestHandler,
+        private readonyly AuthenticationInterface $authentication,
+        private readonyly Database $database
+    ) {}
 
-  public function __invoke(): void
-  {
-    // Creates an injector that has all the necessary dependencies needed to
-    // build a functional server.
-    $injector = new Injector(
-        new RequestLoggingModule(),
-        new RequestHandlerModule(),
-        new AuthenticationModule(),
-        new DatabaseModule(),
-        // ...
-    );
-    // Bootstrap the application by creating an instance of the server then
-    // start the server to handle incoming requests.
-    $injector->getInstance(MyWebServer::class)->start();
-  }
+    public function start(): void
+    {
+        //　...
+    }
+    
+    public function __invoke(): void
+    {
+        // Creates an injector that has all the necessary dependencies needed to
+        // build a functional server.
+        $module = new RequestLoggingModule();
+        $module->install(new RequestHandlerModule());
+        $module->install(new RequestHandlerModule());
+        $module->install(new AuthenticationModule());
+        $module->install(new DatabaseModule());
+
+        $injector = new Injector($module);
+    
+        // Bootstrap the application by creating an instance of the server then
+        // start the server to handle incoming requests.
+        $injector->getInstance(MyWebServer::class)->start();
+    }
 }
 
 (new MyWebServer)();
@@ -138,7 +146,7 @@ public final class MyWebServer {
 The injector internally holds the dependency graphs described in your application. When you request an instance of a given type, the injector figures out what objects to construct, resolves their dependencies, and wires everything together. To specify how dependencies are resolved, configure your injector with
 [bindings](Bindings).
 
-[`Injector`]: https://google.github.io/guice/api-docs/latest/javadoc/com/google/inject/Injector.html
+[`Injector`]: https://github.com/ray-di/Ray.Di/blob/2.x/src/di/InjectorInterface.php
 
 ## A simple Ray.Di application
 
