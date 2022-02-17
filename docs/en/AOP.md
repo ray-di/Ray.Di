@@ -17,7 +17,7 @@ final class NotOnWeekends
 class BillingService
 {
     #[NotOnWeekends]
-    chargeOrder(PizzaOrder $order, CreditCard $creditCard)
+    public function chargeOrder(PizzaOrder $order, CreditCard $creditCard)
     {
 ```
 
