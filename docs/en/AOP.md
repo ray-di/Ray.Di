@@ -14,7 +14,7 @@ final class NotOnWeekends
 ...and apply it to the methods that need to be intercepted:
 
 ```php
-class BillingService
+class BillingService implements BillingServiceInterface
 {
     #[NotOnWeekends]
     public function chargeOrder(PizzaOrder $order, CreditCard $creditCard)
@@ -53,6 +53,7 @@ class WeekendModule extends AbstractModule
 {
     protected function configure()
     {
+        $this->bind(BillingServiceInterface::class)->to(BillingService::class);
         $this->bindInterceptor(
             $this->matcher->any(),                           // any class
             $this->matcher->annotatedWith('NotOnWeekends'),  // #[NotOnWeekends] attributed method
