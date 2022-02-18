@@ -87,7 +87,7 @@ Applications contain objects that declare dependencies on other objects, and tho
 
 Ray.Di modules allow applications to specify how to satisfy those dependencies. For example, the following `DemoModule` configures all the necessary dependencies for `Greeter` class:
 
-```java
+```php
 /**
  * Ray.Di module that provides bindings for message and count used in
  * {@link Greeter}.
