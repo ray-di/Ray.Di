@@ -56,7 +56,7 @@ Specify the method name ($methodName) and qualifier ($named) of the setter injec
 (new InjectionPoints)
 	->addMethod($methodName1)
 	->addMethod($methodName2, $named)
-  ->addOptionalMethod($methodName, $named)
+        ->addOptionalMethod($methodName, $named)
 ```
 
 **postCosntruct**
