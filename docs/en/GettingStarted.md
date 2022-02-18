@@ -208,39 +208,4 @@ usually have many `Module`s that can build complex objects.
 
 ## What's next?
 
-Read more on how to conceptualize Ray.Di with a simple [mental model](MentalModel.md).# Getting Started
-
-
-
-
-```php
-class BillingService
-{
-    public function __construct(
-        private readonly ProcessorInterface $processor,
-        private readonly LoggerInterface $logger
-    ){}
-}
-```
-
-Ray.Di uses bindings to map types to their implementations. A module is a collection of bindings specified using fluent, English-like method calls:
-
-```php
-class BillingModule extends AbstractModule
-{
-    protected function configure(): void
-    {
-        $this->bind(ProcessorInterface::class)->to(PaypalProcessor::class); 
-        $this->bind(LoggerInterface::class)->to(DatabaseLogger::class);
-    }
-}
-```
-
-The modules are the building blocks of an injector, which is Ray.Di's object-graph builder. First we create the injector, and then we can use that to build the BillingService:
-
-```php
-$injector = new Injector(new BillingModule);
-$billingService = $injector->getInstance(BillingService::class);
-```
-
-By building the billingService, we've constructed a small object graph using Ray.Di.
+Read more on how to conceptualize Ray.Di with a simple [mental model](MentalModel.md).
