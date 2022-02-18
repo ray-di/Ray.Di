@@ -6,7 +6,7 @@ and one `TransactionLog`. Sometimes you want more than one instance of your
 dependent types. When this flexibility is necessary, Guice binds a provider.
 Providers produce a value when the `get()` method is invoked:
 
-```java
+```php
 interface Provider
 {
     public function get();
