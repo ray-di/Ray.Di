@@ -9,7 +9,7 @@ Providers produce a value when the `get()` method is invoked:
 ```java
 interface Provider
 {
-		public function get();
+    public function get();
 }
 ```
 
