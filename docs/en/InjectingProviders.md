@@ -122,7 +122,7 @@ behavior isn't correct because the user changes from request to request.
 Instead, you should use a Provider. Since Providers produce values on-demand,
 they enable you to mix scopes safely:
 
-```java
+```php
 public class ConsoleTransactionLog implements TransactionLogInterface
 {
     private readonly AtomicInteger $failureCount;
