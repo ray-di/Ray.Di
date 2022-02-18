@@ -108,7 +108,7 @@ In a real application, the dependency graph for objects will be much more compli
 
 To bootstrap your application, you'll need to create a Ray.Di # [`Injector`] withone or more modules in it. For example, a web server application might have a`main` method that looks like this:
 
-```java
+```php
 public final class MyWebServer {
   public function start(): void
   {
