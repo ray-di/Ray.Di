@@ -65,7 +65,7 @@ Use providers when you need multiple instances of the same type. Suppose your
 application saves a summary entry and a details when a pizza charge fails. With
 providers, you can get a new entry whenever you need one:
 
-```java
+```php
 class LogFileTransactionLog implements TransactionLogInterface
 {
     private readonly Provider $logFileProvider;
