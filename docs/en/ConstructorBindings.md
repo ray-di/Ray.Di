@@ -16,9 +16,7 @@ $this->bind($interfaceName)
 
 (new InjectionPoints)                       // InjectionPoints　$setter_injection
     ->addMethod('setGuzzle', 'token')
-    ->addOptionalMethod('setOptionalToken'),
-    'initialize'                                // string $postCostruct
-      );
+    ->addOptionalMethod('setOptionalToken', 'initialize');           // string $postCostruct
 $this->bind()->annotated('user_id')->toInstance($_ENV['user_id']);
 $this->bind()->annotated('user_password')->toInstance($_ENV['user_password']);
 
