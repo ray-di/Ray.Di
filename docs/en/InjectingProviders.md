@@ -18,24 +18,24 @@ Provider types are marked with a qualifier to distinguish `Provider<TransactionL
 ```php
 public class RealBillingService implements BillingServiceInterface
 {
-  private readonly Provider $processorProvider;
-  private readonly Provider $transactionLogProvider;
+    private readonly Provider $processorProvider;
+    private readonly Provider $transactionLogProvider;
 
-  public __construct(
-  		#[QureditCardProcessor] Provider $processorProvider,
-  		#[TransactionLog] Provider $transactionLogProvider;
-  ) {
-      $this->processorProvider = $processorProvider;
-      $this->transactionLogProvider = $transactionLogProvider;
-  }
+    public __construct(
+        #[QureditCardProcessor] Provider $processorProvider,
+        #[TransactionLog] Provider $transactionLogProvider
+    ) {
+        $this->processorProvider = $processorProvider;
+        $this->transactionLogProvider = $transactionLogProvider;
+    }
 
-  public chargeOrder(PizzaOrder $order, CreditCard $creditCard): Receipt
-        {
-    $processor = $this->processorProvider->get();
-    $transactionLog = $this->transactionLogProvider->get();
-
-    /* use the processor and transaction log here */
-  }
+    public chargeOrder(PizzaOrder $order, CreditCard $creditCard): Receipt
+    {
+        $processor = $this->processorProvider->get();
+        $transactionLog = $this->transactionLogProvider->get();
+        
+        /* use the processor and transaction log here */
+    }
 }
 ```
 
