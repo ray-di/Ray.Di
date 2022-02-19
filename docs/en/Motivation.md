@@ -89,7 +89,7 @@ In our client code, we just replace the `new` calls with factory lookups:
 ```php
 public class RealBillingService implements BillingServiceInterface
 {
-    public chargeOrder(PizzaOrder $order, CreditCard $creditCard): Receipt
+    public function chargeOrder(PizzaOrder $order, CreditCard $creditCard): Receipt
     {
         $processor = CreditCardProcessorFactory::getInstance();
         $transactionLog = TransactionLogFactory::getInstance();
