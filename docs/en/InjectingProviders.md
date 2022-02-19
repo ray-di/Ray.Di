@@ -94,7 +94,7 @@ If you've got a dependency on a type that is particularly *expensive to
 produce*, you can use providers to defer that work. This is especially useful
 when you don't always need the dependency:
 
-```java
+```php
 class LogFileTransactionLog implements TransactionLogInterface
 {
     private readonly Provider $connectionProvider;
