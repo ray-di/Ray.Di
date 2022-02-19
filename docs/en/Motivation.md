@@ -261,8 +261,8 @@ public class BillingModule extends AbstractModule
     protected function configure(): void
     {
         $this->bind(TransactionLog::class)->to(DatabaseTransactionLog::class);
-        $this->bind(CreditCardProcessor::class)->(PaypalCreditCardProcessor::class);
-        $this->bind(BillingServiceInterface::class)->(RealBillingService::class);
+        $this->bind(CreditCardProcessor::class)->to(PaypalCreditCardProcessor::class);
+        $this->bind(BillingServiceInterface::class)->to(RealBillingService::class);
       }
 }
 ```
