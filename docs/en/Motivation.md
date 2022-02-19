@@ -277,7 +277,7 @@ public class RealBillingService implements BillingServiceInterface
         private readonly TransactionLog $transactionLog
     ) {}
 
-    public chargeOrder(PizzaOrder $order, CreditCard $creditCard): Receipt
+    public function chargeOrder(PizzaOrder $order, CreditCard $creditCard): Receipt
     {
         try {
           $result = $this->processor->charge($creditCard, $order->getAmount());
