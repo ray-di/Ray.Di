@@ -13,11 +13,11 @@ final class ModuleMerger
      */
     public function __invoke(array $modules): ?AbstractModule
     {
-        $module = array_shift($modules);
+        $baseModule = array_shift($modules);
         foreach ($modules as $module) {
-            $module->install($module);
+            $baseModule->install($module);
         }
 
-        return $module;
+        return $baseModule;
     }
 }
