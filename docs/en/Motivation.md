@@ -31,7 +31,7 @@ and transaction logger:
 ```php
 public class RealBillingService implements BillingServiceInterface
 {
-    public chargeOrder(PizzaOrder $order, CreditCard $creditCard): Receipt
+    public function chargeOrder(PizzaOrder $order, CreditCard $creditCard): Receipt
     {
         $processor = new PaypalCreditCardProcessor();
         $transactionLog = new DatabaseTransactionLog();
