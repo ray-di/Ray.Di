@@ -27,8 +27,8 @@ class Injector implements InjectorInterface
     private $container;
 
     /**
-     * @param AbstractModule|array<AbstractModule>|null $module Module(s)
-     * @param string                                    $tmpDir Temp directory for generated class
+     * @param AbstractModule|non-empty-array<AbstractModule>|null $module Module(s)
+     * @param string                                              $tmpDir Temp directory for generated class
      */
     public function __construct($module = null, string $tmpDir = '')
     {

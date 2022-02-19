@@ -9,7 +9,7 @@ use function array_shift;
 final class ModuleMerger
 {
     /**
-     * @param array<AbstractModule> $modules
+     * @param non-empty-array<AbstractModule> $modules
      */
     public function __invoke(array $modules): ?AbstractModule
     {
