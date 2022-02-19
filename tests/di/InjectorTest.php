@@ -448,4 +448,30 @@ class InjectorTest extends TestCase
         assert(isset($instance->bindings['returnSame'][0]));
         $this->assertInstanceOf(NullInterceptor::class, $instance->bindings['returnSame'][0]);
     }
+
+    public function testModuleArray(): void
+    {
+        $modules = [
+            new class extends AbstractModule
+            {
+                protected function configure()
+                {
+                    $this->bind()->annotatedWith('var')->toInstance('a');
+                    $this->bind()->annotatedWith('first')->toInstance('1');
+                }
+            },
+            new class extends AbstractModule
+            {
+                protected function configure()
+                {
+                    $this->bind()->annotatedWith('var')->toInstance('b');
+                    $this->bind()->annotatedWith('second')->toInstance('2');
+                }
+            },
+        ];
+        $injector = new Injector($modules);
+        $this->assertSame('a', $injector->getInstance('', 'var'));
+        $this->assertSame('2', $injector->getInstance('', 'second'));
+        $this->assertSame('1', $injector->getInstance('', 'first'));
+    }
 }

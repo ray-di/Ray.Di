@@ -11,6 +11,7 @@ use Ray\Di\Exception\Untargeted;
 
 use function assert;
 use function file_exists;
+use function is_array;
 use function is_dir;
 use function spl_autoload_register;
 use function sprintf;
@@ -26,11 +27,15 @@ class Injector implements InjectorInterface
     private $container;
 
     /**
-     * @param AbstractModule $module Binding module
-     * @param string         $tmpDir Temp directory for generated class
+     * @param AbstractModule|non-empty-array<AbstractModule>|null $module Module(s)
+     * @param string                                              $tmpDir Temp directory for generated class
      */
-    public function __construct(?AbstractModule $module = null, string $tmpDir = '')
+    public function __construct($module = null, string $tmpDir = '')
     {
+        if (is_array($module)) {
+            $module = (new ModuleMerger())($module);
+        }
+
         $module = $module ?? new NullModule();
         $module->install(new AssistedModule());
         $this->classDir = is_dir($tmpDir) ? $tmpDir : sys_get_temp_dir();
