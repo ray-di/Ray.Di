@@ -20,7 +20,7 @@ class Foo
     {
         // Ugh. How could I test this? What if I ever want to use a different
         // database in another application?
-        $this->database = new Database("/path/to/my/data");
+        $this->database = new Database('/path/to/my/data');
     }
 }
 ```
@@ -88,6 +88,22 @@ Applications contain objects that declare dependencies on other objects, and tho
 Ray.Di modules allow applications to specify how to satisfy those dependencies. For example, the following `DemoModule` configures all the necessary dependencies for `Greeter` class:
 
 ```php
+class CountProvider implements ProviderInterface
+{
+    public function get(): int
+    {
+        return 3;
+    }
+}
+
+class MessageProvider implements ProviderInterface
+{
+    public function get(): int
+    {
+        return 'hello world';
+    }
+}
+
 /**
  * Ray.Di module that provides bindings for message and count used in
  * {@link Greeter}.
@@ -96,8 +112,8 @@ class DemoModule extends AbstractModule
 {
     protected function configure(): void
     {
-        $this->bind()->annotatedWith(Count::class)->toInstance(3);
-        $this->bind()->annotatedWith(Message::class)->toInstance('hello world');
+        $this->bind()->annotatedWith(Count::class)->toProvider(CountProvider::class);
+        $this->bind()->annotatedWith(Message::class)->toProvider(MessageProvider::class);
     }
 }
 ```
@@ -126,13 +142,12 @@ final class MyWebServer {
     {
         // Creates an injector that has all the necessary dependencies needed to
         // build a functional server.
-        $module = new RequestLoggingModule();
-        $module->install(new RequestHandlerModule());
-        $module->install(new RequestHandlerModule());
-        $module->install(new AuthenticationModule());
-        $module->install(new DatabaseModule());
-
-        $injector = new Injector($module);
+        $injector = new Injector([
+            new RequestLoggingModule(),
+            new RequestHandlerModule(),
+            new AuthenticationModule(),
+            new DatabaseModule()
+        ]);
     
         // Bootstrap the application by creating an instance of the server then
         // start the server to handle incoming requests.
@@ -171,12 +186,28 @@ class Count
 {
 }
 
+class CountProvider implements ProviderInterface
+{
+    public function get(): int
+    {
+        return 3;
+    }
+}
+
+class MessageProvider implements ProviderInterface
+{
+    public function get(): int
+    {
+        return 'hello world';
+    }
+}
+
 class DemoModule extends AbstractModule
 {
     protected function configure()
     {
-        $this->bind()->annotatedWith(Message::class)->toInstance('hello world');
-        $this->bind()->annotatedWith(Count::class)->toInstance(3);
+        $this->bind()->annotatedWith(Count::class)->toProvider(CountProvider::class);
+        $this->bind()->annotatedWith(Message::class)->toProvider(MessageProvider::class);
     }
 }
 
