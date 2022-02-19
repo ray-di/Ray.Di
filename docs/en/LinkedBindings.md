@@ -5,5 +5,5 @@ Linked bindings map a type to its implementation. This example maps the interfac
 For example, the following code links the concrete DatabaseTransactionLog class to a subclass:
 
 ```php
-$this->bind(TransactionLogInterface::class).to(DatabaseTransactionLog::class);
+$this->bind(TransactionLogInterface::class)->to(DatabaseTransactionLog::class);
 ```
