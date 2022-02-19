@@ -215,18 +215,18 @@ public class RealBillingServiceTest extends TestCase
         $this->$transactionLog = new InMemoryTransactionLog();
         $this->$processor = new FakeCreditCardProcessor();      
     }
-
-  public function testSuccessfulCharge()
-  {
+    
+    public function testSuccessfulCharge()
+    {
         $billingService= new RealBillingService($this->processor, $this->transactionLog);
         $receipt = $billingService->chargeOrder($this->order, $this->creditCard);
-
+        
         $this->assertTrue($receipt.hasSuccessfulCharge());
         $this->assertSame(100, $receipt->getAmountOfCharge());
         $this->assertSame($this->creditCard, $this->processor->getCardOfOnlyCharge());
         $this->assertSame(100, $this->processor->getAmountOfOnlyCharge());
         $this->assertTrue($this->transactionLog->wasSuccessLogged());
-  }
+    }
 }
 ```
 
