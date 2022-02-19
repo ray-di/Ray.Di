@@ -35,19 +35,19 @@ public class RealBillingService implements BillingServiceInterface
     {
         $processor = new PaypalCreditCardProcessor();
         $transactionLog = new DatabaseTransactionLog();
-    
-    try {
-        $result = $processor->charge($creditCard, $order->getAmount());
-        $transactionLog->logChargeResult($result);
-    
-        return $result->wasSuccessful()
-            ? Receipt::forSuccessfulCharge($order->getAmount())
-            : Receipt::forDeclinedCharge($result->getDeclineMessage());
-       } catch (UnreachableException $e) {
+
+        try {
+            $result = $processor->charge($creditCard, $order->getAmount());
+            $transactionLog->logChargeResult($result);
+
+            return $result->wasSuccessful()
+                ? Receipt::forSuccessfulCharge($order->getAmount())
+                : Receipt::forDeclinedCharge($result->getDeclineMessage());
+        } catch (UnreachableException $e) {
             $transactionLog->logConnectException($e);
 
             return ReceiptforSystemFailure($e->getMessage());
-      }
+        }
     }
 }
 ```
