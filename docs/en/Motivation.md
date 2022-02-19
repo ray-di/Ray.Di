@@ -223,7 +223,7 @@ public class RealBillingServiceTest extends TestCase
 
         $this->assertTrue($receipt.hasSuccessfulCharge());
         $this->assertSame(100, $receipt->getAmountOfCharge());
-        $this->assertSame(creditCard, $this->processor->getCardOfOnlyCharge());
+        $this->assertSame($this->creditCard, $this->processor->getCardOfOnlyCharge());
         $this->assertSame(100, $this->processor->getAmountOfOnlyCharge());
         $this->assertTrue($this->transactionLog->wasSuccessLogged());
   }
