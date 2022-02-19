@@ -221,7 +221,7 @@ public class RealBillingServiceTest extends TestCase
         $billingService= new RealBillingService($this->processor, $this->transactionLog);
         $receipt = $billingService->chargeOrder($this->order, $this->creditCard);
 
-        $this->assertTrue(receipt.hasSuccessfulCharge());
+        $this->assertTrue($receipt.hasSuccessfulCharge());
         $this->assertSame(100, $receipt->getAmountOfCharge());
         $this->assertSame(creditCard, $this->processor->getCardOfOnlyCharge());
         $this->assertSame(100, $this->processor->getAmountOfOnlyCharge());
