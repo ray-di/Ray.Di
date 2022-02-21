@@ -77,7 +77,7 @@ final class MultilingualGreeter
 
 `Key` with binding annotations can be created as:
 
-```java
+```php
 $englishGreetingKey = $map[English::class];
 $spanishGreetingKey = $map[Spanish::class];
 ```
