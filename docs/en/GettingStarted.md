@@ -98,7 +98,7 @@ class CountProvider implements ProviderInterface
 
 class MessageProvider implements ProviderInterface
 {
-    public function get(): int
+    public function get(): string
     {
         return 'hello world';
     }
