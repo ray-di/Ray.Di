@@ -85,7 +85,7 @@ $spanishGreetingKey = $map[Spanish::class];
 When an application calls `$injector->getInstance(MultilingualGreeter::class)` to
 create an instance of `MultilingualGreeter`. This is the equivalent of doing:
 
-```java
+```php
 // Ray.Di internally does this for you so you don't have to wire up those
 // dependencies manually.
 /** @var string $english */
