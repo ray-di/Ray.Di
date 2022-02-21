@@ -52,7 +52,7 @@ $databaseKey = $map[$index];
 
 However, applications often have dependencies that are of the same type:
 
-```java
+```php
 final class MultilingualGreeter
 {
     public function __construct(
