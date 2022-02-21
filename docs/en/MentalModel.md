@@ -35,7 +35,7 @@ map is a reasonable approximation for how Ray.Di behaves.
 Ray.Di uses [`Dependecy Index`] to identify a dependency that can be resolved using the
 "Ray.Di map".
 
-The `Greeter` class used in the[Getting Started](GettingStarted.md) declares two
+The `Greeter` class used in the [Getting Started](GettingStarted.md) declares two
 dependencies in its constructor and those dependencies are represented as `Key`
 in Ray.Di:
 
