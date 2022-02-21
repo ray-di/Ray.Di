@@ -173,7 +173,6 @@ Ray.Di maps are configured using Ray.Di modules. A **Ray.Di module** is a unit o
 configuration logic that adds things into the Ray.Di map. There are two ways to
 do this:
 
-*   Adding method annotations like `@Provides`
 *   Using the Ray.Di Domain Specific Language (DSL).
 
 Conceptually, these APIs simply provide ways to manipulate the Ray.Di map. The
