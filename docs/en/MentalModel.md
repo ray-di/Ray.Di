@@ -65,7 +65,7 @@ final class MultilingualGreeter
 Ray.Di uses [binding Attributes](BindingAttributes.md) to distinguish dependencies
 that are of the same type, that is to make the type more specific:
 
-```java
+```php
 final class MultilingualGreeter
 {
     public function __construct(
