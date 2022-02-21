@@ -101,9 +101,9 @@ public class RealBillingService implements BillingServiceInterface
             return $result->wasSuccessful()
                 ? Receipt::forSuccessfulCharge($order->getAmount())
                 : Receipt::forDeclinedCharge($result->getDeclineMessage());
-         } catch (UnreachableException $e) {
-             $transactionLog->logConnectException($e);
-             return Receipt::forSystemFailure($e.getMessage());
+        } catch (UnreachableException $e) {
+            $transactionLog->logConnectException($e);
+            return Receipt::forSystemFailure($e.getMessage());
         }
     }
 }
