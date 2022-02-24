@@ -10,6 +10,6 @@
 
 <img src="https://ray-di.github.io/images/logo.svg" width=160  alt="logo">
 
-Ray.Di is DI and AOP framework for PHP inspired  [Google Guice](https://github.com/google/guice/wiki).
+Ray.Di is DI and AOP framework for PHP inspired by [Google Guice](https://github.com/google/guice/wiki).
 
 https://ray-di.github.io
