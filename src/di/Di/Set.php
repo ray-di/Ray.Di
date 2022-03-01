@@ -9,12 +9,15 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PARAMETER), Qualifier]
 final class Set
 {
-    /** @var string */
+    /** @var ""|class-string */
     public $interface;
 
     /** @var string */
     public $name;
 
+    /**
+     * @param ""|class-string $interface
+     */
     public function __construct(string $interface, string $name = '')
     {
         $this->interface = $interface;
