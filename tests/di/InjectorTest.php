@@ -475,6 +475,9 @@ class InjectorTest extends TestCase
         $this->assertSame('1', $injector->getInstance('', 'first'));
     }
 
+    /**
+     * @requires PHP 8.0
+     */
     public function testProviderInjectWithSet(): void
     {
         $injector = new Injector(new class extends AbstractModule{
