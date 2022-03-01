@@ -38,6 +38,7 @@ class Injector implements InjectorInterface
 
         $module = $module ?? new NullModule();
         $module->install(new AssistedModule());
+        $module->install(new InjectingProviderModule());
         $this->classDir = is_dir($tmpDir) ? $tmpDir : sys_get_temp_dir();
         $this->container = $module->getContainer();
         $this->container->map(function (DependencyInterface $dependency) {
