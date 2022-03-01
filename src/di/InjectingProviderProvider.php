@@ -10,8 +10,11 @@ use function assert;
 
 final class InjectingProviderProvider implements ProviderInterface
 {
-    private InjectionPointInterface $ip;
-    private InjectorInterface $injector;
+    /** @var InjectionPointInterface */
+    private $ip;
+
+    /** @var InjectorInterface */
+    private $injector;
 
     public function __construct(InjectionPointInterface $ip, InjectorInterface $injector)
     {
