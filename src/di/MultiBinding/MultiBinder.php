@@ -35,15 +35,21 @@ final class MultiBinder
      */
     public function add(string $class, ?string $key = null): void
     {
-        $this->set($class, $key);
+        $this->bind($class, $key);
         $bind = (new Bind($this->container, LazyCollection::class))->toInstance(new LazyCollection($this->lazyCollection));
         $this->container->add($bind);
+    }
+
+    public function set(string $class, ?string $key = null): void
+    {
+        unset($this->lazyCollection[$this->interface]);
+        $this->add($class, $key);
     }
 
     /**
      * @param class-string $class
      */
-    public function set(string $class, ?string $key): void
+    private function bind(string $class, ?string $key): void
     {
         if ($key === null) {
             $this->lazyCollection[$this->interface][] = new Lazy($class);
