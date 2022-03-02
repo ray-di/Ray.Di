@@ -8,11 +8,11 @@ use Ray\Di\InjectorInterface;
 
 final class Lazy
 {
-    /** @var string */
+    /** @var class-string */
     private $class;
 
     /**
-     * @param class-string|'' $interface
+     * @param class-string $class
      */
     public function __construct(string $class)
     {
