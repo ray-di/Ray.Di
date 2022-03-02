@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Ray\Di\MultiBinding;
 
 use ArrayAccess;
+use Generator;
 use Iterator;
 use IteratorAggregate;
 use LogicException;
 use Ray\Di\InjectorInterface;
+use ReturnTypeWillChange;
 
 use function array_key_exists;
+use function assert;
+use function is_object;
 
 final class Map implements IteratorAggregate, ArrayAccess
 {
@@ -28,7 +32,7 @@ final class Map implements IteratorAggregate, ArrayAccess
     }
 
     /** @param string $offset */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->lazies);
@@ -36,22 +40,25 @@ final class Map implements IteratorAggregate, ArrayAccess
 
     /**
      * @param string $offset
+     *
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         $lazy = $this->lazies[$offset];
+
         /** @var Lazy $lazy */
         return $lazy($this->injector);
     }
 
     /**
      * @param string $offset
-     * @param mixed $value
+     * @param mixed  $value
+     *
      * @return never
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         throw new LogicException();
@@ -59,18 +66,23 @@ final class Map implements IteratorAggregate, ArrayAccess
 
     /**
      * @param string $offset
+     *
      * @return never
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         throw new LogicException();
     }
 
+    /** @return Generator<int, object> */
     public function getIterator(): Iterator
     {
         foreach ($this->lazies as $lazy) {
-            yield ($lazy)($this->injector);
+            $object = ($lazy)($this->injector);
+            assert(is_object($object));
+
+            yield $object;
         }
     }
 }
