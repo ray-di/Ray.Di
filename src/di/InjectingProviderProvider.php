@@ -33,8 +33,11 @@ final class InjectingProviderProvider implements ProviderInterface
 
         return new class ($this->injector, $instance) implements ProviderInterface
         {
-            private InjectorInterface $injector;
-            private Set $set;
+            /** @var InjectorInterface  */
+            private $injector;
+
+            /** @var Set  */
+            private $set;
 
             public function __construct(InjectorInterface $injector, Set $set)
             {
