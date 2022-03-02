@@ -16,7 +16,6 @@ use function assert;
 use function class_exists;
 use function explode;
 use function get_class;
-use function is_object;
 use function is_string;
 use function preg_match;
 use function substr;
@@ -62,11 +61,6 @@ final class Name
     /**
      * Create instance from PHP8 attributes
      *
-     * @psalm-suppress MixedAssignment
-     * @psalm-suppress UndefinedMethod
-     * @psalm-suppress MixedMethodCall
-     * @psalm-suppress MixedArrayAccess
-     *
      * psalm does not know ReflectionAttribute?? PHPStan produces no type error here.
      */
     public static function withAttributes(ReflectionMethod $method): ?self
@@ -74,7 +68,7 @@ final class Name
         $params = $method->getParameters();
         $names = [];
         foreach ($params as $param) {
-            /** @var array{0: ReflectionAttribute}|null $attributes */
+            /** @var array<ReflectionAttribute> $attributes */
             $attributes = $param->getAttributes();
             if ($attributes) {
                 $names[$param->name] = self::getName($attributes);
@@ -89,15 +83,15 @@ final class Name
     }
 
     /**
-     * @param array{0: ReflectionAttribute} $attributes
+     * @param non-empty-array<ReflectionAttribute> $attributes
      *
      * @throws ReflectionException
      */
     private static function getName(array $attributes): string
     {
         $refAttribute = $attributes[0];
+        /** @var Named|object $attribute */
         $attribute = $refAttribute->newInstance();
-        assert(is_object($attribute));
         if ($attribute instanceof Named) {
             return $attribute->value;
         }
