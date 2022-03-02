@@ -9,7 +9,7 @@ use ReflectionAttribute;
 
 use function assert;
 
-final class InjectingProviderProvider implements ProviderInterface
+final class ProviderSetProvider implements ProviderInterface
 {
     /** @var InjectionPointInterface */
     private $ip;
