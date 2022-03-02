@@ -16,16 +16,20 @@ use ReturnTypeWillChange;
 use function array_key_exists;
 use function count;
 
+/**
+ * @template T
+ * @implements ArrayAccess<array-key, T>
+ */
 final class Map implements IteratorAggregate, ArrayAccess, Countable
 {
-    /** @var array<string, Lazy> $lazies */
+    /** @var array<array-key, Lazy> $lazies */
     private $lazies;
 
     /** @var InjectorInterface */
     private $injector;
 
     /**
-     * @param array<string, Lazy> $lazies
+     * @param array<array-key, Lazy> $lazies
      */
     public function __construct(array $lazies, InjectorInterface $injector)
     {
@@ -34,7 +38,7 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
-     * @param string $offset
+     * @param array-key $offset
      *
      * @codeCoverageIgnore
      */
@@ -45,23 +49,24 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
-     * @param string $offset
+     * @param array-key $offset
      *
-     * @return mixed
+     * @return T
      *
      * @codeCoverageIgnore
      */
     #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
-        $lazy = $this->lazies[$offset];
+        /** @var T $instance */
+        $instance = ($this->lazies[$offset])($this->injector);
 
-        return $lazy($this->injector);
+        return $instance;
     }
 
     /**
-     * @param string $offset
-     * @param mixed  $value
+     * @param array-key $offset
+     * @param mixed     $value
      *
      * @return never
      *
@@ -76,7 +81,7 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
     }
 
     /**
-     * @param string $offset
+     * @param array-key $offset
      *
      * @return never
      *
@@ -90,13 +95,14 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
         throw new LogicException();
     }
 
-    /** @return Generator<int, object> */
+    /** @return Generator<array-key, T, mixed, void> */
     public function getIterator(): Iterator
     {
-        foreach ($this->lazies as $lazy) {
+        foreach ($this->lazies as $key => $lazy) {
+            /** @var T $object */
             $object = ($lazy)($this->injector);
 
-            yield $object;
+            yield $key => $object;
         }
     }
 
