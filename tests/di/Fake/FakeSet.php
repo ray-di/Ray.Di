@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-
 use Ray\Di\Di\Set;
 
 final class FakeSet
