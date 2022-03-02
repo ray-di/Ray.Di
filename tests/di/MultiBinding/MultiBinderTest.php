@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Ray\Di\FakeEngine;
 use Ray\Di\FakeEngine2;
 use Ray\Di\FakeEngineInterface;
+use Ray\Di\MultiBinder;
 use Ray\Di\NullModule;
 
 /**

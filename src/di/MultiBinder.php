@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ray\Di\MultiBinding;
+namespace Ray\Di;
 
-use Ray\Di\AbstractModule;
-use Ray\Di\Bind;
-use Ray\Di\Container;
+use Ray\Di\MultiBinding\Lazy;
+use Ray\Di\MultiBinding\LazyCollection;
 
 final class MultiBinder
 {

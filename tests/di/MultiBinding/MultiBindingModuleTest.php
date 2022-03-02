@@ -13,6 +13,7 @@ use Ray\Di\FakeEngine3;
 use Ray\Di\FakeEngineInterface;
 use Ray\Di\FakeMultiBindingConsumer;
 use Ray\Di\Injector;
+use Ray\Di\MultiBinder;
 
 use function count;
 

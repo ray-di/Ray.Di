@@ -8,8 +8,8 @@ use Doctrine\Common\Annotations\AnnotationException;
 use Ray\Aop\Compiler;
 use Ray\Di\Annotation\ScriptDir;
 use Ray\Di\Exception\Untargeted;
-
 use Ray\Di\MultiBinding\MultiBindingModule;
+
 use function assert;
 use function file_exists;
 use function is_array;
