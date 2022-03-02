@@ -1,0 +1,65 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Ray\Di\MultiBinding;
+
+use PHPUnit\Framework\TestCase;
+use Ray\Di\AbstractModule;
+use Ray\Di\FakeEngine;
+use Ray\Di\FakeEngine2;
+use Ray\Di\FakeEngineInterface;
+use Ray\Di\FakeMultiBindingConsumer;
+use Ray\Di\Injector;
+
+use function count;
+
+class MultiBindingModuleTest extends TestCase
+{
+    /** @var AbstractModule */
+    private $module;
+
+    protected function setUp(): void
+    {
+        $this->module = new class extends AbstractModule{
+            protected function configure(): void
+            {
+                $this->install(new MultiBindingModule());
+                $binder = MultiBinder::newInstance($this, FakeEngineInterface::class);
+                $binder->add('one', FakeEngine::class);
+                $binder->add('two', FakeEngine2::class);
+            }
+        };
+    }
+
+    public function testInjectMap(): Map
+    {
+        $injector = new Injector($this->module);
+        /** @var FakeMultiBindingConsumer $consumer */
+        $consumer = $injector->getInstance(FakeMultiBindingConsumer::class);
+        $this->assertInstanceOf(Map::class, $consumer->engines);
+
+        return $consumer->engines;
+    }
+
+    /**
+     * @depends testInjectMap
+     */
+    public function testMapInstance(Map $map): void
+    {
+        $this->assertInstanceOf(FakeEngine::class, $map['one']);
+        $this->assertInstanceOf(FakeEngine2::class, $map['two']);
+    }
+
+    /**
+     * @depends testInjectMap
+     */
+    public function testMapIteration(Map $map): void
+    {
+        foreach ($map as $engine) {
+            $this->assertInstanceOf(FakeEngineInterface::class, $engine);
+        }
+
+        $this->assertSame(2, count((array) $map));
+    }
+}
