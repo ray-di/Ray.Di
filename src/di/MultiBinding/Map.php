@@ -50,7 +50,6 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
     {
         $lazy = $this->lazies[$offset];
 
-        /** @var Lazy $lazy */
         return $lazy($this->injector);
     }
 
