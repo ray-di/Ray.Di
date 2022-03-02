@@ -14,13 +14,13 @@ use function array_key_exists;
 
 final class Map implements IteratorAggregate, ArrayAccess
 {
-    /** @var array<string, list<Lazy>> $lazies */
+    /** @var array<string, Lazy> $lazies */
     private $lazies;
 
     /** @var InjectorInterface */
     private $injector;
 
-    /** @param array<string, list<Lazy>> $lazies */
+    /** @param array<string, Lazy> $lazies */
     public function __construct(array $lazies, InjectorInterface $injector)
     {
         $this->lazies = $lazies;
@@ -41,7 +41,9 @@ final class Map implements IteratorAggregate, ArrayAccess
     #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
-        return ($this->lazies[$offset])($this->injector);
+        $lazy = $this->lazies[$offset];
+        /** @var Lazy $lazy */
+        return $lazy($this->injector);
     }
 
     /**

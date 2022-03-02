@@ -19,6 +19,9 @@ final class Lazy
         $this->class = $class;
     }
 
+    /**
+     * @return mixed
+     */
     public function __invoke(InjectorInterface $injector)
     {
         return $injector->getInstance($this->class);
