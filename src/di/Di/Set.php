@@ -6,6 +6,8 @@ namespace Ray\Di\Di;
 
 use Attribute;
 
+use function sprintf;
+
 #[Attribute(Attribute::TARGET_PARAMETER), Qualifier]
 final class Set
 {
@@ -22,5 +24,10 @@ final class Set
     {
         $this->interface = $interface;
         $this->name = $name;
+    }
+
+    public function getKey(): string
+    {
+        return sprintf('%s-%s', $this->interface, $this->name);
     }
 }
