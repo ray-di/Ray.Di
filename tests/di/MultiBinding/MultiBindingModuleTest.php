@@ -29,7 +29,6 @@ class MultiBindingModuleTest extends TestCase
         $this->module = new class extends AbstractModule{
             protected function configure(): void
             {
-                $this->install(new MultiBindingModule());
                 $binder = MultiBinder::newInstance($this, FakeEngineInterface::class);
                 $binder->add(FakeEngine::class, 'one');
                 $binder->add(FakeEngine2::class, 'two');
