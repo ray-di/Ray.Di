@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Di\Di\Set;
+use ReflectionAttribute;
 
 use function assert;
 
@@ -27,8 +28,9 @@ final class InjectingProviderProvider implements ProviderInterface
      */
     public function get()
     {
-        $set = $this->ip->getParameter()->getAttributes(Set::class)[0];
-        $instance = $set->newInstance();
+        /** @var non-empty-array<ReflectionAttribute> $attributes */
+        $attributes = $this->ip->getParameter()->getAttributes(Set::class);
+        $instance = $attributes[0]->newInstance();
         assert($instance instanceof Set);
 
         return new class ($this->injector, $instance) implements ProviderInterface
