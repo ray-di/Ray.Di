@@ -6,4 +6,7 @@ namespace Ray\Di;
 
 class FakeEngine3 implements FakeEngineInterface
 {
+    public function foo()
+    {
+    }
 }
