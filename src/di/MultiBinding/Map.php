@@ -64,6 +64,7 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
     public function offsetSet($offset, $value)
     {
         unset($offset, $value);
+
         throw new LogicException();
     }
 
@@ -76,6 +77,7 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
     public function offsetUnset($offset)
     {
         unset($offset);
+
         throw new LogicException();
     }
 
