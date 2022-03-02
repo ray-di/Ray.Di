@@ -13,7 +13,7 @@ final class MultiBinder
     /** @var Container */
     private $container;
 
-    /** @var array<string, array<int|string, Lazy>> */
+    /** @var array<string, array<int|string, Lazy<object>>> */
     private $lazyCollection = [];
 
     /** @var string */
