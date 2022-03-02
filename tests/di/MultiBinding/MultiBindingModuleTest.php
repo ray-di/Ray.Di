@@ -62,9 +62,7 @@ class MultiBindingModuleTest extends TestCase
      */
     public function testMapIteration(Map $map): void
     {
-        foreach ($map as $engine) {
-            $this->assertInstanceOf(FakeEngineInterface::class, $engine);
-        }
+        $this->assertContainsOnlyInstancesOf(FakeEngineInterface::class, $map);
 
         $this->assertSame(3, count($map));
     }
