@@ -14,6 +14,9 @@ use Ray\Di\Injector;
 
 use function count;
 
+/**
+ * @requires PHP 8.0
+ */
 class MultiBindingModuleTest extends TestCase
 {
     /** @var AbstractModule */

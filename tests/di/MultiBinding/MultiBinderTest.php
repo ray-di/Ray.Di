@@ -10,6 +10,9 @@ use Ray\Di\FakeEngine2;
 use Ray\Di\FakeEngineInterface;
 use Ray\Di\NullModule;
 
+/**
+ * @requires PHP 8.0
+ */
 class MultiBinderTest extends TestCase
 {
     public function testAdd(): void
