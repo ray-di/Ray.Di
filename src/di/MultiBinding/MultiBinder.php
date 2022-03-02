@@ -40,6 +40,9 @@ final class MultiBinder
         $this->container->add($bind);
     }
 
+    /**
+     * @param class-string $class
+     */
     public function set(string $class, ?string $key = null): void
     {
         unset($this->lazyCollection[$this->interface]);
