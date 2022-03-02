@@ -28,6 +28,7 @@ final class Map implements IteratorAggregate, ArrayAccess
     }
 
     /** @param string $offset */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->lazies);
@@ -37,6 +38,7 @@ final class Map implements IteratorAggregate, ArrayAccess
      * @param string $offset
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return ($this->lazies[$offset])($this->injector);
@@ -47,6 +49,7 @@ final class Map implements IteratorAggregate, ArrayAccess
      * @param mixed $value
      * @return never
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         throw new LogicException();
@@ -56,6 +59,7 @@ final class Map implements IteratorAggregate, ArrayAccess
      * @param string $offset
      * @return never
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         throw new LogicException();
