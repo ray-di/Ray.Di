@@ -26,14 +26,20 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
     /** @var InjectorInterface */
     private $injector;
 
-    /** @param array<string, Lazy> $lazies */
+    /**
+     * @param array<string, Lazy> $lazies
+     */
     public function __construct(array $lazies, InjectorInterface $injector)
     {
         $this->lazies = $lazies;
         $this->injector = $injector;
     }
 
-    /** @param string $offset */
+    /**
+     * @param string $offset
+     *
+     * @codeCoverageIgnore
+     */
     #[ReturnTypeWillChange]
     public function offsetExists($offset): bool
     {
@@ -44,6 +50,8 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
      * @param string $offset
      *
      * @return mixed
+     *
+     * @codeCoverageIgnore
      */
     #[ReturnTypeWillChange]
     public function offsetGet($offset)
