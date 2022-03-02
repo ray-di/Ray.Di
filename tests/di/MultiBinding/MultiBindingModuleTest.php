@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di\MultiBinding;
 
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
 use Ray\Di\FakeEngine;
@@ -64,5 +65,32 @@ class MultiBindingModuleTest extends TestCase
         }
 
         $this->assertSame(2, count((array) $map));
+    }
+
+    /**
+     * @depends testInjectMap
+     */
+    public function testIsSet(Map $map): void
+    {
+        $this->assertTrue(isset($map['one']));
+        $this->assertTrue(isset($map['two']));
+    }
+
+    /**
+     * @depends testInjectMap
+     */
+    public function testOffsetSet(Map $map): void
+    {
+        $this->expectException(LogicException::class);
+        $map['one'] = 1;
+    }
+
+    /**
+     * @depends testInjectMap
+     */
+    public function testOffsetUnset(Map $map): void
+    {
+        $this->expectException(LogicException::class);
+        unset($map['one']);
     }
 }
