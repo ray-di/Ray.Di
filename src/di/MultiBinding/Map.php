@@ -59,6 +59,8 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
      * @param mixed  $value
      *
      * @return never
+     *
+     * @codeCoverageIgnore
      */
     #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
@@ -72,6 +74,8 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
      * @param string $offset
      *
      * @return never
+     *
+     * @codeCoverageIgnore
      */
     #[ReturnTypeWillChange]
     public function offsetUnset($offset)
