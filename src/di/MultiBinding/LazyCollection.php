@@ -9,7 +9,7 @@ use ArrayObject;
 final class LazyCollection extends ArrayObject
 {
     /**
-     * @param array<string, array<string, list<Lazy>>> $array
+     * @param array<string, array<string, Lazy>> $array
      */
     public function __construct(array $array)
     {

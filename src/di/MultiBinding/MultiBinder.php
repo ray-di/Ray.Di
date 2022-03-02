@@ -13,7 +13,7 @@ final class MultiBinder
     /** @var Container */
     private $container;
 
-    /** @var array<Lazy> */
+    /** @var array<string, array<string, Lazy>> */
     private $lazyCollection = [];
 
     /** @var string */
@@ -30,6 +30,7 @@ final class MultiBinder
         return new self($module, $interface);
     }
 
+    /** @param class-string $class */
     public function add(string $key, string $class): void
     {
         $this->lazyCollection[$this->interface][$key] = new Lazy($class);
