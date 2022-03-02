@@ -6,13 +6,16 @@ namespace Ray\Di\MultiBinding;
 
 use Ray\Di\InjectorInterface;
 
+/**
+ * @template T of object
+ */
 final class Lazy
 {
-    /** @var class-string */
+    /** @var class-string<T> */
     private $class;
 
     /**
-     * @param class-string $class
+     * @param class-string<T> $class
      */
     public function __construct(string $class)
     {
@@ -20,10 +23,10 @@ final class Lazy
     }
 
     /**
-     * @return mixed
+     * @return T
      */
     public function __invoke(InjectorInterface $injector)
     {
-        return $injector->getInstance($this->class);
+        return $injector->getInstance($this->class); // @phpstan-ignore-line
     }
 }

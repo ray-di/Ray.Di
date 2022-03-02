@@ -14,9 +14,7 @@ use Ray\Di\InjectorInterface;
 use ReturnTypeWillChange;
 
 use function array_key_exists;
-use function assert;
 use function count;
-use function is_object;
 
 final class Map implements IteratorAggregate, ArrayAccess, Countable
 {
@@ -97,7 +95,6 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
     {
         foreach ($this->lazies as $lazy) {
             $object = ($lazy)($this->injector);
-            assert(is_object($object));
 
             yield $object;
         }
