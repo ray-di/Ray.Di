@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
 use Ray\Di\FakeEngine;
 use Ray\Di\FakeEngine2;
+use Ray\Di\FakeEngine3;
 use Ray\Di\FakeEngineInterface;
 use Ray\Di\FakeMultiBindingConsumer;
 use Ray\Di\Injector;
@@ -30,8 +31,9 @@ class MultiBindingModuleTest extends TestCase
             {
                 $this->install(new MultiBindingModule());
                 $binder = MultiBinder::newInstance($this, FakeEngineInterface::class);
-                $binder->add('one', FakeEngine::class);
-                $binder->add('two', FakeEngine2::class);
+                $binder->add(FakeEngine::class, 'one');
+                $binder->add(FakeEngine2::class, 'two');
+                $binder->add(FakeEngine3::class);
             }
         };
     }
@@ -64,7 +66,7 @@ class MultiBindingModuleTest extends TestCase
             $this->assertInstanceOf(FakeEngineInterface::class, $engine);
         }
 
-        $this->assertSame(2, count((array) $map));
+        $this->assertSame(3, count($map));
     }
 
     /**

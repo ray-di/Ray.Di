@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di\MultiBinding;
 
 use ArrayAccess;
+use Countable;
 use Generator;
 use Iterator;
 use IteratorAggregate;
@@ -14,9 +15,10 @@ use ReturnTypeWillChange;
 
 use function array_key_exists;
 use function assert;
+use function count;
 use function is_object;
 
-final class Map implements IteratorAggregate, ArrayAccess
+final class Map implements IteratorAggregate, ArrayAccess, Countable
 {
     /** @var array<string, Lazy> $lazies */
     private $lazies;
@@ -84,5 +86,10 @@ final class Map implements IteratorAggregate, ArrayAccess
 
             yield $object;
         }
+    }
+
+    public function count(): int
+    {
+        return count($this->lazies);
     }
 }
