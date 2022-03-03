@@ -29,6 +29,9 @@ final class MultiBinder
         $this->container = $module->getContainer();
         $this->multiBindings = $this->container->multiBindings;
         $this->interface = $interface;
+        $this->container->add(
+            (new Bind($this->container, MultiBindings::class))->toInstance($this->multiBindings)
+        );
     }
 
     public static function newInstance(AbstractModule $module, string $interface): self
@@ -57,7 +60,6 @@ final class MultiBinder
     public function to(string $class): void
     {
         $this->bind(new LazyTo($class), $this->key);
-        $this->register();
     }
 
     /**
@@ -66,7 +68,6 @@ final class MultiBinder
     public function toProvider(string $provider): void
     {
         $this->bind(new LazyProvider($provider), $this->key);
-        $this->register();
     }
 
     /**
@@ -75,13 +76,6 @@ final class MultiBinder
     public function toInstance($instance): void
     {
         $this->bind(new LazyInstance($instance), $this->key);
-        $this->register();
-    }
-
-    public function register(): void
-    {
-        $bind = (new Bind($this->container, MultiBindings::class))->toInstance($this->multiBindings);
-        $this->container->add($bind);
     }
 
     private function bind(LazyInteterface $lazy, ?string $key): void
