@@ -36,7 +36,7 @@ final class MapProvider implements ProviderInterface
         /** @var Set $instance */
         $instance = $set->newInstance();
 
-        /** @var array<string, Lazy<object>> $keyBasedLazy */
+        /** @var array<string, LazyTo<object>> $keyBasedLazy */
         $keyBasedLazy = $this->lazyCollection[$instance->interface];
 
         return new Map($keyBasedLazy, $this->injector);
