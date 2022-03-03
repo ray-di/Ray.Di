@@ -17,6 +17,7 @@ use Ray\Di\FakeRobotInterface;
 use Ray\Di\FakeRobotProvider;
 use Ray\Di\Injector;
 use Ray\Di\MultiBinder;
+use Ray\Di\NullModule;
 
 use function count;
 
@@ -30,7 +31,7 @@ class MultiBindingModuleTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->module = new class extends AbstractModule{
+        $this->module = new class extends AbstractModule {
             protected function configure(): void
             {
                 $engineBinder = MultiBinder::newInstance($this, FakeEngineInterface::class);
@@ -109,5 +110,26 @@ class MultiBindingModuleTest extends TestCase
         $this->assertInstanceOf(Map::class, $consumer->robots);
         $this->assertContainsOnlyInstancesOf(FakeRobot::class, $consumer->robots);
         $this->assertSame(3, count($consumer->robots));
+    }
+
+    public function testMultipileModule(): void
+    {
+        $module = new NullModule();
+        $binder = MultiBinder::newInstance($module, FakeEngineInterface::class);
+        $binder->addBinding('one')->to(FakeEngine::class);
+        $binder->addBinding('two')->to(FakeEngine2::class);
+        $module->install(new class extends AbstractModule {
+            protected function configure()
+            {
+                $binder = MultiBinder::newInstance($this, FakeEngineInterface::class);
+                $binder->addBinding('three')->to(FakeEngine::class);
+                $binder->addBinding('four')->to(FakeEngine::class);
+            }
+        });
+        $lazyCollection = $module->getContainer()->getInstance(LazyCollection::class);
+        $this->assertArrayHasKey('one', $lazyCollection[FakeEngineInterface::class]);
+        $this->assertArrayHasKey('two', $lazyCollection[FakeEngineInterface::class]);
+        $this->assertArrayHasKey('three', $lazyCollection[FakeEngineInterface::class]);
+        $this->assertArrayHasKey('four', $lazyCollection[FakeEngineInterface::class]);
     }
 }

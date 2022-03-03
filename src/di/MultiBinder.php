@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Ray\Di\Exception\Unbound;
 use Ray\Di\MultiBinding\LazyCollection;
 use Ray\Di\MultiBinding\LazyInstance;
 use Ray\Di\MultiBinding\LazyInteterface;
@@ -16,8 +15,8 @@ final class MultiBinder
     /** @var Container */
     private $container;
 
-    /** @var array<string, array<int|string, LazyInteterface>> */
-    private $lazyCollection = [];
+    /** @var LazyCollection */
+    private $lazyCollection;
 
     /** @var string */
     private $interface;
@@ -28,6 +27,7 @@ final class MultiBinder
     private function __construct(AbstractModule $module, string $interface)
     {
         $this->container = $module->getContainer();
+        $this->lazyCollection = $this->container->lazyCollection;
         $this->interface = $interface;
     }
 
@@ -45,7 +45,7 @@ final class MultiBinder
 
     public function setBinding(?string $key = null): self
     {
-        unset($this->lazyCollection[$this->interface]);
+        $this->container->lazyCollection->exchangeArray([]);
         $this->key = $key;
 
         return $this;
@@ -80,14 +80,7 @@ final class MultiBinder
 
     public function register(): void
     {
-        try {
-            $lazyCollection = $this->container->getInstance(LazyCollection::class);
-            $this->lazyCollection += $lazyCollection->getArrayCopy();
-        } catch (Unbound $e) {
-        }
-
-        $lazyCollection = new LazyCollection($this->lazyCollection);
-        $bind = (new Bind($this->container, LazyCollection::class))->toInstance($lazyCollection);
+        $bind = (new Bind($this->container, LazyCollection::class))->toInstance($this->lazyCollection);
         $this->container->add($bind);
     }
 
@@ -96,12 +89,19 @@ final class MultiBinder
      */
     private function bind(LazyInteterface $lazy, ?string $key): void
     {
+        $bindings = [];
+        if ($this->lazyCollection->offsetExists($this->interface)) {
+            $bindings = $this->lazyCollection->offsetGet($this->interface);
+        }
+
         if ($key === null) {
-            $this->lazyCollection[$this->interface][] = $lazy;
+            $bindings[] = $lazy;
+            $this->lazyCollection->offsetSet($this->interface, $bindings);
 
             return;
         }
 
-        $this->lazyCollection[$this->interface][$key] = $lazy;
+        $bindings[$key] = $lazy;
+        $this->lazyCollection->offsetSet($this->interface, $bindings);
     }
 }
