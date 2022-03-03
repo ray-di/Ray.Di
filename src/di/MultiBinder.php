@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Ray\Di\MultiBinding\LazyCollection;
 use Ray\Di\MultiBinding\LazyInstance;
 use Ray\Di\MultiBinding\LazyInteterface;
 use Ray\Di\MultiBinding\LazyProvider;
 use Ray\Di\MultiBinding\LazyTo;
+use Ray\Di\MultiBinding\MultiBindings;
 
 final class MultiBinder
 {
     /** @var Container */
     private $container;
 
-    /** @var LazyCollection */
-    private $lazyCollection;
+    /** @var MultiBindings */
+    private $multiBindings;
 
     /** @var string */
     private $interface;
@@ -27,7 +27,7 @@ final class MultiBinder
     private function __construct(AbstractModule $module, string $interface)
     {
         $this->container = $module->getContainer();
-        $this->lazyCollection = $this->container->lazyCollection;
+        $this->multiBindings = $this->container->multiBindings;
         $this->interface = $interface;
     }
 
@@ -45,7 +45,7 @@ final class MultiBinder
 
     public function setBinding(?string $key = null): self
     {
-        $this->container->lazyCollection->exchangeArray([]);
+        $this->container->multiBindings->exchangeArray([]);
         $this->key = $key;
 
         return $this;
@@ -80,7 +80,7 @@ final class MultiBinder
 
     public function register(): void
     {
-        $bind = (new Bind($this->container, LazyCollection::class))->toInstance($this->lazyCollection);
+        $bind = (new Bind($this->container, MultiBindings::class))->toInstance($this->multiBindings);
         $this->container->add($bind);
     }
 
@@ -90,18 +90,18 @@ final class MultiBinder
     private function bind(LazyInteterface $lazy, ?string $key): void
     {
         $bindings = [];
-        if ($this->lazyCollection->offsetExists($this->interface)) {
-            $bindings = $this->lazyCollection->offsetGet($this->interface);
+        if ($this->multiBindings->offsetExists($this->interface)) {
+            $bindings = $this->multiBindings->offsetGet($this->interface);
         }
 
         if ($key === null) {
             $bindings[] = $lazy;
-            $this->lazyCollection->offsetSet($this->interface, $bindings);
+            $this->multiBindings->offsetSet($this->interface, $bindings);
 
             return;
         }
 
         $bindings[$key] = $lazy;
-        $this->lazyCollection->offsetSet($this->interface, $bindings);
+        $this->multiBindings->offsetSet($this->interface, $bindings);
     }
 }

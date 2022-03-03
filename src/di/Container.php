@@ -10,7 +10,7 @@ use Ray\Aop\CompilerInterface;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Exception\Untargeted;
-use Ray\Di\MultiBinding\LazyCollection;
+use Ray\Di\MultiBinding\MultiBindings;
 use ReflectionClass;
 
 use function array_merge;
@@ -21,8 +21,8 @@ use function ksort;
 
 final class Container implements InjectorInterface
 {
-    /** @var ?LazyCollection */
-    public $lazyCollection;
+    /** @var MultiBindings */
+    public $multiBindings;
 
     /** @var DependencyInterface[] */
     private $container = [];
@@ -32,7 +32,7 @@ final class Container implements InjectorInterface
 
     public function __construct()
     {
-        $this->lazyCollection = new LazyCollection();
+        $this->multiBindings = new MultiBindings();
     }
 
     /**
@@ -40,7 +40,7 @@ final class Container implements InjectorInterface
      */
     public function __sleep()
     {
-        return ['container', 'pointcuts', 'lazyCollection'];
+        return ['container', 'pointcuts', 'multiBindings'];
     }
 
     /**
@@ -171,8 +171,8 @@ final class Container implements InjectorInterface
      */
     public function merge(self $container): void
     {
-        $mergedLazyCollection = array_merge_recursive($this->lazyCollection->getArrayCopy(), $container->lazyCollection->getArrayCopy());
-        $this->lazyCollection->exchangeArray($mergedLazyCollection);
+        $mergedLazyCollection = array_merge_recursive($this->multiBindings->getArrayCopy(), $container->multiBindings->getArrayCopy());
+        $this->multiBindings->exchangeArray($mergedLazyCollection);
         $this->container += $container->getContainer();
         $this->pointcuts = array_merge($this->pointcuts, $container->getPointcuts());
     }

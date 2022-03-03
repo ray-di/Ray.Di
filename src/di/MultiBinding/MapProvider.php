@@ -12,8 +12,8 @@ use ReflectionAttribute;
 
 final class MapProvider implements ProviderInterface
 {
-    /** @var LazyCollection */
-    private $lazyCollection;
+    /** @var MultiBindings */
+    private $multiBindings;
 
     /** @var InjectionPointInterface */
     private $ip;
@@ -21,9 +21,9 @@ final class MapProvider implements ProviderInterface
     /** @var InjectorInterface */
     private $injector;
 
-    public function __construct(InjectionPointInterface $ip, LazyCollection $lazyCollection, InjectorInterface $injector)
+    public function __construct(InjectionPointInterface $ip, MultiBindings $multiBindings, InjectorInterface $injector)
     {
-        $this->lazyCollection = $lazyCollection;
+        $this->multiBindings = $multiBindings;
         $this->ip = $ip;
         $this->injector = $injector;
     }
@@ -37,7 +37,7 @@ final class MapProvider implements ProviderInterface
         $instance = $set->newInstance();
 
         /** @var array<string, LazyTo<object>> $keyBasedLazy */
-        $keyBasedLazy = $this->lazyCollection[$instance->interface];
+        $keyBasedLazy = $this->multiBindings[$instance->interface];
 
         return new Map($keyBasedLazy, $this->injector);
     }

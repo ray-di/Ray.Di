@@ -6,6 +6,6 @@ namespace Ray\Di\MultiBinding;
 
 use ArrayObject;
 
-final class LazyCollection extends ArrayObject
+final class MultiBindings extends ArrayObject
 {
 }
