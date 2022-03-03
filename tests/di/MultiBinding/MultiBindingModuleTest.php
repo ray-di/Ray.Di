@@ -126,10 +126,11 @@ class MultiBindingModuleTest extends TestCase
                 $binder->addBinding('four')->to(FakeEngine::class);
             }
         });
-        $lazyCollection = $module->getContainer()->getInstance(MultiBindings::class);
-        $this->assertArrayHasKey('one', $lazyCollection[FakeEngineInterface::class]);
-        $this->assertArrayHasKey('two', $lazyCollection[FakeEngineInterface::class]);
-        $this->assertArrayHasKey('three', $lazyCollection[FakeEngineInterface::class]);
-        $this->assertArrayHasKey('four', $lazyCollection[FakeEngineInterface::class]);
+        /** @var MultiBindings $multiBindings */
+        $multiBindings = $module->getContainer()->getInstance(MultiBindings::class);
+        $this->assertArrayHasKey('one', (array) $multiBindings[FakeEngineInterface::class]);
+        $this->assertArrayHasKey('two', (array) $multiBindings[FakeEngineInterface::class]);
+        $this->assertArrayHasKey('three', (array) $multiBindings[FakeEngineInterface::class]);
+        $this->assertArrayHasKey('four', (array) $multiBindings[FakeEngineInterface::class]);
     }
 }

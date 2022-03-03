@@ -22,10 +22,10 @@ class MultiBinderTest extends TestCase
         $binder = MultiBinder::newInstance($module, FakeEngineInterface::class);
         $binder->addBinding('one')->to(FakeEngine::class);
         $binder->addBinding('two')->to(FakeEngine2::class);
-        /** @var MultiBindings $lazyCollection */
-        $lazyCollection = $module->getContainer()->getInstance(MultiBindings::class);
-        $this->assertArrayHasKey('one', $lazyCollection[FakeEngineInterface::class]);
-        $this->assertArrayHasKey('two', $lazyCollection[FakeEngineInterface::class]);
+        /** @var MultiBindings $multiBindings */
+        $multiBindings = $module->getContainer()->getInstance(MultiBindings::class);
+        $this->assertArrayHasKey('one', (array) $multiBindings[FakeEngineInterface::class]);
+        $this->assertArrayHasKey('two', (array) $multiBindings[FakeEngineInterface::class]);
     }
 
     public function testSet(): void
@@ -35,9 +35,9 @@ class MultiBinderTest extends TestCase
         $binder->addBinding('one')->to(FakeEngine::class);
         $binder->addBinding('two')->to(FakeEngine2::class);
         $binder->setBinding('one')->to(FakeEngine::class);
-        /** @var MultiBindings $lazyCollection */
-        $lazyCollection = $module->getContainer()->getInstance(MultiBindings::class);
-        $this->assertArrayHasKey('one', $lazyCollection[FakeEngineInterface::class]);
-        $this->assertArrayNotHasKey('two', $lazyCollection[FakeEngineInterface::class]);
+        /** @var MultiBindings $multiBindings */
+        $multiBindings = $module->getContainer()->getInstance(MultiBindings::class);
+        $this->assertArrayHasKey('one', (array) $multiBindings[FakeEngineInterface::class]);
+        $this->assertArrayNotHasKey('two', (array) $multiBindings[FakeEngineInterface::class]);
     }
 }

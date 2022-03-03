@@ -30,7 +30,7 @@ final class LazyProvider implements LazyInteterface
      */
     public function __invoke(InjectorInterface $injector)
     {
-        $provider = $injector->getInstance($this->class); // @phpstan-ignore-line
+        $provider = $injector->getInstance($this->class);
         assert($provider instanceof ProviderInterface);
 
         return $provider->get();

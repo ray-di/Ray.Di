@@ -84,9 +84,6 @@ final class MultiBinder
         $this->container->add($bind);
     }
 
-    /**
-     * @param class-string $class
-     */
     private function bind(LazyInteterface $lazy, ?string $key): void
     {
         $bindings = [];
@@ -96,7 +93,7 @@ final class MultiBinder
 
         if ($key === null) {
             $bindings[] = $lazy;
-            $this->multiBindings->offsetSet($this->interface, $bindings);
+            $this->multiBindings->offsetSet($this->interface, $bindings); // @phpstan-ignore-line
 
             return;
         }
