@@ -8,6 +8,7 @@ use Doctrine\Common\Annotations\AnnotationException;
 use Ray\Aop\Compiler;
 use Ray\Di\Annotation\ScriptDir;
 use Ray\Di\Exception\Untargeted;
+use Ray\Di\MultiBinding\MultiBindingModule;
 
 use function assert;
 use function file_exists;
@@ -39,6 +40,7 @@ class Injector implements InjectorInterface
         $module = $module ?? new NullModule();
         $module->install(new AssistedModule());
         $module->install(new ProviderSetModule());
+        $module->install(new MultiBindingModule());
         $this->classDir = is_dir($tmpDir) ? $tmpDir : sys_get_temp_dir();
         $this->container = $module->getContainer();
         $this->container->map(function (DependencyInterface $dependency) {

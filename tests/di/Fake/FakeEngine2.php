@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-class FakeEngine implements FakeEngineInterface
+class FakeEngine2 implements FakeEngineInterface
 {
     public function foo()
     {

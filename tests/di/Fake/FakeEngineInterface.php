@@ -6,4 +6,5 @@ namespace Ray\Di;
 
 interface FakeEngineInterface
 {
+    public function foo();
 }

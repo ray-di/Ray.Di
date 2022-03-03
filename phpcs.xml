@@ -39,6 +39,7 @@
         <exclude name="Squiz.PHP.GlobalKeyword.NotAllowed"/>
         <exclude name="SlevomatCodingStandard.PHP.RequireExplicitAssertion.RequiredExplicitAssertion"/>
         <exclude name="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration.InvalidFormat"/>
+        <exclude name="Squiz.Commenting.FunctionComment.InvalidNoReturn"/>
         <!-- PHP8 attribute -->
         <exclude name="PSR12.Files.FileHeader.IncorrectOrder"/>
         <!-- /Base -->

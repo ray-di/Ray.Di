@@ -14,4 +14,4 @@ parameters:
     - tests/compiler/tmp/*
     - tests/compiler/Fake/*
   checkGenericClassInNonGenericObjectType: false
-
+  checkMissingIterableValueType: false
