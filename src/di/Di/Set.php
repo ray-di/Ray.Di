@@ -6,7 +6,7 @@ namespace Ray\Di\Di;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_PARAMETER), Qualifier]
+#[Attribute(Attribute::TARGET_PARAMETER | Attribute::TARGET_PROPERTY), Qualifier]
 final class Set
 {
     /** @var ""|class-string */
