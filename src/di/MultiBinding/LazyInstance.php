@@ -23,7 +23,7 @@ final class LazyInstance implements LazyInteterface
     }
 
     /**
-     * @return mixed
+     * @return T
      */
     public function __invoke(InjectorInterface $injector)
     {

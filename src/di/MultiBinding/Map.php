@@ -95,7 +95,7 @@ final class Map implements IteratorAggregate, ArrayAccess, Countable
         throw new LogicException();
     }
 
-    /** @return Generator<array-key, T, mixed, void> */
+    /** @return Generator<array-key, T, void, void> */
     public function getIterator(): Iterator
     {
         foreach ($this->lazies as $key => $lazy) {
