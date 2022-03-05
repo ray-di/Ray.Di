@@ -13,7 +13,7 @@ use function array_merge_recursive;
  */
 final class MultiBindings extends ArrayObject
 {
-    public function merge(self $multiBindings)
+    public function merge(self $multiBindings): void
     {
         $this->exchangeArray(
             array_merge_recursive($this->getArrayCopy(), $multiBindings->getArrayCopy())
