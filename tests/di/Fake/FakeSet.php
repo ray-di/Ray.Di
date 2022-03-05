@@ -11,7 +11,7 @@ final class FakeSet
     /**
      * @param Provider<FakeEngineInterface> $provider
      */
-    public function __construct(#[Set(FakeEngineInterface::class)] public Provider $provider)
+    public function __construct(#[Set(FakeEngineInterface::class)] public ProviderInterface $provider)
     {
         $this->provider = $provider;
     }
