@@ -45,9 +45,9 @@ final class MapProvider implements ProviderInterface
             throw new SetNotFound((string) $this->ip->getParameter());
         }
 
-        /** @var array<string, LazyTo<object>> $keyBasedLazy */
-        $keyBasedLazy = $this->multiBindings[$set->interface];
+        /** @var array<string, LazyTo<object>> $lazies */
+        $lazies = $this->multiBindings[$set->interface];
 
-        return new Map($keyBasedLazy, $this->injector);
+        return new Map($lazies, $this->injector);
     }
 }
