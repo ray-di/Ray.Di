@@ -139,12 +139,6 @@ class MultiBindingModuleTest extends TestCase
 
     public function testAnnotation(): void
     {
-        $this->module->install(new class extends AbstractModule{
-            protected function configure()
-            {
-                $this->bind(FakeMultiBindingAnnotation::class);
-            }
-        });
         $injector = new Injector($this->module);
         /** @var FakeMultiBindingAnnotation $fake */
         $fake = $injector->getInstance(FakeMultiBindingAnnotation::class);
@@ -157,12 +151,6 @@ class MultiBindingModuleTest extends TestCase
     public function testSetNotFound(): void
     {
         $this->expectException(SetNotFound::class);
-        $this->module->install(new class extends AbstractModule{
-            protected function configure()
-            {
-                $this->bind(FakeMultiBindingAnnotationSetNotFound::class);
-            }
-        });
         $injector = new Injector($this->module);
         $injector->getInstance(FakeMultiBindingAnnotationSetNotFound::class);
     }
