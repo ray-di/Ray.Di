@@ -15,6 +15,7 @@
         "doctrine/cache": "^1.10 | ^2.1",
         "koriym/attributes": "^1.0",
         "koriym/null-object": "^1.0",
+        "koriym/param-reader": "^1.0",
         "koriym/printo": "^1.0",
         "nikic/php-parser": "^4.5",
         "ray/aop": "^2.10"
