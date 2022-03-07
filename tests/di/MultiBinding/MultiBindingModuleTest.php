@@ -7,11 +7,13 @@ namespace Ray\Di\MultiBinding;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
+use Ray\Di\Exception\SetNotFound;
 use Ray\Di\FakeEngine;
 use Ray\Di\FakeEngine2;
 use Ray\Di\FakeEngine3;
 use Ray\Di\FakeEngineInterface;
 use Ray\Di\FakeMultiBindingAnnotation;
+use Ray\Di\FakeMultiBindingAnnotationSetNotFound;
 use Ray\Di\FakeMultiBindingConsumer;
 use Ray\Di\FakeRobot;
 use Ray\Di\FakeRobotInterface;
@@ -150,5 +152,18 @@ class MultiBindingModuleTest extends TestCase
         $this->assertSame(3, count($fake->engines));
         $this->assertContainsOnlyInstancesOf(FakeRobotInterface::class, $fake->robots);
         $this->assertSame(3, count($fake->robots));
+    }
+
+    public function testSetNotFound(): void
+    {
+        $this->expectException(SetNotFound::class);
+        $this->module->install(new class extends AbstractModule{
+            protected function configure()
+            {
+                $this->bind(FakeMultiBindingAnnotationSetNotFound::class);
+            }
+        });
+        $injector = new Injector($this->module);
+        $injector->getInstance(FakeMultiBindingAnnotationSetNotFound::class);
     }
 }

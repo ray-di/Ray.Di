@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di\MultiBinding;
 
-use LogicException;
 use Ray\Di\Di\Set;
+use Ray\Di\Exception\SetNotFound;
 use Ray\Di\InjectionPointInterface;
 use Ray\Di\InjectorInterface;
 use Ray\Di\ParameterAttributeReader;
@@ -42,7 +42,7 @@ final class MapProvider implements ProviderInterface
         /** @var ?Set $set */
         $set = $this->reader->get($this->ip->getParameter(), Set::class);
         if ($set === null) {
-            throw new LogicException();
+            throw new SetNotFound((string) $this->ip->getParameter());
         }
 
         /** @var array<string, LazyTo<object>> $keyBasedLazy */
