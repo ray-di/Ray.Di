@@ -7,7 +7,7 @@ namespace Ray\Di;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Exception\MethodInvocationNotAvailable;
 
-class MethodInvocationProvider implements ProviderInterface
+final class MethodInvocationProvider implements ProviderInterface
 {
     /** @var ?MethodInvocation */
     private $invocation;
