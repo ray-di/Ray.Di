@@ -11,6 +11,7 @@ use Ray\Di\FakeEngine;
 use Ray\Di\FakeEngine2;
 use Ray\Di\FakeEngine3;
 use Ray\Di\FakeEngineInterface;
+use Ray\Di\FakeMultiBindingAnnotation;
 use Ray\Di\FakeMultiBindingConsumer;
 use Ray\Di\FakeRobot;
 use Ray\Di\FakeRobotInterface;
@@ -132,5 +133,22 @@ class MultiBindingModuleTest extends TestCase
         $this->assertArrayHasKey('two', (array) $multiBindings[FakeEngineInterface::class]);
         $this->assertArrayHasKey('three', (array) $multiBindings[FakeEngineInterface::class]);
         $this->assertArrayHasKey('four', (array) $multiBindings[FakeEngineInterface::class]);
+    }
+
+    public function testAnnotation(): void
+    {
+        $this->module->install(new class extends AbstractModule{
+            protected function configure()
+            {
+                $this->bind(FakeMultiBindingAnnotation::class);
+            }
+        });
+        $injector = new Injector($this->module);
+        /** @var FakeMultiBindingAnnotation $fake */
+        $fake = $injector->getInstance(FakeMultiBindingAnnotation::class);
+        $this->assertContainsOnlyInstancesOf(FakeEngineInterface::class, $fake->engines);
+        $this->assertSame(3, count($fake->engines));
+        $this->assertContainsOnlyInstancesOf(FakeRobotInterface::class, $fake->robots);
+        $this->assertSame(3, count($fake->robots));
     }
 }
