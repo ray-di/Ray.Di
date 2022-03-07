@@ -11,7 +11,7 @@ final class ModuleMerger
     /**
      * @param non-empty-array<AbstractModule> $modules
      */
-    public function __invoke(array $modules): ?AbstractModule
+    public function __invoke(array $modules): AbstractModule
     {
         $baseModule = array_shift($modules);
         foreach ($modules as $module) {

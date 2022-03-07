@@ -10,6 +10,7 @@ use Ray\Di\Annotation\ScriptDir;
 use Ray\Di\Exception\Untargeted;
 use Ray\Di\MultiBinding\MultiBindingModule;
 
+use function array_merge;
 use function assert;
 use function file_exists;
 use function is_array;
@@ -33,14 +34,14 @@ class Injector implements InjectorInterface
      */
     public function __construct($module = null, string $tmpDir = '')
     {
-        if (is_array($module)) {
-            $module = (new ModuleMerger())($module);
-        }
-
         $module = $module ?? new NullModule();
-        $module->install(new AssistedModule());
-        $module->install(new ProviderSetModule());
-        $module->override(new MultiBindingModule());
+        $builtInModules = [
+            new AssistedModule(),
+            new ProviderSetModule(),
+            new MultiBindingModule(),
+        ];
+        $modules = array_merge($builtInModules, is_array($module) ? $module : [$module]);
+        $module = (new ModuleMerger())($modules);
         $this->classDir = is_dir($tmpDir) ? $tmpDir : sys_get_temp_dir();
         $this->container = $module->getContainer();
         $this->container->map(function (DependencyInterface $dependency) {
