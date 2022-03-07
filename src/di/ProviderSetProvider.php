@@ -15,13 +15,13 @@ final class ProviderSetProvider implements ProviderInterface
     /** @var InjectorInterface */
     private $injector;
 
-    /** @var ConstractorParamDualReader  */
+    /** @var ParameterReader  */
     private $reader;
 
     public function __construct(
         InjectionPointInterface $ip,
         InjectorInterface $injector,
-        ConstractorParamDualReader $reader
+        ParameterReader $reader
     ) {
         $this->ip = $ip;
         $this->injector = $injector;

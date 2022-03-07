@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Ray\Di\MultiBinding;
 
-use Ray\Di\ConstractorParamDualReader;
 use Ray\Di\Di\Set;
 use Ray\Di\Exception\SetNotFound;
 use Ray\Di\InjectionPointInterface;
 use Ray\Di\InjectorInterface;
+use Ray\Di\ParameterReader;
 use Ray\Di\ProviderInterface;
 
 final class MapProvider implements ProviderInterface
@@ -22,14 +22,14 @@ final class MapProvider implements ProviderInterface
     /** @var InjectorInterface */
     private $injector;
 
-    /** @var ConstractorParamDualReader  */
+    /** @var ParameterReader  */
     private $reader;
 
     public function __construct(
         InjectionPointInterface $ip,
         MultiBindings $multiBindings,
         InjectorInterface $injector,
-        ConstractorParamDualReader $reader
+        ParameterReader $reader
     ) {
         $this->multiBindings = $multiBindings;
         $this->ip = $ip;

@@ -4,19 +4,25 @@ declare(strict_types=1);
 
 namespace Ray\Di\MultiBinding;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
-use Ray\Di\ConstractorParamDualReader;
 use Ray\Di\Di\Set;
 use Ray\Di\FakeMultiBindingAnnotation;
+use Ray\Di\ParameterReader;
 use ReflectionParameter;
 
-class ConstractorParamDualReaderTest extends TestCase
+class ParameterReaderTest extends TestCase
 {
-    public function testGet(): void
+    /** @var ParameterReader  */
+    private $reader;
+
+    protected function setUp(): void
     {
-        $reader = new ParameterDualReader();
-        $prop = $reader->getParametrAnnotation(
+        $this->reader = new ParameterReader();
+    }
+
+    public function testGetParametrAnnotation(): void
+    {
+        $prop = $this->reader->getParametrAnnotation(
             new ReflectionParameter(
                 [FakeMultiBindingAnnotation::class, '__construct'],
                 'engines'

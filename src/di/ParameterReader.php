@@ -6,7 +6,6 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
-use Ray\Di\Di\Inject;
 use Ray\Di\Di\Named;
 use ReflectionAttribute;
 use ReflectionClass;
@@ -18,33 +17,29 @@ use function assert;
 use const PHP_VERSION_ID;
 
 /**
- * Attribute/annotation reader for constructor parameters
+ * An attribute/annotation reader for method parameters
  *
  * @template T of object
  */
-class ConstractorParamDualReader
+class ParameterReader
 {
     /** @var ?Reader */
     private $reader;
 
     /**
-     * Set optional cached reader
-     *
-     * @Inject(optional=true)
      * @Named("annotation")
      */
-    #[Inject(optional: true)]
     #[Named('annotation')]
-    public function setReader(Reader $reader): void
+    public function __construct(?Reader $reader = null)
     {
         $this->reader = $reader;
     }
 
     /**
-     * Read the parameter attribute
+     * Read the parameter attribute or annotation
      *
      * Attempts to read the attribute of the parameter,
-     * and if not successful, attempts to read the annotation of the property of the same name
+     * and if not successful, attempts to read the annotation of the property of the same variable name.
      *
      * @param class-string<T> $class
      *
