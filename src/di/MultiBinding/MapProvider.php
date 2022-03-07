@@ -8,7 +8,7 @@ use Ray\Di\Di\Set;
 use Ray\Di\Exception\SetNotFound;
 use Ray\Di\InjectionPointInterface;
 use Ray\Di\InjectorInterface;
-use Ray\Di\ParameterAttributeReader;
+use Ray\Di\ConstractorParamDualReader;
 use Ray\Di\ProviderInterface;
 
 final class MapProvider implements ProviderInterface
@@ -22,14 +22,14 @@ final class MapProvider implements ProviderInterface
     /** @var InjectorInterface */
     private $injector;
 
-    /** @var ParameterAttributeReader  */
+    /** @var ConstractorParamDualReader  */
     private $reader;
 
     public function __construct(
         InjectionPointInterface $ip,
         MultiBindings $multiBindings,
         InjectorInterface $injector,
-        ParameterAttributeReader $reader
+        ConstractorParamDualReader $reader
     ) {
         $this->multiBindings = $multiBindings;
         $this->ip = $ip;
@@ -40,7 +40,7 @@ final class MapProvider implements ProviderInterface
     public function get(): Map
     {
         /** @var ?Set $set */
-        $set = $this->reader->get($this->ip->getParameter(), Set::class);
+        $set = $this->reader->getParametrAnnotation($this->ip->getParameter(), Set::class);
         if ($set === null) {
             throw new SetNotFound((string) $this->ip->getParameter());
         }

@@ -7,15 +7,15 @@ namespace Ray\Di\MultiBinding;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Di\Set;
 use Ray\Di\FakeMultiBindingAnnotation;
-use Ray\Di\ParameterAttributeReader;
+use Ray\Di\ConstractorParamDualReader;
 use ReflectionParameter;
 
 class ParameterAttributeReaderTest extends TestCase
 {
     public function testGet(): void
     {
-        $reader = new ParameterAttributeReader();
-        $prop = $reader->get(
+        $reader = new ConstractorParamDualReader();
+        $prop = $reader->getParametrAnnotation(
             new ReflectionParameter(
                 [FakeMultiBindingAnnotation::class, '__construct'],
                 'engines'

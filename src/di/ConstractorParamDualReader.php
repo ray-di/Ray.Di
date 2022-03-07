@@ -22,12 +22,14 @@ use const PHP_VERSION_ID;
  *
  * @template T of object
  */
-class ParameterAttributeReader
+class ConstractorParamDualReader
 {
     /** @var ?Reader */
     private $reader;
 
     /**
+     * Set optional cached reader
+     *
      * @Inject(optional=true)
      * @Named("annotation")
      */
@@ -48,7 +50,7 @@ class ParameterAttributeReader
      *
      * @return T|null
      */
-    public function get(ReflectionParameter $param, string $class): ?object
+    public function getParametrAnnotation(ReflectionParameter $param, string $class): ?object
     {
         if (PHP_VERSION_ID < 80000) {
             return $this->readAnnotation($param, $class);
