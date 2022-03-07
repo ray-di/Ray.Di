@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Di\Di\Set;
-use ReflectionAttribute;
-
-use function assert;
+use Ray\Di\Exception\SetNotFound;
 
 final class ProviderSetProvider implements ProviderInterface
 {
@@ -17,10 +15,17 @@ final class ProviderSetProvider implements ProviderInterface
     /** @var InjectorInterface */
     private $injector;
 
-    public function __construct(InjectionPointInterface $ip, InjectorInterface $injector)
-    {
+    /** @var ConstractorParamDualReader  */
+    private $reader;
+
+    public function __construct(
+        InjectionPointInterface $ip,
+        InjectorInterface $injector,
+        ConstractorParamDualReader $reader
+    ) {
         $this->ip = $ip;
         $this->injector = $injector;
+        $this->reader = $reader;
     }
 
     /**
@@ -28,12 +33,13 @@ final class ProviderSetProvider implements ProviderInterface
      */
     public function get()
     {
-        /** @var non-empty-array<ReflectionAttribute> $attributes */
-        $attributes = $this->ip->getParameter()->getAttributes(Set::class);
-        $instance = $attributes[0]->newInstance();
-        assert($instance instanceof Set);
+        /** @var ?Set $set */
+        $set = $this->reader->getParametrAnnotation($this->ip->getParameter(), Set::class);
+        if ($set === null) {
+            throw new SetNotFound((string) $this->ip->getParameter());
+        }
 
-        return new class ($this->injector, $instance) implements ProviderInterface
+        return new class ($this->injector, $set) implements ProviderInterface
         {
             /** @var InjectorInterface  */
             private $injector;

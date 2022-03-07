@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Ray\Di\MultiBinding;
 
+use Ray\Di\ConstractorParamDualReader;
 use Ray\Di\Di\Set;
 use Ray\Di\Exception\SetNotFound;
 use Ray\Di\InjectionPointInterface;
 use Ray\Di\InjectorInterface;
-use Ray\Di\ConstractorParamDualReader;
 use Ray\Di\ProviderInterface;
 
 final class MapProvider implements ProviderInterface

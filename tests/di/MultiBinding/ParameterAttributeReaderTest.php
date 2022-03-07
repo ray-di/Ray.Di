@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Ray\Di\MultiBinding;
 
 use PHPUnit\Framework\TestCase;
+use Ray\Di\ConstractorParamDualReader;
 use Ray\Di\Di\Set;
 use Ray\Di\FakeMultiBindingAnnotation;
-use Ray\Di\ConstractorParamDualReader;
 use ReflectionParameter;
 
 class ParameterAttributeReaderTest extends TestCase
