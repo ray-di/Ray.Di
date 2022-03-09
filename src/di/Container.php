@@ -10,6 +10,7 @@ use Ray\Aop\CompilerInterface;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Exception\Untargeted;
+use Ray\Di\MultiBinding\MultiBindings;
 use ReflectionClass;
 
 use function array_merge;
@@ -19,18 +20,26 @@ use function ksort;
 
 final class Container implements InjectorInterface
 {
+    /** @var MultiBindings */
+    public $multiBindings;
+
     /** @var DependencyInterface[] */
     private $container = [];
 
     /** @var array<int, Pointcut> */
     private $pointcuts = [];
 
+    public function __construct()
+    {
+        $this->multiBindings = new MultiBindings();
+    }
+
     /**
      * @return list<string>
      */
     public function __sleep()
     {
-        return ['container', 'pointcuts'];
+        return ['container', 'pointcuts', 'multiBindings'];
     }
 
     /**
@@ -161,6 +170,7 @@ final class Container implements InjectorInterface
      */
     public function merge(self $container): void
     {
+        $this->multiBindings->merge($container->multiBindings);
         $this->container += $container->getContainer();
         $this->pointcuts = array_merge($this->pointcuts, $container->getPointcuts());
     }

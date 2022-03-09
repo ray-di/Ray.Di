@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Ray\Di\MultiBinding;
 
+use Koriym\ParamReader\ParamReaderInterface;
 use Ray\Di\Di\Set;
+use Ray\Di\Exception\SetNotFound;
 use Ray\Di\InjectionPointInterface;
 use Ray\Di\InjectorInterface;
 use Ray\Di\ProviderInterface;
-use ReflectionAttribute;
 
 final class MapProvider implements ProviderInterface
 {
-    /** @var LazyCollection */
-    private $lazyCollection;
+    /** @var MultiBindings */
+    private $multiBindings;
 
     /** @var InjectionPointInterface */
     private $ip;
@@ -21,24 +22,32 @@ final class MapProvider implements ProviderInterface
     /** @var InjectorInterface */
     private $injector;
 
-    public function __construct(InjectionPointInterface $ip, LazyCollection $lazyCollection, InjectorInterface $injector)
-    {
-        $this->lazyCollection = $lazyCollection;
+    /** @var ParamReaderInterface  */
+    private $reader;
+
+    public function __construct(
+        InjectionPointInterface $ip,
+        MultiBindings $multiBindings,
+        InjectorInterface $injector,
+        ParamReaderInterface $reader
+    ) {
+        $this->multiBindings = $multiBindings;
         $this->ip = $ip;
         $this->injector = $injector;
+        $this->reader = $reader;
     }
 
     public function get(): Map
     {
-        /** @var array<ReflectionAttribute> $attributes */
-        $attributes = $this->ip->getParameter()->getAttributes(Set::class);
-        $set = $attributes[0];
-        /** @var Set $instance */
-        $instance = $set->newInstance();
+        /** @var ?Set $set */
+        $set = $this->reader->getParametrAnnotation($this->ip->getParameter(), Set::class);
+        if ($set === null) {
+            throw new SetNotFound((string) $this->ip->getParameter());
+        }
 
-        /** @var array<string, Lazy<object>> $keyBasedLazy */
-        $keyBasedLazy = $this->lazyCollection[$instance->interface];
+        /** @var array<string, LazyTo<object>> $lazies */
+        $lazies = $this->multiBindings[$set->interface];
 
-        return new Map($keyBasedLazy, $this->injector);
+        return new Map($lazies, $this->injector);
     }
 }

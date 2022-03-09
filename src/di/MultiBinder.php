@@ -4,24 +4,34 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Ray\Di\MultiBinding\Lazy;
-use Ray\Di\MultiBinding\LazyCollection;
+use Ray\Di\MultiBinding\LazyInstance;
+use Ray\Di\MultiBinding\LazyInteterface;
+use Ray\Di\MultiBinding\LazyProvider;
+use Ray\Di\MultiBinding\LazyTo;
+use Ray\Di\MultiBinding\MultiBindings;
 
 final class MultiBinder
 {
     /** @var Container */
     private $container;
 
-    /** @var array<string, array<int|string, Lazy<object>>> */
-    private $lazyCollection = [];
+    /** @var MultiBindings */
+    private $multiBindings;
 
     /** @var string */
     private $interface;
 
+    /** @var ?string  */
+    private $key;
+
     private function __construct(AbstractModule $module, string $interface)
     {
         $this->container = $module->getContainer();
+        $this->multiBindings = $this->container->multiBindings;
         $this->interface = $interface;
+        $this->container->add(
+            (new Bind($this->container, MultiBindings::class))->toInstance($this->multiBindings)
+        );
     }
 
     public static function newInstance(AbstractModule $module, string $interface): self
@@ -29,36 +39,60 @@ final class MultiBinder
         return new self($module, $interface);
     }
 
-    /**
-     * @param class-string $class
-     */
-    public function add(string $class, ?string $key = null): void
+    public function addBinding(?string $key = null): self
     {
-        $this->bind($class, $key);
-        $bind = (new Bind($this->container, LazyCollection::class))->toInstance(new LazyCollection($this->lazyCollection));
-        $this->container->add($bind);
+        $this->key = $key;
+
+        return $this;
+    }
+
+    public function setBinding(?string $key = null): self
+    {
+        $this->container->multiBindings->exchangeArray([]);
+        $this->key = $key;
+
+        return $this;
     }
 
     /**
      * @param class-string $class
      */
-    public function set(string $class, ?string $key = null): void
+    public function to(string $class): void
     {
-        unset($this->lazyCollection[$this->interface]);
-        $this->add($class, $key);
+        $this->bind(new LazyTo($class), $this->key);
     }
 
     /**
-     * @param class-string $class
+     * @param class-string<ProviderInterface> $provider
      */
-    private function bind(string $class, ?string $key): void
+    public function toProvider(string $provider): void
     {
+        $this->bind(new LazyProvider($provider), $this->key);
+    }
+
+    /**
+     * @param mixed $instance
+     */
+    public function toInstance($instance): void
+    {
+        $this->bind(new LazyInstance($instance), $this->key);
+    }
+
+    private function bind(LazyInteterface $lazy, ?string $key): void
+    {
+        $bindings = [];
+        if ($this->multiBindings->offsetExists($this->interface)) {
+            $bindings = $this->multiBindings->offsetGet($this->interface);
+        }
+
         if ($key === null) {
-            $this->lazyCollection[$this->interface][] = new Lazy($class);
+            $bindings[] = $lazy;
+            $this->multiBindings->offsetSet($this->interface, $bindings); // @phpstan-ignore-line
 
             return;
         }
 
-        $this->lazyCollection[$this->interface][$key] = new Lazy($class);
+        $bindings[$key] = $lazy;
+        $this->multiBindings->offsetSet($this->interface, $bindings);
     }
 }

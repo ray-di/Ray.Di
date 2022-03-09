@@ -125,6 +125,10 @@ final class Dependency implements DependencyInterface
         $class = (string) $this->newInstance;
         /**  @psalm-suppress RedundantConditionGivenDocblockType */
         assert(class_exists($class));
+        if ((new ReflectionClass($class))->isFinal()) {
+            return;
+        }
+
         $isInterceptor = (new ReflectionClass($class))->implementsInterface(MethodInterceptor::class);
         $isWeaved = (new ReflectionClass($class))->implementsInterface(WeavedInterface::class);
         if ($isInterceptor || $isWeaved) {

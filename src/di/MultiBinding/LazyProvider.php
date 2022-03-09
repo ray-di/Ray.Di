@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Ray\Di\MultiBinding;
 
 use Ray\Di\InjectorInterface;
+use Ray\Di\ProviderInterface;
+
+use function assert;
 
 /**
- * @template T of object
+ * @template T of ProviderInterface
  */
-final class Lazy
+final class LazyProvider implements LazyInteterface
 {
     /** @var class-string<T> */
     private $class;
@@ -23,10 +26,13 @@ final class Lazy
     }
 
     /**
-     * @return T
+     * @return mixed
      */
     public function __invoke(InjectorInterface $injector)
     {
-        return $injector->getInstance($this->class); // @phpstan-ignore-line
+        $provider = $injector->getInstance($this->class);
+        assert($provider instanceof ProviderInterface);
+
+        return $provider->get();
     }
 }

@@ -10,14 +10,14 @@ use Ray\Di\MultiBinding\Map;
 
 final class FakeMultiBindingConsumer
 {
-    /** @var Map<FakeEngineInterface> */
-    public $engines;
-
-    /** @param Map<FakeEngineInterface> $engines */
-    public function __construct(#[Set(FakeEngineInterface::class)] Map $engines)
-    {
-        $this->engines = $engines;
-    }
+    /**
+     * @param Map<FakeEngineInterface> $engines
+     * @param Map<FakeRobotInterface> $robots
+     */
+    public function __construct(
+        #[Set(FakeEngineInterface::class)] public Map $engines,
+        #[Set(FakeRobotInterface::class)] public Map $robots
+    ){}
 
     public function testValid(): void
     {

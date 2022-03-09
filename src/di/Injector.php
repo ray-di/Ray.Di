@@ -6,13 +6,10 @@ namespace Ray\Di;
 
 use Doctrine\Common\Annotations\AnnotationException;
 use Ray\Aop\Compiler;
-use Ray\Di\Annotation\ScriptDir;
 use Ray\Di\Exception\Untargeted;
-use Ray\Di\MultiBinding\MultiBindingModule;
 
 use function assert;
 use function file_exists;
-use function is_array;
 use function is_dir;
 use function spl_autoload_register;
 use function sprintf;
@@ -33,28 +30,10 @@ class Injector implements InjectorInterface
      */
     public function __construct($module = null, string $tmpDir = '')
     {
-        if (is_array($module)) {
-            $module = (new ModuleMerger())($module);
-        }
-
-        $module = $module ?? new NullModule();
-        $module->install(new AssistedModule());
-        $module->install(new ProviderSetModule());
-        $module->install(new MultiBindingModule());
         $this->classDir = is_dir($tmpDir) ? $tmpDir : sys_get_temp_dir();
-        $this->container = $module->getContainer();
-        $this->container->map(function (DependencyInterface $dependency) {
-            if ($dependency instanceof NullObjectDependency) {
-                return $dependency->toNull($this->classDir);
-            }
-
-            return $dependency;
-        });
-        $this->container->weaveAspects(new Compiler($this->classDir));
-
-        // builtin injection
+        $this->container = (new ContainerFactory())($module, $this->classDir);
+        // Bind injector (built-in bindings)
         (new Bind($this->container, InjectorInterface::class))->toInstance($this);
-        (new Bind($this->container, ''))->annotatedWith(ScriptDir::class)->toInstance($this->classDir);
         $this->container->sort();
     }
 
