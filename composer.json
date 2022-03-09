@@ -13,15 +13,16 @@
         "php": "^7.2 || ^8.0",
         "doctrine/annotations": "^1.12",
         "doctrine/cache": "^1.10 | ^2.1",
-        "koriym/attributes": "^1.0",
+        "koriym/attributes": "^1.0.4",
         "koriym/null-object": "^1.0",
+        "koriym/param-reader": "^1.0",
         "koriym/printo": "^1.0",
-        "nikic/php-parser": "^4.5",
+        "nikic/php-parser": "^4.13",
         "ray/aop": "^2.10"
     },
     "require-dev": {
         "ext-pdo": "*",
-        "phpunit/phpunit": "^9.5.10",
+        "phpunit/phpunit": "^8.5.24 || ^9.5",
         "bamarni/composer-bin-plugin": "^1.4"
     },
     "config": {
@@ -54,7 +55,7 @@
         "cs-fix": ["./vendor/bin/phpcbf src tests"],
         "clean": ["./vendor/bin/phpstan clear-result-cache", "./vendor/bin/psalm --clear-cache", "rm -rf tests/tmp/*.php"],
         "sa": ["@sa-di", "@sa-compiler"],
-        "sa-di": ["./vendor/bin/psalm --show-info=true","./vendor/bin/phpstan analyse -c phpstan.neon"],
+        "sa-di": ["./vendor/bin/psalm --monochrome --show-info=true","./vendor/bin/phpstan analyse -c phpstan.neon"],
         "sa-compiler": ["./vendor/bin/psalm -c psalm.compiler.xml --show-info=true"],
         "metrics": ["@test", "./vendor/bin/phpmetrics --report-html=build/metrics --exclude=Exception --log-junit=build/junit.xml --junit=build/junit.xml src"],
         "phpmd": ["./vendor/bin/phpmd src/di text ./phpmd.xml"],

@@ -7,14 +7,18 @@ namespace Ray\Di\MultiBinding;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
+use Ray\Di\Exception\SetNotFound;
 use Ray\Di\FakeEngine;
 use Ray\Di\FakeEngine2;
 use Ray\Di\FakeEngine3;
 use Ray\Di\FakeEngineInterface;
+use Ray\Di\FakeMultiBindingAnnotation;
 use Ray\Di\FakeMultiBindingConsumer;
 use Ray\Di\FakeRobot;
 use Ray\Di\FakeRobotInterface;
 use Ray\Di\FakeRobotProvider;
+use Ray\Di\FakeSetNotFoundWithMap;
+use Ray\Di\FakeSetNotFoundWithProvider;
 use Ray\Di\Injector;
 use Ray\Di\MultiBinder;
 use Ray\Di\NullModule;
@@ -132,5 +136,30 @@ class MultiBindingModuleTest extends TestCase
         $this->assertArrayHasKey('two', (array) $multiBindings[FakeEngineInterface::class]);
         $this->assertArrayHasKey('three', (array) $multiBindings[FakeEngineInterface::class]);
         $this->assertArrayHasKey('four', (array) $multiBindings[FakeEngineInterface::class]);
+    }
+
+    public function testAnnotation(): void
+    {
+        $injector = new Injector($this->module);
+        /** @var FakeMultiBindingAnnotation $fake */
+        $fake = $injector->getInstance(FakeMultiBindingAnnotation::class);
+        $this->assertContainsOnlyInstancesOf(FakeEngineInterface::class, $fake->engines);
+        $this->assertSame(3, count($fake->engines));
+        $this->assertContainsOnlyInstancesOf(FakeRobotInterface::class, $fake->robots);
+        $this->assertSame(3, count($fake->robots));
+    }
+
+    public function testSetNotFoundInMap(): void
+    {
+        $this->expectException(SetNotFound::class);
+        $injector = new Injector($this->module);
+        $injector->getInstance(FakeSetNotFoundWithMap::class);
+    }
+
+    public function testSetNotFoundInProvider(): void
+    {
+        $this->expectException(SetNotFound::class);
+        $injector = new Injector();
+        $injector->getInstance(FakeSetNotFoundWithProvider::class);
     }
 }

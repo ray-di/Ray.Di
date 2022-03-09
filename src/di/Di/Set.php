@@ -5,8 +5,14 @@ declare(strict_types=1);
 namespace Ray\Di\Di;
 
 use Attribute;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
-#[Attribute(Attribute::TARGET_PARAMETER), Qualifier]
+/**
+ * @Annotation
+ * @Target({"METHOD","PROPERTY"})
+ * @NamedArgumentConstructor()
+ */
+#[Attribute(Attribute::TARGET_PARAMETER | Attribute::TARGET_PROPERTY)]
 final class Set
 {
     /** @var ""|class-string */

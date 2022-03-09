@@ -14,7 +14,6 @@ use Ray\Di\MultiBinding\MultiBindings;
 use ReflectionClass;
 
 use function array_merge;
-use function array_merge_recursive;
 use function class_exists;
 use function explode;
 use function ksort;
@@ -171,8 +170,7 @@ final class Container implements InjectorInterface
      */
     public function merge(self $container): void
     {
-        $mergedLazyCollection = array_merge_recursive($this->multiBindings->getArrayCopy(), $container->multiBindings->getArrayCopy());
-        $this->multiBindings->exchangeArray($mergedLazyCollection);
+        $this->multiBindings->merge($container->multiBindings);
         $this->container += $container->getContainer();
         $this->pointcuts = array_merge($this->pointcuts, $container->getPointcuts());
     }
