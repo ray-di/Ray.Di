@@ -490,7 +490,5 @@ class InjectorTest extends TestCase
         assert($fakeSet instanceof FakeSet);
         $this->assertInstanceOf(ProviderInterface::class, $fakeSet->provider);
         $this->assertInstanceOf(FakeEngine::class, $fakeSet->provider->get());
-        $this->assertInstanceOf(ProviderInterface::class, $fakeSet->engineProvider);
-        $this->assertInstanceOf(FakeEngineInterface::class, $fakeSet->engineProvider->get());
     }
 }
