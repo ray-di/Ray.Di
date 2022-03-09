@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 /**
- * Alias for ProviderInterface
+ * @deprecated User ProviderInterface instead
  */
 interface Provider extends ProviderInterface
 {

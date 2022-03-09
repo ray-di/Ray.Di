@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 /**
- * Interface for instance provider. (lazy-loading)
+ * @template T of mixed
  */
 interface ProviderInterface
 {
     /**
-     * Get an instance
-     *
-     * @return mixed
+     * @return T
      */
     public function get();
 }

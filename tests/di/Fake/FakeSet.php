@@ -9,25 +9,21 @@ use Ray\Di\Di\Set;
 
 final class FakeSet
 {
-    /** @var Provider */
-    public $provider;
-
     /**
-     * @var ProviderInterface<FakeEngineInterface>
-     * @Set(FakeEngineInterface::class)
+     * @param Provider<FakeEngineInterface> $provider
      */
-    public $engineProvider;
-
-    public function __construct(#[Set(FakeEngineInterface::class)] ProviderInterface $provider)
+    public function __construct(#[Set(FakeEngineInterface::class)] public ProviderInterface $provider)
     {
         $this->provider = $provider;
     }
 
-    /**
-     * @Inject
-     */
-    public function setProviderWithAnnotation(ProviderInterface $engineProvider)
+    public function warn(): void
     {
-        $this->engineProvider = $engineProvider;
+        // valid method
+        $this->provider->get()->foo();
+
+        // invalid method (but phpstan does not detect the error)
+        /** @psalm-suppress UndefinedInterfaceMethod */
+        $this->provider->get()->bar();
     }
 }
