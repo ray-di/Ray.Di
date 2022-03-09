@@ -13,7 +13,7 @@
         "php": "^7.2 || ^8.0",
         "doctrine/annotations": "^1.12",
         "doctrine/cache": "^1.10 | ^2.1",
-        "koriym/attributes": "^1.0",
+        "koriym/attributes": "^1.0.4",
         "koriym/null-object": "^1.0",
         "koriym/param-reader": "^1.0",
         "koriym/printo": "^1.0",
@@ -22,7 +22,7 @@
     },
     "require-dev": {
         "ext-pdo": "*",
-        "phpunit/phpunit": "^8.5.23",
+        "phpunit/phpunit": "^8.5.24 || ^9.5",
         "bamarni/composer-bin-plugin": "^1.4"
     },
     "config": {
@@ -50,7 +50,7 @@
         "test": "./vendor/bin/phpunit --log-junit=build/junit.xml",
         "tests": ["@cs", "@sa", "@test"],
         "coverage": ["php -dzend_extension=xdebug.so -dxdebug.mode=coverage ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
-        "pcov": ["php -dextension=/usr/local/Cellar/php/8.1.2/pecl/20210902/pcov.so -d pcov.enabled=1 ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage  --coverage-clover=coverage.xml"],
+        "pcov": ["php -dextension=pcov.so -d pcov.enabled=1 ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage  --coverage-clover=coverage.xml"],
         "cs": ["./vendor/bin/phpcs --standard=./phpcs.xml src tests"],
         "cs-fix": ["./vendor/bin/phpcbf src tests"],
         "clean": ["./vendor/bin/phpstan clear-result-cache", "./vendor/bin/psalm --clear-cache", "rm -rf tests/tmp/*.php"],
