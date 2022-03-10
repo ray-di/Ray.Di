@@ -1,6 +1,6 @@
 {
     "name": "ray/di",
-    "description": "Guice style annotation-driven dependency injection framework",
+    "description": "Guice style dependency injection framework",
     "keywords": ["di", "aop"],
     "license": "MIT",
     "authors": [
