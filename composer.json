@@ -18,7 +18,8 @@
         "koriym/param-reader": "^1.0",
         "koriym/printo": "^1.0",
         "nikic/php-parser": "^4.13",
-        "ray/aop": "^2.10"
+        "ray/aop": "^2.10",
+        "ray/compiler": "^1.6"
     },
     "require-dev": {
         "ext-pdo": "*",
@@ -33,14 +34,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Ray\\Di\\": ["src/di", "src-deprecated/di"],
-            "Ray\\Compiler\\": ["src/compiler"]
+            "Ray\\Di\\": ["src/di", "src-deprecated/di"]
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Ray\\Di\\": ["tests/di", "tests/di/Fake/"],
-            "Ray\\Compiler\\": ["tests/compiler", "tests/compiler/Fake"]
+            "Ray\\Di\\": ["tests/di", "tests/di/Fake/"]
         },
         "files": ["tests/deleteFiles.php"]
     },
@@ -54,8 +53,6 @@
         "cs": ["./vendor/bin/phpcs --standard=./phpcs.xml src tests"],
         "cs-fix": ["./vendor/bin/phpcbf src tests"],
         "clean": ["./vendor/bin/phpstan clear-result-cache", "./vendor/bin/psalm --clear-cache", "rm -rf tests/tmp/*.php"],
-        "sa": ["@sa-di", "@sa-compiler"],
-        "sa-di": ["./vendor/bin/psalm --monochrome --show-info=true","./vendor/bin/phpstan analyse -c phpstan.neon"],
         "sa-compiler": ["./vendor/bin/psalm -c psalm.compiler.xml --show-info=true"],
         "metrics": ["@test", "./vendor/bin/phpmetrics --report-html=build/metrics --exclude=Exception --log-junit=build/junit.xml --junit=build/junit.xml src"],
         "phpmd": ["./vendor/bin/phpmd src/di text ./phpmd.xml"],

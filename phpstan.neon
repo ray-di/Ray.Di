@@ -2,16 +2,12 @@ parameters:
   level: max
   paths:
     - src/di
-    - src/compiler
     - tests/di
-    - tests/compiler
     - tests/type
   excludePaths:
     - tests/tmp/*
     - tests/di/tmp/*
     - tests/Di/tmp/*
     - tests/di/Fake/*
-    - tests/compiler/tmp/*
-    - tests/compiler/Fake/*
   checkGenericClassInNonGenericObjectType: false
   checkMissingIterableValueType: false

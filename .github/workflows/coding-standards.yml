@@ -34,8 +34,5 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
 
-      - name: Validate composer.json
-        run: composer validate --strict
-
       - name: Run PHP_CodeSniffer
         run: ./vendor/bin/phpcs -q --no-colors --report=checkstyle src tests | cs2pr
