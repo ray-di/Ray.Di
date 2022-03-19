@@ -11,9 +11,6 @@
       <directory phpVersion="8.0.0" phpVersionOperator=">=">tests-php8</directory>
       <directory>tests/di</directory>
     </testsuite>
-    <testsuite name="Ray.Compiler Test Suite">
-      <directory>tests/compiler/</directory>
-    </testsuite>
   </testsuites>
   <php>
     <ini name="error_reporting" value="-1"/>
