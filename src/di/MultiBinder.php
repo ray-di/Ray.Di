@@ -87,7 +87,7 @@ final class MultiBinder
 
         if ($key === null) {
             $bindings[] = $lazy;
-            $this->multiBindings->offsetSet($this->interface, $bindings); // @phpstan-ignore-line
+            $this->multiBindings->offsetSet($this->interface, $bindings);
 
             return;
         }
