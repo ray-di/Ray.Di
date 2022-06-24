@@ -8,3 +8,5 @@ on:
 jobs:
   ci:
     uses: ray-di/.github/.github/workflows/continuous-integration.yml@php7.2_to_php8.2-alpha
+    with:
+      script: demo/run.php
