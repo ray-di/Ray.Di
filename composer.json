@@ -18,7 +18,7 @@
         "koriym/param-reader": "^1.0",
         "koriym/printo": "^1.0",
         "nikic/php-parser": "^4.13",
-        "ray/aop": "2.x-dev",
+        "ray/aop": "^2.10",
         "ray/compiler": "^1.7"
 
     },
@@ -54,7 +54,7 @@
         "cs": ["./vendor/bin/phpcs --standard=./phpcs.xml src tests"],
         "cs-fix": ["./vendor/bin/phpcbf src tests"],
         "clean": ["./vendor/bin/phpstan clear-result-cache", "./vendor/bin/psalm --clear-cache", "rm -rf tests/tmp/*.php"],
-        "sa": ["./vendor/bin/psalm --show-info=true", "./vendor/bin/phpstan analyze"],
+        "sa": ["./vendor/bin/psalm -c psalm.xml --show-info=true", "./vendor/bin/phpstan analyse -c phpstan.neon --no-progress "],
         "metrics": ["@test", "./vendor/bin/phpmetrics --report-html=build/metrics --exclude=Exception --log-junit=build/junit.xml --junit=build/junit.xml src"],
         "phpmd": ["./vendor/bin/phpmd src/di text ./phpmd.xml"],
         "build": ["@cs", "@sa", "@pcov", "@metrics"]
