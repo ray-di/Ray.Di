@@ -4,6 +4,7 @@
 /demo-php8          export-ignore
 /.gitattributes     export-ignore
 /.github            export-ignore
+/vendor-bin         export-ignore
 /.gitignore         export-ignore
 /.scrutinizer.yml   export-ignore
 /.travis.yml        export-ignore
