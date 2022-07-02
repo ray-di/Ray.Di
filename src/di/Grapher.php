@@ -55,7 +55,7 @@ final class Grapher
      * Build an object graph with give constructor parameters
      *
      * @param string            $class  class name
-     * @param array<int, mixed> $params constuct paramteters
+     * @param array<int, mixed> $params construct parameters
      *
      * @return mixed
      */
