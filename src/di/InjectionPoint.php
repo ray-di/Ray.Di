@@ -115,10 +115,7 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
         [$this->reader, $this->pClass, $this->pFunction, $this->pName] = $array;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function serialize()
+    public function serialize(): ?string
     {
         return serialize($this->__serialize());
     }
@@ -126,12 +123,12 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     /**
      * {@inheritDoc}
      *
-     * @psalm-param string $serializedData
+     * @psalm-param string $data
      */
-    public function unserialize($serializedData)
+    public function unserialize($data): void
     {
         /** @var array{0: Reader, 1: string, 2: string, 3: string} $array */
-        $array = unserialize($serializedData, ['allowed_classes' => [Reader::class]]);
+        $array = unserialize($data, ['allowed_classes' => [Reader::class]]);
         $this->__unserialize($array);
     }
 }

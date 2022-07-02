@@ -81,6 +81,6 @@ class Injector implements InjectorInterface
         new Bind($this->container, $class);
         $bound = $this->container->getContainer()[$class . '-' . Name::ANY];
         assert($bound instanceof Dependency);
-        $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class, Name::ANY);
+        $this->container->weaveAspect(new Compiler($this->classDir), $bound)->getInstance($class);
     }
 }

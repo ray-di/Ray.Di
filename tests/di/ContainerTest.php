@@ -11,7 +11,6 @@ use Ray\Aop\Pointcut;
 use Ray\Di\Exception\Unbound;
 use Throwable;
 
-use function assert;
 use function get_class;
 
 class ContainerTest extends TestCase
@@ -150,7 +149,6 @@ class ContainerTest extends TestCase
         (new Bind($container, ''))->annotatedWith(FakeConstant::class)->toInstance('kuma');
         (new Bind($container, FakeConstantConsumer::class));
         $instance = $container->getInstance(FakeConstantConsumer::class, Name::ANY);
-        assert($instance instanceof FakeConstantConsumer);
         $this->assertSame('kuma', $instance->constantByConstruct);
         $this->assertSame('kuma', $instance->constantBySetter);
         $this->assertSame('kuma', $instance->setterConstantWithoutVarName);

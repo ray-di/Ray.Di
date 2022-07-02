@@ -10,7 +10,6 @@ use Ray\Di\Exception\InvalidType;
 use Ray\Di\Exception\NotFound;
 
 use function assert;
-use function is_object;
 use function property_exists;
 use function spl_object_hash;
 
@@ -71,8 +70,6 @@ class BindTest extends TestCase
         unset($bind);
         $dependency1 = $container->getInstance(FakeEngine::class, Name::ANY);
         $dependency2 = $container->getInstance(FakeEngine::class, Name::ANY);
-        assert(is_object($dependency1));
-        assert(is_object($dependency2));
         $this->assertSame(spl_object_hash($dependency1), spl_object_hash($dependency2));
     }
 
@@ -149,8 +146,6 @@ class BindTest extends TestCase
         (new Bind($container, ProviderInterface::class))->annotatedWith('handle')->to(FakeHandleProvider::class)->in(Scope::SINGLETON);
         $instance1 = $container->getInstance(ProviderInterface::class, 'handle');
         $instance2 = $container->getInstance(ProviderInterface::class, 'handle');
-        assert(is_object($instance1));
-        assert(is_object($instance2));
         $this->assertSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -159,7 +154,6 @@ class BindTest extends TestCase
         $container = new Container();
         (new Bind($container, ProviderInterface::class))->toProvider(FakeContextualProvider::class, 'context_string');
         $instance = $container->getInstance(ProviderInterface::class, Name::ANY);
-        assert(is_object($instance));
         assert(property_exists($instance, 'context'));
         $this->assertSame('context_string', $instance->context);
     }

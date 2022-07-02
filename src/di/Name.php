@@ -86,6 +86,9 @@ final class Name
      * @param non-empty-array<ReflectionAttribute> $attributes
      *
      * @throws ReflectionException
+     *
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      */
     private static function getName(array $attributes): string
     {
