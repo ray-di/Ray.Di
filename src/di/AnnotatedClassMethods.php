@@ -45,7 +45,6 @@ final class AnnotatedClassMethods
 
         $named = $this->reader->getMethodAnnotation($constructor, Named::class);
         if ($named instanceof Named) {
-            /** @var Named $named */
             return new Name($named->value);
         }
 

@@ -9,7 +9,7 @@ parameters:
     - tests/di/tmp/*
     - tests/Di/tmp/*
     - tests/di/Fake/*
-  checkGenericClassInNonGenericObjectType: false
-  checkMissingIterableValueType: false
   ignoreErrors:
     - '#Parameter \#1 \$interface of method Ray\\Di\\Injector::getInstance\(\) expects class-string\<\>, string given.#'
+    - '#contains generic class ReflectionAttribute but does not specify its types:#'
+    - '#generic class ReflectionAttribute but does not specify its types:#'

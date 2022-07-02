@@ -7,6 +7,9 @@ namespace Ray\Di;
 use Ray\Aop\MethodInvocation;
 use Ray\Di\Exception\MethodInvocationNotAvailable;
 
+/**
+ * @implements ProviderInterface<MethodInvocation>
+ */
 final class MethodInvocationProvider implements ProviderInterface
 {
     /** @var ?MethodInvocation */
@@ -17,10 +20,7 @@ final class MethodInvocationProvider implements ProviderInterface
         $this->invocation = $invocation;
     }
 
-    /**
-     * @return MethodInvocation
-     */
-    public function get()
+    public function get(): MethodInvocation
     {
         if ($this->invocation === null) {
             throw new MethodInvocationNotAvailable();

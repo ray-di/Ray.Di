@@ -11,6 +11,9 @@ use Ray\Di\InjectionPointInterface;
 use Ray\Di\InjectorInterface;
 use Ray\Di\ProviderInterface;
 
+/**
+ * @implements ProviderInterface<Map>
+ */
 final class MapProvider implements ProviderInterface
 {
     /** @var MultiBindings */
@@ -22,9 +25,12 @@ final class MapProvider implements ProviderInterface
     /** @var InjectorInterface */
     private $injector;
 
-    /** @var ParamReaderInterface  */
+    /** @var ParamReaderInterface<object>  */
     private $reader;
 
+    /**
+     * @param ParamReaderInterface<object> $reader
+     */
     public function __construct(
         InjectionPointInterface $ip,
         MultiBindings $multiBindings,
@@ -37,9 +43,12 @@ final class MapProvider implements ProviderInterface
         $this->reader = $reader;
     }
 
+    /**
+     * @return Map<mixed>
+     */
     public function get(): Map
     {
-        /** @var ?Set $set */
+        /** @var ?Set<object> $set */
         $set = $this->reader->getParametrAnnotation($this->ip->getParameter(), Set::class);
         if ($set === null) {
             throw new SetNotFound((string) $this->ip->getParameter());
