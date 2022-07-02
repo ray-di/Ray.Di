@@ -110,7 +110,6 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToBindModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
-        assert(is_object($instance1) && is_object($instance2));
         $this->assertNotSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -119,7 +118,6 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToBindSingletonModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
-        assert(is_object($instance1) && is_object($instance2));
         $this->assertSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -128,7 +126,6 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToProviderBindModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
-        assert(is_object($instance1) && is_object($instance2));
         $this->assertNotSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -144,7 +141,6 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToProviderSingletonBindModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
-        assert(is_object($instance1) && is_object($instance2));
         $this->assertSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -159,7 +155,6 @@ class InjectorTest extends TestCase
     {
         $injector = new Injector();
         $team = $injector->getInstance(FakeRobotTeam::class);
-        /** @var FakeRobotTeam $team */
         $this->assertInstanceOf(FakeRobotTeam::class, $team);
         $this->assertInstanceOf(FakeRobot::class, $team->robot1);
         $this->assertInstanceOf(FakeRobot::class, $team->robot2);
@@ -185,7 +180,6 @@ class InjectorTest extends TestCase
         $this->assertInstanceOf(FakeMirrorInterface::class, $car->spareMirror);
         $this->assertSame(spl_object_hash($car->rightMirror), spl_object_hash($car->spareMirror));
         $this->assertInstanceOf(FakeHandle::class, $car->handle);
-        assert($car->handle instanceof FakeHandle);
         $this->assertSame($car->handle->logo, 'momo');
 
         return $injector;

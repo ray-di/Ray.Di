@@ -77,9 +77,8 @@ final class AssistedInterceptor implements MethodInterceptor
             $interface = $this->getInterface($type);
             $name = $this->getName($method, $parameter);
             $pos = $parameter->getPosition();
-            assert(class_exists($interface) || interface_exists($interface) || $interface === '');
             /** @psalm-suppress MixedAssignment */
-            $arguments[$pos] = $this->injector->getInstance($interface, $name);
+            $arguments[$pos] = $this->injector->getInstance($interface, $name); // @phpstan-ignore-line
         }
 
         return $arguments;
@@ -104,8 +103,14 @@ final class AssistedInterceptor implements MethodInterceptor
         return Name::ANY;
     }
 
-    private function getInterface(?ReflectionType $type): string
+    /**
+     * @return ''|class-string
+     */
+    private function getInterface(?ReflectionType $type)
     {
-        return $type instanceof ReflectionNamedType && ! in_array($type->getName(), Argument::UNBOUND_TYPE, true) ? $type->getName() : '';
+        $interface = $type instanceof ReflectionNamedType && ! in_array($type->getName(), Argument::UNBOUND_TYPE, true) ? $type->getName() : '';
+        assert($interface === '' || interface_exists($interface) || class_exists($interface));
+
+        return $interface;
     }
 }
