@@ -11,3 +11,5 @@ parameters:
     - tests/di/Fake/*
   checkGenericClassInNonGenericObjectType: false
   checkMissingIterableValueType: false
+  ignoreErrors:
+    - '#Parameter \#1 \$interface of method Ray\\Di\\Injector::getInstance\(\) expects class-string\<\>, string given.#'
