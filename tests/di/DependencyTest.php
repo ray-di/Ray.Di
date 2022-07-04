@@ -34,11 +34,6 @@ class DependencyTest extends TestCase
         $this->dependency = new Dependency($newInstance, new ReflectionMethod(FakeCar::class, 'postConstruct'));
     }
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
     /**
      * @return Container[][]
      * @psalm-return array{0: array{0: Container}}
@@ -127,7 +122,7 @@ class DependencyTest extends TestCase
      * @dataProvider containerProvider
      * @covers \Ray\Di\Dependency::injectWithArgs
      */
-    public function testInjectWithArgsPostConstcuct(Container $container): void
+    public function testInjectWithArgsPostConstruct(Container $container): void
     {
         $car = $this->dependency->injectWithArgs($container, [new FakeEngine()]);
         $this->assertInstanceOf(FakeCar::class, $car);

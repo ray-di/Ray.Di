@@ -20,27 +20,24 @@ class AssistedTest extends TestCase
     public function testAssisted(): void
     {
         $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
-        /** @var FakeAssistedConsumer $consumer */
         $assistedDependency = $consumer->assistOne('a', 'b');
-        $expecetd = FakeRobot::class;
-        $this->assertInstanceOf($expecetd, $assistedDependency);
+        $expected = FakeRobot::class;
+        $this->assertInstanceOf($expected, $assistedDependency);
     }
 
     public function testAssistedWithName(): void
     {
         $this->injector = new Injector(new FakeInstanceBindModule());
         $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
-        /** @var FakeAssistedConsumer $consumer */
         $assistedDependency = $consumer->assistWithName('a7');
-        $expecetd = 1;
-        $this->assertSame($expecetd, $assistedDependency);
+        $expected = 1;
+        $this->assertSame($expected, $assistedDependency);
     }
 
     public function testAssistedAnyWithName(): void
     {
         $injector = new Injector(new FakeToBindModule(new FakeInstanceBindModule()));
         $consumer = $injector->getInstance(FakeAssistedConsumer::class);
-        /** @var FakeAssistedConsumer $consumer */
         [$assistedDependency1, $assistedDependency2] = $consumer->assistAny();
         $expected1 = 1;
         $this->assertSame($expected1, $assistedDependency1);
@@ -50,7 +47,6 @@ class AssistedTest extends TestCase
     public function testAssistedMethodInvocation(): void
     {
         $assistedConsumer = (new Injector(new FakeAssistedDbModule(), __DIR__ . '/tmp'))->getInstance(FakeAssistedParamsConsumer::class);
-        /** @var FakeAssistedParamsConsumer $assistedConsumer */
         [$id, $db] = $assistedConsumer->getUser(1);
         /** @var FakeAbstractDb $db */
         $this->assertSame(1, $id);
@@ -61,16 +57,13 @@ class AssistedTest extends TestCase
     {
         $this->expectException(MethodInvocationNotAvailable::class);
         $assistedDbProvider = (new Injector(new FakeAssistedDbModule()))->getInstance(FakeAssistedDbProvider::class);
-        /** @var FakeAssistedDbProvider $assistedDbProvider */
         $assistedDbProvider->get();
     }
 
-    public function testAssistedCustomeInject(): void
+    public function testAssistedCustomInject(): void
     {
         $assistedConsumer = (new Injector(new FakeAssistedDbModule(), __DIR__ . '/tmp'))->getInstance(FakeAssistedParamsConsumer::class);
-        /** @var FakeAssistedParamsConsumer $assistedConsumer */
-        [$id, $db] = $assistedConsumer->getUser(1);
-        /** @var FakeAbstractDb $db */
+        [$id] = $assistedConsumer->getUser(1);
         $this->assertSame(1, $id);
     }
 }

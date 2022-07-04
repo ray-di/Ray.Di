@@ -8,6 +8,10 @@ use Koriym\ParamReader\ParamReaderInterface;
 use Ray\Di\Di\Set;
 use Ray\Di\Exception\SetNotFound;
 
+/**
+ * @implements ProviderInterface<mixed>
+ * @template T of object
+ */
 final class ProviderSetProvider implements ProviderInterface
 {
     /** @var InjectionPointInterface */
@@ -16,9 +20,12 @@ final class ProviderSetProvider implements ProviderInterface
     /** @var InjectorInterface */
     private $injector;
 
-    /** @var ParamReaderInterface  */
+    /** @var ParamReaderInterface<T>  */
     private $reader;
 
+    /**
+     * @param ParamReaderInterface<T> $reader
+     */
     public function __construct(
         InjectionPointInterface $ip,
         InjectorInterface $injector,
@@ -34,8 +41,9 @@ final class ProviderSetProvider implements ProviderInterface
      */
     public function get()
     {
-        /** @var ?Set $set */
-        $set = $this->reader->getParametrAnnotation($this->ip->getParameter(), Set::class);
+        $param = $this->ip->getParameter();
+        /** @var ?Set<object> $set */
+        $set = $this->reader->getParametrAnnotation($param, Set::class); // @phpstan-ignore-line
         if ($set === null) {
             throw new SetNotFound((string) $this->ip->getParameter());
         }
@@ -45,9 +53,12 @@ final class ProviderSetProvider implements ProviderInterface
             /** @var InjectorInterface  */
             private $injector;
 
-            /** @var Set  */
+            /** @var Set<object>  */
             private $set;
 
+            /**
+             * @param Set<object> $set
+             */
             public function __construct(InjectorInterface $injector, Set $set)
             {
                 $this->injector = $injector;

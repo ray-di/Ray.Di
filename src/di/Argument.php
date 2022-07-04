@@ -91,7 +91,7 @@ final class Argument implements Serializable
     /**
      * {@inheritDoc}
      */
-    public function serialize()
+    public function serialize(): ?string
     {
         return serialize($this->__serialize());
     }
@@ -99,12 +99,12 @@ final class Argument implements Serializable
     /**
      * {@inheritDoc}
      *
-     * @psalm-param string $serializedData
+     * @psalm-param string $data
      */
-    public function unserialize($serializedData)
+    public function unserialize($data): void
     {
         /** @var array{0: string, 1: bool, 2: string, 3: string, 4: string, 5: array{0: string, 1: string, 2:string}} $array */
-        $array = unserialize($serializedData, ['allowed_classes' => false]);
+        $array = unserialize($data, ['allowed_classes' => false]);
         $this->__unserialize($array);
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di\MultiBinding;
 
+use ArrayAccess;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\AbstractModule;
@@ -50,10 +51,12 @@ class MultiBindingModuleTest extends TestCase
         };
     }
 
+    /**
+     * @return Map<FakeEngineInterface>
+     */
     public function testInjectMap(): Map
     {
         $injector = new Injector($this->module);
-        /** @var FakeMultiBindingConsumer $consumer */
         $consumer = $injector->getInstance(FakeMultiBindingConsumer::class);
         $this->assertInstanceOf(Map::class, $consumer->engines);
 
@@ -61,6 +64,8 @@ class MultiBindingModuleTest extends TestCase
     }
 
     /**
+     * @param Map<object> $map
+     *
      * @depends testInjectMap
      */
     public function testMapInstance(Map $map): void
@@ -70,6 +75,8 @@ class MultiBindingModuleTest extends TestCase
     }
 
     /**
+     * @param Map<object> $map
+     *
      * @depends testInjectMap
      */
     public function testMapIteration(Map $map): void
@@ -80,6 +87,8 @@ class MultiBindingModuleTest extends TestCase
     }
 
     /**
+     * @param Map<object> $map
+     *
      * @depends testInjectMap
      */
     public function testIsSet(Map $map): void
@@ -89,6 +98,8 @@ class MultiBindingModuleTest extends TestCase
     }
 
     /**
+     * @param Map<object> $map
+     *
      * @depends testInjectMap
      */
     public function testOffsetSet(Map $map): void
@@ -98,6 +109,8 @@ class MultiBindingModuleTest extends TestCase
     }
 
     /**
+     * @param Map<object> $map
+     *
      * @depends testInjectMap
      */
     public function testOffsetUnset(Map $map): void
@@ -109,7 +122,6 @@ class MultiBindingModuleTest extends TestCase
     public function testAnotherBinder(): void
     {
         $injector = new Injector($this->module);
-        /** @var FakeMultiBindingConsumer $consumer */
         $consumer = $injector->getInstance(FakeMultiBindingConsumer::class);
         $this->assertInstanceOf(Map::class, $consumer->robots);
         $this->assertContainsOnlyInstancesOf(FakeRobot::class, $consumer->robots);
@@ -130,7 +142,7 @@ class MultiBindingModuleTest extends TestCase
                 $binder->addBinding('four')->to(FakeEngine::class);
             }
         });
-        /** @var MultiBindings $multiBindings */
+        /** @var ArrayAccess<string, object> $multiBindings */
         $multiBindings = $module->getContainer()->getInstance(MultiBindings::class);
         $this->assertArrayHasKey('one', (array) $multiBindings[FakeEngineInterface::class]);
         $this->assertArrayHasKey('two', (array) $multiBindings[FakeEngineInterface::class]);
@@ -141,7 +153,6 @@ class MultiBindingModuleTest extends TestCase
     public function testAnnotation(): void
     {
         $injector = new Injector($this->module);
-        /** @var FakeMultiBindingAnnotation $fake */
         $fake = $injector->getInstance(FakeMultiBindingAnnotation::class);
         $this->assertContainsOnlyInstancesOf(FakeEngineInterface::class, $fake->engines);
         $this->assertSame(3, count($fake->engines));

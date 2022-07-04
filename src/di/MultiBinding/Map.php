@@ -19,6 +19,7 @@ use function count;
 /**
  * @template T
  * @implements ArrayAccess<array-key, T>
+ * @implements IteratorAggregate<string, mixed>
  */
 final class Map implements IteratorAggregate, ArrayAccess, Countable
 {

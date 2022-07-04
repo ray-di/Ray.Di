@@ -108,9 +108,7 @@ final class Container implements InjectorInterface
             throw $this->unbound($index);
         }
 
-        $dependency = $this->container[$index];
-
-        return $dependency->inject($this);
+        return $this->container[$index]->inject($this);
     }
 
     /**

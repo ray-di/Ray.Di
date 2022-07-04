@@ -16,16 +16,12 @@ interface InjectorInterface
     /**
      * Return object graph
      *
-     * @param class-string<T> $interface interface name|class name|empty-string
-     * @param string          $name      interface name space
-     * @psalm-param ''|class-string<T>   $interface
-     * @phpstan-param ''|class-string    $interface
+     * @param ''|class-string<T> $interface
+     * @param string             $name
      *
-     * @return T
-     * @psalm-return   (T is object ? T : mixed)
-     * @phpstan-return mixed
+     * @return ($interface is '' ? mixed : T)
      *
-     * @psalm-template T of object
+     * @template T of object
      */
-    public function getInstance($interface, $name = Name::ANY);  // @phpstan-ignore-line
+    public function getInstance($interface, $name = Name::ANY);
 }

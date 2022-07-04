@@ -63,7 +63,9 @@ final class MultiBinder
     }
 
     /**
-     * @param class-string<ProviderInterface> $provider
+     * @param class-string<ProviderInterface<T>> $provider
+     *
+     * @template T of mixed
      */
     public function toProvider(string $provider): void
     {

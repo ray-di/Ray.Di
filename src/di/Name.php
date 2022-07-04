@@ -86,18 +86,20 @@ final class Name
      * @param non-empty-array<ReflectionAttribute> $attributes
      *
      * @throws ReflectionException
+     *
+     * @psalm-suppress MixedAssignment
+     * @psalm-suppress MixedArgument
      */
     private static function getName(array $attributes): string
     {
         $refAttribute = $attributes[0];
-        /** @var Named|object $attribute */
         $attribute = $refAttribute->newInstance();
         if ($attribute instanceof Named) {
             return $attribute->value;
         }
 
-        $isQualifer = (bool) (new ReflectionClass($attribute))->getAttributes(Qualifier::class);
-        if ($isQualifer) {
+        $isQualifier = (bool) (new ReflectionClass($attribute))->getAttributes(Qualifier::class);
+        if ($isQualifier) {
             return get_class($attribute);
         }
 

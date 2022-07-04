@@ -6,10 +6,10 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config https://psalm.dev/schema/config"
 >
     <projectFiles>
-        <directory name="src/di" />
-        <directory name="tests/type" />
+        <directory name="src/di"/>
+        <directory name="tests/type"/>
     </projectFiles>
     <stubs>
         <file name="tests/stub/BindInterface.phpstub"/>
     </stubs>
-</psalm>
+<plugins><pluginClass class="Psalm\PhpUnitPlugin\Plugin"/></plugins></psalm>

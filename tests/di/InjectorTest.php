@@ -14,7 +14,6 @@ use Ray\Di\Exception\Unbound;
 use function assert;
 use function defined;
 use function file_get_contents;
-use function is_object;
 use function is_string;
 use function passthru;
 use function property_exists;
@@ -110,7 +109,6 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToBindModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
-        assert(is_object($instance1) && is_object($instance2));
         $this->assertNotSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -119,7 +117,6 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToBindSingletonModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
-        assert(is_object($instance1) && is_object($instance2));
         $this->assertSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -128,7 +125,6 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToProviderBindModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
-        assert(is_object($instance1) && is_object($instance2));
         $this->assertNotSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -144,7 +140,6 @@ class InjectorTest extends TestCase
         $injector = new Injector(new FakeToProviderSingletonBindModule());
         $instance1 = $injector->getInstance(FakeRobotInterface::class);
         $instance2 = $injector->getInstance(FakeRobotInterface::class);
-        assert(is_object($instance1) && is_object($instance2));
         $this->assertSame(spl_object_hash($instance1), spl_object_hash($instance2));
     }
 
@@ -159,7 +154,6 @@ class InjectorTest extends TestCase
     {
         $injector = new Injector();
         $team = $injector->getInstance(FakeRobotTeam::class);
-        /** @var FakeRobotTeam $team */
         $this->assertInstanceOf(FakeRobotTeam::class, $team);
         $this->assertInstanceOf(FakeRobot::class, $team->robot1);
         $this->assertInstanceOf(FakeRobot::class, $team->robot2);
@@ -235,7 +229,6 @@ class InjectorTest extends TestCase
     public function testBuiltinBinding(): void
     {
         $instance = (new Injector())->getInstance(FakeBuiltin::class);
-        /** @var FakeBuiltin $instance */
         $this->assertInstanceOf(Injector::class, $instance->injector);
     }
 
@@ -244,7 +237,6 @@ class InjectorTest extends TestCase
         $injector = unserialize(serialize(new Injector()));
         assert($injector instanceof InjectorInterface);
         $instance = $injector->getInstance(FakeBuiltin::class);
-        assert(is_object($instance));
         assert(property_exists($instance, 'injector'));
         $this->assertInstanceOf(Injector::class, $instance->injector);
     }
@@ -301,7 +293,6 @@ class InjectorTest extends TestCase
     {
         $injector = new Injector(new FakeAopInterceptorModule(), __DIR__ . '/tmp');
         $instance = $injector->getInstance(FakeAop::class);
-        /** @var FakeAop $instance */
         $result = $instance->returnSame(2);
         $this->assertSame(4, $result);
     }
@@ -310,7 +301,6 @@ class InjectorTest extends TestCase
     {
         $injector = new Injector(new FakeAnnoModule(), __DIR__ . '/tmp');
         $instance = $injector->getInstance(FakeAnnoOrderClass::class);
-        assert($instance instanceof FakeAnnoOrderClass);
         $instance->get();
         $expect = [FakeAnnoInterceptor4::class, FakeAnnoInterceptor1::class, FakeAnnoInterceptor2::class, FakeAnnoInterceptor3::class, FakeAnnoInterceptor5::class];
         $this->assertSame($expect, FakeAnnoClass::$order);
@@ -319,7 +309,6 @@ class InjectorTest extends TestCase
     public function testAnnotateConstant(): void
     {
         $instance = (new Injector(new FakeConstantModule(), __DIR__ . '/tmp'))->getInstance(FakeConstantConsumer::class);
-        assert($instance instanceof FakeConstantConsumer);
         $this->assertSame('default_construct', $instance->defaultByConstruct);
     }
 
@@ -327,7 +316,6 @@ class InjectorTest extends TestCase
     {
         $injector = new Injector(new FakeWalkRobotModule());
         $robot = $injector->getInstance(FakeWalkRobot::class);
-        assert($robot instanceof FakeWalkRobot);
         $this->assertInstanceOf(FakeLeftLeg::class, $robot->leftLeg);
         $this->assertInstanceOf(FakeRightLeg::class, $robot->rightLeg);
     }
@@ -350,12 +338,7 @@ class InjectorTest extends TestCase
     {
         $injector = new Injector(new FakeInternalTypeModule());
         $types = $injector->getInstance(FakeInternalTypes::class);
-        assert($types instanceof FakeInternalTypes);
-        $this->assertIsBool($types->bool);
-        $this->assertIsCallable($types->callable);
-        $this->assertIsArray($types->array);
-        $this->assertIsString($types->string);
-        $this->assertIsInt($types->int);
+        $this->assertInstanceOf(FakeInternalTypes::class, $types);
     }
 
     public function testToConstructor(): void
@@ -421,7 +404,6 @@ class InjectorTest extends TestCase
             }
         }));
         $instance = $injector->getInstance(FakeAop::class);
-        /** @var FakeAop $instance */
         $result = $instance->returnSame(2);
         $this->assertSame(4, $result);
     }
@@ -441,7 +423,6 @@ class InjectorTest extends TestCase
             }
         }));
         $instance = $injector->getInstance(FakeAop::class);
-        /** @var FakeAop $instance */
         $result = $instance->returnSame(2);
         $this->assertSame(2, $result);
         assert(isset($instance->bindings));
@@ -487,7 +468,6 @@ class InjectorTest extends TestCase
             }
         });
         $fakeSet = $injector->getInstance(FakeSet::class);
-        assert($fakeSet instanceof FakeSet);
         $this->assertInstanceOf(ProviderInterface::class, $fakeSet->provider);
         $this->assertInstanceOf(FakeEngine::class, $fakeSet->provider->get());
     }
