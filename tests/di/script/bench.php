@@ -37,7 +37,7 @@ foreach (range(1, $n) as $i) {
 
 $timer2 = microtime(true) - $timer;
 
-$compiler = new DiCompiler(new FakeCarModule(), __DIR__ . '/tmp');
+$compiler = new DiCompiler(new FakeCarModule());
 $compiler->compile();
 $timer = microtime(true);
 $injector = new ScriptInjector(__DIR__ . '/tmp');

@@ -198,7 +198,7 @@ class InjectorTest extends TestCase
 
     public function testAop(): void
     {
-        $injector = new Injector(new FakeAopModule(), __DIR__ . '/tmp');
+        $injector = new Injector(new FakeAopModule());
         $instance = $injector->getInstance(FakeAopInterface::class);
         /** @var FakeAop $instance */
         $result = $instance->returnSame(2);
@@ -219,7 +219,7 @@ class InjectorTest extends TestCase
                 );
             }
         };
-        $injector = new Injector($module, __DIR__ . '/tmp');
+        $injector = new Injector($module);
         $instance = $injector->getInstance(FakeAopInterface::class);
         /** @var FakeAop $instance */
         $result = $instance->returnSame(2);
@@ -243,7 +243,7 @@ class InjectorTest extends TestCase
 
     public function testAopBoundInDifferentModule(): void
     {
-        $injector = new Injector(new FakeAopInstallModule(), __DIR__ . '/tmp');
+        $injector = new Injector(new FakeAopInstallModule());
         $instance = $injector->getInstance(FakeAopInterface::class);
         /** @var FakeAop $instance */
         $result = $instance->returnSame(2);
@@ -252,7 +252,7 @@ class InjectorTest extends TestCase
 
     public function testAopBoundInDifferentModuleAfterAnotherBinding(): void
     {
-        $injector = new Injector(new FakeAopInstallModule(new FakeAopModule()), __DIR__ . '/tmp');
+        $injector = new Injector(new FakeAopInstallModule(new FakeAopModule()));
         $instance = $injector->getInstance(FakeAopInterface::class);
         /** @var FakeAop $instance */
         $result = $instance->returnSame(2);
@@ -261,7 +261,7 @@ class InjectorTest extends TestCase
 
     public function testAopBoundDoublyInDifferentModule(): void
     {
-        $injector = new Injector(new FakeAopDoublyInstallModule(), __DIR__ . '/tmp');
+        $injector = new Injector(new FakeAopDoublyInstallModule());
         $instance = $injector->getInstance(FakeAopInterface::class);
         /** @var FakeAop $instance */
         $result = $instance->returnSame(2);
@@ -291,7 +291,7 @@ class InjectorTest extends TestCase
 
     public function testAopOnDemandByUnboundConcreteClass(): void
     {
-        $injector = new Injector(new FakeAopInterceptorModule(), __DIR__ . '/tmp');
+        $injector = new Injector(new FakeAopInterceptorModule());
         $instance = $injector->getInstance(FakeAop::class);
         $result = $instance->returnSame(2);
         $this->assertSame(4, $result);
@@ -299,7 +299,7 @@ class InjectorTest extends TestCase
 
     public function testBindOrder(): void
     {
-        $injector = new Injector(new FakeAnnoModule(), __DIR__ . '/tmp');
+        $injector = new Injector(new FakeAnnoModule());
         $instance = $injector->getInstance(FakeAnnoOrderClass::class);
         $instance->get();
         $expect = [FakeAnnoInterceptor4::class, FakeAnnoInterceptor1::class, FakeAnnoInterceptor2::class, FakeAnnoInterceptor3::class, FakeAnnoInterceptor5::class];
@@ -308,7 +308,7 @@ class InjectorTest extends TestCase
 
     public function testAnnotateConstant(): void
     {
-        $instance = (new Injector(new FakeConstantModule(), __DIR__ . '/tmp'))->getInstance(FakeConstantConsumer::class);
+        $instance = (new Injector(new FakeConstantModule()))->getInstance(FakeConstantConsumer::class);
         $this->assertSame('default_construct', $instance->defaultByConstruct);
     }
 
