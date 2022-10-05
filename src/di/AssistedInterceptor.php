@@ -78,7 +78,7 @@ final class AssistedInterceptor implements MethodInterceptor
             $name = $this->getName($method, $parameter);
             $pos = $parameter->getPosition();
             /** @psalm-suppress MixedAssignment */
-            $arguments[$pos] = $this->injector->getInstance($interface, $name); // @phpstan-ignore-line
+            $arguments[$pos] = $this->injector->getInstance($interface, $name);
         }
 
         return $arguments;

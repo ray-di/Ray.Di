@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+putenv('TMPDIR=' . __DIR__ . '/tmp');
+
 passthru('php ' . __DIR__ . '/01a-linked-binding.php');
 passthru('php ' . __DIR__ . '/01b-linked-binding-setter-injection.php');
 passthru('php ' . __DIR__ . '/02-provider-binding.php');
