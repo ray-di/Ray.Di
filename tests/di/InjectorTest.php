@@ -152,7 +152,12 @@ class InjectorTest extends TestCase
 
     public function testGetConcreteHavingDependency(): void
     {
-        $injector = new Injector();
+        $injector = new Injector(new class extends AbstractModule{
+            protected function configure()
+            {
+                $this->bind(FakeRobot::class);
+            }
+        });
         $team = $injector->getInstance(FakeRobotTeam::class);
         $this->assertInstanceOf(FakeRobotTeam::class, $team);
         $this->assertInstanceOf(FakeRobot::class, $team->robot1);
