@@ -31,10 +31,6 @@ final class Untarget
         $bound->setScope($this->scope);
         $bind->setBound($bound);
         $container->add($bind);
-        $constructor = $this->class->getConstructor();
-        if ($constructor) {
-            (new UntargetedBind())($container, $constructor);
-        }
     }
 
     public function setScope(string $scope): void

@@ -17,6 +17,7 @@ use function assert;
 use function class_exists;
 use function in_array;
 use function interface_exists;
+use function is_string;
 use function parse_str;
 
 /**
@@ -96,8 +97,8 @@ final class AssistedInterceptor implements MethodInterceptor
 
         parse_str($named->value, $names);
         $paramName = $parameter->getName();
-        if (isset($names[$paramName])) {
-            return (string) $names[$paramName];
+        if (isset($names[$paramName]) && is_string($names[$paramName])) {
+            return $names[$paramName];
         }
 
         return Name::ANY;
