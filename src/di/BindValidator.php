@@ -6,10 +6,10 @@ namespace Ray\Di;
 
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\NullInterceptor;
+use Ray\Aop\ReflectionClass;
 use Ray\Di\Exception\InvalidProvider;
 use Ray\Di\Exception\InvalidType;
 use Ray\Di\Exception\NotFound;
-use ReflectionClass;
 
 use function class_exists;
 use function interface_exists;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use ReflectionClass;
+use Ray\Aop\ReflectionClass;
 
 final class Untarget
 {

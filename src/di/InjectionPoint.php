@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
+use Ray\Aop\ReflectionClass;
+use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\Qualifier;
-use ReflectionClass;
-use ReflectionMethod;
 use ReflectionParameter;
 use Serializable;
 
@@ -20,9 +20,6 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
 {
     /** @var ?ReflectionParameter */
     private $parameter;
-
-    /** @var Reader */
-    private $reader;
 
     /** @var string */
     private $pClass;
@@ -58,7 +55,6 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     {
         $this->parameter = $this->getParameter();
         $class = $this->parameter->getDeclaringClass();
-        assert($class instanceof ReflectionClass);
         $method = $this->parameter->getDeclaringFunction()->getShortName();
         assert(class_exists($class->name));
 
@@ -72,9 +68,8 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     {
         $this->parameter = $this->getParameter();
         $class = $this->parameter->getDeclaringClass();
-        assert($class instanceof ReflectionClass);
 
-        return $class;
+        return new ReflectionClass($class->name);
     }
 
     /**
@@ -83,13 +78,10 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     public function getQualifiers(): array
     {
         $qualifiers = [];
-        $annotations = $this->reader->getMethodAnnotations($this->getMethod());
+        $annotations = $this->getMethod()->getAnnotations();
         foreach ($annotations as $annotation) {
-            $qualifier = $this->reader->getClassAnnotation(
-                new ReflectionClass($annotation),
-                Qualifier::class
-            );
-            if ($qualifier instanceof Qualifier) {
+            $maybeQualifier = (new ReflectionClass($annotation))->getAnnotation(Qualifier::class);
+            if ($maybeQualifier instanceof Qualifier) {
                 $qualifiers[] = $annotation;
             }
         }

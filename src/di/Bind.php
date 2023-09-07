@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Aop\MethodInterceptor;
+use Ray\Aop\ReflectionClass;
+use Ray\Aop\ReflectionMethod;
 use Ray\Di\Exception\InvalidToConstructorNameParameter;
-use ReflectionClass;
 use ReflectionException;
-use ReflectionMethod;
 
 use function array_keys;
 use function array_reduce;

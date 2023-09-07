@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Doctrine\Common\Annotations\Reader;
+use Ray\Aop\ReflectionClass;
+use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\Named;
 use Ray\Di\Di\Qualifier;
-use ReflectionClass;
-use ReflectionMethod;
 
 use function get_class;
 use function implode;
@@ -27,7 +27,7 @@ final class NameKeyVarString
     public function __invoke(ReflectionMethod $method): ?string
     {
         $keyVal = [];
-        $named = $this->reader->getMethodAnnotation($method, Named::class);
+        $named = $method->getAnnotation(Named::class);
         if ($named instanceof Named) {
             $keyVal[] = $named->value;
         }
@@ -42,10 +42,10 @@ final class NameKeyVarString
 
     private function getQualifierKeyVarString(ReflectionMethod $method): string
     {
-        $annotations = $this->reader->getMethodAnnotations($method);
+        $annotations = $method->getAnnotations();
         $names = [];
         foreach ($annotations as $annotation) {
-            $qualifier = $this->reader->getClassAnnotation(new ReflectionClass($annotation), Qualifier::class);
+            $qualifier = (new ReflectionClass($annotation))->getAnnotation(Qualifier::class);
             if ($qualifier instanceof Qualifier) {
                 /** @var ?scalar $annotation->value */
                 $value = $annotation->value ?? Name::ANY; // @phpstan-ignore-line

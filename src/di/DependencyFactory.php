@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
+use Ray\Aop\ReflectionClass;
 use Ray\ServiceLocator\ServiceLocator;
-use ReflectionClass;
 use ReflectionMethod;
 
 use function assert;

@@ -28,7 +28,7 @@ final class AnnotatedClass
      *
      * @phpstan-param ReflectionClass<object> $class Target class reflection
      */
-    public function getNewInstance(ReflectionClass $class): NewInstance
+    public function getNewInstance(\Ray\Aop\ReflectionClass $class): NewInstance
     {
         $setterMethods = new SetterMethods([]);
         $methods = $class->getMethods();
@@ -54,7 +54,7 @@ final class AnnotatedClass
     {
         $methods = $class->getMethods();
         foreach ($methods as $method) {
-            $annotation = $this->reader->getMethodAnnotation($method, PostConstruct::class);
+            $annotation = $method->getAnnotation(PostConstruct::class);
             if ($annotation instanceof PostConstruct) {
                 return $method;
             }

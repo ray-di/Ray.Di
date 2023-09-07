@@ -7,7 +7,7 @@ namespace Ray\Di;
 use Doctrine\Common\Annotations\AnnotationReader;
 use LogicException;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
+use Ray\Aop\ReflectionClass;
 
 class AnnotatedClassTest extends TestCase
 {
