@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use Ray\Aop\ReflectionClass;
@@ -17,7 +16,7 @@ class AnnotatedClassTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->annotatedClass = new AnnotatedClass(new AnnotationReader());
+        $this->annotatedClass = new AnnotatedClass();
     }
 
     public function testInvoke(): void

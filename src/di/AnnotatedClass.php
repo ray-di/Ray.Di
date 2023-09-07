@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\Reader;
+use Ray\Aop\ReflectionClass;
 use Ray\Di\Di\PostConstruct;
-use ReflectionClass;
 use ReflectionMethod;
 
 final class AnnotatedClass
 {
-    /** @var Reader */
-    private $reader;
-
     /** @var AnnotatedClassMethods */
     private $injectionMethod;
 
-    public function __construct(Reader $reader)
+    public function __construct()
     {
-        $this->reader = $reader;
-        $this->injectionMethod = new AnnotatedClassMethods($reader);
+        $this->injectionMethod = new AnnotatedClassMethods();
     }
 
     /**
@@ -28,7 +23,8 @@ final class AnnotatedClass
      *
      * @phpstan-param ReflectionClass<object> $class Target class reflection
      */
-    public function getNewInstance(\Ray\Aop\ReflectionClass $class): NewInstance
+
+    public function getNewInstance(ReflectionClass $class): NewInstance
     {
         $setterMethods = new SetterMethods([]);
         $methods = $class->getMethods();

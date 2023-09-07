@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\Reader;
 use Ray\Aop\ReflectionClass;
 use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\InjectInterface;
@@ -14,16 +13,12 @@ use const PHP_VERSION_ID;
 
 final class AnnotatedClassMethods
 {
-    /** @var Reader */
-    private $reader;
-
     /** @var NameKeyVarString */
     private $nameKeyVarString;
 
-    public function __construct(Reader $reader)
+    public function __construct()
     {
-        $this->reader = $reader;
-        $this->nameKeyVarString = new NameKeyVarString($reader);
+        $this->nameKeyVarString = new NameKeyVarString();
     }
 
     /**
@@ -48,7 +43,7 @@ final class AnnotatedClassMethods
             return new Name($named->value);
         }
 
-        $name = ($this->nameKeyVarString)(new ReflectionMethod($class->name, $constructor->name));
+        $name = ($this->nameKeyVarString)(new ReflectionMethod($class->getName(), $constructor->getName()));
         if ($name !== null) {
             return new Name($name);
         }
@@ -72,7 +67,7 @@ final class AnnotatedClassMethods
         return $setterMethod;
     }
 
-    private function getName(\Ray\Aop\ReflectionMethod $method): Name
+    private function getName(ReflectionMethod $method): Name
     {
         if (PHP_VERSION_ID >= 80000) {
             $name = Name::withAttributes($method);

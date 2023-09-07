@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\Reader;
 use Ray\Aop\ReflectionClass;
 use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\Qualifier;
@@ -30,14 +29,13 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     /** @var string */
     private $pName;
 
-    public function __construct(ReflectionParameter $parameter, Reader $reader)
+    public function __construct(ReflectionParameter $parameter)
     {
         $this->parameter = $parameter;
         $this->pFunction = (string) $parameter->getDeclaringFunction()->name;
         $class = $parameter->getDeclaringClass();
         $this->pClass = $class instanceof ReflectionClass ? $class->name : '';
         $this->pName = $parameter->name;
-        $this->reader = $reader;
     }
 
     /**
@@ -56,9 +54,10 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
         $this->parameter = $this->getParameter();
         $class = $this->parameter->getDeclaringClass();
         $method = $this->parameter->getDeclaringFunction()->getShortName();
-        assert(class_exists($class->name));
+        assert($class instanceof \ReflectionClass);
+        assert(class_exists($class->getName()));
 
-        return new ReflectionMethod($class->name, $method);
+        return new ReflectionMethod($class->getName(), $method);
     }
 
     /**
@@ -68,8 +67,9 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     {
         $this->parameter = $this->getParameter();
         $class = $this->parameter->getDeclaringClass();
+        assert($class instanceof \ReflectionClass);
 
-        return new ReflectionClass($class->name);
+        return new ReflectionClass($class->getName());
     }
 
     /**
@@ -90,21 +90,21 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
     }
 
     /**
-     * @return array{0: Reader, 1: string, 2: string, 3: string}
+     * @return array<string>
      */
     public function __serialize(): array
     {
-        return [$this->reader, $this->pClass, $this->pFunction, $this->pName];
+        return [$this->pClass, $this->pFunction, $this->pName];
     }
 
     /**
      * {@inheritDoc}
      *
-     * @param array{0: Reader, 1: string, 2: string, 3: string} $array
+     * @param array<string> $array
      */
     public function __unserialize(array $array): void
     {
-        [$this->reader, $this->pClass, $this->pFunction, $this->pName] = $array;
+        [$this->pClass, $this->pFunction, $this->pName] = $array;
     }
 
     public function serialize(): ?string
@@ -119,8 +119,8 @@ final class InjectionPoint implements InjectionPointInterface, Serializable
      */
     public function unserialize($data): void
     {
-        /** @var array{0: Reader, 1: string, 2: string, 3: string} $array */
-        $array = unserialize($data, ['allowed_classes' => [Reader::class]]);
+        /** @var array<string> $array */
+        $array = unserialize($data);
         $this->__unserialize($array);
     }
 }

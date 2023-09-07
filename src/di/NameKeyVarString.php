@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\Reader;
 use Ray\Aop\ReflectionClass;
 use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\Named;
@@ -16,14 +15,6 @@ use function sprintf;
 
 final class NameKeyVarString
 {
-    /** @var Reader */
-    private $reader;
-
-    public function __construct(Reader $reader)
-    {
-        $this->reader = $reader;
-    }
-
     public function __invoke(ReflectionMethod $method): ?string
     {
         $keyVal = [];

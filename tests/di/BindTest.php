@@ -154,7 +154,7 @@ class BindTest extends TestCase
         $container = new Container();
         (new Bind($container, ProviderInterface::class))->toProvider(FakeContextualProvider::class, 'context_string');
         $instance = $container->getInstance(ProviderInterface::class, Name::ANY);
-        assert(property_exists($instance, 'context'));
+        assert(property_exists($instance, 'context')); // @phpstan-ignore-line
         $this->assertSame('context_string', $instance->context);
     }
 }

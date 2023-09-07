@@ -50,7 +50,8 @@ final class BindValidator
      *
      * @phpstan-param class-string $provider
      *
-     * @return ReflectionClass<object>
+     * @psalm-return ReflectionClass
+     * @phpstan-return ReflectionClass<object>
      *
      * @throws NotFound
      */
