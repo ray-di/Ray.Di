@@ -23,7 +23,6 @@ final class AnnotatedClass
      *
      * @phpstan-param ReflectionClass<object> $class Target class reflection
      */
-
     public function getNewInstance(ReflectionClass $class): NewInstance
     {
         $setterMethods = new SetterMethods([]);

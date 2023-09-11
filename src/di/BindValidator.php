@@ -42,7 +42,7 @@ final class BindValidator
             throw new InvalidType("[{$class}] is no implemented [{$interface}] interface");
         }
 
-        return new ReflectionClass($class);
+        return new ReflectionClass($class); // @phpstan-ignore-line
     }
 
     /**
