@@ -6,9 +6,9 @@ namespace Ray\Di;
 
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\ReflectionClass;
-use Ray\Aop\ReflectionMethod;
 use Ray\Di\Exception\InvalidToConstructorNameParameter;
 use ReflectionException;
+use ReflectionMethod;
 
 use function array_keys;
 use function array_reduce;
@@ -51,7 +51,7 @@ final class Bind
         $this->container = $container;
         $this->interface = $interface;
         $this->validate = new BindValidator();
-        $bindUntarget = class_exists($interface) && ! (new ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
+        $bindUntarget = class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
         $this->bound = new NullDependency();
         if ($bindUntarget) {
             $this->untarget = new Untarget($interface);

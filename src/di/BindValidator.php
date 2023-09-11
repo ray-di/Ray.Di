@@ -62,11 +62,12 @@ final class BindValidator
             throw new NotFound($provider);
         }
 
-        if (! (new ReflectionClass($provider))->implementsInterface(ProviderInterface::class)) {
+        $reflectioClass = new ReflectionClass($provider);
+        if (! $reflectioClass->implementsInterface(ProviderInterface::class)) {
             throw new InvalidProvider($provider);
         }
 
-        return new ReflectionClass($provider);
+        return $reflectioClass;
     }
 
     private function isNullInterceptorBinding(string $class, string $interface): bool
