@@ -15,7 +15,7 @@ class RebindTest extends TestCase
             protected function configure()
             {
                 $this->bind(FakeFooInterface::class)->to(FakeFoo::class);
-                $this->reBind(FakeFooInterface::class, 'new');
+                $this->rebind(FakeFooInterface::class, 'new');
             }
         };
         $foo = (new Injector($module))->getInstance(FakeFooInterface::class, 'new');
@@ -38,7 +38,7 @@ class RebindTest extends TestCase
 
             protected function configure()
             {
-                $this->reBind(FakeFooInterface::class, 'new');
+                $this->rebind(FakeFooInterface::class, 'new');
             }
         };
         $module1->install($module2);
@@ -58,7 +58,7 @@ class RebindTest extends TestCase
         $module2 = new class extends AbstractModule{
             protected function configure()
             {
-                $this->reBind(FakeFooInterface::class, 'new'); // no binding at this module
+                $this->rebind(FakeFooInterface::class, 'new'); // no binding at this module
             }
         };
         $module1->install($module2);

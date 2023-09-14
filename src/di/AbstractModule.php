@@ -26,12 +26,12 @@ abstract class AbstractModule
     private $container;
 
     /** @var Rebind >*/
-    private $reBind;
+    private $rebind;
 
     public function __construct(
         ?self $module = null
     ) {
-        $this->reBind = new Rebind();
+        $this->rebind = new Rebind();
         $this->lastModule = $module;
         $this->activate();
         assert($this->container instanceof Container);
@@ -39,7 +39,7 @@ abstract class AbstractModule
             $this->container->merge($module->getContainer());
         }
 
-        $this->reBind->commit($this->container);
+        $this->rebind->commit($this->container);
     }
 
     public function __toString(): string
@@ -120,7 +120,7 @@ abstract class AbstractModule
      * @param string $sourceName      Original binding name
      * @param string $targetInterface Original interface
      *
-     * @deprecated Use reBind() instead
+     * @deprecated Use rebind() instead
      */
     public function rename(string $interface, string $newName, string $sourceName = Name::ANY, string $targetInterface = ''): void
     {
@@ -133,10 +133,10 @@ abstract class AbstractModule
     /**
      * Re-bind an existing binding
      */
-    public function reBind(string $fromInterface, string $toName, string $fromName = '', string $toInterface = ''): void
+    public function rebind(string $fromInterface, string $toName, string $fromName = '', string $toInterface = ''): void
     {
         $toInterface = $toInterface ?: $fromInterface;
-        $this->reBind->bind($fromInterface, $toName, $fromName, $toInterface);
+        $this->rebind->bind($fromInterface, $toName, $fromName, $toInterface);
     }
 
     /**
