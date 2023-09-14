@@ -64,4 +64,26 @@ class RebindTest extends TestCase
         $module1->install($module2);
         (new Injector($module1))->getInstance(FakeFooInterface::class, 'new');
     }
+
+    public function testRebindInTwoModule(): void
+    {
+        $module1 = new class extends AbstractModule{
+            protected function configure()
+            {
+                $this->bind(FakeFooInterface::class)->to(FakeFoo::class);
+            }
+        };
+        $module2 = new class ($module1) extends AbstractModule{
+            protected function configure()
+            {
+                $this->rebind(FakeFooInterface::class, 'new');
+                $this->bind(FakeFooInterface::class)->to(FakeFooAlt::class);
+            }
+        };
+        $injector = new Injector($module2);
+        $foo = $injector->getInstance(FakeFooInterface::class, '');
+        $this->assertInstanceOf(FakeFooAlt::class, $foo);
+        $foo = $injector->getInstance(FakeFooInterface::class, 'new');
+        $this->assertInstanceOf(FakeFoo::class, $foo);
+    }
 }
