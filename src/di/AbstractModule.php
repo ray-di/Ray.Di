@@ -25,7 +25,7 @@ abstract class AbstractModule
     /** @var ?Container */
     private $container;
 
-    /** @var Rebind >*/
+    /** @var Rebind */
     private $rebind;
 
     public function __construct(
