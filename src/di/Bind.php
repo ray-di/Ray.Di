@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Aop\MethodInterceptor;
+use Ray\Aop\ReflectionClass;
 use Ray\Di\Exception\InvalidToConstructorNameParameter;
-use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 
@@ -51,7 +51,7 @@ final class Bind
         $this->container = $container;
         $this->interface = $interface;
         $this->validate = new BindValidator();
-        $bindUntarget = class_exists($interface) && ! (new ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
+        $bindUntarget = class_exists($interface) && ! (new \ReflectionClass($interface))->isAbstract() && ! $this->isRegistered($interface);
         $this->bound = new NullDependency();
         if ($bindUntarget) {
             $this->untarget = new Untarget($interface);
@@ -103,10 +103,12 @@ final class Bind
     /**
      * Bind to constructor
      *
-     * @param class-string                 $class class name
+     * @param class-string<T>              $class class name
      * @param array<string, string>|string $name  "varName=bindName,..." or [$varName => $bindName, $varName => $bindName...]
      *
      * @throws ReflectionException
+     *
+     * @template T of object
      */
     public function toConstructor(string $class, $name, ?InjectionPoints $injectionPoints = null, ?string $postConstruct = null): self
     {
@@ -116,7 +118,9 @@ final class Bind
 
         $this->untarget = null;
         $postConstructRef = $postConstruct ? new ReflectionMethod($class, $postConstruct) : null;
-        $this->bound = (new DependencyFactory())->newToConstructor(new ReflectionClass($class), $name, $injectionPoints, $postConstructRef);
+        /** @var ReflectionClass<object> $reflection */
+        $reflection = new ReflectionClass($class);
+        $this->bound = (new DependencyFactory())->newToConstructor($reflection, $name, $injectionPoints, $postConstructRef);
         $this->container->add($this);
 
         return $this;

@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\Reader;
+use Ray\Aop\ReflectionClass;
 use Ray\Di\Di\PostConstruct;
-use ReflectionClass;
 use ReflectionMethod;
 
 final class AnnotatedClass
 {
-    /** @var Reader */
-    private $reader;
-
     /** @var AnnotatedClassMethods */
     private $injectionMethod;
 
-    public function __construct(Reader $reader)
+    public function __construct()
     {
-        $this->reader = $reader;
-        $this->injectionMethod = new AnnotatedClassMethods($reader);
+        $this->injectionMethod = new AnnotatedClassMethods();
     }
 
     /**
@@ -54,7 +49,7 @@ final class AnnotatedClass
     {
         $methods = $class->getMethods();
         foreach ($methods as $method) {
-            $annotation = $this->reader->getMethodAnnotation($method, PostConstruct::class);
+            $annotation = $method->getAnnotation(PostConstruct::class);
             if ($annotation instanceof PostConstruct) {
                 return $method;
             }

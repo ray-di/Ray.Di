@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Ray\ServiceLocator\ServiceLocator;
-use ReflectionClass;
+use Ray\Aop\ReflectionClass;
 use ReflectionMethod;
 
 use function assert;
@@ -20,7 +19,7 @@ final class DependencyFactory
      */
     public function newAnnotatedDependency(ReflectionClass $class): Dependency
     {
-        $annotateClass = new AnnotatedClass(ServiceLocator::getReader());
+        $annotateClass = new AnnotatedClass();
         $newInstance = $annotateClass->getNewInstance($class);
         $postConstruct = $annotateClass->getPostConstruct($class);
 

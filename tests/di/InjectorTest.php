@@ -430,7 +430,7 @@ class InjectorTest extends TestCase
         $instance = $injector->getInstance(FakeAop::class);
         $result = $instance->returnSame(2);
         $this->assertSame(2, $result);
-        assert(isset($instance->bindings));
+        assert(property_exists($instance, 'bindings'));
         assert(isset($instance->bindings['returnSame'][0]));
         $this->assertInstanceOf(NullInterceptor::class, $instance->bindings['returnSame'][0]);
     }

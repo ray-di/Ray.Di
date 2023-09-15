@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
 use ReflectionParameter;
 
@@ -19,7 +18,7 @@ class InjectionPointTest extends TestCase
     protected function setUp(): void
     {
         $this->parameter = new ReflectionParameter([FakeWalkRobot::class, '__construct'], 'rightLeg');
-        $this->ip = new InjectionPoint($this->parameter, new AnnotationReader());
+        $this->ip = new InjectionPoint($this->parameter);
     }
 
     public function testGetParameter(): void

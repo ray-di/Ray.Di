@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use ReflectionClass;
+use Ray\Aop\ReflectionClass;
 
 final class Untarget
 {
-    /** @var ReflectionClass<object> */
+    /**
+     * @phpstan-var ReflectionClass<object>
+     * @psalm-var ReflectionClass
+     */
     private $class;
 
     /** @var string */
     private $scope = Scope::PROTOTYPE;
 
     /**
-     * @phpstan-param class-string $class
+     * @param class-string $class
      */
     public function __construct(string $class)
     {

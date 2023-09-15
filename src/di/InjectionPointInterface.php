@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use ReflectionClass;
-use ReflectionMethod;
+use Ray\Aop\ReflectionClass;
+use Ray\Aop\ReflectionMethod;
 use ReflectionParameter;
 
 interface InjectionPointInterface

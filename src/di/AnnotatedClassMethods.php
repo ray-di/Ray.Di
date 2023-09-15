@@ -4,26 +4,21 @@ declare(strict_types=1);
 
 namespace Ray\Di;
 
-use Doctrine\Common\Annotations\Reader;
+use Ray\Aop\ReflectionClass;
+use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\InjectInterface;
 use Ray\Di\Di\Named;
-use ReflectionClass;
-use ReflectionMethod;
 
 use const PHP_VERSION_ID;
 
 final class AnnotatedClassMethods
 {
-    /** @var Reader */
-    private $reader;
-
     /** @var NameKeyVarString */
     private $nameKeyVarString;
 
-    public function __construct(Reader $reader)
+    public function __construct()
     {
-        $this->reader = $reader;
-        $this->nameKeyVarString = new NameKeyVarString($reader);
+        $this->nameKeyVarString = new NameKeyVarString();
     }
 
     /**
@@ -37,18 +32,18 @@ final class AnnotatedClassMethods
         }
 
         if (PHP_VERSION_ID >= 80000) {
-            $name = Name::withAttributes(new ReflectionMethod($class->getName(), '__construct'));
+            $name = Name::withAttributes(new \ReflectionMethod($class->getName(), '__construct'));
             if ($name) {
                 return $name;
             }
         }
 
-        $named = $this->reader->getMethodAnnotation($constructor, Named::class);
+        $named = $constructor->getAnnotation(Named::class);
         if ($named instanceof Named) {
             return new Name($named->value);
         }
 
-        $name = ($this->nameKeyVarString)($constructor);
+        $name = ($this->nameKeyVarString)(new ReflectionMethod($class->getName(), $constructor->getName()));
         if ($name !== null) {
             return new Name($name);
         }
@@ -58,7 +53,7 @@ final class AnnotatedClassMethods
 
     public function getSetterMethod(ReflectionMethod $method): ?SetterMethod
     {
-        $inject = $this->reader->getMethodAnnotation($method, InjectInterface::class);
+        $inject = $method->getAnnotation(InjectInterface::class);
         if (! $inject instanceof InjectInterface) {
             return null;
         }

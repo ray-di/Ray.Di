@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Di\Exception\Unbound;
-use Ray\ServiceLocator\ServiceLocator;
 use ReflectionMethod;
 
 final class Arguments
@@ -65,6 +64,6 @@ final class Arguments
             return;
         }
 
-        (new Bind($container, InjectionPointInterface::class))->toInstance(new InjectionPoint($argument->get(), ServiceLocator::getReader()));
+        (new Bind($container, InjectionPointInterface::class))->toInstance(new InjectionPoint($argument->get()));
     }
 }

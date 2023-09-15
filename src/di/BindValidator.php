@@ -6,10 +6,10 @@ namespace Ray\Di;
 
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\NullInterceptor;
+use Ray\Aop\ReflectionClass;
 use Ray\Di\Exception\InvalidProvider;
 use Ray\Di\Exception\InvalidType;
 use Ray\Di\Exception\NotFound;
-use ReflectionClass;
 
 use function class_exists;
 use function interface_exists;
@@ -42,7 +42,7 @@ final class BindValidator
             throw new InvalidType("[{$class}] is no implemented [{$interface}] interface");
         }
 
-        return new ReflectionClass($class);
+        return new ReflectionClass($class); // @phpstan-ignore-line
     }
 
     /**
@@ -50,7 +50,8 @@ final class BindValidator
      *
      * @phpstan-param class-string $provider
      *
-     * @return ReflectionClass<object>
+     * @psalm-return ReflectionClass
+     * @phpstan-return ReflectionClass<object>
      *
      * @throws NotFound
      */
@@ -61,11 +62,12 @@ final class BindValidator
             throw new NotFound($provider);
         }
 
-        if (! (new ReflectionClass($provider))->implementsInterface(ProviderInterface::class)) {
+        $reflectioClass = new ReflectionClass($provider);
+        if (! $reflectioClass->implementsInterface(ProviderInterface::class)) {
             throw new InvalidProvider($provider);
         }
 
-        return new ReflectionClass($provider);
+        return $reflectioClass;
     }
 
     private function isNullInterceptorBinding(string $class, string $interface): bool
