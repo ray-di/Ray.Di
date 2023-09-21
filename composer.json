@@ -18,7 +18,7 @@
         "koriym/printo": "^1.0",
         "nikic/php-parser": "^4.13.2",
         "ray/aop": "^2.14",
-        "ray/compiler": "^1.9.1"
+        "ray/compiler": "^1.10.3"
     },
     "require-dev": {
         "ext-pdo": "*",
