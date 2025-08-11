@@ -3,6 +3,13 @@
   "$id": "http://ray-di.github.io/Ray.Di/binding-schema.json",
   "title": "Ray.Di BindingInfo Schema",
   "description": "Schema for Ray.Di BindingInfo Value Objects",
+  "links": [
+    {
+      "rel": "describedby",
+      "href": "https://ray-di.github.io/llms.txt",
+      "title": "Ray.Di Framework Documentation"
+    }
+  ],
   "type": "array",
   "items": {
     "$ref": "#/definitions/bindingInfo"
