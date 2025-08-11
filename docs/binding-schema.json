@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://ray-di.github.io/Ray.Di/binding-schema.json",
   "title": "Ray.Di BindingInfo Schema",
   "description": "Schema for Ray.Di BindingInfo Value Objects",
   "type": "array",
