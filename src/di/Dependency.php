@@ -8,6 +8,7 @@ use Ray\Aop\Bind as AopBind;
 use Ray\Aop\CompilerInterface;
 use Ray\Aop\MethodInterceptor;
 use Ray\Aop\WeavedInterface;
+use Ray\Di\Bindings\AopInfo;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -32,6 +33,9 @@ final class Dependency implements DependencyInterface, AcceptInterface
 
     /** @var ?mixed */
     private $instance;
+
+    /** @var ?AopInfo */
+    private $aopInfo;
 
     public function __construct(NewInstance $newInstance, ?ReflectionMethod $postConstruct = null)
     {
@@ -142,8 +146,21 @@ final class Dependency implements DependencyInterface, AcceptInterface
             return;
         }
 
+        // Store AOP info for later retrieval
+        if ($compiler instanceof SpyCompiler) {
+            $this->aopInfo = $compiler->getAopInfo($bind);
+        }
+
         $class = $compiler->compile($className, $bind);
         $this->newInstance->weaveAspects($class, $bind);
+    }
+
+    /**
+     * Get AOP information if available
+     */
+    public function getAopInfo(): ?AopInfo
+    {
+        return $this->aopInfo;
     }
 
     /** @inheritDoc */

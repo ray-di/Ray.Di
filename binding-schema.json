@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Ray.Di BindingInfo Schema",
+  "description": "Schema for Ray.Di BindingInfo Value Objects",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/bindingInfo"
+  },
+  "definitions": {
+    "bindingInfo": {
+      "type": "object",
+      "required": ["interface", "named", "type", "target"],
+      "properties": {
+        "interface": {
+          "type": "string",
+          "description": "The interface or class being bound"
+        },
+        "named": {
+          "type": ["string", "null"],
+          "description": "Named binding identifier (null if not named)"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["to", "toProvider", "toInstance"],
+          "description": "The type of binding"
+        },
+        "target": {
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Target class name for 'to' or 'toProvider' bindings"
+            },
+            {
+              "type": ["string", "number", "boolean", "null"],
+              "description": "Instance value for 'toInstance' bindings"
+            }
+          ],
+          "description": "The target of the binding"
+        },
+        "aop": {
+          "type": "object",
+          "description": "AOP method bindings from AopInfo VO",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "Interceptor class name"
+            },
+            "description": "List of interceptors for this method"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

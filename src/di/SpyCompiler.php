@@ -6,11 +6,10 @@ namespace Ray\Di;
 
 use Ray\Aop\BindInterface;
 use Ray\Aop\CompilerInterface;
+use Ray\Di\Bindings\AopInfo;
 
 use function array_keys;
-use function implode;
 use function method_exists;
-use function sprintf;
 
 /**
  * @codeCoverageIgnore
@@ -44,7 +43,8 @@ final class SpyCompiler implements CompilerInterface
             return $class;
         }
 
-        return $class . $this->getInterceptors($bind); // @phpstan-ignore-line
+        $aopInfo = $this->getInterceptors($bind);
+        return $class . (string) $aopInfo; // @phpstan-ignore-line
     }
 
     /**
@@ -73,26 +73,14 @@ final class SpyCompiler implements CompilerInterface
         return $hasMethod;
     }
 
-    private function getInterceptors(BindInterface $bind): string
+    public function getAopInfo(BindInterface $bind): AopInfo
     {
         $bindings = $bind->getBindings();
-        if (! $bindings) {
-            return ''; // @codeCoverageIgnore
-        }
+        return new AopInfo($bindings);
+    }
 
-        $log = ' (aop)';
-        foreach ($bindings as $method => $interceptors) {
-            /**
-             * @phpstan-var array<string> $interceptors
-             * @psalm-ignore-var
-             */
-            $log .= sprintf(
-                ' +%s(%s)',
-                $method,
-                implode(', ', $interceptors)
-            );
-        }
-
-        return $log;
+    private function getInterceptors(BindInterface $bind): AopInfo
+    {
+        return $this->getAopInfo($bind);
     }
 }
