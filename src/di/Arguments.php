@@ -86,12 +86,14 @@ final class Arguments implements AcceptInterface
     private function getNoHintMsg(Argument $argument): string
     {
         $ref = $argument->get();
+        $func = $ref->getDeclaringFunction();
+        $fileName = $func->getFileName();
 
         return sprintf(
             '$%s (%s:%d)',
             $ref->getName(),
-            $ref->getDeclaringFunction()->getFileName(),
-            $ref->getDeclaringFunction()->getStartLine()
+            $fileName !== false ? $fileName : 'unknown',
+            $func->getStartLine()
         );
     }
 }
