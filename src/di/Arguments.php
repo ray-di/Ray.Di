@@ -92,7 +92,7 @@ final class Arguments implements AcceptInterface
         return sprintf(
             '$%s (%s:%d)',
             $ref->getName(),
-            $fileName !== false ? $fileName : 'unknown',
+            $fileName !== false ? $fileName : 'unknown file',
             $func->getStartLine()
         );
     }
