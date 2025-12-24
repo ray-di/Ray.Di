@@ -23,4 +23,22 @@ class NoHintTest extends TestCase
         $injector = new Injector(new FakeUnNamedModule());
         $injector->getInstance(FakeUnNamedClass::class);
     }
+
+    public function testNoHintMessageFormat(): void
+    {
+        $injector = new Injector(new FakeUnNamedModule());
+
+        try {
+            $injector->getInstance(FakeUnNamedClass::class);
+            $this->fail('NoHint exception should be thrown');
+        } catch (NoHint $e) {
+            // Message format: ${var} (file:line)
+            $this->assertMatchesRegularExpression(
+                '/^\$\w+ \(.+:\d+\)$/',
+                $e->getMessage(),
+            );
+            $this->assertStringContainsString('$value', $e->getMessage());
+            $this->assertStringContainsString('FakeUnNamedClass.php', $e->getMessage());
+        }
+    }
 }
