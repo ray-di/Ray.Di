@@ -41,7 +41,7 @@
         }
     },
     "scripts": {
-        "test": "phpunit --log-junit=build/junit.xm/m///..l",
+        "test": "phpunit --log-junit=build/junit.xml",
         "tests": ["@cs", "@sa", "@test"],
         "coverage": ["php -dzend_extension=xdebug.so -dxdebug.mode=coverage ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
         "pcov": ["php -dextension=pcov.so -d pcov.enabled=1 ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage --coverage-xml=build/coverage-xml --coverage-clover=coverage.xml"],
