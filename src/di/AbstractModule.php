@@ -44,6 +44,14 @@ abstract class AbstractModule implements Stringable
     }
 
     /**
+     * Return module bindings as JSON string
+     */
+    public function toJson(): string
+    {
+        return (new ModuleJson())($this->getContainer(), $this->getContainer()->getPointcuts());
+    }
+
+    /**
      * Install module
      */
     public function install(self $module): void
