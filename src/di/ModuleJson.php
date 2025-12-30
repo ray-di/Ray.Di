@@ -27,8 +27,6 @@ use const JSON_UNESCAPED_UNICODE;
  */
 final class ModuleJson
 {
-    private const SCHEMA = 'https://ray-di.github.io/schemas/module.schema.json';
-
     /**
      * @param PointcutList $pointcuts
      */
@@ -126,7 +124,6 @@ final class ModuleJson
             $entry['aop'] = $aopBindings;
         }
 
-        /** @var BindingEntry $entry */
         return $entry;
     }
 
