@@ -9,15 +9,17 @@ use Ray\Di\Di\Qualifier;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionParameter;
 
 use function count;
 
 /**
- * Backward compatible parameter qualifier for single-parameter methods
+ * Backward compatible parameter qualifier for method-level Qualifier attributes
  *
  * Automatically applies method-level Qualifier attributes to parameters when:
- * - Method has exactly one parameter
- * - Parameter has no explicit qualifier
+ * - Parameters have no explicit qualifier
+ * - For single-parameter methods: Qualifier is applied to the only parameter
+ * - For multi-parameter methods: Qualifier's value property specifies the target parameter name
  * - For constructors: Method has a Qualifier attribute (InjectInterface is implicit)
  * - For setters: Method has an attribute implementing both InjectInterface and Qualifier
  *
@@ -44,12 +46,6 @@ final class BcParameterQualifier
     /**
      * Get parameter qualifier names from method-level attribute if applicable
      *
-     * Returns parameter name mapping if:
-     * 1. Method has exactly one parameter
-     * 2. Parameter has no qualifier attribute
-     * 3. For setters: Method has an attribute implementing both InjectInterface and Qualifier
-     * 4. For constructors: Method has a Qualifier attribute (InjectInterface is implicit)
-     *
      * @param ReflectionMethod $method The method to analyze
      *
      * @return array<string, string> Parameter name to qualifier mapping (empty if not applicable)
@@ -57,75 +53,68 @@ final class BcParameterQualifier
     public static function getNames(ReflectionMethod $method): array
     {
         $params = $method->getParameters();
-
-        // Only for single-parameter methods
-        if (count($params) !== 1) {
+        if ($params === []) {
             return [];
-        }
-
-        $qualifier = self::getQualifier($method);
-        if ($qualifier === '') {
-            return [];
-        }
-
-        return [$params[0]->name => $qualifier];
-    }
-
-    /**
-     * Get parameter qualifier from method-level attribute if applicable
-     *
-     * Returns the qualifier name if:
-     * 1. Method has exactly one parameter
-     * 2. Parameter has no qualifier attribute
-     * 3. For setters: Method has an attribute implementing both InjectInterface and Qualifier
-     * 4. For constructors: Method has a Qualifier attribute (InjectInterface is implicit)
-     *
-     * @param ReflectionMethod $method The method to analyze
-     *
-     * @return string The qualifier class name, or empty string if not applicable
-     */
-    private static function getQualifier(ReflectionMethod $method): string
-    {
-        $params = $method->getParameters();
-
-        // Only for single-parameter methods
-        if (count($params) !== 1) {
-            return '';
-        }
-
-        $param = $params[0];
-
-        // Check if parameter already has a qualifier
-        if (self::hasParameterQualifier($param->getAttributes())) {
-            return '';
         }
 
         $isConstructor = $method->name === '__construct';
-
-        // Check method-level attributes for Qualifier
         $methodAttributes = $method->getAttributes();
-        foreach ($methodAttributes as $attr) {
-            $instance = $attr->newInstance();
-            $attrClass = new ReflectionClass($attr->getName());
-            $qualifierAttr = $attrClass->getAttributes(Qualifier::class);
+        $names = [];
 
-            // Skip if not a Qualifier
-            if ($qualifierAttr === []) {
+        foreach ($methodAttributes as $attr) {
+            $attrClass = new ReflectionClass($attr->getName());
+            if ($attrClass->getAttributes(Qualifier::class) === []) {
                 continue;
             }
 
-            // For constructors: Qualifier alone is sufficient (InjectInterface is implicit)
-            if ($isConstructor) {
-                return $attr->getName();
-            }
+            $instance = $attr->newInstance();
 
             // For setters: Must also implement InjectInterface
-            if ($instance instanceof InjectInterface) {
-                return $attr->getName();
+            if (! $isConstructor && ! $instance instanceof InjectInterface) {
+                continue;
+            }
+
+            $targetParam = self::resolveTargetParam($instance, $params);
+            if ($targetParam === null) {
+                continue;
+            }
+
+            // Skip if parameter already has a qualifier
+            if (self::hasParameterQualifier($targetParam->getAttributes())) {
+                continue;
+            }
+
+            $names[$targetParam->name] = $attr->getName();
+        }
+
+        return $names;
+    }
+
+    /**
+     * Resolve which parameter a Qualifier targets
+     *
+     * If the Qualifier has a value property matching a parameter name, use that.
+     * Otherwise, if there is exactly one parameter, use it.
+     *
+     * @param object                 $qualifier The Qualifier attribute instance
+     * @param array<ReflectionParameter> $params    Method parameters
+     */
+    private static function resolveTargetParam(object $qualifier, array $params): ?ReflectionParameter
+    {
+        if (count($params) === 1) {
+            return $params[0];
+        }
+
+        // For multi-parameter methods, use qualifier's value property to find target
+        if (isset($qualifier->value) && $qualifier->value !== '') {
+            foreach ($params as $param) {
+                if ($param->name === $qualifier->value) {
+                    return $param;
+                }
             }
         }
 
-        return '';
+        return null;
     }
 
     /**
