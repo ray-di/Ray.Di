@@ -27,10 +27,20 @@ class FakeBcParameterQualifierClass
     }
 
     /**
-     * Multiple parameters - should NOT infer
+     * Multiple parameters with value not matching any param name - should NOT infer
      */
     #[FakeGearStickInject('test')]
     public function setMultipleParams(FakeGearStickInterface $param1, FakeTyreInterface $param2): void
+    {
+        $this->multipleParams1 = $param1;
+        $this->multipleParams2 = $param2;
+    }
+
+    /**
+     * Multiple parameters with value matching a param name - should infer for that param
+     */
+    #[FakeGearStickInject('param1')]
+    public function setMultipleParamsWithMatchingValue(FakeGearStickInterface $param1, FakeTyreInterface $param2): void
     {
         $this->multipleParams1 = $param1;
         $this->multipleParams2 = $param2;

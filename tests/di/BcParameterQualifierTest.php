@@ -7,6 +7,7 @@ namespace Ray\Di;
 use PHPUnit\Framework\TestCase;
 use Ray\Di\Annotation\FakeInjectOne;
 use Ray\Di\Annotation\FakeQualifierOnly;
+use Ray\Di\Annotation\FakeQualifierWithValue;
 use ReflectionMethod;
 
 class BcParameterQualifierTest extends TestCase
@@ -20,13 +21,31 @@ class BcParameterQualifierTest extends TestCase
         $this->assertSame(['param' => FakeInjectOne::class], $names);
     }
 
-    public function testNoNamesForMultipleParameters(): void
+    public function testNoNamesForMultipleParametersWithNonMatchingValue(): void
     {
         $method = new ReflectionMethod(FakeBcParameterQualifierClass::class, 'setMultipleParams');
         /** @psalm-suppress DeprecatedClass */
         $names = BcParameterQualifier::getNames($method);
 
         $this->assertSame([], $names);
+    }
+
+    public function testNamesForMultipleParametersWithMatchingValue(): void
+    {
+        $method = new ReflectionMethod(FakeBcParameterQualifierClass::class, 'setMultipleParamsWithMatchingValue');
+        /** @psalm-suppress DeprecatedClass */
+        $names = BcParameterQualifier::getNames($method);
+
+        $this->assertSame(['param1' => FakeGearStickInject::class], $names);
+    }
+
+    public function testConstructorMultiParamWithMatchingValue(): void
+    {
+        $method = new ReflectionMethod(FakeBcConstructorMultiParamClass::class, '__construct');
+        /** @psalm-suppress DeprecatedClass */
+        $names = BcParameterQualifier::getNames($method);
+
+        $this->assertSame(['param2' => FakeQualifierWithValue::class], $names);
     }
 
     public function testNoNamesWhenParameterHasQualifier(): void
