@@ -111,7 +111,7 @@ final class Argument implements AcceptInterface, Stringable
     }
 
     /**
-     * @param array{0: DependencyIndex, 1: bool, 2: string, 3: string, 4: string, 5: array{0: string, 1: string, 2:string}} $unserialized
+     * @param array{0: DependencyIndex, 1: bool, 2: mixed, 3: string, 4: array{0: string, 1: string, 2: string}} $unserialized
      */
     public function __unserialize(array $unserialized): void
     {

@@ -17,7 +17,7 @@ use Ray\Aop\Pointcut;
  *
  * @psalm-type DependencyContainer = array<non-empty-string, DependencyInterface>
  * @psalm-type DependencyIndex = non-empty-string
- * @psalm-type PointcutList array<int, Pointcut>
+ * @psalm-type PointcutList = array<int, Pointcut>
  * @psalm-type BindingName = non-empty-string
  * @psalm-type BindableInterface = class-string|''
  * @psalm-type ConstructorNameMapping = array<non-empty-string, non-empty-string>
@@ -43,8 +43,8 @@ use Ray\Aop\Pointcut;
  * @psalm-type LazyBindingList = non-empty-array<array-key, MultiBinding\LazyInterface>
  *
  * AOP and Aspect Types
- * @psalm-type MethodInterceptorBindings array<non-empty-string, list<MethodInterceptor>>
- * @psalm-type InterceptorClassList array<class-string<MethodInterceptor>>
+ * @psalm-type MethodInterceptorBindings = array<non-empty-string, list<MethodInterceptor>>
+ * @psalm-type InterceptorClassList = array<class-string<MethodInterceptor>>
  * @psalm-type VisitorResult = object|array<array-key, mixed>|null
  *
  * Reflection and Metadata Types

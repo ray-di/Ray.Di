@@ -25,7 +25,7 @@ final class MultiBinder
     private function __construct(AbstractModule $module, private readonly string $interface)
     {
         $this->container = $module->getContainer();
-        $this->multiBindings = $this->container->multiBindings;
+        $this->multiBindings = $this->container->getMultiBindings();
         $this->container->add(
             (new Bind($this->container, MultiBindings::class))->toInstance($this->multiBindings)
         );
@@ -45,7 +45,7 @@ final class MultiBinder
 
     public function setBinding(?string $key = null): self
     {
-        $this->container->multiBindings->exchangeArray([]);
+        $this->container->getMultiBindings()->exchangeArray([]);
         $this->key = $key;
 
         return $this;

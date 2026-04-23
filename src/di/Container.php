@@ -30,7 +30,7 @@ use function sprintf;
 final class Container implements InjectorInterface
 {
     /** @var MultiBindings */
-    public $multiBindings;
+    private $multiBindings;
 
     /** @var DependencyContainer */
     private array $container = [];
@@ -180,6 +180,11 @@ final class Container implements InjectorInterface
     public function getPointcuts(): array
     {
         return $this->pointcuts;
+    }
+
+    public function getMultiBindings(): MultiBindings
+    {
+        return $this->multiBindings;
     }
 
     /**

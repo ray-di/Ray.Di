@@ -122,19 +122,13 @@ final class Dependency implements DependencyInterface, AcceptInterface
      */
     public function weaveAspects(CompilerInterface $compiler, array $pointcuts): void
     {
-        $class = (string) $this->newInstance;
-        if ((new ReflectionClass($class))->isFinal()) {
-            return;
-        }
-
-        $isInterceptor = (new ReflectionClass($class))->implementsInterface(MethodInterceptor::class);
-        $isWeaved = (new ReflectionClass($class))->implementsInterface(WeavedInterface::class);
-        if ($isInterceptor || $isWeaved) {
+        $className = (string) $this->newInstance;
+        $reflection = new ReflectionClass($className);
+        if ($reflection->isFinal() || $reflection->implementsInterface(MethodInterceptor::class) || $reflection->implementsInterface(WeavedInterface::class)) {
             return;
         }
 
         $bind = new AopBind();
-        $className = (string) $this->newInstance;
         $bind->bind($className, $pointcuts);
         if (! $bind->getBindings()) {
             return;
