@@ -19,7 +19,7 @@ final class DependencyProvider implements DependencyInterface, AcceptInterface
          * Provider dependency
          */
         private readonly Dependency $dependency,
-        public string $context
+        public readonly string $context
     ) {
     }
 

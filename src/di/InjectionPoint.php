@@ -43,7 +43,6 @@ final class InjectionPoint implements InjectionPointInterface
      */
     public function getMethod(): ReflectionMethod
     {
-        $this->parameter = $this->getParameter();
         $class = $this->parameter->getDeclaringClass();
         $method = $this->parameter->getDeclaringFunction()->getShortName();
         assert($class instanceof \ReflectionClass);
@@ -57,7 +56,6 @@ final class InjectionPoint implements InjectionPointInterface
      */
     public function getClass(): ReflectionClass
     {
-        $this->parameter = $this->getParameter();
         $class = $this->parameter->getDeclaringClass();
         assert($class instanceof \ReflectionClass);
 
@@ -95,5 +93,8 @@ final class InjectionPoint implements InjectionPointInterface
     public function __unserialize(array $array): void
     {
         [$this->pClass, $this->pFunction, $this->pName] = $array;
+        if ($this->pClass !== '') {
+            $this->parameter = new ReflectionParameter([$this->pClass, $this->pFunction], $this->pName);
+        }
     }
 }

@@ -74,7 +74,7 @@ final class Injector implements InjectorInterface
             /** @psalm-var class-string $interface */
             $this->bind($interface);
             /** @psalm-suppress MixedAssignment */
-            $instance = $this->getInstance($interface, $name);
+            $instance = $this->container->getInstance($interface, $name);
         }
 
         /** @psalm-suppress MixedReturnStatement */

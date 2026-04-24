@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Exception;
-use LogicException;
 use Ray\Di\Exception\Unbound;
 use ReflectionMethod;
-
-use function call_user_func_array;
-use function is_callable;
 
 final class SetterMethod implements AcceptInterface
 {
@@ -46,12 +42,8 @@ final class SetterMethod implements AcceptInterface
             throw $unbound;
         }
 
-        $callable = [$instance, $this->method];
-        if (! is_callable($callable)) {
-            throw new LogicException(); // @codeCoverageIgnore
-        }
-
-        call_user_func_array($callable, $parameters);
+        /** @psalm-suppress MixedMethodCall */
+        $instance->{$this->method}(...$parameters);
     }
 
     public function setOptional(): void

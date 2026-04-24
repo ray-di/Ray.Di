@@ -15,9 +15,7 @@ use ReflectionNamedType;
 use ReflectionParameter;
 
 use function assert;
-use function call_user_func_array;
 use function in_array;
-use function is_callable;
 
 /**
  * @psalm-import-type NamedArguments from Types
@@ -54,10 +52,8 @@ final class AssistedInjectInterceptor implements MethodInterceptor
             }
         }
 
-        $callable = [$invocation->getThis(), $invocation->getMethod()->getName()];
-        assert(is_callable($callable));
-
-        return call_user_func_array($callable, $namedArguments);
+        /** @psalm-suppress MixedMethodCall */
+        return $invocation->getThis()->{$invocation->getMethod()->getName()}(...$namedArguments);
     }
 
     /**
