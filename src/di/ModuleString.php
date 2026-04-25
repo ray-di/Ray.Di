@@ -152,6 +152,10 @@ final class ModuleString
             return 'toInstance:' . $this->renderValue($dependency->value);
         }
 
+        if ($dependency instanceof NullObjectDependency) {
+            return 'toNull';
+        }
+
         return (string) $dependency;
     }
 
