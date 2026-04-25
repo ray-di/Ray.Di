@@ -34,7 +34,9 @@ final class ModuleJson
     {
         $bindings = $this->getBindings($container, $pointcuts);
 
-        return json_encode($bindings, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '{}';
+        $json = json_encode($bindings, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+        return $json === false ? '{}' : $json;
     }
 
     /**
@@ -149,6 +151,7 @@ final class ModuleJson
      */
     private function createInstanceEntry(string $interface, string $name, Instance $dependency): array
     {
+        /** @psalm-suppress MixedAssignment */
         $value = $dependency->value;
 
         return [

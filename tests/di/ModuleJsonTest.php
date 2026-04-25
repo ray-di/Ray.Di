@@ -24,11 +24,7 @@ class ModuleJsonTest extends TestCase
 
     public function testBindingsContainInterface(): void
     {
-        $module = new FakeLogStringModule();
-        $json = $module->toJson();
-        $decoded = json_decode($json, true);
-
-        $bindings = $decoded['bindings'];
+        $bindings = $this->decodeBindings();
         $interfaces = array_column($bindings, 'interface');
 
         $this->assertContains(FakeAopInterface::class, $interfaces);
@@ -37,11 +33,7 @@ class ModuleJsonTest extends TestCase
 
     public function testDependencyBinding(): void
     {
-        $module = new FakeLogStringModule();
-        $json = $module->toJson();
-        $decoded = json_decode($json, true);
-
-        $binding = $this->findBinding($decoded['bindings'], FakeAopInterface::class);
+        $binding = $this->findBinding($this->decodeBindings(), FakeAopInterface::class);
 
         $this->assertNotNull($binding);
         $this->assertSame('class', $binding['type']);
@@ -50,11 +42,7 @@ class ModuleJsonTest extends TestCase
 
     public function testProviderBinding(): void
     {
-        $module = new FakeLogStringModule();
-        $json = $module->toJson();
-        $decoded = json_decode($json, true);
-
-        $binding = $this->findBinding($decoded['bindings'], FakeRobotInterface::class);
+        $binding = $this->findBinding($this->decodeBindings(), FakeRobotInterface::class);
 
         $this->assertNotNull($binding);
         $this->assertSame('provider', $binding['type']);
@@ -63,11 +51,7 @@ class ModuleJsonTest extends TestCase
 
     public function testInstanceBinding(): void
     {
-        $module = new FakeLogStringModule();
-        $json = $module->toJson();
-        $decoded = json_decode($json, true);
-
-        $binding = $this->findBindingByName($decoded['bindings'], 'string');
+        $binding = $this->findBindingByName($this->decodeBindings(), 'string');
 
         $this->assertNotNull($binding);
         $this->assertSame('instance', $binding['type']);
@@ -76,22 +60,32 @@ class ModuleJsonTest extends TestCase
 
     public function testAopBinding(): void
     {
-        $module = new FakeLogStringModule();
-        $json = $module->toJson();
-        $decoded = json_decode($json, true);
-
-        $binding = $this->findBinding($decoded['bindings'], FakeAopInterface::class);
+        $binding = $this->findBinding($this->decodeBindings(), FakeAopInterface::class);
 
         $this->assertNotNull($binding);
         $this->assertArrayHasKey('aop', $binding);
-        $this->assertArrayHasKey('returnSame', $binding['aop']);
-        $this->assertContains(FakeDoubleInterceptor::class, $binding['aop']['returnSame']);
+        $aop = $binding['aop'] ?? [];
+        $this->assertArrayHasKey('returnSame', $aop);
+        $this->assertContains(FakeDoubleInterceptor::class, $aop['returnSame']);
     }
 
     /**
-     * @param array<array{interface: string, name: string, type: string, to: mixed}> $bindings
+     * @return list<array{interface: string, name: string, type: string, to: mixed, aop?: array<string, list<string>>}>
+     */
+    private function decodeBindings(): array
+    {
+        $module = new FakeLogStringModule();
+        $json = $module->toJson();
+        /** @var array{bindings: list<array{interface: string, name: string, type: string, to: mixed, aop?: array<string, list<string>>}>} $decoded */
+        $decoded = json_decode($json, true);
+
+        return $decoded['bindings'];
+    }
+
+    /**
+     * @param list<array{interface: string, name: string, type: string, to: mixed, aop?: array<string, list<string>>}> $bindings
      *
-     * @return array{interface: string, name: string, type: string, to: mixed}|null
+     * @return array{interface: string, name: string, type: string, to: mixed, aop?: array<string, list<string>>}|null
      */
     private function findBinding(array $bindings, string $interface): ?array
     {
@@ -105,9 +99,9 @@ class ModuleJsonTest extends TestCase
     }
 
     /**
-     * @param array<array{interface: string, name: string, type: string, to: mixed}> $bindings
+     * @param list<array{interface: string, name: string, type: string, to: mixed, aop?: array<string, list<string>>}> $bindings
      *
-     * @return array{interface: string, name: string, type: string, to: mixed}|null
+     * @return array{interface: string, name: string, type: string, to: mixed, aop?: array<string, list<string>>}|null
      */
     private function findBindingByName(array $bindings, string $name): ?array
     {
