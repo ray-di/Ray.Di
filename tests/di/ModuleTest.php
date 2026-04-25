@@ -74,4 +74,16 @@ module
 EOT;
         $this->assertSame($normalize($expected), $normalize($string));
     }
+
+    public function testtoStringWithToNull(): void
+    {
+        $module = new class extends AbstractModule {
+            protected function configure(): void
+            {
+                $this->bind(FakeRobotInterface::class)->toNull();
+            }
+        };
+        $string = (string) $module;
+        $this->assertStringContainsString('toNull', $string);
+    }
 }

@@ -20,7 +20,7 @@ use const JSON_UNESCAPED_UNICODE;
 
 /**
  * @psalm-import-type PointcutList from Types
- * @psalm-type BindingType = 'class'|'provider'|'instance'
+ * @psalm-type BindingType = 'class'|'provider'|'instance'|'null'
  * @psalm-type AopBindings = array<string, list<string>>
  * @psalm-type BindingEntry = array{interface: string, name: string, type: BindingType, to: mixed, aop?: AopBindings}
  * @psalm-type ModuleBindings = array{bindings: list<BindingEntry>}
@@ -35,8 +35,11 @@ final class ModuleJson
         $bindings = $this->getBindings($container, $pointcuts);
 
         $json = json_encode($bindings, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        if ($json === false) {
+            return '{"bindings":[]}';
+        }
 
-        return $json === false ? '{}' : $json;
+        return $json;
     }
 
     /**
@@ -86,6 +89,15 @@ final class ModuleJson
 
         if ($dependency instanceof Instance) {
             return $this->createInstanceEntry($interface, $name, $dependency);
+        }
+
+        if ($dependency instanceof NullObjectDependency) {
+            return [
+                'interface' => $interface,
+                'name' => $name,
+                'type' => 'null',
+                'to' => null,
+            ];
         }
 
         return null;
