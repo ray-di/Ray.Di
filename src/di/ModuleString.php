@@ -14,7 +14,6 @@ use function is_scalar;
 use function ksort;
 use function preg_replace;
 use function serialize;
-use function sprintf;
 use function strrpos;
 use function substr;
 use function unserialize;
@@ -40,12 +39,23 @@ final class ModuleString
         $groups = $this->groupByInterface($container, $pointcuts);
         ksort($groups);
 
-        $output = [];
-        foreach ($groups as $interface => $bindings) {
-            $output[] = $this->renderGroup($interface, $bindings);
+        $lines = ['module'];
+        $interfaces = array_keys($groups);
+        $interfaceCount = count($interfaces);
+
+        foreach ($interfaces as $i => $interface) {
+            $isLast = $i === $interfaceCount - 1;
+            $branch = $isLast ? '└──' : '├──';
+            $continuation = $isLast ? '    ' : '│   ';
+
+            $groupLines = $this->renderGroup($interface, $groups[$interface]);
+            $lines[] = $branch . ' ' . $groupLines[0];
+            for ($j = 1, $n = count($groupLines); $j < $n; $j++) {
+                $lines[] = $continuation . $groupLines[$j];
+            }
         }
 
-        return implode(PHP_EOL . PHP_EOL, $output);
+        return implode(PHP_EOL, $lines);
     }
 
     /**
@@ -89,8 +99,10 @@ final class ModuleString
 
     /**
      * @param list<array{name: string, dependency: DependencyInterface, aop: array<string, list<string>>}> $bindings
+     *
+     * @return list<string>
      */
-    private function renderGroup(string $interface, array $bindings): string
+    private function renderGroup(string $interface, array $bindings): array
     {
         $header = $interface === '' ? "''" : $interface;
         $lines = [$header];
@@ -111,7 +123,7 @@ final class ModuleString
             }
         }
 
-        return implode(PHP_EOL, $lines);
+        return $lines;
     }
 
     private function renderBinding(string $name, DependencyInterface $dependency): string

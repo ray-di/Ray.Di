@@ -56,23 +56,21 @@ class ModuleTest extends TestCase
             return str_replace(["\r\n", "\r"], "\n", $str);
         };
         $expected = <<<'EOT'
-''
-├── named:array ─ toInstance:(array)
-├── named:bool ─ toInstance:true
-├── named:int ─ toInstance:1
-├── named:null ─ toInstance:null
-├── named:object ─ toInstance:(stdClass)
-└── named:string ─ toInstance:'1'
-
-Ray\Di\FakeAopInterface
-└── to:Ray\Di\FakeAop
-    └─intercept─ returnSame: Ray\Di\FakeDoubleInterceptor
-
-Ray\Di\FakeDoubleInterceptor
-└── to:Ray\Di\FakeDoubleInterceptor ─ in:Singleton
-
-Ray\Di\FakeRobotInterface
-└── toProvider:Ray\Di\FakeRobotProvider ─ in:Singleton
+module
+├── ''
+│   ├── named:array ─ toInstance:(array)
+│   ├── named:bool ─ toInstance:true
+│   ├── named:int ─ toInstance:1
+│   ├── named:null ─ toInstance:null
+│   ├── named:object ─ toInstance:(stdClass)
+│   └── named:string ─ toInstance:'1'
+├── Ray\Di\FakeAopInterface
+│   └── to:Ray\Di\FakeAop
+│       └─intercept─ returnSame: Ray\Di\FakeDoubleInterceptor
+├── Ray\Di\FakeDoubleInterceptor
+│   └── to:Ray\Di\FakeDoubleInterceptor ─ in:Singleton
+└── Ray\Di\FakeRobotInterface
+    └── toProvider:Ray\Di\FakeRobotProvider ─ in:Singleton
 EOT;
         $this->assertSame($normalize($expected), $normalize($string));
     }
