@@ -55,14 +55,25 @@ class ModuleTest extends TestCase
         $normalize = static function (string $str): string {
             return str_replace(["\r\n", "\r"], "\n", $str);
         };
-        $this->assertSame($normalize('-array => (array)
--bool => (boolean) 1
--int => (integer) 1
--null => (NULL)
--object => (object) stdClass
--string => (string) 1
-Ray\Di\FakeAopInterface- => (dependency) Ray\Di\FakeAop (aop) +returnSame(Ray\Di\FakeDoubleInterceptor)
-Ray\Di\FakeDoubleInterceptor- => (dependency) Ray\Di\FakeDoubleInterceptor
-Ray\Di\FakeRobotInterface- => (provider) (dependency) Ray\Di\FakeRobotProvider'), $normalize($string));
+        $expected = <<<'EOT'
+''
+├── named:array ─ toInstance:(array)
+├── named:bool ─ toInstance:true
+├── named:int ─ toInstance:1
+├── named:null ─ toInstance:null
+├── named:object ─ toInstance:(stdClass)
+└── named:string ─ toInstance:'1'
+
+Ray\Di\FakeAopInterface
+└── to:Ray\Di\FakeAop
+    └─ returnSame: Ray\Di\FakeDoubleInterceptor
+
+Ray\Di\FakeDoubleInterceptor
+└── to:Ray\Di\FakeDoubleInterceptor ─ in:Singleton
+
+Ray\Di\FakeRobotInterface
+└── toProvider:Ray\Di\FakeRobotProvider ─ in:Singleton
+EOT;
+        $this->assertSame($normalize($expected), $normalize($string));
     }
 }
