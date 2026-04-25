@@ -105,7 +105,9 @@ final class ModuleString
 
             if ($binding['aop'] !== []) {
                 $aopPrefix = $isLast ? '    ' : '│   ';
-                $lines[] = $aopPrefix . $this->renderAop($binding['aop']);
+                foreach ($this->renderAop($binding['aop']) as $aopLine) {
+                    $lines[] = $aopPrefix . $aopLine;
+                }
             }
         }
 
@@ -200,8 +202,10 @@ final class ModuleString
 
     /**
      * @param array<string, list<string>> $aop
+     *
+     * @return list<string>
      */
-    private function renderAop(array $aop): string
+    private function renderAop(array $aop): array
     {
         $methods = array_keys($aop);
         $lines = [];
@@ -213,6 +217,6 @@ final class ModuleString
             $lines[] = $branch . ' ' . $method . ': ' . implode(', ', $aop[$method]);
         }
 
-        return implode(PHP_EOL, $lines);
+        return $lines;
     }
 }
