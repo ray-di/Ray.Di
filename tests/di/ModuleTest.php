@@ -66,7 +66,7 @@ class ModuleTest extends TestCase
 
 Ray\Di\FakeAopInterface
 └── to:Ray\Di\FakeAop
-    └─ returnSame: Ray\Di\FakeDoubleInterceptor
+    └─intercept─ returnSame: Ray\Di\FakeDoubleInterceptor
 
 Ray\Di\FakeDoubleInterceptor
 └── to:Ray\Di\FakeDoubleInterceptor ─ in:Singleton

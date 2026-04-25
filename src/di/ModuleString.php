@@ -217,7 +217,7 @@ final class ModuleString
 
         foreach ($methods as $i => $method) {
             $isLast = $i === $count - 1;
-            $branch = $isLast ? '└─' : '├─';
+            $branch = $isLast ? '└─intercept─' : '├─intercept─';
             $lines[] = $branch . ' ' . $method . ': ' . implode(', ', $aop[$method]);
         }
 
