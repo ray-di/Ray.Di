@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "ext-json": "*",
         "koriym/null-object": "^1.0",
         "ray/aop": "^2.19"
     },
