@@ -14,6 +14,7 @@ use function is_scalar;
 use function ksort;
 use function preg_replace;
 use function serialize;
+use function sort;
 use function strrpos;
 use function substr;
 use function unserialize;
@@ -224,6 +225,7 @@ final class ModuleString
     private function renderAop(array $aop): array
     {
         $methods = array_keys($aop);
+        sort($methods);
         $lines = [];
         $count = count($methods);
 
