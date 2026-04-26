@@ -60,6 +60,8 @@ module
 ├── ''
 │   ├── named:array ─ toInstance:(array)
 │   ├── named:bool ─ toInstance:true
+│   ├── named:false ─ toInstance:false
+│   ├── named:float ─ toInstance:1.5
 │   ├── named:int ─ toInstance:1
 │   ├── named:null ─ toInstance:null
 │   ├── named:object ─ toInstance:(stdClass)

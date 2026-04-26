@@ -12,7 +12,9 @@ class FakeLogStringModule extends AbstractModule
     {
         $this->bind()->annotatedWith('null')->toInstance(null);
         $this->bind()->annotatedWith('bool')->toInstance(true);
+        $this->bind()->annotatedWith('false')->toInstance(false);
         $this->bind()->annotatedWith('int')->toInstance(1);
+        $this->bind()->annotatedWith('float')->toInstance(1.5);
         $this->bind()->annotatedWith('string')->toInstance('1');
         $this->bind()->annotatedWith('array')->toInstance([1]);
         $this->bind()->annotatedWith('object')->toInstance(new stdClass());
