@@ -69,6 +69,30 @@ class ModuleJsonTest extends TestCase
         $this->assertContains(FakeDoubleInterceptor::class, $aop['returnSame']);
     }
 
+    public function testToNullBinding(): void
+    {
+        $module = new class extends AbstractModule {
+            protected function configure(): void
+            {
+                $this->bind(FakeRobotInterface::class)->toNull();
+            }
+        };
+        $json = $module->toJson();
+        /** @var array{bindings: list<array{interface: string, name: string, type: string, to: mixed}>} $decoded */
+        $decoded = json_decode($json, true);
+        $binding = null;
+        foreach ($decoded['bindings'] as $b) {
+            if ($b['interface'] === FakeRobotInterface::class) {
+                $binding = $b;
+                break;
+            }
+        }
+
+        $this->assertNotNull($binding);
+        $this->assertSame('null', $binding['type']);
+        $this->assertNull($binding['to']);
+    }
+
     /**
      * @return list<array{interface: string, name: string, type: string, to: mixed, aop?: array<string, list<string>>}>
      */
