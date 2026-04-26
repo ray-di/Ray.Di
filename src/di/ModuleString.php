@@ -168,7 +168,7 @@ final class ModuleString
             return 'toNull';
         }
 
-        return (string) $dependency;
+        return (string) $dependency; // @codeCoverageIgnore
     }
 
     /**

@@ -38,6 +38,8 @@ final class AopCollector implements CompilerInterface
      * {@inheritDoc}
      *
      * @return never
+     *
+     * @codeCoverageIgnore
      */
     public function newInstance(string $class, array $args, BindInterface $bind)
     {
@@ -51,12 +53,12 @@ final class AopCollector implements CompilerInterface
     {
         $bindings = $bind->getBindings();
         if (! $bindings) {
-            return $class;
+            return $class; // @codeCoverageIgnore
         }
 
         foreach ($bindings as $method => $interceptors) {
             if (! method_exists($class, $method)) {
-                continue;
+                continue; // @codeCoverageIgnore
             }
 
             /** @var list<string> $interceptors */

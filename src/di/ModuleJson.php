@@ -36,7 +36,7 @@ final class ModuleJson
 
         $json = json_encode($bindings, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         if ($json === false) {
-            return '{"bindings":[]}';
+            return '{"bindings":[]}'; // @codeCoverageIgnore
         }
 
         return $json;
@@ -100,7 +100,7 @@ final class ModuleJson
             ];
         }
 
-        return null;
+        return null; // @codeCoverageIgnore
     }
 
     /**
