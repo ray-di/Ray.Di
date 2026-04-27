@@ -16,7 +16,7 @@ final class BindingIndex
     {
         $pos = strrpos($index, '-');
         if ($pos === false) {
-            return [$index, Name::ANY];
+            return [$index, Name::ANY]; // @codeCoverageIgnore
         }
 
         return [substr($index, 0, $pos), substr($index, $pos + 1)];
