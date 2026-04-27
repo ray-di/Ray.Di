@@ -11,6 +11,7 @@ use function gettype;
 use function implode;
 use function is_object;
 use function is_scalar;
+use function is_string;
 use function ksort;
 use function preg_replace;
 use function serialize;
@@ -175,11 +176,7 @@ final class ModuleString
         }
 
         if (is_scalar($value)) {
-            if (gettype($value) === 'string') {
-                return var_export($value, true);
-            }
-
-            return (string) $value;
+            return is_string($value) ? var_export($value, true) : (string) $value;
         }
 
         if (is_object($value)) {
