@@ -79,13 +79,8 @@ EOT;
 
     public function testtoStringWithToNull(): void
     {
-        $module = new class extends AbstractModule {
-            protected function configure(): void
-            {
-                $this->bind(FakeRobotInterface::class)->toNull();
-            }
-        };
+        $module = new FakeToNullModule();
         $string = (string) $module;
-        $this->assertStringContainsString('toNull', $string);
+        $this->assertStringContainsString('└── toNull', $string);
     }
 }

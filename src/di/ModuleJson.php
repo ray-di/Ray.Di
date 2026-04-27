@@ -10,8 +10,6 @@ use function is_scalar;
 use function json_encode;
 use function preg_replace;
 use function serialize;
-use function strrpos;
-use function substr;
 use function unserialize;
 
 use const JSON_PRETTY_PRINT;
@@ -77,7 +75,7 @@ final class ModuleJson
      */
     private function createEntry(string $dependencyIndex, DependencyInterface $dependency, array $aopBindings): ?array
     {
-        [$interface, $name] = $this->parseIndex($dependencyIndex);
+        [$interface, $name] = BindingIndex::parse($dependencyIndex);
 
         if ($dependency instanceof Dependency) {
             return $this->createDependencyEntry($interface, $name, $dependency, $aopBindings);
@@ -101,19 +99,6 @@ final class ModuleJson
         }
 
         return null; // @codeCoverageIgnore
-    }
-
-    /**
-     * @return array{string, string}
-     */
-    private function parseIndex(string $index): array
-    {
-        $pos = strrpos($index, '-');
-        if ($pos === false) {
-            return [$index, Name::ANY];
-        }
-
-        return [substr($index, 0, $pos), substr($index, $pos + 1)];
     }
 
     /**

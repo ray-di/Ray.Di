@@ -15,8 +15,6 @@ use function ksort;
 use function preg_replace;
 use function serialize;
 use function sort;
-use function strrpos;
-use function substr;
 use function unserialize;
 use function usort;
 use function var_export;
@@ -70,7 +68,7 @@ final class ModuleString
         $groups = [];
 
         foreach ($container->getContainer() as $dependencyIndex => $dependency) {
-            [$interface, $name] = $this->parseIndex($dependencyIndex);
+            [$interface, $name] = BindingIndex::parse($dependencyIndex);
             $aop = $dependency instanceof Dependency
                 ? $collector->collect($dependency, $pointcuts)
                 : [];
@@ -83,19 +81,6 @@ final class ModuleString
         }
 
         return $groups;
-    }
-
-    /**
-     * @return array{string, string}
-     */
-    private function parseIndex(string $index): array
-    {
-        $pos = strrpos($index, '-');
-        if ($pos === false) {
-            return [$index, Name::ANY];
-        }
-
-        return [substr($index, 0, $pos), substr($index, $pos + 1)];
     }
 
     /**
