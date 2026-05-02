@@ -87,7 +87,7 @@ abstract class AbstractModule implements Stringable
             if (class_exists($interceptor)) {
                 (new Bind($this->getContainer(), $interceptor))->to($interceptor)->in(Scope::SINGLETON);
 
-                return;
+                continue;
             }
 
             assert(interface_exists($interceptor));

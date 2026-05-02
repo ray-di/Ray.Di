@@ -39,11 +39,13 @@ final class BindValidator
             throw new NotFound($class);
         }
 
-        if (! $this->isNullInterceptorBinding($class, $interface) && interface_exists($interface) && ! (new ReflectionClass($class))->implementsInterface($interface)) {
-            throw new InvalidType(sprintf('[%s] is no implemented [%s] interface', $class, $interface));
+        $reflectionClass = new ReflectionClass($class);
+        /** @psalm-suppress TypeDoesNotContainType */
+        if (! $this->isNullInterceptorBinding($class, $interface) && interface_exists($interface) && ! $reflectionClass->implementsInterface($interface)) {
+            throw new InvalidType(sprintf('[%s] does not implement the [%s] interface', $class, $interface));
         }
 
-        return new ReflectionClass($class);
+        return $reflectionClass;
     }
 
     /**

@@ -27,6 +27,7 @@ final class Dependency implements DependencyInterface, AcceptInterface
     /** @var ?string */
     private $postConstruct;
     private bool $isSingleton = false;
+    private bool $isInstantiated = false;
 
     /** @var ?mixed */
     private $instance;
@@ -67,12 +68,13 @@ final class Dependency implements DependencyInterface, AcceptInterface
     public function inject(Container $container)
     {
         // singleton ?
-        if ($this->isSingleton === true && $this->instance !== null) {
+        if ($this->isSingleton && $this->isInstantiated) {
             return $this->instance;
         }
 
         // create dependency injected instance
         $this->instance = ($this->newInstance)($container);
+        $this->isInstantiated = true;
 
         // @PostConstruct
         if ($this->postConstruct !== null) {
@@ -91,12 +93,13 @@ final class Dependency implements DependencyInterface, AcceptInterface
     public function injectWithArgs(Container $container, array $params)
     {
         // singleton ?
-        if ($this->isSingleton === true && $this->instance !== null) {
+        if ($this->isSingleton && $this->isInstantiated) {
             return $this->instance;
         }
 
         // create dependency injected instance
         $this->instance = $this->newInstance->newInstanceArgs($container, $params);
+        $this->isInstantiated = true;
 
         // @PostConstruct
         if ($this->postConstruct !== null) {

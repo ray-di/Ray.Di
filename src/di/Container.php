@@ -148,7 +148,8 @@ final class Container implements InjectorInterface
      */
     public function unbound(string $index): Untargeted|Unbound
     {
-        [$class, $name] = explode('-', $index);
+        /** @psalm-suppress PossiblyUndefinedArrayOffset -- $index is always "interface-name" format */
+        [$class, $name] = explode('-', $index, 2);
         if (class_exists($class) && ! (new ReflectionClass($class))->isAbstract()) {
             return new Untargeted($class);
         }

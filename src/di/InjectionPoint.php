@@ -7,6 +7,7 @@ namespace Ray\Di;
 use Ray\Aop\ReflectionClass;
 use Ray\Aop\ReflectionMethod;
 use Ray\Di\Di\Qualifier;
+use ReflectionClass as CoreReflectionClass;
 use ReflectionParameter;
 
 use function assert;
@@ -26,7 +27,7 @@ final class InjectionPoint implements InjectionPointInterface
     {
         $this->pFunction = $this->parameter->getDeclaringFunction()->name;
         $class = $this->parameter->getDeclaringClass();
-        $this->pClass = $class instanceof ReflectionClass ? $class->name : '';
+        $this->pClass = $class instanceof CoreReflectionClass ? $class->name : '';
         $this->pName = $this->parameter->name;
     }
 
