@@ -213,10 +213,6 @@ final class Container implements InjectorInterface
      */
     public function clearMultiBindings(string $interface): void
     {
-        if (! $this->multiBindings->offsetExists($interface)) {
-            return;
-        }
-
         $this->multiBindings->offsetUnset($interface);
     }
 
