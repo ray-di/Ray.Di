@@ -11,6 +11,7 @@ use Ray\Aop\Pointcut;
 use Ray\Di\Exception\NoHint;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Exception\Untargeted;
+use Ray\Di\MultiBinding\LazyInterface;
 use Ray\Di\MultiBinding\MultiBindings;
 use ReflectionClass;
 
@@ -31,6 +32,7 @@ final class Container implements InjectorInterface
 {
     /** @var MultiBindings */
     private $multiBindings;
+    private bool $multiBindingsInstanceBound = false;
 
     /** @var DependencyContainer */
     private array $container = [];
@@ -48,7 +50,7 @@ final class Container implements InjectorInterface
      */
     public function __sleep()
     {
-        return ['container', 'pointcuts', 'multiBindings'];
+        return ['container', 'pointcuts', 'multiBindings', 'multiBindingsInstanceBound'];
     }
 
     /**
@@ -183,9 +185,49 @@ final class Container implements InjectorInterface
         return $this->pointcuts;
     }
 
-    public function getMultiBindings(): MultiBindings
+    /**
+     * Append a multi-binding entry for the given interface.
+     *
+     * @param ?string $key Bind under this key, or append unkeyed when null.
+     */
+    public function addMultiBinding(string $interface, ?string $key, LazyInterface $lazy): void
     {
-        return $this->multiBindings;
+        $this->ensureMultiBindingsInstanceBound();
+        /** @var array<int|string, LazyInterface> $bindings */
+        $bindings = $this->multiBindings->offsetExists($interface)
+            ? $this->multiBindings->offsetGet($interface)
+            : [];
+        if ($key === null) {
+            $bindings[] = $lazy;
+            $this->multiBindings->offsetSet($interface, $bindings);
+
+            return;
+        }
+
+        $bindings[$key] = $lazy;
+        $this->multiBindings->offsetSet($interface, $bindings);
+    }
+
+    /**
+     * Clear multi-bindings for a specific interface.
+     */
+    public function clearMultiBindings(string $interface): void
+    {
+        if (! $this->multiBindings->offsetExists($interface)) {
+            return;
+        }
+
+        $this->multiBindings->offsetUnset($interface);
+    }
+
+    private function ensureMultiBindingsInstanceBound(): void
+    {
+        if ($this->multiBindingsInstanceBound) {
+            return;
+        }
+
+        $this->add((new Bind($this, MultiBindings::class))->toInstance($this->multiBindings));
+        $this->multiBindingsInstanceBound = true;
     }
 
     /**
