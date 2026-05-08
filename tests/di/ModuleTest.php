@@ -83,4 +83,12 @@ EOT;
         $string = (string) $module;
         $this->assertStringContainsString('└── toNull', $string);
     }
+
+    public function testtoStringWithMultipleAopMethods(): void
+    {
+        $module = new FakeMultiAopModule();
+        $string = (string) $module;
+        $this->assertStringContainsString('├─intercept─ methodA', $string);
+        $this->assertStringContainsString('└─intercept─ methodB', $string);
+    }
 }
