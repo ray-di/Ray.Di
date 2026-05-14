@@ -135,14 +135,16 @@ final class ModuleString
     {
         if ($dependency instanceof Dependency) {
             $str = (string) $dependency;
-            $class = preg_replace('/^\(dependency\) ([^\s]+).*$/', '$1', $str) ?? '';
+            /** @var string $class preg_replace won't return null with valid pattern */
+            $class = preg_replace('/^\(dependency\) ([^\s]+).*$/', '$1', $str);
 
             return 'to:' . $class;
         }
 
         if ($dependency instanceof DependencyProvider) {
             $str = (string) $dependency;
-            $class = preg_replace('/^\(provider\) \(dependency\) ([^\s]+).*$/', '$1', $str) ?? '';
+            /** @var string $class preg_replace won't return null with valid pattern */
+            $class = preg_replace('/^\(provider\) \(dependency\) ([^\s]+).*$/', '$1', $str);
 
             return 'toProvider:' . $class;
         }

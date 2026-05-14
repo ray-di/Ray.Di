@@ -110,7 +110,8 @@ final class ModuleJson
     {
         $dependencyString = (string) $dependency;
         // Extract class name from "(dependency) ClassName" or "(dependency) ClassName (aop) ..."
-        $className = preg_replace('/^\(dependency\) ([^\s]+).*$/', '$1', $dependencyString) ?? '';
+        /** @var string $className preg_replace won't return null with valid pattern */
+        $className = preg_replace('/^\(dependency\) ([^\s]+).*$/', '$1', $dependencyString);
 
         $entry = [
             'interface' => $interface,
@@ -133,7 +134,8 @@ final class ModuleJson
     {
         $providerString = (string) $dependency;
         // Extract provider class name from "(provider) (dependency) ProviderClassName"
-        $providerClass = preg_replace('/^\(provider\) \(dependency\) ([^\s]+).*$/', '$1', $providerString) ?? '';
+        /** @var string $providerClass preg_replace won't return null with valid pattern */
+        $providerClass = preg_replace('/^\(provider\) \(dependency\) ([^\s]+).*$/', '$1', $providerString);
 
         return [
             'interface' => $interface,
