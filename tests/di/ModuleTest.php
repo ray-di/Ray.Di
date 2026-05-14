@@ -91,4 +91,14 @@ EOT;
         $this->assertStringContainsString('├─intercept─ methodA', $string);
         $this->assertStringContainsString('└─intercept─ methodB', $string);
     }
+
+    public function testtoStringWithAopOnNonLastBinding(): void
+    {
+        $module = new FakeMultiBindingAopModule();
+        $string = (string) $module;
+        // When AOP binding is not last in group, continuation line uses '│   ' prefix
+        $this->assertStringContainsString('├── named:first', $string);
+        $this->assertStringContainsString('│   └─intercept─', $string);
+        $this->assertStringContainsString('└── named:second', $string);
+    }
 }
