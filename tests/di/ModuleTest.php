@@ -101,4 +101,12 @@ EOT;
         $this->assertStringContainsString('│   └─intercept─', $string);
         $this->assertStringContainsString('└── named:second', $string);
     }
+
+    public function testtoStringWithExplicitSingletonClass(): void
+    {
+        $module = new FakeSingletonClassModule();
+        $string = (string) $module;
+        // Explicit class binding with Singleton scope (not via interceptor)
+        $this->assertStringContainsString('to:Ray\Di\FakeRobot ─ in:Singleton', $string);
+    }
 }
