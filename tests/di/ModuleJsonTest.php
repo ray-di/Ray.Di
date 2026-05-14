@@ -87,6 +87,15 @@ class ModuleJsonTest extends TestCase
         $this->assertContains(FakeDoubleInterceptor::class, $aop['returnSame']);
     }
 
+    public function testDependencyWithoutAop(): void
+    {
+        $binding = $this->findBinding($this->decodeBindings(), FakeDoubleInterceptor::class);
+
+        $this->assertNotNull($binding);
+        $this->assertSame('class', $binding['type']);
+        $this->assertArrayNotHasKey('aop', $binding);
+    }
+
     public function testToNullBinding(): void
     {
         $module = new FakeToNullModule();
