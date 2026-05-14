@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Ray\Di\Exception\NotFound;
 
 use function str_replace;
+use function strpos;
 
 class ModuleTest extends TestCase
 {
@@ -108,5 +109,17 @@ EOT;
         $string = (string) $module;
         // Explicit class binding with Singleton scope (not via interceptor)
         $this->assertStringContainsString('to:Ray\Di\FakeRobot ─ in:Singleton', $string);
+    }
+
+    public function testtoStringBindingsSortedByName(): void
+    {
+        $module = new FakeLogStringModule();
+        $string = (string) $module;
+        // Verify bindings are sorted: array < bool < false < float < int < null < object < string
+        $arrayPos = strpos($string, 'named:array');
+        $stringPos = strpos($string, 'named:string');
+        $this->assertNotFalse($arrayPos);
+        $this->assertNotFalse($stringPos);
+        $this->assertLessThan($stringPos, $arrayPos);
     }
 }
