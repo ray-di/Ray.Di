@@ -76,6 +76,15 @@ class ModuleJsonTest extends TestCase
         $this->assertSame(['__class' => 'stdClass'], $binding['to']);
     }
 
+    public function testInstanceBindingNull(): void
+    {
+        $binding = $this->findBindingByName($this->decodeBindings(), 'null');
+
+        $this->assertNotNull($binding);
+        $this->assertSame('instance', $binding['type']);
+        $this->assertNull($binding['to']);
+    }
+
     public function testAopBinding(): void
     {
         $binding = $this->findBinding($this->decodeBindings(), FakeAopInterface::class);
