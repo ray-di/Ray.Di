@@ -10,3 +10,23 @@ jobs:
     uses: ray-di/.github/.github/workflows/static-analysis.yml@v1
     with:
       php_version: 8.3
+
+  # Custom ComposerRequireChecker job that always uses config file
+  # This replaces the shared workflow's broken ComposerRequireChecker
+  composer-require-checker-local:
+    runs-on: ubuntu-latest
+    name: ComposerRequireChecker
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+      - name: Download ComposerRequireChecker
+        run: |
+          curl -sLO https://github.com/maglnet/ComposerRequireChecker/releases/latest/download/composer-require-checker.phar
+          chmod +x composer-require-checker.phar
+      - name: Run ComposerRequireChecker
+        run: php composer-require-checker.phar check ./composer.json --config-file=./composer-require-checker.json
