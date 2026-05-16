@@ -10,21 +10,4 @@ jobs:
     uses: ray-di/.github/.github/workflows/static-analysis.yml@v1
     with:
       php_version: 8.3
-
-  # Local ComposerRequireChecker that actually works
-  # The shared workflow's version crashes with exit code 255
-  composer-require-checker:
-    runs-on: ubuntu-latest
-    name: ComposerRequireChecker (local)
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-      - name: Install dependencies
-        run: composer install --no-interaction --no-progress
-      - name: Install ComposerRequireChecker
-        run: composer global require maglnet/composer-require-checker
-      - name: Run ComposerRequireChecker
-        run: composer-require-checker check ./composer.json --config-file=./composer-require-checker.json
+      has_crc_config: true
