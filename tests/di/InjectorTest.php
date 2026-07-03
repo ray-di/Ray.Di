@@ -355,6 +355,19 @@ class InjectorTest extends TestCase
         $this->assertInstanceOf(FakeRightLeg::class, $robot->rightLeg);
     }
 
+    /**
+     * When a provider's constructor requests another dependency before
+     * InjectionPointInterface, resolving that other dependency overwrites
+     * the container's current injection point before the provider reads it.
+     */
+    public function testContextualDependencyInjectionWithOtherProviderDependency(): void
+    {
+        $injector = new Injector(new FakeWalkRobotOtherDepModule());
+        $robot = $injector->getInstance(FakeWalkRobot::class);
+        $this->assertInstanceOf(FakeLeftLeg::class, $robot->leftLeg);
+        $this->assertInstanceOf(FakeRightLeg::class, $robot->rightLeg);
+    }
+
     public function testNewAbstract(): void
     {
         $this->expectException(Unbound::class);
