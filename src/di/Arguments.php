@@ -57,7 +57,10 @@ final class Arguments implements AcceptInterface
      */
     private function getParameter(Container $container, Argument $argument)
     {
-        $this->bindInjectionPoint($container, $argument);
+        $isInjectionPointItself = (string) $argument === InjectionPointInterface::class . '-' . Name::ANY;
+        $previousInjectionPoint = $isInjectionPointItself
+            ? null
+            : $container->setInjectionPoint(new InjectionPoint($argument->get()));
         try {
             return $container->getDependency((string) $argument);
         } catch (Unbound $unbound) {
@@ -70,17 +73,11 @@ final class Arguments implements AcceptInterface
             }
 
             throw new Unbound($argument->getMeta(), 0, $unbound);
+        } finally {
+            if (! $isInjectionPointItself) {
+                $container->restoreInjectionPoint($previousInjectionPoint);
+            }
         }
-    }
-
-    private function bindInjectionPoint(Container $container, Argument $argument): void
-    {
-        $isSelf = (string) $argument === InjectionPointInterface::class . '-' . Name::ANY;
-        if ($isSelf) {
-            return;
-        }
-
-        $container->setInjectionPoint(new InjectionPoint($argument->get()));
     }
 
     private function getNoHintMsg(Argument $argument): string

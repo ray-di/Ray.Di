@@ -61,11 +61,37 @@ final class Container implements InjectorInterface
     }
 
     /**
+     * Set the current injection point, returning the previous one so it can be restored
+     *
      * @internal
      */
-    public function setInjectionPoint(InjectionPointInterface $ip): void
+    public function setInjectionPoint(InjectionPointInterface $ip): ?InjectionPointInterface
     {
-        $this->container[InjectionPointInterface::class . '-' . Name::ANY] = new Instance($ip);
+        $key = InjectionPointInterface::class . '-' . Name::ANY;
+        $existing = $this->container[$key] ?? null;
+        $previous = $existing instanceof Instance && $existing->value instanceof InjectionPointInterface
+            ? $existing->value
+            : null;
+        $this->container[$key] = new Instance($ip);
+
+        return $previous;
+    }
+
+    /**
+     * Restore a previously saved injection point
+     *
+     * @internal
+     */
+    public function restoreInjectionPoint(?InjectionPointInterface $ip): void
+    {
+        $key = InjectionPointInterface::class . '-' . Name::ANY;
+        if ($ip === null) {
+            unset($this->container[$key]);
+
+            return;
+        }
+
+        $this->container[$key] = new Instance($ip);
     }
 
     /**
