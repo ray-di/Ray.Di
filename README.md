@@ -37,4 +37,6 @@ previously read that generated file should use `toMarkdown()` or `toHtml()` as
 shown above. The explicit `Ray\Bindings\BindingsMarkdown` file writer and the
 `bindings-html` command remain available for file-based workflows.
 
+Technical comparison with other PHP DI containers (Japanese): [docs/comparison.ja.md](docs/comparison.ja.md)
+
 https://ray-di.github.io
