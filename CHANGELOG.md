@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `Container` tracks in-progress resolution per coroutine, so a coroutine suspending inside a provider no longer makes another coroutine's resolution of the same index look like a `CircularDependency`.
+- Concurrent construction of an unbuilt singleton across coroutines throws `ConcurrentSingletonConstruction` instead of silently building duplicates; warm up singletons before serving requests.
+
 ## 2.23.1 - 2026-08-30
 
 ### Fixed

@@ -26,6 +26,7 @@ layer exists so that class of change can never again pass silently.
 | rename(): deferred application, reachable sources, error contract | `RenameTest` |
 | Cycle detection vs legal re-entry (singleton `@PostConstruct`) | `CircularDependencyTest` |
 | Assisted invocation: not available after the call, nested calls restore the outer invocation, coroutine interceptions isolated | `AssistedTest`, `MethodInvocationCoroutineTest` |
+| Coroutine isolation: no false cycle across coroutines, no duplicate singleton construction, real cycles still detected | `CoroutineSafetyTest` |
 | Singleton identity, serialization lifecycle | `DependencyTest`, `InjectorTest` |
 | JIT (untargeted) binding: single construction, named requests fail fast | `InjectorTest` |
 | Module-list merging (`new Injector([$m1, $m2])`): first module wins | `ModuleMergerTest` |

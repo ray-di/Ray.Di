@@ -91,6 +91,11 @@ final class DependencyProvider implements DependencyInterface, AcceptInterface
         return $this->isSingleton;
     }
 
+    public function isInstantiated(): bool
+    {
+        return $this->isInstantiated;
+    }
+
     /** @inheritDoc */
     public function accept(VisitorInterface $visitor)
     {
