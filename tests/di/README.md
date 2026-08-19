@@ -25,6 +25,7 @@ layer exists so that class of change can never again pass silently.
 | MultiBinding visibility: every installed sibling contributes | `ModuleCompositionTest` |
 | rename(): deferred application, reachable sources, error contract | `RenameTest` |
 | Cycle detection vs legal re-entry (singleton `@PostConstruct`) | `CircularDependencyTest` |
+| Coroutine isolation: no false cycle across coroutines, no duplicate singleton construction, real cycles still detected | `CoroutineSafetyTest` |
 | Singleton identity, serialization lifecycle | `DependencyTest`, `InjectorTest` |
 | JIT (untargeted) binding: single construction, named requests fail fast | `InjectorTest` |
 | Module-list merging (`new Injector([$m1, $m2])`): first module wins | `ModuleMergerTest` |

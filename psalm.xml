@@ -11,6 +11,7 @@
     </projectFiles>
     <stubs>
         <file name="tests/stub/BindInterface.phpstub"/>
+        <file name="tests/stub/Swoole.phpstub"/>
     </stubs>
     <issueHandlers>
         <MissingOverrideAttribute errorLevel="suppress"/>

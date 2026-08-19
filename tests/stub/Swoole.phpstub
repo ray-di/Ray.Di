@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * Swoole / OpenSwoole symbols referenced by coroutine-safe container code
+ *
+ * Stubs for static analysis only; never loaded at runtime. Ray.Di does not
+ * require a coroutine extension, so psalm / phpstan learn these symbols
+ * from this file. Keep signatures minimal and in sync with the real
+ * extensions when adding references.
+ */
+
+namespace Swoole {
+    class Coroutine
+    {
+        public static function getCid(): int
+        {
+        }
+
+        /** @param callable(): void $callback */
+        public static function create(callable $callback): int|false
+        {
+        }
+
+        public static function sleep(float $seconds): bool
+        {
+        }
+    }
+}
+
+namespace Swoole\Coroutine {
+    /** @param callable(): void $callback */
+    function run(callable $callback): bool
+    {
+    }
+
+    class WaitGroup
+    {
+        public function add(int $count = 1): void
+        {
+        }
+
+        public function done(): void
+        {
+        }
+
+        public function wait(float $timeout = 0): bool
+        {
+        }
+    }
+}
+
+namespace OpenSwoole {
+    class Coroutine
+    {
+        public static function getCid(): int
+        {
+        }
+    }
+}

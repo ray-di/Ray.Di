@@ -9,6 +9,7 @@ use Ray\Aop\Compiler;
 use Ray\Aop\CompilerInterface;
 use Ray\Aop\Pointcut;
 use Ray\Di\Exception\CircularDependency;
+use Ray\Di\Exception\ConcurrentSingletonConstruction;
 use Ray\Di\Exception\NoHint;
 use Ray\Di\Exception\RenameTargetAlreadyBound;
 use Ray\Di\Exception\Unbound;
@@ -42,6 +43,8 @@ final class Container implements InjectorInterface
      */
     private const MULTI_BINDINGS_INDEX = MultiBindings::class . '-' . Name::ANY;
 
+    private const INJECTION_POINT_INDEX = InjectionPointInterface::class . '-' . Name::ANY;
+
     /** @var MultiBindings */
     public $multiBindings;
 
@@ -52,13 +55,39 @@ final class Container implements InjectorInterface
     private array $pointcuts = [];
 
     /**
-     * Dependency indexes currently being resolved, used to detect circular dependencies
+     * Dependency indexes currently being resolved, keyed by coroutine id
+     * (0 when outside a coroutine), used to detect circular dependencies
      *
+     * Per-coroutine so that a coroutine suspending mid-resolution does not
+     * make another coroutine resolve the same index look like a cycle.
      * Not serialized: resolution state is always empty between getInstance() calls.
+     *
+     * @var array<int, array<string, true>>
+     */
+    private array $resolving = [];
+
+    /**
+     * Singleton indexes currently under construction, set only inside
+     * coroutines; a second coroutine finding its index here throws
+     * ConcurrentSingletonConstruction instead of building a duplicate
+     *
+     * Not serialized (see $resolving).
      *
      * @var array<string, true>
      */
-    private array $resolving = [];
+    private array $constructing = [];
+
+    /**
+     * Per-coroutine injection point overlay, keyed by coroutine id
+     *
+     * Outside coroutines the injection point lives in the container entry as
+     * before; inside coroutines it is kept per coroutine so that a coroutine
+     * suspending mid-resolution cannot observe another coroutine's point.
+     * Not serialized (see $resolving).
+     *
+     * @var array<int, InjectionPointInterface>
+     */
+    private array $injectionPoints = [];
 
     /**
      * Composition-time binding history
@@ -114,12 +143,19 @@ final class Container implements InjectorInterface
      */
     public function setInjectionPoint(InjectionPointInterface $ip): ?InjectionPointInterface
     {
-        $key = InjectionPointInterface::class . '-' . Name::ANY;
-        $existing = $this->container[$key] ?? null;
+        $cid = CoroutineContext::id();
+        if ($cid > 0) {
+            $previous = $this->injectionPoints[$cid] ?? null;
+            $this->injectionPoints[$cid] = $ip;
+
+            return $previous;
+        }
+
+        $existing = $this->container[self::INJECTION_POINT_INDEX] ?? null;
         $previous = $existing instanceof Instance && $existing->value instanceof InjectionPointInterface
             ? $existing->value
             : null;
-        $this->container[$key] = new Instance($ip);
+        $this->container[self::INJECTION_POINT_INDEX] = new Instance($ip);
 
         return $previous;
     }
@@ -131,14 +167,26 @@ final class Container implements InjectorInterface
      */
     public function restoreInjectionPoint(?InjectionPointInterface $ip): void
     {
-        $key = InjectionPointInterface::class . '-' . Name::ANY;
-        if ($ip === null) {
-            unset($this->container[$key]);
+        $cid = CoroutineContext::id();
+        if ($cid > 0) {
+            if ($ip === null) {
+                unset($this->injectionPoints[$cid]);
+
+                return;
+            }
+
+            $this->injectionPoints[$cid] = $ip;
 
             return;
         }
 
-        $this->container[$key] = new Instance($ip);
+        if ($ip === null) {
+            unset($this->container[self::INJECTION_POINT_INDEX]);
+
+            return;
+        }
+
+        $this->container[self::INJECTION_POINT_INDEX] = new Instance($ip);
     }
 
     /**
@@ -186,7 +234,7 @@ final class Container implements InjectorInterface
             throw new BadMethodCallException($interface);
         }
 
-        return $dependency->injectWithArgs($this, $params);
+        return $this->injectSingletonOnce($index, $dependency, fn (): mixed => $dependency->injectWithArgs($this, $params));
     }
 
     /**
@@ -200,11 +248,19 @@ final class Container implements InjectorInterface
      */
     public function getDependency(string $index)
     {
+        if ($index === self::INJECTION_POINT_INDEX) {
+            $injectionPoint = $this->injectionPoints[CoroutineContext::id()] ?? null;
+            if ($injectionPoint !== null) {
+                return $injectionPoint;
+            }
+        }
+
         if (! isset($this->container[$index])) {
             throw $this->unbound($index);
         }
 
-        if (isset($this->resolving[$index])) {
+        $cid = CoroutineContext::id();
+        if (isset($this->resolving[$cid][$index])) {
             $dependency = $this->container[$index];
             // An already-instantiated singleton satisfies re-entrant requests
             // (e.g. from a @PostConstruct method) with its cached instance,
@@ -213,15 +269,65 @@ final class Container implements InjectorInterface
                 return $dependency->inject($this);
             }
 
-            throw new CircularDependency(sprintf("'%s'", implode(' -> ', [...array_keys($this->resolving), $index])));
+            throw new CircularDependency(sprintf("'%s'", implode(' -> ', [...array_keys($this->resolving[$cid]), $index])));
         }
 
-        $this->resolving[$index] = true;
+        $this->resolving[$cid][$index] = true;
         try {
-            return $this->container[$index]->inject($this);
+            $dependency = $this->container[$index];
+
+            return $this->injectSingletonOnce($index, $dependency, fn (): mixed => $dependency->inject($this));
         } finally {
-            unset($this->resolving[$index]);
+            unset($this->resolving[$cid][$index]);
+            if ($this->resolving[$cid] === []) {
+                unset($this->resolving[$cid]);
+            }
         }
+    }
+
+    /**
+     * Inject, refusing to build a singleton concurrently in another coroutine
+     *
+     * Outside coroutines and for already-built or non-singleton dependencies
+     * this is a plain inject. Inside a coroutine, the first coroutine to
+     * build a singleton marks its index; a second coroutine finding the mark
+     * throws ConcurrentSingletonConstruction rather than building a duplicate
+     * (e.g. a second connection pool). Warm up singletons before serving
+     * requests so construction never races.
+     *
+     * @param callable(): mixed $inject
+     *
+     * @return mixed
+     */
+    private function injectSingletonOnce(string $index, DependencyInterface $dependency, callable $inject)
+    {
+        if (CoroutineContext::id() === 0 || ! self::isUnbuiltSingleton($dependency)) {
+            return $inject();
+        }
+
+        if (isset($this->constructing[$index])) {
+            throw new ConcurrentSingletonConstruction(sprintf("'%s'", $index));
+        }
+
+        $this->constructing[$index] = true;
+        try {
+            return $inject();
+        } finally {
+            unset($this->constructing[$index]);
+        }
+    }
+
+    private static function isUnbuiltSingleton(DependencyInterface $dependency): bool
+    {
+        if ($dependency instanceof Dependency) {
+            return $dependency->isSingleton() && ! $dependency->isInstantiated();
+        }
+
+        if ($dependency instanceof DependencyProvider) {
+            return $dependency->isSingleton() && ! $dependency->isInstantiated();
+        }
+
+        return false;
     }
 
     /**

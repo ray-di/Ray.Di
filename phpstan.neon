@@ -5,6 +5,8 @@ parameters:
     - src/di
     - tests/di
     - tests/type
+  scanFiles:
+    - tests/stub/Swoole.phpstub
   excludePaths:
     - tests/tmp/*
     - tests/di/tmp/*
