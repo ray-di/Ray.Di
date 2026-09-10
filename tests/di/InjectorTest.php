@@ -48,9 +48,14 @@ class InjectorTest extends TestCase
      * An unbound concrete class is auto-registered as an untargeted binding:
      * getInstance() catches Untargeted, binds the class on the fly, then
      * resolves it. Removing that self-bind makes the retry recurse endlessly.
+     * JIT resolution is deprecated; the notice steers toward an explicit
+     * binding, which is what CompiledInjector requires.
      */
     public function testGetUnboundConcreteClassIsAutoBound(): void
     {
+        $this->expectUserDeprecationMessage(
+            'Just-in-time binding of unbound concrete class "' . FakeEngine::class . '" is deprecated. Bind it explicitly: JIT resolution is unavailable under CompiledInjector and is not recorded in bindings.md.',
+        );
         $injector = new Injector(new FakeInstanceBindModule());
         $instance = $injector->getInstance(FakeEngine::class);
         $this->assertInstanceOf(FakeEngine::class, $instance);
@@ -71,6 +76,9 @@ class InjectorTest extends TestCase
 
     public function testUnboundConcreteClassIsConstructedOnlyOnce(): void
     {
+        $this->expectUserDeprecationMessage(
+            'Just-in-time binding of unbound concrete class "' . FakeConstructCounter::class . '" is deprecated. Bind it explicitly: JIT resolution is unavailable under CompiledInjector and is not recorded in bindings.md.',
+        );
         FakeConstructCounter::$constructCount = 0;
         $injector = new Injector(new FakeInstanceBindModule());
         $instance = $injector->getInstance(FakeConstructCounter::class);
@@ -193,6 +201,9 @@ class InjectorTest extends TestCase
 
     public function testGetConcreteClass(): void
     {
+        $this->expectUserDeprecationMessage(
+            'Just-in-time binding of unbound concrete class "' . FakeRobot::class . '" is deprecated. Bind it explicitly: JIT resolution is unavailable under CompiledInjector and is not recorded in bindings.md.',
+        );
         $injector = new Injector();
         $robot = $injector->getInstance(FakeRobot::class);
         $this->assertInstanceOf(FakeRobot::class, $robot);
@@ -200,6 +211,9 @@ class InjectorTest extends TestCase
 
     public function testGetConcreteHavingDependency(): void
     {
+        $this->expectUserDeprecationMessage(
+            'Just-in-time binding of unbound concrete class "' . FakeRobotTeam::class . '" is deprecated. Bind it explicitly: JIT resolution is unavailable under CompiledInjector and is not recorded in bindings.md.',
+        );
         $injector = new Injector(new class extends AbstractModule{
             protected function configure()
             {
@@ -214,6 +228,9 @@ class InjectorTest extends TestCase
 
     public function testGetConcreteClassWithModule(): void
     {
+        $this->expectUserDeprecationMessage(
+            'Just-in-time binding of unbound concrete class "' . FakeCar::class . '" is deprecated. Bind it explicitly: JIT resolution is unavailable under CompiledInjector and is not recorded in bindings.md.',
+        );
         $injector = new Injector(new FakeCarModule());
         $car = $injector->getInstance(FakeCar::class);
         $this->assertInstanceOf(FakeCar::class, $car);
@@ -278,13 +295,24 @@ class InjectorTest extends TestCase
 
     public function testBuiltinBinding(): void
     {
-        $instance = (new Injector())->getInstance(FakeBuiltin::class);
+        $injector = new Injector(new class extends AbstractModule {
+            protected function configure(): void
+            {
+                $this->bind(FakeBuiltin::class);
+            }
+        });
+        $instance = $injector->getInstance(FakeBuiltin::class);
         $this->assertInstanceOf(Injector::class, $instance->injector);
     }
 
     public function testSerializeBuiltinBinding(): void
     {
-        $injector = unserialize(serialize(new Injector()));
+        $injector = unserialize(serialize(new Injector(new class extends AbstractModule {
+            protected function configure(): void
+            {
+                $this->bind(FakeBuiltin::class);
+            }
+        })));
         assert($injector instanceof InjectorInterface);
         $instance = $injector->getInstance(FakeBuiltin::class);
         $this->assertInstanceOf(Injector::class, $instance->injector);
@@ -340,6 +368,9 @@ class InjectorTest extends TestCase
 
     public function testAopOnDemandByUnboundConcreteClass(): void
     {
+        $this->expectUserDeprecationMessage(
+            'Just-in-time binding of unbound concrete class "' . FakeAop::class . '" is deprecated. Bind it explicitly: JIT resolution is unavailable under CompiledInjector and is not recorded in bindings.md.',
+        );
         $injector = new Injector(new FakeAopInterceptorModule());
         $instance = $injector->getInstance(FakeAop::class);
         $result = $instance->returnSame(2);
@@ -402,6 +433,9 @@ class InjectorTest extends TestCase
 
     public function testNewAbstract(): void
     {
+        $this->expectUserDeprecationMessage(
+            'Just-in-time binding of unbound concrete class "' . FakeConcreteClass::class . '" is deprecated. Bind it explicitly: JIT resolution is unavailable under CompiledInjector and is not recorded in bindings.md.',
+        );
         $this->expectException(Unbound::class);
         (new Injector())->getInstance(FakeConcreteClass::class);
     }
@@ -543,6 +577,7 @@ class InjectorTest extends TestCase
             protected function configure()
             {
                 $this->bind(FakeEngineInterface::class)->to(FakeEngine::class);
+                $this->bind(FakeSet::class);
             }
         });
         $fakeSet = $injector->getInstance(FakeSet::class);

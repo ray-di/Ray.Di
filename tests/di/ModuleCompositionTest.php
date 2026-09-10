@@ -326,6 +326,10 @@ class ModuleCompositionTest extends TestCase
         $module = new class ($chained) extends AbstractModule {
             protected function configure(): void
             {
+                $this->bind(FakeMultiBindingConsumer::class);
+                $this->bind(FakeEngine::class);
+                $this->bind(FakeEngine2::class);
+                $this->bind(FakeEngine3::class);
                 MultiBinder::newInstance($this, FakeEngineInterface::class)
                     ->addBinding('own')->to(FakeEngine3::class);
                 MultiBinder::newInstance($this, FakeRobotInterface::class)
@@ -355,6 +359,10 @@ class ModuleCompositionTest extends TestCase
         $module = new class extends AbstractModule {
             protected function configure(): void
             {
+                $this->bind(FakeMultiBindingConsumer::class);
+                $this->bind(FakeEngine::class);
+                $this->bind(FakeEngine2::class);
+                $this->bind(FakeRobot::class);
                 $this->install(new class extends AbstractModule {
                     protected function configure(): void
                     {
@@ -393,6 +401,10 @@ class ModuleCompositionTest extends TestCase
         $module = new class extends AbstractModule {
             protected function configure(): void
             {
+                $this->bind(FakeMultiBindingConsumer::class);
+                $this->bind(FakeEngine::class);
+                $this->bind(FakeEngine2::class);
+                $this->bind(FakeEngine3::class);
                 $this->install(new class extends AbstractModule {
                     protected function configure(): void
                     {
@@ -432,6 +444,9 @@ class ModuleCompositionTest extends TestCase
         $module = new class extends AbstractModule {
             protected function configure(): void
             {
+                $this->bind(FakeMultiBindingConsumer::class);
+                $this->bind(FakeEngine::class);
+                $this->bind(FakeEngine2::class);
                 $this->install(new class extends AbstractModule {
                     protected function configure(): void
                     {

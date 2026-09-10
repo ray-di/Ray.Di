@@ -14,7 +14,12 @@ class AssistedInjectTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->injector = new Injector(new FakeToBindModule(), __DIR__ . '/tmp');
+        $this->injector = new Injector(new class (new FakeToBindModule()) extends AbstractModule {
+            protected function configure(): void
+            {
+                $this->bind(FakeAssistedInjectConsumer::class);
+            }
+        }, __DIR__ . '/tmp');
     }
 
     public function testAssisted(): void
@@ -74,6 +79,7 @@ class AssistedInjectTest extends TestCase
             {
                 protected function configure()
                 {
+                    $this->bind(FakePropConstruct::class);
                     $this->bind()->annotatedWith('abc')->toInstance('abc');
                 }
             }

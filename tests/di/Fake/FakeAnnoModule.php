@@ -8,6 +8,7 @@ class FakeAnnoModule extends AbstractModule
 {
     protected function configure()
     {
+        $this->bind(FakeAnnoOrderClass::class);
         $this->bindInterceptor(
             $this->matcher->any(),
             $this->matcher->annotatedWith(FakeAnnoMethod1::class),

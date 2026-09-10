@@ -73,6 +73,7 @@ class CircularDependencyTest extends TestCase
             protected function configure(): void
             {
                 $this->bind(FakeDiamondSharedInterface::class)->to(FakeDiamondShared::class);
+                $this->bind(FakeDiamondRoot::class);
             }
         });
 

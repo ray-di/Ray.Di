@@ -14,6 +14,7 @@ $injector = new Injector(new class extends AbstractModule{
     protected function configure()
     {
         $this->bind(FinderInterface::class)->to(Finder::class);
+        $this->bind(MovieFinder::class);
     }
 });
 $finder = $injector->getInstance(MovieFinder::class);

@@ -219,6 +219,9 @@ LOG;
     {
         $injector = unserialize(serialize(new Injector(null, __DIR__ . '/tmp')));
         assert($injector instanceof Injector);
+        $this->expectUserDeprecationMessage(
+            'Just-in-time binding of unbound concrete class "' . FakeEngine::class . '" is deprecated. Bind it explicitly: JIT resolution is unavailable under CompiledInjector and is not recorded in bindings.md.',
+        );
         $injector->getInstance(FakeEngine::class); // JIT binding after wakeup
 
         $container = (new ReflectionProperty(Injector::class, 'container'))->getValue($injector);

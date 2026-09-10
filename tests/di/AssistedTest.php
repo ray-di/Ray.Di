@@ -17,7 +17,12 @@ class AssistedTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->injector = new Injector(new FakeToBindModule());
+        $this->injector = new Injector(new class (new FakeToBindModule()) extends AbstractModule {
+            protected function configure(): void
+            {
+                $this->bind(FakeAssistedConsumer::class);
+            }
+        });
     }
 
     public function testAssisted(): void

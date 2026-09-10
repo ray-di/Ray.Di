@@ -12,5 +12,7 @@ class FakeInstanceBindModule extends AbstractModule
     {
         $this->bind('')->annotatedWith('one')->toInstance(1);
         $this->bind('')->annotatedWith(FakeInjectOne::class)->toInstance(1);
+        $this->bind(FakeAssistedConsumer::class);
+        $this->bind(FakeAssistedInjectConsumer::class);
     }
 }

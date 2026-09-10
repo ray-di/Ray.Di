@@ -8,6 +8,7 @@ class FakeWalkRobotModule extends AbstractModule
 {
     protected function configure()
     {
+        $this->bind(FakeWalkRobot::class);
         $this->bind(FakeLegInterface::class)->toProvider(FakeWalkRobotLegProvider::class);
     }
 }

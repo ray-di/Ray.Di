@@ -12,6 +12,7 @@ class FakePhp8CarModule extends AbstractModule
 {
     protected function configure()
     {
+        $this->bind(FakePhp8Car::class);
         $this->bind(FakeCarInterface::class)->to(FakePhp8Car::class); // dependent
         $this->bind(FakeEngineInterface::class)->to(FakeEngine::class); // constructor
         $this->bind(FakeTyreInterface::class)->to(FakeTyre::class); // setter

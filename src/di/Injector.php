@@ -17,6 +17,9 @@ use function spl_autoload_register;
 use function sprintf;
 use function str_replace;
 use function sys_get_temp_dir;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 /**
  * @psalm-import-type BindableInterface from Types
@@ -81,6 +84,14 @@ final class Injector implements InjectorInterface
             if ($name !== Name::ANY) {
                 throw new Unbound(sprintf("'%s-%s'", $interface, $name), 0, $untargeted);
             }
+
+            trigger_error(
+                sprintf(
+                    'Just-in-time binding of unbound concrete class "%s" is deprecated. Bind it explicitly: JIT resolution is unavailable under CompiledInjector and is not recorded in bindings.md.',
+                    $interface,
+                ),
+                E_USER_DEPRECATED,
+            );
 
             /**
              * @psalm-var class-string $interface

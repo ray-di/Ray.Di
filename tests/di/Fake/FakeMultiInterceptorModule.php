@@ -8,6 +8,7 @@ class FakeMultiInterceptorModule extends AbstractModule
 {
     protected function configure()
     {
+        $this->bind(FakeAop::class);
         // two interceptors bound in a SINGLE bindInterceptor() call
         $this->bindInterceptor(
             $this->matcher->any(),
