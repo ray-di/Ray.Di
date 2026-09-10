@@ -7,6 +7,7 @@ namespace Ray\Di;
 use PHPUnit\Framework\TestCase;
 use ReflectionParameter;
 
+use function assert;
 use function serialize;
 use function unserialize;
 
@@ -51,9 +52,9 @@ class InjectionPointTest extends TestCase
 
     /**
      * An InjectionPoint is serialized into the compiled container. After
-     * unserialize() the ReflectionParameter must be reconstructed; otherwise
-     * the typed $parameter property stays uninitialized and getParameter()/
-     * getMethod()/getClass() raise an Error on first access.
+     * unserialize() the ReflectionParameter is dropped and rebuilt lazily on
+     * first access; getParameter()/getMethod()/getClass() must still return
+     * a working ReflectionParameter/ReflectionMethod/ReflectionClass.
      */
     public function testSerializeRoundTripRestoresParameter(): void
     {
@@ -64,6 +65,47 @@ class InjectionPointTest extends TestCase
         $this->assertSame('rightLeg', $restored->getParameter()->name);
         $this->assertSame((string) $this->parameter->getDeclaringFunction(), (string) $restored->getMethod());
         $this->assertSame((string) $this->parameter->getDeclaringClass(), (string) $restored->getClass());
+    }
+
+    /**
+     * Unlike testSerializeRoundTripRestoresParameter(), this never calls
+     * getParameter() first, so it exercises getMethod()'s own lazy-rebuild
+     * path rather than a cache getParameter() already populated.
+     */
+    public function testGetMethodAfterUnserializeWithoutPriorGetParameter(): void
+    {
+        $restored = unserialize(serialize($this->ip));
+        assert($restored instanceof InjectionPoint);
+
+        $this->assertSame((string) $this->parameter->getDeclaringFunction(), (string) $restored->getMethod());
+    }
+
+    /** @see self::testGetMethodAfterUnserializeWithoutPriorGetParameter() for why this is separate from the combined round trip */
+    public function testGetClassAfterUnserializeWithoutPriorGetParameter(): void
+    {
+        $restored = unserialize(serialize($this->ip));
+        assert($restored instanceof InjectionPoint);
+
+        $this->assertSame((string) $this->parameter->getDeclaringClass(), (string) $restored->getClass());
+    }
+
+    /**
+     * A restored InjectionPoint that is never touched must remain
+     * re-serializable: __serialize() reads the retained (class, function,
+     * name) tuple, not the still-null live ReflectionParameter, so
+     * unserialize -> serialize -> unserialize works even when getParameter()
+     * is never called in between.
+     */
+    public function testSerializeRoundTripSurvivesUnusedReserialize(): void
+    {
+        $blob = serialize($this->ip);
+        $restored = unserialize($blob);
+        assert($restored instanceof InjectionPoint);
+
+        $reserialized = unserialize(serialize($restored));
+        assert($reserialized instanceof InjectionPoint);
+
+        $this->assertSame('rightLeg', $reserialized->getParameter()->name);
     }
 
     /**
