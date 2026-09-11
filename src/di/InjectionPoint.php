@@ -22,13 +22,15 @@ final class InjectionPoint implements InjectionPointInterface
 
     /** @var string */
     private $pName;
+    private ?ReflectionParameter $parameter = null;
 
-    public function __construct(private ReflectionParameter $parameter)
+    public function __construct(ReflectionParameter $parameter)
     {
-        $this->pFunction = $this->parameter->getDeclaringFunction()->name;
-        $class = $this->parameter->getDeclaringClass();
+        $this->parameter = $parameter;
+        $this->pFunction = $parameter->getDeclaringFunction()->name;
+        $class = $parameter->getDeclaringClass();
         $this->pClass = $class instanceof CoreReflectionClass ? $class->name : '';
-        $this->pName = $this->parameter->name;
+        $this->pName = $parameter->name;
     }
 
     /**
@@ -36,7 +38,7 @@ final class InjectionPoint implements InjectionPointInterface
      */
     public function getParameter(): ReflectionParameter
     {
-        return $this->parameter;
+        return $this->parameter ??= new ReflectionParameter([$this->pClass, $this->pFunction], $this->pName);
     }
 
     /**
@@ -44,8 +46,9 @@ final class InjectionPoint implements InjectionPointInterface
      */
     public function getMethod(): ReflectionMethod
     {
-        $class = $this->parameter->getDeclaringClass();
-        $method = $this->parameter->getDeclaringFunction()->getShortName();
+        $parameter = $this->getParameter();
+        $class = $parameter->getDeclaringClass();
+        $method = $parameter->getDeclaringFunction()->getShortName();
         assert($class instanceof CoreReflectionClass);
         assert(class_exists($class->getName()));
 
@@ -57,7 +60,7 @@ final class InjectionPoint implements InjectionPointInterface
      */
     public function getClass(): ReflectionClass
     {
-        $class = $this->parameter->getDeclaringClass();
+        $class = $this->getParameter()->getDeclaringClass();
         assert($class instanceof CoreReflectionClass);
 
         return new ReflectionClass($class->getName());
@@ -87,19 +90,15 @@ final class InjectionPoint implements InjectionPointInterface
     }
 
     /**
-     * Rebuild the ReflectionParameter dropped by serialization.
-     *
-     * The enclosing container is serialized (e.g. by ModuleString and
-     * compiled-container caches), so a restored InjectionPoint must stay usable;
-     * the typed $parameter would otherwise be left uninitialized.
+     * Not rebuilt here: doing so would force-autoload the declaring class
+     * for every injection point in the graph regardless of use;
+     * getParameter() rebuilds it lazily on first access.
      *
      * @param array<string> $array
      */
     public function __unserialize(array $array): void
     {
         [$this->pClass, $this->pFunction, $this->pName] = $array;
-        if ($this->pClass !== '') {
-            $this->parameter = new ReflectionParameter([$this->pClass, $this->pFunction], $this->pName);
-        }
+        $this->parameter = null;
     }
 }

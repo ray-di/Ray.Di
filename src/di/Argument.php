@@ -14,7 +14,10 @@ use function assert;
 use function in_array;
 use function sprintf;
 
-/** @psalm-import-type DependencyIndex from Types */
+/**
+ * @psalm-import-type DependencyIndex from Types
+ * @psalm-import-type ArgumentSerializationData from Types
+ */
 final class Argument implements AcceptInterface, Stringable
 {
     public const UNBOUND_TYPE = ['bool', 'int', 'float', 'string', 'array', 'resource', 'callable', 'iterable'];
@@ -26,7 +29,10 @@ final class Argument implements AcceptInterface, Stringable
     /** @var mixed */
     private $default;
     private string $meta;
-    private ReflectionParameter $reflection;
+    private string $refClass;
+    private string $refMethod;
+    private string $refParam;
+    private ?ReflectionParameter $reflection = null;
 
     public function __construct(ReflectionParameter $parameter, string $name)
     {
@@ -40,12 +46,17 @@ final class Argument implements AcceptInterface, Stringable
         $this->setDefaultValue($parameter);
         $this->index = $type . '-' . $name;
         $this->reflection = $parameter;
+        $method = $parameter->getDeclaringFunction();
+        assert($method instanceof ReflectionMethod);
+        $this->refClass = $method->class;
+        $this->refMethod = $method->name;
+        $this->refParam = $parameter->getName();
         $this->meta = sprintf(
             "'%s-%s' in %s:%d ($%s)",
             $type,
             $name,
-            $this->reflection->getDeclaringFunction()->getFileName(),
-            $this->reflection->getDeclaringFunction()->getStartLine(),
+            $method->getFileName(),
+            $method->getStartLine(),
             $parameter->getName()
         );
     }
@@ -65,7 +76,7 @@ final class Argument implements AcceptInterface, Stringable
      */
     public function get(): ReflectionParameter
     {
-        return $this->reflection;
+        return $this->reflection ??= new ReflectionParameter([$this->refClass, $this->refMethod], $this->refParam);
     }
 
     public function isDefaultAvailable(): bool
@@ -84,27 +95,19 @@ final class Argument implements AcceptInterface, Stringable
         return $this->meta;
     }
 
-    /** @return array<mixed> */
+    /** @return ArgumentSerializationData */
     public function __serialize(): array
     {
-        $method = $this->reflection->getDeclaringFunction();
-        assert($method instanceof ReflectionMethod);
-        $ref = [
-            $method->class,
-            $method->name,
-            $this->reflection->getName(),
-        ];
-
         return [
             $this->index,
             $this->isDefaultAvailable,
             $this->default,
             $this->meta,
-            $ref,
+            [$this->refClass, $this->refMethod, $this->refParam],
         ];
     }
 
-    /** @param array{0: DependencyIndex, 1: bool, 2: string, 3: string, 4: string, 5: array{0: string, 1: string, 2:string}} $unserialized */
+    /** @param ArgumentSerializationData $unserialized */
     public function __unserialize(array $unserialized): void
     {
         [
@@ -114,7 +117,8 @@ final class Argument implements AcceptInterface, Stringable
             $this->meta,
             $ref,
         ] = $unserialized;
-        $this->reflection = new ReflectionParameter([$ref[0], $ref[1]], $ref[2]);
+        [$this->refClass, $this->refMethod, $this->refParam] = $ref;
+        $this->reflection = null;
     }
 
     /** @inheritDoc */
@@ -124,7 +128,7 @@ final class Argument implements AcceptInterface, Stringable
             $this->index,
             $this->isDefaultAvailable,
             $this->default,
-            $this->reflection
+            $this->get()
         );
     }
 
