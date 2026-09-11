@@ -28,7 +28,9 @@ use Ray\Aop\Pointcut;
  * @psalm-type InjectionPointDefinition = array{0: string, 1: string, 2: bool}
  * @psalm-type InjectionPointsList = list<InjectionPointDefinition>
  * @psalm-type MethodArguments = list<mixed>
- * @psalm-type ArgumentSerializationData = array{0: DependencyIndex, 1: bool, 2: string, 3: string, 4: string, 5: array{0: string, 1: string, 2: string}}
+ * @psalm-type ReflectionMethodReference = array{0: string, 1: string, 2: string}
+ * @psalm-type DependencyMeta = string
+ * @psalm-type ArgumentSerializationData = array{0: DependencyIndex, 1: bool, 2: mixed, 3: DependencyMeta, 4: ReflectionMethodReference}
  * @psalm-type UnboundTypeList = list<'bool'|'int'|'float'|'string'|'array'|'resource'|'callable'|'iterable'|'object'|'mixed'>
  * @psalm-type QualifierList = array<object>
  * @psalm-type ScopeType = Scope::SINGLETON|Scope::PROTOTYPE
@@ -38,8 +40,6 @@ use Ray\Aop\Pointcut;
  * @psalm-type MethodInterceptorBindings array<non-empty-string, list<MethodInterceptor>>
  * @psalm-type InterceptorClassList array<class-string<MethodInterceptor>>
  * @psalm-type VisitorResult = object|array<array-key, mixed>|null
- * @psalm-type ReflectionMethodReference = array{0: string, 1: string, 2: string}
- * @psalm-type DependencyMeta = string
  * @psalm-type DiException = Exception\Unbound|Exception\Untargeted|Exception\NotFound|Exception\InvalidProvider|Exception\InvalidType
  * @psalm-type AnnotationType = Di\Named|Di\Inject|Di\Qualifier|Di\PostConstruct|Di\Assisted|Di\Set<object>
  * @psalm-type DependencyImplementation = Dependency|DependencyProvider|Instance|NullDependency|NullObjectDependency

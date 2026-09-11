@@ -14,7 +14,10 @@ use function assert;
 use function in_array;
 use function sprintf;
 
-/** @psalm-import-type DependencyIndex from Types */
+/**
+ * @psalm-import-type DependencyIndex from Types
+ * @psalm-import-type ArgumentSerializationData from Types
+ */
 final class Argument implements AcceptInterface, Stringable
 {
     public const UNBOUND_TYPE = ['bool', 'int', 'float', 'string', 'array', 'resource', 'callable', 'iterable'];
@@ -92,7 +95,7 @@ final class Argument implements AcceptInterface, Stringable
         return $this->meta;
     }
 
-    /** @return array<mixed> */
+    /** @return ArgumentSerializationData */
     public function __serialize(): array
     {
         return [
@@ -104,7 +107,7 @@ final class Argument implements AcceptInterface, Stringable
         ];
     }
 
-    /** @param array{0: DependencyIndex, 1: bool, 2: mixed, 3: string, 4: array{0: string, 1: string, 2: string}} $unserialized */
+    /** @param ArgumentSerializationData $unserialized */
     public function __unserialize(array $unserialized): void
     {
         [
