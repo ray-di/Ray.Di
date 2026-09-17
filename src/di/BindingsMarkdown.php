@@ -37,7 +37,7 @@ use function unlink;
 final class BindingsMarkdown
 {
     /** Bump when the rendered format or signature inputs change. */
-    private const SIGNATURE_VERSION = 2;
+    private const SIGNATURE_VERSION = 3;
 
     public function __invoke(Container $container, string $classDir): void
     {

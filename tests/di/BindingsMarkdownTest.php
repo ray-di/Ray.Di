@@ -203,20 +203,80 @@ class BindingsMarkdownTest extends TestCase
         $this->assertSame($past, filemtime($file));
     }
 
-    /** A changed resolved binding invalidates the cached markdown. */
-    public function testBindingChangeInvalidatesSignatureCache(): void
+    /** A changed resolved binding's type invalidates the cached markdown. */
+    public function testBindingTypeChangeInvalidatesSignatureCache(): void
     {
         $container = new Container();
         (new Bind($container, '', self::class))->annotatedWith('value')->toInstance(1);
         $writer = new BindingsMarkdown();
         $writer($container, $this->classDir);
 
-        (new Bind($container, '', self::class))->annotatedWith('value')->toInstance(2);
+        (new Bind($container, '', self::class))->annotatedWith('value')->toInstance('changed');
         $writer($container, $this->classDir);
 
         $markdown = file_get_contents($this->classDir . '/bindings.md');
         assert(is_string($markdown));
-        $this->assertStringContainsString('-value => (integer) 2', $markdown);
+        $this->assertStringContainsString('-value => (string)', $markdown);
+    }
+
+    /**
+     * A scalar toInstance() value never appears in the Bindings section or
+     * its own provenance ("bind") event; only the type tag does.
+     */
+    public function testScalarInstanceValueIsRedactedInBindingsAndProvenance(): void
+    {
+        $container = new Container();
+        (new Bind($container, '', self::class))->annotatedWith('secret')->toInstance('fake-secret-value-not-real-9f2b1c');
+        $writer = new BindingsMarkdown();
+        $writer($container, $this->classDir);
+
+        $markdown = file_get_contents($this->classDir . '/bindings.md');
+        assert(is_string($markdown));
+        $this->assertStringContainsString('-secret => (string)', $markdown);
+        $this->assertStringContainsString('bind    -secret => (string) @' . self::class, $markdown);
+        $this->assertStringNotContainsString('fake-secret-value-not-real-9f2b1c', $markdown);
+    }
+
+    /** A same-module rebind (replace) never renders the discarded scalar's value. */
+    public function testReplacedScalarValueIsRedactedInProvenance(): void
+    {
+        $container = new Container();
+        (new Bind($container, '', self::class))->annotatedWith('secret')->toInstance('old-fake-secret-value');
+        (new Bind($container, '', self::class))->annotatedWith('secret')->toInstance('new-fake-secret-value');
+        $writer = new BindingsMarkdown();
+        $writer($container, $this->classDir);
+
+        $markdown = file_get_contents($this->classDir . '/bindings.md');
+        assert(is_string($markdown));
+        $this->assertStringContainsString(
+            'replace -secret => (string) @' . self::class . ' (replaced (string) @' . self::class . ')',
+            $markdown,
+        );
+        $this->assertStringNotContainsString('old-fake-secret-value', $markdown);
+        $this->assertStringNotContainsString('new-fake-secret-value', $markdown);
+    }
+
+    /** A merge collision never renders either side's scalar value (kept or discarded). */
+    public function testKeptAndDiscardedScalarValuesAreRedactedOnMerge(): void
+    {
+        $kept = new Container();
+        (new Bind($kept, '', 'KeptModule'))->annotatedWith('secret')->toInstance('kept-fake-secret-value');
+        $incoming = new Container();
+        (new Bind($incoming, '', 'IncomingModule'))->annotatedWith('secret')->toInstance('discarded-fake-secret-value');
+
+        $kept->merge($incoming);
+
+        $writer = new BindingsMarkdown();
+        $writer($kept, $this->classDir);
+
+        $markdown = file_get_contents($this->classDir . '/bindings.md');
+        assert(is_string($markdown));
+        $this->assertStringContainsString(
+            'keep    -secret => (string) @KeptModule (discarded (string) @IncomingModule)',
+            $markdown,
+        );
+        $this->assertStringNotContainsString('kept-fake-secret-value', $markdown);
+        $this->assertStringNotContainsString('discarded-fake-secret-value', $markdown);
     }
 
     /** Provenance-only changes intentionally retain the cached markdown. */

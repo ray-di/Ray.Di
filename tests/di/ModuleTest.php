@@ -57,11 +57,11 @@ class ModuleTest extends TestCase
             return str_replace(["\r\n", "\r"], "\n", $str);
         };
         $this->assertSame($normalize('-array => (array)
--bool => (boolean) 1
--int => (integer) 1
+-bool => (boolean)
+-int => (integer)
 -null => (NULL)
 -object => (object) stdClass
--string => (string) 1
+-string => (string)
 Ray\Di\FakeAopInterface- => (dependency) Ray\Di\FakeAop (aop) +returnSame(Ray\Di\FakeDoubleInterceptor)
 Ray\Di\FakeDoubleInterceptor- => (untargeted)
 Ray\Di\FakeRobotInterface- => (provider) (dependency) Ray\Di\FakeRobotProvider'), $normalize($string));

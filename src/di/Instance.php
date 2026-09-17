@@ -6,8 +6,6 @@ namespace Ray\Di;
 
 use function gettype;
 use function is_object;
-use function is_scalar;
-use function sprintf;
 
 final class Instance implements DependencyInterface, AcceptInterface
 {
@@ -18,14 +16,6 @@ final class Instance implements DependencyInterface, AcceptInterface
 
     public function __toString(): string
     {
-        if (is_scalar($this->value)) {
-            return sprintf(
-                '(%s) %s',
-                gettype($this->value),
-                (string) $this->value
-            );
-        }
-
         if (is_object($this->value)) {
             return '(object) ' . $this->value::class;
         }
