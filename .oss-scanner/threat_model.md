@@ -26,8 +26,10 @@ cache file an application writes for itself.
   `__unserialize` round-trip of the graph. A serialized `Injector` carries these, so their round-trip is a
   boundary even when the container itself is trusted.
 - `src/di/Bind.php`, `src/di/BindValidator.php`, `src/di/NewInstance.php`, `src/di/Instance.php`,
-  `src/di/Untarget.php`, `src/di/Scope.php` — turning a binding into construction. A binding that resolves to a
-  class other than the type it claims is high.
+  `src/di/Untarget.php`, `src/di/Scope.php` — turning a binding into construction. A binding whose target is
+  not assignable to the declared type is high. `BindValidator::to()` checks interfaces only, and `toInstance()`
+  and `toConstructor()` do not go through it, so the question is whether a non-assignable object can reach an
+  injection point that does not re-check the type.
 - `src/di/CompileNullObject.php` and `src/di/NullObjectDependency.php` (through `koriym/null-object`) write
   generated classes into the `classDir`, and `src/di/BindingsMarkdown.php` writes a binding log beside them.
   `src/di/Grapher.php` is a second entry point with the same `__wakeup()` autoloader as `Injector`, and
@@ -65,8 +67,12 @@ Everything is installed; the network is already gone.
   injection point or an argument that changed — is high.
 - A leak from a cache file or from an error message is medium, and high when it exposes something secret.
 - Denial of service is medium.
-- A finding that needs the attacker to already write the `classDir`, or to control a file the application writes
-  for itself, is low. Report it, but state the assumption it rests on.
+- A finding that needs the attacker to write a `classDir` the application owns — the same user, a private
+  directory — or to control a cache file the application writes for itself, is low: that attacker already runs
+  code as, or already controls data trusted by, the application. It is not low when the `classDir` is the
+  default `sys_get_temp_dir()` or any directory a lower-privileged principal can write, because the loader
+  prefers an existing `<classDir>/<Class_Name>.php` over regenerating it and `include`s it as the application.
+  Report it, and state which case it rests on.
 
 ## Anything to leave alone
 
