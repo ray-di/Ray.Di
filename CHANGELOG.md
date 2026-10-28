@@ -2,9 +2,17 @@
 
 ## Unreleased
 
+### Changed
+
+- An `#[Assisted]` (or `#[Inject]`-attributed) method argument the caller passes is now kept; the dependency is injected only when the argument is omitted, `null`, or equal to the parameter's default value (a caller that fills every parameter, such as BEAR.Resource or a named-argument call, passes an omitted one as its default). Previously the interceptor replaced every such argument, discarding the caller's value. **Audit these parameters before upgrading if a framework fills method arguments from untrusted input:** that input now reaches them. BEAR.Resource passes the request query as arguments, so a client sending `?uuid=attacker` now sets an `#[Assisted]` `$uuid` that previously always came from DI.
+
 ### Deprecated
 
 - Just-in-time binding of an unbound concrete class from `getInstance()` now emits an `E_USER_DEPRECATED` notice. Bind the class explicitly; JIT resolution is unavailable under `CompiledInjector` and is not recorded in `bindings.md` ([#337](https://github.com/ray-di/Ray.Di/issues/337)).
+
+### Fixed
+
+- Installing `AssistedModule` or `AssistedInjectModule` on top of the built-in one no longer drops the method's other arguments: the second interception read the arguments by position after the first had re-keyed them by name, so a required argument was lost (`ArgumentCountError`) and an optional one fell back to its default.
 
 ## 2.23.1 - 2026-08-30
 
