@@ -18,10 +18,15 @@ use function file_get_contents;
 use function file_put_contents;
 use function filemtime;
 use function glob;
+use function hash;
 use function is_dir;
 use function is_string;
 use function mkdir;
 use function rmdir;
+use function serialize;
+use function sort;
+use function sprintf;
+use function str_replace;
 use function sys_get_temp_dir;
 use function time;
 use function touch;
@@ -277,6 +282,46 @@ class BindingsMarkdownTest extends TestCase
         );
         $this->assertStringNotContainsString('kept-fake-secret-value', $markdown);
         $this->assertStringNotContainsString('discarded-fake-secret-value', $markdown);
+    }
+
+    /**
+     * A bindings.md written before redaction (SIGNATURE_VERSION 2) is rewritten.
+     *
+     * When the scalar lost a merge, the winning binding renders the same before
+     * and after redaction, and provenance is not part of the signature, so only
+     * the version bump keeps the leaked value from being served from cache.
+     */
+    public function testPreRedactionFileWithDiscardedScalarIsRewritten(): void
+    {
+        $kept = new Container();
+        (new Bind($kept, FakeRobotInterface::class, 'KeptModule'))->annotatedWith('secret')->to(FakeRobot::class);
+        $incoming = new Container();
+        (new Bind($incoming, FakeRobotInterface::class, 'IncomingModule'))->annotatedWith('secret')->toInstance('leaked-fake-secret-value');
+        $kept->merge($incoming);
+
+        $bindings = [];
+        foreach ($kept->getContainer() as $index => $dependency) {
+            $bindings[] = $index . "\0" . (string) $dependency;
+        }
+
+        sort($bindings);
+        $preRedactionSignature = hash('sha256', serialize([2, $bindings, []]));
+        $preRedactionMarkdown = str_replace(
+            '(discarded (string) @IncomingModule)',
+            '(discarded (string) leaked-fake-secret-value @IncomingModule)',
+            (new BindingsMarkdown())->render($kept),
+        );
+        file_put_contents(
+            $this->classDir . '/bindings.md',
+            $preRedactionMarkdown . sprintf("\n<!-- signature: %s -->\n", $preRedactionSignature),
+        );
+
+        (new BindingsMarkdown())($kept, $this->classDir);
+
+        $markdown = file_get_contents($this->classDir . '/bindings.md');
+        assert(is_string($markdown));
+        $this->assertStringContainsString('(discarded (string) @IncomingModule)', $markdown);
+        $this->assertStringNotContainsString('leaked-fake-secret-value', $markdown);
     }
 
     /** Provenance-only changes intentionally retain the cached markdown. */
