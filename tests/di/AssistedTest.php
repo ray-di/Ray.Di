@@ -70,41 +70,51 @@ class AssistedTest extends TestCase
         $this->assertInstanceOf(FakeRobot::class, $assistedDependency);
     }
 
-    public function testAssistedKeepsAnArgumentTheCallerPassed(): void
+    public function testAssistedReplacesAnArgumentTheCallerPassed(): void
     {
         $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
-        $robot = new FakeRobot();
+        $passed = new FakeRobot();
+        $robot = $consumer->assistOne('a', 'b', $passed);
 
-        $this->assertSame($robot, $consumer->assistOne('a', 'b', $robot));
+        $this->assertInstanceOf(FakeRobot::class, $robot);
+        $this->assertNotSame($passed, $robot);
     }
 
-    public function testAssistedKeepsANamedScalarTheCallerPassed(): void
+    public function testAssistedReplacesANamedScalarTheCallerPassed(): void
     {
         $consumer = (new Injector(new FakeInstanceBindModule()))->getInstance(FakeAssistedConsumer::class);
 
-        $this->assertSame(2, $consumer->assistWithName('a7', 2));
+        $this->assertSame(1, $consumer->assistWithName('a7', 2));
     }
 
-    public function testAssistedInjectsWhenTheCallerPassesNull(): void
+    public function testAssistedKeepsEveryVariadicArgument(): void
     {
         $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
+        [$value, $robot, $rest] = $consumer->assistBeforeVariadic('a', null, 'x', 'y', 'z');
 
-        $this->assertInstanceOf(FakeRobot::class, $consumer->assistOne('a', 'b', null));
+        $this->assertSame('a', $value);
+        $this->assertInstanceOf(FakeRobot::class, $robot);
+        $this->assertSame(['x', 'y', 'z'], $rest);
     }
 
-    public function testAssistedInjectsAnArgumentPassedAsItsOwnDefault(): void
+    public function testAssistedKeepsArgumentsBeyondTheDeclaredParameters(): void
     {
-        $consumer = (new Injector(new FakeInstanceBindModule()))->getInstance(FakeAssistedInjectConsumer::class);
+        $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
+        [$value, $robot, $extra] = $consumer->assistWithExtraArguments('a', null, 'e1', 'e2');
 
-        // A caller that fills every parameter, as BEAR.Resource does, passes an omitted one as its default.
-        $this->assertSame(1, $consumer->assistCustomeAssistedInject(one: 0));
+        $this->assertSame('a', $value);
+        $this->assertInstanceOf(FakeRobot::class, $robot);
+        $this->assertSame(['e1', 'e2'], $extra);
     }
 
-    public function testAssistedKeepsAnArgumentThatDiffersFromItsDefault(): void
+    public function testAssistedInstalledTwiceKeepsEveryVariadicArgument(): void
     {
-        $consumer = (new Injector(new FakeInstanceBindModule()))->getInstance(FakeAssistedInjectConsumer::class);
+        $module = new FakeToBindModule(new FakeInstanceBindModule(new AssistedModule()));
+        $consumer = (new Injector($module))->getInstance(FakeAssistedConsumer::class);
+        [, $robot, $rest] = $consumer->assistBeforeVariadic('a', null, 'x', 'y');
 
-        $this->assertSame(5, $consumer->assistCustomeAssistedInject(5));
+        $this->assertInstanceOf(FakeRobot::class, $robot);
+        $this->assertSame(['x', 'y'], $rest);
     }
 
     public function testAssistedInstalledTwiceKeepsTheOtherArguments(): void
