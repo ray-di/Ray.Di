@@ -101,7 +101,8 @@ final class AssistedInjectInterceptor implements MethodInterceptor
      * Return the arguments by position when the caller passed more than the declared parameters
      *
      * A variadic tail or surplus arguments cannot follow named arguments. They exist only when every
-     * declared position is filled, so the whole call can be made by position.
+     * declared position is filled, so the whole call can be made by position. An injected variadic
+     * parameter has no caller-owned tail: its entry in $namedArguments is the injected value.
      *
      * @param list<ReflectionParameter> $params
      * @param array<array-key, mixed>   $args
@@ -115,6 +116,11 @@ final class AssistedInjectInterceptor implements MethodInterceptor
         foreach ($params as $param) {
             if (! $param->isVariadic()) {
                 $declared[] = $param->getName();
+                continue;
+            }
+
+            if (array_key_exists($param->getName(), $namedArguments)) {
+                return $namedArguments;
             }
         }
 

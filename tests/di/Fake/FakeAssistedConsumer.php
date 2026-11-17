@@ -55,4 +55,10 @@ class FakeAssistedConsumer
     {
         return [$value, $robot, array_slice(func_get_args(), 2)];
     }
+
+    /** @return array{string, array<array-key, mixed>} */
+    public function assistVariadic(string $value, #[Assisted] #[Named('one')] ...$values): array
+    {
+        return [$value, $values];
+    }
 }

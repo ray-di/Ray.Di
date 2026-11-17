@@ -107,6 +107,13 @@ class AssistedTest extends TestCase
         $this->assertSame(['e1', 'e2'], $extra);
     }
 
+    public function testAssistedReplacesArgumentsPassedToAnInjectedVariadic(): void
+    {
+        $consumer = (new Injector(new FakeInstanceBindModule()))->getInstance(FakeAssistedConsumer::class);
+
+        $this->assertSame(['a', ['values' => 1]], $consumer->assistVariadic('a', 2, 3));
+    }
+
     public function testAssistedInstalledTwiceKeepsEveryVariadicArgument(): void
     {
         $module = new FakeToBindModule(new FakeInstanceBindModule(new AssistedModule()));
