@@ -31,7 +31,7 @@ final class Grapher
         $this->container->weaveAspects(new Compiler($this->classDir));
 
         // builtin injection
-        (new Bind($this->container, InjectorInterface::class))->toInstance(new Injector($module));
+        (new Bind($this->container, InjectorInterface::class))->toInstance(new Injector($module, $this->classDir));
     }
 
     /**

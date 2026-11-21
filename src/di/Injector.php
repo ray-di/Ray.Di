@@ -34,13 +34,13 @@ final class Injector implements InjectorInterface
 
     /**
      * @param AbstractModule|ModuleList|null $module Module(s)
-     * @param string                         $tmpDir Temp directory for generated class
+     * @param string                         $tmpDir Directory for generated classes; must not be writable by other users
      */
     public function __construct($module = null, string $tmpDir = '')
     {
         $ownsDir = is_dir($tmpDir);
         /** @var ScriptDir $classDir */
-        $classDir = $ownsDir ? $tmpDir : sys_get_temp_dir();
+        $classDir = $ownsDir ? $tmpDir : (new PrivateTmpDir())(sys_get_temp_dir());
         if (! is_writable($classDir)) {
             throw new DirectoryNotWritable($classDir); // @codeCoverageIgnore
         }

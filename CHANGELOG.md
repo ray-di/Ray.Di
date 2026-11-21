@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Security
+
+- `Injector` without an existing `tmpDir` loads generated classes from a per-user `ray-di-<uid>` directory under the system temp directory, and throws `DirectoryNotPrivate` if another user can write to it. `Grapher` generates null-object classes in its own `classDir` ([GHSA-p5q8-69rj-ff33](https://github.com/ray-di/Ray.Di/security/advisories/GHSA-p5q8-69rj-ff33)).
+
 ### Deprecated
 
 - Just-in-time binding of an unbound concrete class from `getInstance()` now emits an `E_USER_DEPRECATED` notice. Bind the class explicitly; JIT resolution is unavailable under `CompiledInjector` and is not recorded in `bindings.md` ([#337](https://github.com/ray-di/Ray.Di/issues/337)).
