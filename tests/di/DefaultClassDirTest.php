@@ -5,20 +5,15 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use PHPUnit\Framework\TestCase;
-use Ray\Di\Exception\DirectoryNotPrivate;
 use ReflectionClass;
 
-use function chmod;
 use function dirname;
 use function fileowner;
 use function fileperms;
 use function glob;
 use function mkdir;
 use function realpath;
-use function rename;
-use function rmdir;
 use function sprintf;
-use function symlink;
 use function sys_get_temp_dir;
 use function tempnam;
 use function uniqid;
@@ -71,37 +66,5 @@ class DefaultClassDirTest extends TestCase
         }, $classDir);
 
         $this->assertCount(1, (array) glob($classDir . '/*Null.php'));
-    }
-
-    public function testDirWritableByOthersIsRejected(): void
-    {
-        new Injector();
-        chmod($this->privateDir, 0777);
-
-        try {
-            $this->expectException(DirectoryNotPrivate::class);
-            new Injector();
-        } finally {
-            chmod($this->privateDir, 0700);
-        }
-    }
-
-    public function testSymlinkedDirIsRejected(): void
-    {
-        new Injector();
-        $aside = $this->privateDir . '.aside';
-        $ownDir = __DIR__ . '/tmp/' . uniqid('own');
-        mkdir($ownDir, 0700);
-        rename($this->privateDir, $aside);
-        symlink($ownDir, $this->privateDir);
-
-        try {
-            $this->expectException(DirectoryNotPrivate::class);
-            new Injector();
-        } finally {
-            unlink($this->privateDir);
-            rename($aside, $this->privateDir);
-            rmdir($ownDir);
-        }
     }
 }

@@ -5,28 +5,20 @@ declare(strict_types=1);
 namespace Ray\Di;
 
 use Ray\Aop\Compiler;
-use Ray\Di\Exception\DirectoryNotPrivate;
 use Ray\Di\Exception\DirectoryNotWritable;
 use Ray\Di\Exception\Unbound;
 use Ray\Di\Exception\Untargeted;
 
 use function assert;
-use function clearstatcache;
 use function file_exists;
-use function fileowner;
 use function is_dir;
 use function is_writable;
-use function lstat;
-use function mkdir;
 use function spl_autoload_register;
 use function sprintf;
 use function str_replace;
 use function sys_get_temp_dir;
-use function tempnam;
 use function trigger_error;
-use function unlink;
 
-use const DIRECTORY_SEPARATOR;
 use const E_USER_DEPRECATED;
 
 /**
@@ -36,10 +28,6 @@ use const E_USER_DEPRECATED;
  */
 final class Injector implements InjectorInterface
 {
-    private const WRITABLE_BY_GROUP_OR_OTHERS = 0022;
-    private const FILE_TYPE = 0170000;
-    private const DIRECTORY = 0040000;
-
     /** @var ScriptDir */
     private readonly string $classDir;
     private readonly Container $container;
@@ -52,7 +40,7 @@ final class Injector implements InjectorInterface
     {
         $ownsDir = is_dir($tmpDir);
         /** @var ScriptDir $classDir */
-        $classDir = $ownsDir ? $tmpDir : $this->privateTmpDir();
+        $classDir = $ownsDir ? $tmpDir : (new PrivateTmpDir())(sys_get_temp_dir());
         if (! is_writable($classDir)) {
             throw new DirectoryNotWritable($classDir); // @codeCoverageIgnore
         }
@@ -65,55 +53,6 @@ final class Injector implements InjectorInterface
         if ($ownsDir) {
             (new BindingsMarkdown())($this->container, $classDir);
         }
-    }
-
-    /**
-     * Per-user directory under the system temp directory, whose sticky bit keeps others from replacing it
-     */
-    private function privateTmpDir(): string
-    {
-        $tmpDir = sys_get_temp_dir();
-        // @codeCoverageIgnoreStart
-        if (DIRECTORY_SEPARATOR === '\\') {
-            return $tmpDir; // no POSIX owner/mode
-        }
-
-        // @codeCoverageIgnoreEnd
-
-        $uid = $this->uid($tmpDir);
-        $dir = sprintf('%s/ray-di-%d', $tmpDir, $uid);
-        @mkdir($dir, 0700);
-        clearstatcache(true, $dir);
-        // lstat does not follow a symlink
-        $stat = @lstat($dir);
-        $isPrivate = $stat !== false
-            && ($stat['mode'] & self::FILE_TYPE) === self::DIRECTORY
-            && $stat['uid'] === $uid
-            && ($stat['mode'] & self::WRITABLE_BY_GROUP_OR_OTHERS) === 0;
-        if (! $isPrivate) {
-            throw new DirectoryNotPrivate($dir);
-        }
-
-        return $dir;
-    }
-
-    /**
-     * uid of the current user without ext-posix
-     */
-    private function uid(string $tmpDir): int
-    {
-        $probe = is_writable($tmpDir) ? tempnam($tmpDir, 'di') : false;
-        $uid = $probe === false ? false : fileowner($probe);
-        // @codeCoverageIgnoreStart
-        if ($probe === false || $uid === false) {
-            throw new DirectoryNotWritable($tmpDir);
-        }
-
-        // @codeCoverageIgnoreEnd
-
-        @unlink($probe);
-
-        return $uid;
     }
 
     /**
