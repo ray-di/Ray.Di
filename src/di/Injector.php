@@ -80,17 +80,7 @@ final class Injector implements InjectorInterface
 
         // @codeCoverageIgnoreEnd
 
-        // uid of the current user without ext-posix
-        $probe = is_writable($tmpDir) ? tempnam($tmpDir, 'di') : false;
-        $uid = $probe === false ? false : fileowner($probe);
-        // @codeCoverageIgnoreStart
-        if ($probe === false || $uid === false) {
-            throw new DirectoryNotWritable($tmpDir);
-        }
-
-        // @codeCoverageIgnoreEnd
-
-        @unlink($probe);
+        $uid = $this->uid($tmpDir);
         $dir = sprintf('%s/ray-di-%d', $tmpDir, $uid);
         @mkdir($dir, 0700);
         clearstatcache(true, $dir);
@@ -105,6 +95,25 @@ final class Injector implements InjectorInterface
         }
 
         return $dir;
+    }
+
+    /**
+     * uid of the current user without ext-posix
+     */
+    private function uid(string $tmpDir): int
+    {
+        $probe = is_writable($tmpDir) ? tempnam($tmpDir, 'di') : false;
+        $uid = $probe === false ? false : fileowner($probe);
+        // @codeCoverageIgnoreStart
+        if ($probe === false || $uid === false) {
+            throw new DirectoryNotWritable($tmpDir);
+        }
+
+        // @codeCoverageIgnoreEnd
+
+        @unlink($probe);
+
+        return $uid;
     }
 
     /**
