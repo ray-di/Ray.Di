@@ -46,7 +46,7 @@ final class Injector implements InjectorInterface
 
     /**
      * @param AbstractModule|ModuleList|null $module Module(s)
-     * @param string                         $tmpDir Directory for generated classes. Classes are loaded from it: it must not be writable by untrusted users.
+     * @param string                         $tmpDir Directory for generated classes; must not be writable by other users
      */
     public function __construct($module = null, string $tmpDir = '')
     {
@@ -68,21 +68,19 @@ final class Injector implements InjectorInterface
     }
 
     /**
-     * A directory under the system temp directory that only the current user can write
-     *
-     * The check runs once: the sticky bit of the system temp directory keeps another user from replacing the directory afterwards.
+     * Per-user directory under the system temp directory, whose sticky bit keeps others from replacing it
      */
     private function privateTmpDir(): string
     {
         $tmpDir = sys_get_temp_dir();
         // @codeCoverageIgnoreStart
         if (DIRECTORY_SEPARATOR === '\\') {
-            return $tmpDir; // Windows: the temp directory is per-user and has no POSIX owner/mode
+            return $tmpDir; // no POSIX owner/mode
         }
 
         // @codeCoverageIgnoreEnd
 
-        // The owner of a file created here is the user the directory must belong to (no ext-posix needed)
+        // uid of the current user without ext-posix
         $probe = is_writable($tmpDir) ? tempnam($tmpDir, 'di') : false;
         $uid = $probe === false ? false : fileowner($probe);
         // @codeCoverageIgnoreStart
@@ -96,7 +94,7 @@ final class Injector implements InjectorInterface
         $dir = sprintf('%s/ray-di-%d', $tmpDir, $uid);
         @mkdir($dir, 0700);
         clearstatcache(true, $dir);
-        // One lstat for every condition: a symlink is not followed and the entry cannot change between the checks
+        // lstat does not follow a symlink
         $stat = @lstat($dir);
         $isPrivate = $stat !== false
             && ($stat['mode'] & self::FILE_TYPE) === self::DIRECTORY

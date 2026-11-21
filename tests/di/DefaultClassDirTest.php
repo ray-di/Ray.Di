@@ -26,9 +26,6 @@ use function unlink;
 
 use const DIRECTORY_SEPARATOR;
 
-/**
- * Generated classes are `require`d, so they must never be read from a directory another local user can write.
- */
 class DefaultClassDirTest extends TestCase
 {
     private string $privateDir;
