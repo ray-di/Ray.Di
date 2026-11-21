@@ -14,10 +14,9 @@ use function assert;
 use function clearstatcache;
 use function file_exists;
 use function fileowner;
-use function fileperms;
 use function is_dir;
-use function is_link;
 use function is_writable;
+use function lstat;
 use function mkdir;
 use function spl_autoload_register;
 use function sprintf;
@@ -38,6 +37,8 @@ use const E_USER_DEPRECATED;
 final class Injector implements InjectorInterface
 {
     private const WRITABLE_BY_GROUP_OR_OTHERS = 0022;
+    private const FILE_TYPE = 0170000;
+    private const DIRECTORY = 0040000;
 
     /** @var ScriptDir */
     private readonly string $classDir;
@@ -93,16 +94,14 @@ final class Injector implements InjectorInterface
 
         @unlink($probe);
         $dir = sprintf('%s/ray-di-%d', $tmpDir, $uid);
-        if (! is_dir($dir) && ! is_link($dir)) {
-            @mkdir($dir, 0700);
-        }
-
+        @mkdir($dir, 0700);
         clearstatcache(true, $dir);
-        // fileowner() and fileperms() follow a symlink, so a link to a directory this user owns would pass them
-        $isPrivate = is_dir($dir)
-            && ! is_link($dir)
-            && fileowner($dir) === $uid
-            && ((int) fileperms($dir) & self::WRITABLE_BY_GROUP_OR_OTHERS) === 0;
+        // One lstat for every condition: a symlink is not followed and the entry cannot change between the checks
+        $stat = @lstat($dir);
+        $isPrivate = $stat !== false
+            && ($stat['mode'] & self::FILE_TYPE) === self::DIRECTORY
+            && $stat['uid'] === $uid
+            && ($stat['mode'] & self::WRITABLE_BY_GROUP_OR_OTHERS) === 0;
         if (! $isPrivate) {
             throw new DirectoryNotPrivate($dir);
         }
