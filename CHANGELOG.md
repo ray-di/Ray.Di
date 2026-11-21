@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.24.0 - 2026-11-22
+
 ### Security
 
 - `Injector` without an existing `tmpDir` loads generated classes from a per-user `ray-di-<uid>` directory under the system temp directory, and throws `DirectoryNotPrivate` if another user can write to it. `Grapher` generates null-object classes in its own `classDir` ([GHSA-p5q8-69rj-ff33](https://github.com/ray-di/Ray.Di/security/advisories/GHSA-p5q8-69rj-ff33)).
