@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `EnvProvider` reads the environment variable named by the provider context on each `get()`: `->toProvider(EnvProvider::class, 'DB_PASS')`. A compiled container holds the variable name, not its value.
+
 ## 2.24.0 - 2026-11-22
 
 ### Security
