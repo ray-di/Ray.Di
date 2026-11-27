@@ -11,6 +11,7 @@ use function is_int;
 
 /**
  * @psalm-import-type LazyBindingList from Types
+ * @psalm-capabilities read-props|write-this-props
  * @extends ArrayObject<string, LazyBindingList>
  */
 final class MultiBindings extends ArrayObject
@@ -20,6 +21,7 @@ final class MultiBindings extends ArrayObject
         foreach ($multiBindings->getArrayCopy() as $interface => $lazies) {
             /** @var LazyBindingList $existing */
             $existing = $this->offsetExists($interface) ? $this[$interface] : [];
+            /** @psalm-suppress ImpureMethodCall -- storage is always the default array */
             $this->offsetSet($interface, $this->mergeEntries($existing, $lazies));
         }
     }

@@ -5,7 +5,7 @@
         "phpmetrics/phpmetrics": "^2.7 || v3.0.0rc8",
         "phpstan/phpstan": "^2.0",
         "squizlabs/php_codesniffer": "^4.0",
-        "vimeo/psalm": "^6.8",
+        "vimeo/psalm": "^7.0",
         "phpstan/phpstan-phpunit": "^2.0",
         "infection/infection": "^0.33 || ^0.34"
     },
