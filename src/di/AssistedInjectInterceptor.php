@@ -14,8 +14,11 @@ use ReflectionAttribute;
 use ReflectionNamedType;
 use ReflectionParameter;
 
+use function array_is_list;
 use function array_key_exists;
+use function array_slice;
 use function assert;
+use function count;
 use function in_array;
 
 /**
@@ -40,19 +43,22 @@ final class AssistedInjectInterceptor implements MethodInterceptor
         $this->methodInvocationProvider->set($invocation);
         try {
             $params = $invocation->getMethod()->getParameters();
-            $namedArguments = $this->getNamedArguments($invocation);
+            /** @var array<array-key, mixed> $args */
+            $args = $invocation->getArguments()->getArrayCopy();
+            $namedArguments = $this->getNamedArguments($params, $args);
             foreach ($params as $param) {
                 /** @var list<ReflectionAttribute> $inject */
                 $inject = $param->getAttributes(InjectInterface::class, ReflectionAttribute::IS_INSTANCEOF); // @phpstan-ignore-line
                 /** @var list<ReflectionAttribute> $assisted */
                 $assisted = $param->getAttributes(Assisted::class);
+                // The container decides an injected parameter: a value the caller passed is replaced.
                 if (isset($assisted[0]) || isset($inject[0])) {
                     /** @psalm-suppress MixedAssignment */
                     $namedArguments[$param->getName()] = $this->getDependency($param);
                 }
             }
 
-            $invocation->getArguments()->exchangeArray($namedArguments);
+            $invocation->getArguments()->exchangeArray($this->withTrailingArguments($params, $args, $namedArguments));
 
             return $invocation->proceed();
         } finally {
@@ -61,24 +67,74 @@ final class AssistedInjectInterceptor implements MethodInterceptor
     }
 
     /**
-     * @param MethodInvocation<object> $invocation
+     * @param list<ReflectionParameter> $params
+     * @param array<array-key, mixed>   $args
      *
      * @return array<string, mixed>
      */
-    private function getNamedArguments(MethodInvocation $invocation): array
+    private function getNamedArguments(array $params, array $args): array
     {
-        $args = $invocation->getArguments()->getArrayCopy();
-        $params = $invocation->getMethod()->getParameters();
         $namedParams = [];
         foreach ($params as $param) {
+            if ($param->isVariadic()) {
+                continue;
+            }
+
             $pos = $param->getPosition();
             if (array_key_exists($pos, $args)) {
                 /** @psalm-suppress MixedAssignment */
                 $namedParams[$param->getName()] = $args[$pos];
+                continue;
+            }
+
+            // An interceptor earlier in the chain may already have re-keyed the arguments by name.
+            if (array_key_exists($param->getName(), $args)) {
+                /** @psalm-suppress MixedAssignment */
+                $namedParams[$param->getName()] = $args[$param->getName()];
             }
         }
 
         return $namedParams;
+    }
+
+    /**
+     * Return the arguments by position when the caller passed more than the declared parameters
+     *
+     * A variadic tail or surplus arguments cannot follow named arguments. They exist only when every
+     * declared position is filled, so the whole call can be made by position. An injected variadic
+     * parameter has no caller-owned tail: its entry in $namedArguments is the injected value.
+     *
+     * @param list<ReflectionParameter> $params
+     * @param array<array-key, mixed>   $args
+     * @param array<string, mixed>      $namedArguments
+     *
+     * @return array<array-key, mixed>
+     */
+    private function withTrailingArguments(array $params, array $args, array $namedArguments): array
+    {
+        $declared = [];
+        foreach ($params as $param) {
+            if (! $param->isVariadic()) {
+                $declared[] = $param->getName();
+                continue;
+            }
+
+            if (array_key_exists($param->getName(), $namedArguments)) {
+                return $namedArguments;
+            }
+        }
+
+        if (! array_is_list($args) || count($args) <= count($declared)) {
+            return $namedArguments;
+        }
+
+        $positional = [];
+        foreach ($declared as $name) {
+            /** @psalm-suppress MixedAssignment */
+            $positional[] = $namedArguments[$name];
+        }
+
+        return [...$positional, ...array_slice($args, count($declared))];
     }
 
     /** @return mixed */

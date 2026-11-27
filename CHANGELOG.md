@@ -12,6 +12,11 @@
 
 - Just-in-time binding of an unbound concrete class from `getInstance()` now emits an `E_USER_DEPRECATED` notice. Bind the class explicitly; JIT resolution is unavailable under `CompiledInjector` and is not recorded in `bindings.md` ([#337](https://github.com/ray-di/Ray.Di/issues/337)).
 
+### Fixed
+
+- An `#[Assisted]` method keeps every variadic argument and every argument beyond its declared parameters; only the first variadic value used to reach the method.
+- Installing `AssistedModule` or `AssistedInjectModule` on top of the built-in one no longer drops the method's other arguments (`ArgumentCountError` for a required one, the default for an optional one).
+
 ## 2.23.1 - 2026-08-30
 
 ### Fixed

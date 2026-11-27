@@ -70,6 +70,70 @@ class AssistedTest extends TestCase
         $this->assertInstanceOf(FakeRobot::class, $assistedDependency);
     }
 
+    public function testAssistedReplacesAnArgumentTheCallerPassed(): void
+    {
+        $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
+        $passed = new FakeRobot();
+        $robot = $consumer->assistOne('a', 'b', $passed);
+
+        $this->assertInstanceOf(FakeRobot::class, $robot);
+        $this->assertNotSame($passed, $robot);
+    }
+
+    public function testAssistedReplacesANamedScalarTheCallerPassed(): void
+    {
+        $consumer = (new Injector(new FakeInstanceBindModule()))->getInstance(FakeAssistedConsumer::class);
+
+        $this->assertSame(1, $consumer->assistWithName('a7', 2));
+    }
+
+    public function testAssistedKeepsEveryVariadicArgument(): void
+    {
+        $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
+        [$value, $robot, $rest] = $consumer->assistBeforeVariadic('a', null, 'x', 'y', 'z');
+
+        $this->assertSame('a', $value);
+        $this->assertInstanceOf(FakeRobot::class, $robot);
+        $this->assertSame(['x', 'y', 'z'], $rest);
+    }
+
+    public function testAssistedKeepsArgumentsBeyondTheDeclaredParameters(): void
+    {
+        $consumer = $this->injector->getInstance(FakeAssistedConsumer::class);
+        [$value, $robot, $extra] = $consumer->assistWithExtraArguments('a', null, 'e1', 'e2');
+
+        $this->assertSame('a', $value);
+        $this->assertInstanceOf(FakeRobot::class, $robot);
+        $this->assertSame(['e1', 'e2'], $extra);
+    }
+
+    public function testAssistedReplacesArgumentsPassedToAnInjectedVariadic(): void
+    {
+        $consumer = (new Injector(new FakeInstanceBindModule()))->getInstance(FakeAssistedConsumer::class);
+
+        $this->assertSame(['a', ['values' => 1]], $consumer->assistVariadic('a', 2, 3));
+    }
+
+    public function testAssistedInstalledTwiceKeepsEveryVariadicArgument(): void
+    {
+        $module = new FakeToBindModule(new FakeInstanceBindModule(new AssistedModule()));
+        $consumer = (new Injector($module))->getInstance(FakeAssistedConsumer::class);
+        [, $robot, $rest] = $consumer->assistBeforeVariadic('a', null, 'x', 'y');
+
+        $this->assertInstanceOf(FakeRobot::class, $robot);
+        $this->assertSame(['x', 'y'], $rest);
+    }
+
+    public function testAssistedInstalledTwiceKeepsTheOtherArguments(): void
+    {
+        $module = new FakeToBindModule(new FakeInstanceBindModule(new AssistedModule()));
+        $consumer = (new Injector($module))->getInstance(FakeAssistedConsumer::class);
+        [$value, $robot] = $consumer->assistAfterDefault('x');
+
+        $this->assertSame('x', $value);
+        $this->assertInstanceOf(FakeRobot::class, $robot);
+    }
+
     public function testAssistedMethodInvocation(): void
     {
         $assistedConsumer = (new Injector(new FakeAssistedDbModule()))->getInstance(FakeAssistedParamsConsumer::class);

@@ -7,6 +7,9 @@ namespace Ray\Di;
 use Ray\Di\Di\Assisted;
 use Ray\Di\Di\Named;
 
+use function array_slice;
+use function func_get_args;
+
 class FakeAssistedConsumer
 {
     /**
@@ -39,5 +42,23 @@ class FakeAssistedConsumer
     public function assistAfterDefault(?string $value = 'default', #[Assisted] ?FakeRobotInterface $robot = null): array
     {
         return [$value, $robot];
+    }
+
+    /** @return array{string, FakeRobotInterface|null, array<array-key, string>} */
+    public function assistBeforeVariadic(string $value, #[Assisted] ?FakeRobotInterface $robot = null, string ...$rest): array
+    {
+        return [$value, $robot, $rest];
+    }
+
+    /** @return array{string, FakeRobotInterface|null, list<mixed>} */
+    public function assistWithExtraArguments(string $value, #[Assisted] ?FakeRobotInterface $robot = null): array
+    {
+        return [$value, $robot, array_slice(func_get_args(), 2)];
+    }
+
+    /** @return array{string, array<array-key, mixed>} */
+    public function assistVariadic(string $value, #[Assisted] #[Named('one')] ...$values): array
+    {
+        return [$value, $values];
     }
 }
